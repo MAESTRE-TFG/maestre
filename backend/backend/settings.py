@@ -27,6 +27,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# CORS settings
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # React/Next.js frontend
+]
+CORS_ALLOW_CREDENTIALS = True
+
 
 # Application definition
 
