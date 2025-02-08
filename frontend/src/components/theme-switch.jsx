@@ -14,7 +14,7 @@ export function ThemeSwitch() {
       {theme === "dark" ? (
         <Sun className="h-5 w-5 text-yellow-500" />
       ) : (
-        <Moon className="h-5 w-5 text-zinc-700" />
+        <Moon className="h-5 w-5 text-white" />
       )}
     </button>
   )

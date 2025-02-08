@@ -28,7 +28,10 @@ export function SignupForm({ onSubmit }) {
   };
   return (
     <div className={cn("max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white")}>
-      <form className="my-8" onSubmit={handleSubmit}>
+      <style jsx global>{
+        `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');`
+      }</style>
+      <form className="my-8" onSubmit={handleSubmit} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
         <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
           <LabelInputContainer>
             <Label htmlFor="firstname">First name</Label>
@@ -53,7 +56,10 @@ export function SignupForm({ onSubmit }) {
         </LabelInputContainer>
 
         <button
-          className={cn("relative group/btn block w-full text-white rounded-md h-10 font-medium", theme === "dark" ? "bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" : "bg-gradient-to-br from-black to-neutral-600 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]")}
+          className={cn("relative group/btn block w-full rounded-md h-10 font-medium border border-transparent", 
+            theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
+            : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
+          )}
           type="submit">
           Sign up &rarr;
           <BottomGradient />
