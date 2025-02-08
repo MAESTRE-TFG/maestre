@@ -27,6 +27,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+# CORS settings
+CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # React/Next.js frontend
+]
+CORS_ALLOW_CREDENTIALS = True
+
 
 # Application definition
 
@@ -40,10 +47,11 @@ INSTALLED_APPS = [
     'rest_framework',  # Add this
     'api',  # Add this
     'corsheaders',  # Add this
+    'users',
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  # Add this at the top
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -81,7 +89,7 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'maestre',
-        'USER': 'rafa',
+        'USER': 'postgres',
         'PASSWORD': '1234',  # Reemplaza con tu contraseña
         'HOST': 'localhost',
         'PORT': '5432',
