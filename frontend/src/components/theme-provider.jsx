@@ -6,9 +6,6 @@ const ThemeContext = createContext({})
 
 export function ThemeProvider({ children, attribute = 'class', defaultTheme = 'system', enableSystem = true, disableTransitionOnChange = false }) {
   const [theme, setTheme] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('theme') || defaultTheme
-    }
     return defaultTheme
   })
 
