@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 
 export function SidebarDemo({ ContentComponent }) {
-    const { theme } = useTheme();
+  const { theme } = useTheme();
   const links = [
     {
       label: "Dashboard",
@@ -109,90 +109,44 @@ export function SidebarDemo({ ContentComponent }) {
     </div>
   );
 }
-    export const Logo = () => {
-        const { theme } = useTheme();
-    return (
-      <Link
-        href="#"
+export const Logo = () => {
+  const { theme } = useTheme();
+  return (
+    <div className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20">
+      <img
+        src="static/maestre_logo_circle.png"
+        className="h-7 w-7 flex-shrink-0 rounded-full"
+        width={50}
+        height={50}
+        alt="Maestre"
+      />
+      <motion.span
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
         className={cn(
-          "font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20",
+          "font-medium whitespace-pre",
           theme == "dark" ? "text-white" : "text-black"
         )}
       >
-        <div
-          className={cn(
-            "h-5 w-6 rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0",
-            theme == "dark" ? "bg-white" : "bg-black"
-          )}
-        />
-        <motion.span
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className={cn(
-            "font-medium whitespace-pre",
-            theme == "dark" ? "text-white" : "text-black"
-          )}
-        >
-          Acet Labs
-        </motion.span>
-      </Link>
-    );
-    };
-    export const LogoIcon = () => {
-        const { theme } = useTheme();
-    return (
-      <Link
-        href="#"
-        className={cn(
-          "font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20",
-          theme == "dark" ? "text-white" : "text-black"
-        )}
-      >
-        <div
-          className={cn(
-            "h-5 w-6 bg-black dark:bg-white rounded-br-lg rounded-tr-sm rounded-tl-lg rounded-bl-sm flex-shrink-0",
-            theme == "dark" ? "bg-white" : "bg-black"
-          )}
-        />
-      </Link>
-    );
-    };
-
-    // Dummy dashboard component with content
-    const Dashboard = () => {
-    return (
-      <div className="flex flex-1">
-        <div
-          className={cn(
-            "p-2 md:p-10 rounded-tl-2xl border  flex flex-col gap-2 flex-1 w-full h-full",
-            theme == "dark"
-              ? "bg-neutral-900 border-neutral-700"
-              : "bg-white border-neutral-200"
-          )}
-        >
-          <div className="flex gap-2">
-            {[...new Array(4)].map((i) => (
-              <div
-                key={"first-array" + i}
-                className={cn(
-                  "h-20 w-full rounded-lg animate-pulse",
-                  theme == "dark" ? "bg-neutral-800" : "bg-gray-100"
-                )}
-              ></div>
-            ))}
-          </div>
-          <div className="flex gap-2 flex-1">
-            {[...new Array(2)].map((i) => (
-              <div
-                key={"second-array" + i}
-                className={cn(
-                  "h-full w-full rounded-lg  bg-gray-100 dark:bg-neutral-800 animate-pulse",
-                  theme == "dark" ? "bg-neutral-800" : "bg-gray-100"
-                )}
-              ></div>
-            ))}
-          </div>
-        </div>
-      </div>
-    );
+        <style jsx global>{
+          `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');`
+        }</style>
+        <h2 style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>MAESTRE</h2>
+      </motion.span>
+    </div>
+  );
+};
+export const LogoIcon = () => {
+  const { theme } = useTheme();
+  return (
+    <div className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20">
+      <img
+        src="static/maestre_logo_circle.png"
+        className="h-7 w-7 flex-shrink-0 rounded-full"
+        width={50}
+        height={50}
+        alt="Maestre"
+      />
+    </div>
+  );
 };

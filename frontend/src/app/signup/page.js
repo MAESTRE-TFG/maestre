@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { SignupForm } from '../../components/signup-form-demo';
 import { useTheme } from '@/components/theme-provider';
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 export default function SignUp() {
   const router = useRouter();
@@ -43,7 +44,7 @@ export default function SignUp() {
       </div>
 
         <img 
-          src={theme === "dark" ? "static/maestre_logo_2_black.webp" : "static/maestre_logo_2.webp"} 
+          src={theme === "dark" ? "static/maestre_logo_circle_black.png" : "static/maestre_logo_circle.png"} 
           alt="MAESTRE Logo" 
           className="mx-auto mt-4 w-44 h-44"
         />
