@@ -53,17 +53,11 @@ export default function SignUp() {
           @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
         `}</style>
       </div>
-
-      <img
-        src={
-          theme === "dark"
-            ? "static/maestre_logo_2_black.webp"
-            : "static/maestre_logo_2.webp"
-        }
-        alt="MAESTRE Logo"
-        className="mx-auto mt-4 w-44 h-44"
-      />
-
+        <img 
+          src={theme === "dark" ? "static/maestre_logo_circle_black.png" : "static/maestre_logo_circle.png"} 
+          alt="MAESTRE Logo" 
+          className="mx-auto mt-4 w-44 h-44"
+        />
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <SignupForm onSubmit={handleSubmit} />
       </div>
