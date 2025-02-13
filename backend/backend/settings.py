@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',  # Add this
+    'rest_framework.authtoken',  # Add this
     'api',  # Add this
     'corsheaders',  # Add this
     'users',
@@ -137,3 +138,15 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+    ],
+}
+
+
+# Esta configuración permite que Django use nuestro modelo de usuario personalizado
+# en lugar del modelo de usuario predeterminado que viene con Django
+AUTH_USER_MODEL = 'users.CustomUser'
