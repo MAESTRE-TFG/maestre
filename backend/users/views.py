@@ -2,13 +2,19 @@ from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.authtoken.models import Token
 from .models import CustomUser
 from .serializers import CustomUserSerializer
 
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
+    # Todas los conjuntos de vistas de Django Rest Framework requieren un queryset y un serializador
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
+
+    # Para poder usar el token de autenticación, necesitamos añadirlo a la lista de clases de autenticación
+    authentication_classes = [TokenAuthentication]
     
     def get_permissions(self):
         if self.action == 'create':
@@ -20,9 +26,12 @@ class UserViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        self.perform_create(serializer)
+        user = serializer.save()
+        token, created = Token.objects.get_or_create(user=user)
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        response_data = serializer.data
+        response_data['token'] = token.key
+        return Response(response_data, status=status.HTTP_201_CREATED, headers=headers)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', True)  # Set partial to True
