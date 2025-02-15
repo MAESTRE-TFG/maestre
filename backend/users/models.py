@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from schools.models import School  # Importa el modelo School
 
 '''
 Como tenemos un modelo personalizado de usuario, necesitamos un administrador de usuario personalizado
@@ -31,6 +32,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
+    school = models.ForeignKey(School, on_delete=models.SET_NULL, null=True, blank=True, related_name='users')  # Relación con School
 
     objects = CustomUserManager()
 
@@ -41,7 +43,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     surname = models.CharField(max_length=100)
     region = models.CharField(max_length=100, null=True, blank=True, default=None)
     city = models.CharField(max_length=100, null=True, blank=True, default=None)
-    school = models.CharField(max_length=200, null=True, blank=True, default=None)
 
     groups = models.ManyToManyField(
         'auth.Group',
