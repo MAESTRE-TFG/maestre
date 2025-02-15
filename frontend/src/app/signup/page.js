@@ -24,6 +24,8 @@ export default function SignUp() {
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem("authToken", data.token); // Guarda el token en localStorage
+        const user = JSON.stringify(data)
+        localStorage.setItem("user", user);
         router.push("/");
       } else {
         const data = await response.json();

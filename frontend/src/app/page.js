@@ -1,11 +1,23 @@
 "use client";
-import Image from "next/image";
+import { useEffect, useState } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 const Home = () => {
   const { theme } = useTheme();
+  const router = useRouter();
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      router.push('/signup');
+      return;
+    }
+  }, [router]);
+
   return (
     <div className="flex flex-1">
       <div
