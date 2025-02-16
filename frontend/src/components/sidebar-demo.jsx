@@ -105,7 +105,7 @@ export function SidebarDemo({ ContentComponent }) {
           : "bg-gray-100 border-neutral-200"
       )}
     >
-      <Sidebar open={open} setOpen={setOpen}>
+      <Sidebar open={open} setOpen={setOpen} className={cn(open ? "w-84" : "w-60")}>
         <SidebarBody className="justify-between gap-10">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             {open ? <Logo /> : <LogoIcon />}
@@ -133,7 +133,9 @@ export function SidebarDemo({ ContentComponent }) {
           </div>
         </SidebarBody>
       </Sidebar>
-      <ContentComponent />
+      <div className="flex-1 flex justify-center items-center p-6">
+        <ContentComponent />
+      </div>
     </div>
   );
 }
@@ -171,9 +173,9 @@ export const LogoIcon = () => {
     <div className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20">
       <img
         src={theme === "dark" ? "static/maestre_logo_2_dark.webp" : "static/maestre_logo_2.webp"}
-        className="h-14 w-14 flex-shrink-0 rounded-full"
-        width={100}
-        height={100}
+        className="h-12 w-12 flex-shrink-0 rounded-full"
+        width={90}
+        height={90}
         alt="Maestre"
         style={{ objectFit: "contain" }}
       />

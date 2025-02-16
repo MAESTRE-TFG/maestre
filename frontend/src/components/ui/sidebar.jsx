@@ -63,7 +63,7 @@ export const DesktopSidebar = ({ className, children, ...props }) => {
           className
         )}
         animate={{
-          width: animate ? (open ? "300px" : "60px") : "300px",
+          width: animate ? (open ? "300px" : "80px") : "300px",
         }}
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
@@ -87,7 +87,7 @@ export const MobileSidebar = ({ className, children, ...props }) => {
         )}
         {...props}
       >
-        <div className="flex justify-end z-20 w-full">
+        <div className="flex justify-start z-20 w-full">
           <IconMenu2
             className={cn(
               theme == "dark" ? "text-neutral-200" : "text-neutral-800"

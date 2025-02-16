@@ -10,7 +10,7 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
   const { theme } = useTheme();
 
   return (
-    <div className={cn("max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white")}>
+    <div className={cn("max-w-md w-full mx-auto rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white")}>
       <style jsx global>{
         `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');`
       }</style>
@@ -49,17 +49,19 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
           type="button"
           onClick={handleCancel}>
           Cancel &rarr;
-          <BottomGradient />
+          <BottomGradient isCancel />
         </button>
       </form>
     </div>
   );
 }
 
-const BottomGradient = () => {
+const BottomGradient = ({ isCancel }) => {
   return (<>
-    <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-    <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
+    <span className={cn("group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0", 
+      isCancel ? "bg-gradient-to-r from-transparent via-orange-500 to-transparent" : "bg-gradient-to-r from-transparent via-cyan-500 to-transparent")} />
+    <span className={cn("group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10", 
+      isCancel ? "bg-gradient-to-r from-transparent via-orange-500 to-transparent" : "bg-gradient-to-r from-transparent via-indigo-500 to-transparent")} />
   </>);
 };
 
