@@ -12,10 +12,12 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 import axios from 'axios';
+import { useRouter } from "next/navigation";
 
 export function SidebarDemo({ ContentComponent }) {
   const { theme } = useTheme();
-  const user = JSON.parse(localStorage.getItem('user')) ? JSON.parse(localStorage.getItem('user')) : null;
+  const router = useRouter();
+  const user = typeof window !== 'undefined' && localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
 
   const handleSignout = async () => {
     try {
@@ -26,13 +28,13 @@ export function SidebarDemo({ ContentComponent }) {
       });
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.location.href = '/signin';
+      router.push("/signin");
     } catch (error) {
       if (error.response && error.response.status === 401) {
         console.error('Invalid token:', error.response.data.detail);
         localStorage.removeItem('token');
         localStorage.removeItem('user');
-        window.location.href = '/signin';
+        router.push("/signin");
       } else {
         console.error('Error Signing out:', error);
       }
@@ -117,7 +119,7 @@ export function SidebarDemo({ ContentComponent }) {
             <SidebarLink
               link={{
                 label: user ? user.name + " " + user.surname : "Sign in",
-                href: user ? "#" : "/signin",
+                href: user ? "http://localhost:3000/profile_edit" : "/signin",
                 icon: (
                   <IconUser
                     className={cn(
