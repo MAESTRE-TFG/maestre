@@ -5,14 +5,11 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 
-export function SignupForm({ onSubmit }) {
+export function SigninForm({ onSubmit }) { // Change to SigninForm
   const { theme } = useTheme();
   const [formData, setFormData] = React.useState({
-    username: "",
     email: "",
-    password: "",
-    name: "",
-    surname: ""
+    password: ""
   });
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -32,20 +29,6 @@ export function SignupForm({ onSubmit }) {
         `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');`
       }</style>
       <form className="my-8" onSubmit={handleSubmit} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-        <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
-          <LabelInputContainer>
-            <Label htmlFor="firstname">First name</Label>
-            <Input id="firstname" name="name" placeholder="Tyler" type="text" required value={formData.name} onChange={handleChange} />
-          </LabelInputContainer>
-          <LabelInputContainer>
-            <Label htmlFor="lastname">Last name</Label>
-            <Input id="lastname" name="surname" placeholder="Durden" type="text" required value={formData.surname} onChange={handleChange} />
-          </LabelInputContainer>
-        </div>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="username">Your username</Label>
-          <Input id="username" name="username" placeholder="superprof01" type="text" required value={formData.username} onChange={handleChange} />
-        </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="email">Email Address</Label>
           <Input id="email" name="email" placeholder="projectmayhem@fc.com" type="email" required value={formData.email} onChange={handleChange} />
@@ -61,7 +44,7 @@ export function SignupForm({ onSubmit }) {
             : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
           )}
           type="submit">
-          Sign up &rarr;
+          Sign in &rarr;
           <BottomGradient />
         </button>
 
@@ -69,15 +52,15 @@ export function SignupForm({ onSubmit }) {
 
         <div className="text-center mt-4">
           <p className={cn(theme === "dark" ? "text-white" : "text-black")}>
-            Already have an account? 
+            Don't have an account? 
           </p>
           <button
             className={cn("relative group/btn mt-2 block w-full rounded-md h-10 font-medium border border-transparent", 
               theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
               : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
             )}
-            onClick={() => window.location.href = "/signin"}>
-            Sign in &rarr;
+            onClick={() => window.location.href = "/signup"}>
+            Sign up &rarr;
             <BottomGradient />
           </button>
         </div>
