@@ -22,12 +22,16 @@ class UserViewSet(viewsets.ModelViewSet):
     def get_permissions(self):
         if self.action in ['signup', 'signin']:
             permission_classes = [AllowAny]
+            if self.request.user.is_authenticated:
+                permission_classes = [IsAuthenticated]
         else:
             permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
 
     @action(detail=False, methods=['post'], permission_classes=[AllowAny])
     def signup(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return Response({'detail': 'You are already signed in.'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
@@ -52,6 +56,8 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['post'], permission_classes=[AllowAny])
     def signin(self, request):
+        if request.user.is_authenticated:
+            return Response({'detail': 'You are already signed in.'}, status=status.HTTP_400_BAD_REQUEST)
         email = request.data.get('email')
         password = request.data.get('password')
         user = authenticate(request, email=email, password=password)

@@ -4,16 +4,23 @@ import { useRouter } from "next/navigation";
 import { SignupForm } from "../../components/signup-form-demo";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function SignUp() {
   const router = useRouter();
   const { theme } = useTheme();
   const [error, setError] = useState(null);
 
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      router.push("/");
+    }
+  }, [router]);
+
   const handleSubmit = async (formData) => {
     try {
-      const response = await fetch("http://localhost:8000/api/users/signup/", { // Updated endpoint
+      const response = await fetch("http://localhost:8000/api/users/signup/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -23,7 +30,7 @@ export default function SignUp() {
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem("authToken", data.token); // Guarda el token en localStorage
+        localStorage.setItem("authToken", data.token);
         const user = JSON.stringify(data)
         localStorage.setItem("user", user);
         router.push("/");

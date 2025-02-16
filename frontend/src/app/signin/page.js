@@ -1,19 +1,26 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { SigninForm } from "../../components/signin-form-demo"; // Change to SigninForm
+import { SigninForm } from "../../components/signin-form-demo";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
-export default function SignIn() { // Change function name to SignIn
+export default function SignIn() {
   const router = useRouter();
   const { theme } = useTheme();
   const [error, setError] = useState(null);
 
+  useEffect(() => {
+    const token = localStorage.getItem("authToken");
+    if (token) {
+      router.push("/");
+    }
+  }, [router]);
+
   const handleSubmit = async (formData) => {
     try {
-      const response = await fetch("http://localhost:8000/api/users/signin/", { // Updated endpoint
+      const response = await fetch("http://localhost:8000/api/users/signin/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -23,7 +30,7 @@ export default function SignIn() { // Change function name to SignIn
 
       if (response.ok) {
         const data = await response.json();
-        localStorage.setItem("authToken", data.token); // Guarda el token en localStorage
+        localStorage.setItem("authToken", data.token);
         const user = JSON.stringify(data)
         localStorage.setItem("user", user);
         router.push("/");
@@ -61,7 +68,7 @@ export default function SignIn() { // Change function name to SignIn
           className="mx-auto mt-4 w-44 h-44"
         />
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <SigninForm onSubmit={handleSubmit} /> {/* Change to SigninForm */}
+        <SigninForm onSubmit={handleSubmit} />
       </div>
     </div>
   );
