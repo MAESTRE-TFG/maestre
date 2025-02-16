@@ -1,19 +1,19 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { SignupForm } from "../../components/signup-form-demo";
+import { SigninForm } from "../../components/signin-form-demo"; // Change to SigninForm
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import { useState } from "react";
 
-export default function SignUp() {
+export default function SignIn() { // Change function name to SignIn
   const router = useRouter();
   const { theme } = useTheme();
   const [error, setError] = useState(null);
 
   const handleSubmit = async (formData) => {
     try {
-      const response = await fetch("http://localhost:8000/api/users/signup/", { // Updated endpoint
+      const response = await fetch("http://localhost:8000/api/users/signin/", { // Updated endpoint
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -29,7 +29,7 @@ export default function SignUp() {
         router.push("/");
       } else {
         const data = await response.json();
-        setError(data.detail || "Registration failed");
+        setError(data.detail || "Login failed");
       }
     } catch (err) {
       setError("Network error occurred");
@@ -45,11 +45,11 @@ export default function SignUp() {
             theme === "dark" ? "text-white" : "text-dark"
           )}
         >
-          Welcome to{" "}
+          Welcome back to{" "}
           <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
             MAESTRE
           </span>
-          , Create your account
+          , Sign in to your account
         </h1>
         <style jsx global>{`
           @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
@@ -61,7 +61,7 @@ export default function SignUp() {
           className="mx-auto mt-4 w-44 h-44"
         />
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <SignupForm onSubmit={handleSubmit} />
+        <SigninForm onSubmit={handleSubmit} /> {/* Change to SigninForm */}
       </div>
     </div>
   );

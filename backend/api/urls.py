@@ -9,4 +9,7 @@ router.register(r'users', UserViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('users/signup/', UserViewSet.as_view({'post': 'signup'})),
+    path('users/signin/', UserViewSet.as_view({'post': 'signin'})),
+    path('users/signout/', UserViewSet.as_view({'post': 'signout'})),
 ]

@@ -11,10 +11,34 @@ import {
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
+import axios from 'axios';
 
 export function SidebarDemo({ ContentComponent }) {
   const { theme } = useTheme();
-  const user = JSON.parse(localStorage.getItem('user'))
+  const user = JSON.parse(localStorage.getItem('user')) ? JSON.parse(localStorage.getItem('user')) : null;
+
+  const handleSignout = async () => {
+    try {
+      await axios.post('http://localhost:8000/api/users/signout/', {}, {
+        headers: {
+          'Authorization': `Token ${localStorage.getItem('token')}`
+        }
+      });
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      window.location.href = '/signin';
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        console.error('Invalid token:', error.response.data.detail);
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        window.location.href = '/signin';
+      } else {
+        console.error('Error Signing out:', error);
+      }
+    }
+  };
+
   const links = [
     {
       label: "Dashboard",
@@ -52,9 +76,10 @@ export function SidebarDemo({ ContentComponent }) {
         />
       ),
     },
-    {
-      label: "Logout",
-      href: "#",
+    // Only show the signout button if the user is authenticated
+    user && {
+      label: "Sign out",
+      href: "",
       icon: (
         <IconArrowLeft
           className={cn(
@@ -63,8 +88,10 @@ export function SidebarDemo({ ContentComponent }) {
           )}
         />
       ),
+      onClick: handleSignout,
     },
-  ];
+  ].filter(Boolean); // Filter out any false values (e.g., if user is not authenticated)
+
   const [open, setOpen] = useState(false);
   return (
     <div
@@ -82,15 +109,15 @@ export function SidebarDemo({ ContentComponent }) {
             {open ? <Logo /> : <LogoIcon />}
             <div className="mt-8 flex flex-col gap-2">
               {links.map((link, idx) => (
-                <SidebarLink key={idx} link={link} />
+                <SidebarLink key={idx} link={link} onClick={link.onClick} />
               ))}
             </div>
           </div>
           <div>
             <SidebarLink
               link={{
-                label: user.name + " " + user.surname,
-                href: "#",
+                label: user ? user.name + " " + user.surname : "Sign in",
+                href: user ? "#" : "/signin",
                 icon: (
                   <IconUser
                     className={cn(
@@ -113,11 +140,12 @@ export const Logo = () => {
   return (
     <div className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20">
       <img
-        src="static/maestre_logo_circle.png"
-        className="h-7 w-7 flex-shrink-0 rounded-full"
-        width={50}
-        height={50}
+        src={theme === "dark" ? "static/maestre_logo_2_dark.webp" : "static/maestre_logo_2.webp"}
+        className="h-12 w-12 flex-shrink-0 rounded-full"
+        width={90}
+        height={90}
         alt="Maestre"
+        style={{ objectFit: "contain" }}
       />
       <motion.span
         initial={{ opacity: 0 }}
@@ -140,11 +168,12 @@ export const LogoIcon = () => {
   return (
     <div className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20">
       <img
-        src="static/maestre_logo_circle.png"
-        className="h-7 w-7 flex-shrink-0 rounded-full"
-        width={50}
-        height={50}
+        src={theme === "dark" ? "static/maestre_logo_2_dark.webp" : "static/maestre_logo_2.webp"}
+        className="h-14 w-14 flex-shrink-0 rounded-full"
+        width={100}
+        height={100}
         alt="Maestre"
+        style={{ objectFit: "contain" }}
       />
     </div>
   );
