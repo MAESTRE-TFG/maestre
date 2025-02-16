@@ -21,16 +21,16 @@ export function SidebarDemo({ ContentComponent }) {
     try {
       await axios.post('http://localhost:8000/api/users/signout/', {}, {
         headers: {
-          'Authorization': `Token ${localStorage.getItem('token')}`
+          'Authorization': `Token ${localStorage.getItem('authToken')}`
         }
       });
-      localStorage.removeItem('token');
+      localStorage.removeItem('authToken');
       localStorage.removeItem('user');
       window.location.href = '/signin';
     } catch (error) {
       if (error.response && error.response.status === 401) {
         console.error('Invalid token:', error.response.data.detail);
-        localStorage.removeItem('token');
+        localStorage.removeItem('authToken');
         localStorage.removeItem('user');
         window.location.href = '/signin';
       } else {
