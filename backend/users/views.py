@@ -41,17 +41,18 @@ class UserViewSet(viewsets.ModelViewSet):
         response_data['token'] = token.key
         return Response(response_data, status=status.HTTP_201_CREATED, headers=headers)
 
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', True)  # Set partial to True
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+    @action(detail=True, methods=['put'], permission_classes=[IsAuthenticated])
+    def update_user(self, request, pk=None):
+        user = self.get_object()  # Obtiene el usuario según el ID en la URL
+        serializer = self.get_serializer(user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)
 
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
+    @action(detail=True, methods=['delete'], permission_classes=[IsAuthenticated])
+    def delete_user(self, request, pk=None):
+        user = self.get_object()
+        self.perform_destroy(user)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
     @action(detail=False, methods=['post'], permission_classes=[AllowAny])
