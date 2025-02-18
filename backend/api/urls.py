@@ -11,4 +11,9 @@ router.register(r'schools', SchoolViewSet, basename='schools')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('users/signup/', UserViewSet.as_view({'post': 'signup'})),
+    path('users/signin/', UserViewSet.as_view({'post': 'signin'})),
+    path('users/signout/', UserViewSet.as_view({'post': 'signout'})),
+    path('users/<int:pk>/update/', UserViewSet.as_view({'put': 'update_user'})),
+    path('users/<int:pk>/delete/', UserViewSet.as_view({'delete': 'delete_user'})),
 ]

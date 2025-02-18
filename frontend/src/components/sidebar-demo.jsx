@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import {
   IconArrowLeft,
@@ -11,10 +11,42 @@ import {
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
+import axios from 'axios';
+import { useRouter } from "next/navigation";
 
 export function SidebarDemo({ ContentComponent }) {
   const { theme } = useTheme();
-  const user = JSON.parse(localStorage.getItem('user'))
+  const router = useRouter();
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const handleSignout = async () => {
+    try {
+      await axios.post('http://localhost:8000/api/users/signout/', {}, {
+        headers: {
+          'Authorization': `Token ${localStorage.getItem('authToken')}`
+        }
+      });
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+      router.push("/signin");
+    } catch (error) {
+      if (error.response && error.response.status === 401) {
+        console.error('Invalid token:', error.response.data.detail);
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+        router.push("/signin");
+      } else {
+        console.error('Error Signing out:', error);
+      }
+    }
+  };
+
   const links = [
     {
       label: "Dashboard",
@@ -52,9 +84,10 @@ export function SidebarDemo({ ContentComponent }) {
         />
       ),
     },
-    {
-      label: "Logout",
-      href: "#",
+    // Only show the signout button if the user is authenticated
+    user && {
+      label: "Sign out",
+      href: "",
       icon: (
         <IconArrowLeft
           className={cn(
@@ -63,8 +96,10 @@ export function SidebarDemo({ ContentComponent }) {
           )}
         />
       ),
+      onClick: handleSignout,
     },
-  ];
+  ].filter(Boolean); // Filter out any false values (e.g., if user is not authenticated)
+
   const [open, setOpen] = useState(false);
   return (
     <div
@@ -76,21 +111,21 @@ export function SidebarDemo({ ContentComponent }) {
           : "bg-gray-100 border-neutral-200"
       )}
     >
-      <Sidebar open={open} setOpen={setOpen}>
+      <Sidebar open={open} setOpen={setOpen} className={cn(open ? "w-84" : "w-60")}>
         <SidebarBody className="justify-between gap-10">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             {open ? <Logo /> : <LogoIcon />}
             <div className="mt-8 flex flex-col gap-2">
               {links.map((link, idx) => (
-                <SidebarLink key={idx} link={link} />
+                <SidebarLink key={idx} link={link} onClick={link.onClick} />
               ))}
             </div>
           </div>
           <div>
             <SidebarLink
               link={{
-                label: user.name + " " + user.surname,
-                href: "#",
+                label: user ? user.name + " " + user.surname : "Sign in",
+                href: user ? "http://localhost:3000/profile_edit" : "/signin",
                 icon: (
                   <IconUser
                     className={cn(
@@ -104,7 +139,9 @@ export function SidebarDemo({ ContentComponent }) {
           </div>
         </SidebarBody>
       </Sidebar>
-      <ContentComponent />
+      <div className="flex-1 flex justify-center items-center p-6">
+        <ContentComponent />
+      </div>
     </div>
   );
 }
@@ -113,11 +150,12 @@ export const Logo = () => {
   return (
     <div className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20">
       <img
-        src="static/maestre_logo_circle.png"
-        className="h-7 w-7 flex-shrink-0 rounded-full"
-        width={50}
-        height={50}
+        src={theme === "dark" ? "static/maestre_logo_2_dark.webp" : "static/maestre_logo_2.webp"}
+        className="h-12 w-12 flex-shrink-0 rounded-full"
+        width={90}
+        height={90}
         alt="Maestre"
+        style={{ objectFit: "contain" }}
       />
       <motion.span
         initial={{ opacity: 0 }}
@@ -140,11 +178,12 @@ export const LogoIcon = () => {
   return (
     <div className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20">
       <img
-        src="static/maestre_logo_circle.png"
-        className="h-7 w-7 flex-shrink-0 rounded-full"
-        width={50}
-        height={50}
+        src={theme === "dark" ? "static/maestre_logo_2_dark.webp" : "static/maestre_logo_2.webp"}
+        className="h-12 w-12 flex-shrink-0 rounded-full"
+        width={90}
+        height={90}
         alt="Maestre"
+        style={{ objectFit: "contain" }}
       />
     </div>
   );

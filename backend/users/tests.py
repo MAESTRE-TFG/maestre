@@ -2,6 +2,7 @@ from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase, APIClient
 from .models import CustomUser
+from rest_framework.authtoken.models import Token
 
 class UserTests(APITestCase):
     def setUp(self):
@@ -14,6 +15,7 @@ class UserTests(APITestCase):
         )
         self.create_url = reverse('customuser-list')
         self.client = APIClient()
+        self.token = Token.objects.create(user=self.user)
 
     def test_create_user(self):
         data = {
@@ -108,3 +110,108 @@ class UserTests(APITestCase):
         url = reverse('customuser-detail', kwargs={'pk': self.user.pk})
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_signin(self):
+        url = reverse('customuser-signin')
+        data = {
+            'email': 'testuser@example.com',
+            'password': 'testpassword'
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertIn('token', response.data)
+
+    def test_signin_with_invalid_credentials(self):
+        url = reverse('customuser-signin')
+        data = {
+            'email': 'testuser@example.com',
+            'password': 'wrongpassword'
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertIn('detail', response.data)
+
+    def test_signin_with_unregistered_email(self):
+        url = reverse('customuser-signin')
+        data = {
+            'email': 'unregistered@example.com',
+            'password': 'testpassword'
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertIn('detail', response.data)
+
+    def test_signin_without_credentials(self):
+        url = reverse('customuser-signin')
+        data = {}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_signout(self):
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
+        url = reverse('customuser-signout')
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # Refrescamos el usuario para ver si el token se eliminó
+        self.user.refresh_from_db()
+        self.assertFalse(hasattr(self.user, 'auth_token'))
+
+    def test_signout_without_authentication(self):
+        url = reverse('customuser-signout')
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_signin_missing_email(self):
+        url = reverse('customuser-signin')
+        data = {'password': 'testpassword'}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        # Opcionalmente, puedes comprobar el mensaje de error
+
+    def test_signin_missing_password(self):
+        url = reverse('customuser-signin')
+        data = {'email': 'testuser@example.com'}
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_signout_token_deletion_twice(self):
+        """
+        Verifica que luego de hacer signout y eliminar el token, volver a usarlo en otra petición retorne error.
+        """
+        # Establece las credenciales y realiza el signout
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
+        url_signout = reverse('customuser-signout')
+        response1 = self.client.post(url_signout)
+        self.assertEqual(response1.status_code, status.HTTP_200_OK)
+        # Intenta hacer signout nuevamente con el mismo token eliminado
+        response2 = self.client.post(url_signout)
+        self.assertEqual(response2.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_signin_after_signout(self):
+        """
+        Verifica que después del signout se pueda volver a iniciar sesión y se genere un token nuevo.
+        """
+        signin_url = reverse('customuser-signin')
+        data = {
+            'email': 'testuser@example.com',
+            'password': 'testpassword'
+        }
+        # Inicio de sesión
+        response1 = self.client.post(signin_url, data, format='json')
+        self.assertEqual(response1.status_code, status.HTTP_200_OK)
+        original_token = response1.data.get('token')
+        self.assertIsNotNone(original_token)
+
+        # Signout usando el token obtenido
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {original_token}")
+        signout_url = reverse('customuser-signout')
+        response2 = self.client.post(signout_url)
+        self.assertEqual(response2.status_code, status.HTTP_200_OK)
+
+        # Intentar nuevamente iniciar sesión y verificar que se genere un token distinto
+        self.client.credentials()
+        response3 = self.client.post(signin_url, data, format='json')
+        self.assertEqual(response3.status_code, status.HTTP_200_OK)
+        new_token = response3.data.get('token')
+        self.assertIsNotNone(new_token)
+        self.assertNotEqual(original_token, new_token)

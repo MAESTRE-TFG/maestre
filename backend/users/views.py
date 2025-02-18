@@ -4,6 +4,9 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
+from rest_framework.decorators import action
+from django.contrib.auth import authenticate
+from rest_framework.exceptions import AuthenticationFailed
 from .models import CustomUser
 from .serializers import CustomUserSerializer
 
@@ -17,13 +20,18 @@ class UserViewSet(viewsets.ModelViewSet):
     authentication_classes = [TokenAuthentication]
     
     def get_permissions(self):
-        if self.action == 'create':
+        if self.action in ['signup', 'signin']:
             permission_classes = [AllowAny]
+            if self.request.user.is_authenticated:
+                permission_classes = [IsAuthenticated]
         else:
             permission_classes = [IsAuthenticated]
         return [permission() for permission in permission_classes]
-    
-    def create(self, request, *args, **kwargs):
+
+    @action(detail=False, methods=['post'], permission_classes=[AllowAny])
+    def signup(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return Response({'detail': 'You are already signed in.'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
@@ -33,15 +41,39 @@ class UserViewSet(viewsets.ModelViewSet):
         response_data['token'] = token.key
         return Response(response_data, status=status.HTTP_201_CREATED, headers=headers)
 
-    def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', True)  # Set partial to True
-        instance = self.get_object()
-        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+    @action(detail=True, methods=['put'], permission_classes=[IsAuthenticated])
+    def update_user(self, request, pk=None):
+        user = self.get_object()  # Obtiene el usuario según el ID en la URL
+        serializer = self.get_serializer(user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)
 
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        self.perform_destroy(instance)
+    @action(detail=True, methods=['delete'], permission_classes=[IsAuthenticated])
+    def delete_user(self, request, pk=None):
+        user = self.get_object()
+        self.perform_destroy(user)
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @action(detail=False, methods=['post'], permission_classes=[AllowAny])
+    def signin(self, request):
+        if request.user.is_authenticated:
+            return Response({'detail': 'You are already signed in.'}, status=status.HTTP_400_BAD_REQUEST)
+        email = request.data.get('email')
+        password = request.data.get('password')
+        user = authenticate(request, email=email, password=password)
+        if user is not None:
+            token, created = Token.objects.get_or_create(user=user)
+            serializer = self.get_serializer(user)
+            response_data = serializer.data
+            response_data['token'] = token.key
+            return Response(response_data, status=status.HTTP_200_OK)
+        return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
+
+    @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
+    def signout(self, request):
+        try:
+            request.user.auth_token.delete()
+            return Response(status=status.HTTP_200_OK)
+        except AttributeError:
+            raise AuthenticationFailed('Invalid token.')
