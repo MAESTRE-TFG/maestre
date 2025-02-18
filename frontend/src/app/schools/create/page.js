@@ -4,12 +4,24 @@ import { useRouter } from "next/navigation";
 import { CreateSchoolForm } from "@/components/school-create-form";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function CreateSchool() {
   const router = useRouter();
   const { theme } = useTheme();
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+      const user = localStorage.getItem('user');
+      if (!user) {
+        localStorage.removeItem('authToken');
+      }
+      const token = localStorage.getItem('authToken');
+      if (!token) {
+        router.push('/signup');
+        return;
+      }
+    }, [router]);
 
   const handleSubmit = async (formData) => {
     try {

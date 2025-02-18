@@ -73,6 +73,16 @@ export function CreateSchoolForm({ onSubmit }) {
     onSubmit(formDataCopy);
   };
 
+  const handleSelectStage = (etapa) => {
+    setFormData((prev) => {
+      const updatedStages = prev.stages.includes(etapa)
+        ? prev.stages.filter((e) => e !== etapa) // Desmarcar si ya está seleccionada
+        : [...prev.stages, etapa]; // Agregar si no está seleccionada
+
+      return { ...prev, stages: updatedStages };
+    });
+  };
+
   return (
     <div
       className={cn(
@@ -133,22 +143,28 @@ export function CreateSchoolForm({ onSubmit }) {
           />
         </LabelInputContainer>
         <LabelInputContainer className="mb-8">
-          <Label htmlFor="stages">Stages</Label>
-          <select
-            id="stages"
-            name="stages"
-            multiple
-            required
-            value={formData.stages}
-            onChange={handleChange}
-            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          >
+          <Label>Stages</Label>
+          <div className="flex flex-wrap gap-2">
             {ETAPAS.map((etapa) => (
-              <option key={etapa} value={etapa}>
+              <button
+                key={etapa}
+                type="button"
+                onClick={() => handleSelectStage(etapa)}
+                className={cn(
+                  "px-4 py-2 rounded-lg transition-all border",
+                  theme === "dark" ? 
+                  formData.stages.includes(etapa)
+                    ? "bg-white text-dark shadow-md"
+                    : "bg-zinc-800 border-transparent text-white hover:bg-gray-100 hover:text-zinc-900"
+                  : formData.stages.includes(etapa)
+                    ? "bg-black text-white shadow-md"
+                    : "bg-white border-gray-300 text-zinc-700 hover:bg-zinc-800 hover:text-gray-100",
+                )}
+              >
                 {etapa}
-              </option>
+              </button>
             ))}
-          </select>
+          </div>
         </LabelInputContainer>
 
         <button
@@ -156,7 +172,7 @@ export function CreateSchoolForm({ onSubmit }) {
             "relative group/btn block w-full rounded-md h-10 font-medium border border-transparent",
             theme === "dark"
               ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
+              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border"
           )}
           type="submit"
         >

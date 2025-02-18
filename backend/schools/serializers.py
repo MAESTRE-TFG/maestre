@@ -9,8 +9,6 @@ class SchoolSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         stages = validated_data.pop('stages')
-        # Convertir una lista de cadenas en una cadena separada por comas
-        stages = ", ".join(stages)
         validated_data['stages'] = stages
         school = School.objects.create(**validated_data)
         return school
