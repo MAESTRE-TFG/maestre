@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'api',  # Add this
     'corsheaders',  # Add this
     'users',
+    'schools',
 ]
 
 MIDDLEWARE = [

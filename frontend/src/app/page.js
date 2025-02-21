@@ -11,6 +11,10 @@ const Home = () => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
+    const user = localStorage.getItem('user');
+    if (!user) {
+      localStorage.removeItem('authToken');
+    }
     const token = localStorage.getItem('authToken');
     if (!token) {
       router.push('/signup');
