@@ -12,7 +12,10 @@ export function SignupForm({ onSubmit }) {
     email: "",
     password: "",
     name: "",
-    surname: ""
+    surname: "",
+    region: null,
+    city: null,
+    school: null,
   });
   const handleChange = (e) => {
     const { name, value } = e.target;

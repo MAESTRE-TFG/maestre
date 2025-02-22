@@ -8,10 +8,16 @@ from .serializers import SchoolSerializer
 from users.models import CustomUser
 
 class SchoolViewSet(viewsets.ModelViewSet):
-    queryset = School.objects.all()
     serializer_class = SchoolSerializer
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        queryset = School.objects.all()
+        city = self.request.query_params.get('city')
+        if city:
+            queryset = queryset.filter(city=city)
+        return queryset
 
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
