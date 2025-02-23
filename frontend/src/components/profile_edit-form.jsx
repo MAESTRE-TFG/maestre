@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
+import { useRouter } from "next/navigation";
 
 const COMUNIDADES = [
   "Andalucía",
@@ -28,6 +29,7 @@ const COMUNIDADES = [
 
 export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCancel, schools }) {
   const { theme } = useTheme();
+  const router = useRouter();
 
   return (
     <div className={cn("max-w-24xl w-full overflow-y-auto mx-auto rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white")}>
@@ -79,7 +81,7 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
             <Label htmlFor="city">Your City</Label>
             <Input id="city" name="city" placeholder="Sevilla" type="text" required value={formData.city} onChange={handleChange} />
           </LabelInputContainer>
-          <LabelInputContainer className="mb-8">
+          <LabelInputContainer className="mb-5">
             <Label htmlFor="school">Your School</Label>
             <select
               id="school"
@@ -99,6 +101,19 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
               ))}
             </select>
           </LabelInputContainer>
+          <p className={cn("text-sm mb-2", theme === "dark" ? "text-white" : "text-black")}>
+            ¿Can't find your school?
+          </p>
+          <button
+            onClick={() => router.push("/school_create")}
+            className={cn("relative group/btn block w-full rounded-md h-10 font-medium border border-transparent", 
+              theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
+              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
+            )}
+            type="submit">
+            Create one &rarr;
+          <BottomGradient />
+        </button>
         </div>
       </div>
         <button

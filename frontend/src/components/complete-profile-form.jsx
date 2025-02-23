@@ -61,7 +61,7 @@ export function CompleteProfileForm({ formData, handleChange, handleComplete, sc
           <Label htmlFor="city">Your City</Label>
           <Input id="city" name="city" placeholder="Sevilla" type="text" required value={formData.city} onChange={handleChange} />
         </LabelInputContainer>
-        <LabelInputContainer className="mb-8">
+        <LabelInputContainer className="mb-4">
           <Label htmlFor="school">Your School</Label>
           <select
             id="school"
@@ -81,6 +81,19 @@ export function CompleteProfileForm({ formData, handleChange, handleComplete, sc
             ))}
           </select>
         </LabelInputContainer>
+        <p className={cn("text-sm mb-2", theme === "dark" ? "text-white" : "text-black")}>
+          ¿Can't find your school?
+        </p>
+        <button
+          onClick={() => router.push("/school_create")}
+          className={cn("relative group/btn block w-full rounded-md h-10 font-medium border border-transparent mb-8", 
+            theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
+            : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
+          )}
+          type="submit">
+            Create one &rarr;
+          <BottomGradient />
+        </button>
 
         <div className="flex gap-2">
           <button

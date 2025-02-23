@@ -112,7 +112,7 @@ export function SidebarDemo({ ContentComponent }) {
       )}
     >
       <Sidebar open={open} setOpen={setOpen} className={cn(open ? "w-84" : "w-60")}>
-        <SidebarBody className="justify-between gap-10">
+        <SidebarBody className="justify-between gap-10 bg-neutral-900">
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             {open ? <Logo /> : <LogoIcon />}
             <div className="mt-8 flex flex-col gap-2">

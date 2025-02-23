@@ -10,18 +10,30 @@ export default function CreateSchool() {
   const router = useRouter();
   const { theme } = useTheme();
   const [error, setError] = useState(null);
+  const [editMode, setEditMode] = useState(false);
+
 
   useEffect(() => {
-      const user = localStorage.getItem('user');
-      if (!user) {
-        localStorage.removeItem('authToken');
+    const user = localStorage.getItem('user');
+    if (!user) {
+      localStorage.removeItem('authToken');
+    }
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      router.push('/signup');
+      return;
+    }
+  }, [router]);
+
+  useEffect(() => {
+    const user = localStorage.getItem("user");
+    if (user) {
+      const parsedUser = JSON.parse(user);
+      if (parsedUser.region && parsedUser.city && parsedUser.school){
+        setEditMode(true);
       }
-      const token = localStorage.getItem('authToken');
-      if (!token) {
-        router.push('/signup');
-        return;
-      }
-    }, [router]);
+    }
+  }, []);
 
   const handleSubmit = async (formData) => {
     try {
@@ -37,7 +49,12 @@ export default function CreateSchool() {
 
       if (response.ok) {
         const data = await response.json();
-        router.push("/");
+        if (editMode) {
+          router.push("/profile_edit?editMode=true");
+        }
+        else {
+          router.push("/complete_profile");
+        }
       } else {
         const data = await response.json();
         setError(data.detail || "Failed to create school");

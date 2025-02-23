@@ -1,10 +1,11 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const COMUNIDADES = [
   "Andalucía",
@@ -38,6 +39,7 @@ const ETAPAS = [
 
 export function CreateSchoolForm({ onSubmit }) {
   const { theme } = useTheme();
+  const router = useRouter();
   const user = JSON.stringify(localStorage.getItem("user"));
   const [formData, setFormData] = React.useState({
     name: "",
@@ -111,7 +113,7 @@ export function CreateSchoolForm({ onSubmit }) {
           />
         </LabelInputContainer>
         <LabelInputContainer className="mb-8">
-          <Label htmlFor="community">Community</Label>
+          <Label htmlFor="community">Region</Label>
           <select
             id="community"
             name="community"

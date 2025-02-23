@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect, useMemo, useCallback, use } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { useTheme } from "@/components/theme-provider";
@@ -30,6 +30,14 @@ const ProfileEdit = () => {
   const [schools, setSchools] = useState([]);
   const [city, setCity] = useState("");
   const [school, setSchool] = useState("");
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    // Si existe el parámetro editMode=true, activamos el modo edición
+    if (searchParams.get("editMode") === "true") {
+      setEditMode(true);
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     // useEffect se ejecuta solo en el cliente
@@ -198,18 +206,18 @@ const ProfileEdit = () => {
         `}</style>
       </div>
       <br />
-      <div className="sm:mx-auto sm:w-full sm:max-w-full" style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+      <div className="xl:mx-auto xl:w-full xl:max-w-full" style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
         {error && <p className="text-red-500">{error}</p>}
         {editMode ? (
           memoizedForm
         ) : (
           <div
             className={cn(
-              "max-w-lg w-full justify-center items-center mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input",
+              "max-w-7xl w-full justify-center items-center mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input",
               theme === "dark" ? "bg-black" : "bg-white"
             )}
           >
-            <div className="my-8">
+            <div className="my-2">
             <div className="flex flex-col md:flex-row gap-6">
               <div className="flex-1 border border-gray-300 rounded-md p-4">
                 <LabelInputContainer className="mb-4">
@@ -249,7 +257,8 @@ const ProfileEdit = () => {
                   </p>
                 </LabelInputContainer>
               </div>
-              <div className="flex-1 border border-gray-300 rounded-md p-4">
+              {user.region && user.city && user.school && (
+                <div className="flex-1 border border-gray-300 rounded-md p-4">
                 <LabelInputContainer className="mb-10">
                   <Label>Region</Label>
                   <p
@@ -278,39 +287,38 @@ const ProfileEdit = () => {
                   </p>
                 </LabelInputContainer>
               </div>
+              )}
             </div>
             </div>
             <br />
-            <div className="flex gap-2">
+            <button
+              onClick={() => setEditMode(true)}
+              className={cn(
+                "relative group/btn block w-full rounded-md h-10 font-medium border border-transparent mb-4",
+                theme === "dark"
+                  ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+                  : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
+              )}
+              type="submit"
+            >
+              Edit &rarr;
+              <BottomGradient />
+            </button>
+            {isProfileCompleted === false && (
               <button
-                onClick={() => setEditMode(true)}
+                onClick={() => router.push('/complete_profile')}
                 className={cn(
                   "relative group/btn block w-full rounded-md h-10 font-medium border border-transparent",
                   theme === "dark"
-                    ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-                    : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
+                    ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900"
+                    : "text-black bg-gradient-to-br from-white to-neutral-100 border border-blue-300"
                 )}
-                type="submit"
+                type="button"
               >
-                Edit &rarr;
+                Complete Profile &rarr;
                 <BottomGradient />
               </button>
-              {isProfileCompleted === false && (
-                <button
-                  onClick={() => router.push('/complete_profile')}
-                  className={cn(
-                    "relative group/btn block w-full rounded-md h-10 font-medium border border-transparent",
-                    theme === "dark"
-                      ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900"
-                      : "text-black bg-gradient-to-br from-white to-neutral-100 border border-blue-300"
-                  )}
-                  type="button"
-                >
-                  Complete Profile &rarr;
-                  <BottomGradient />
-                </button>
-              )}
-            </div>
+            )}
             <button
               onClick={handleDelete}
               className={cn(
