@@ -10,6 +10,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from .models import CustomUser
 from .serializers import CustomUserSerializer
 
+
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
     # Todas los conjuntos de vistas de Django Rest Framework requieren un queryset y un serializador
@@ -73,7 +74,10 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
     def signout(self, request):
         try:
-            request.user.auth_token.delete()
-            return Response(status=status.HTTP_200_OK)
-        except AttributeError:
-            raise AuthenticationFailed('Invalid token.')
+            token = request.user.auth_token
+            if token:
+                token.delete()
+            return Response({"message": "Logged out successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+        

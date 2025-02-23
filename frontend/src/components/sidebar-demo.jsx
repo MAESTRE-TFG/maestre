@@ -37,7 +37,7 @@ export function SidebarDemo({ ContentComponent }) {
       router.push("/signin");
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        console.error('Invalid token:', error.response.data.detail);
+        console.error('Invalid token:', error.response.data ? error.response.data.detail : 'No detail available');
         localStorage.removeItem('authToken');
         localStorage.removeItem('user');
         router.push("/signin");
