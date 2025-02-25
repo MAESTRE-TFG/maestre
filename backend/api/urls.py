@@ -8,6 +8,7 @@ router = DefaultRouter()
 router.register(r'items', ItemViewSet)
 router.register(r'users', UserViewSet)
 router.register(r'schools', SchoolViewSet, basename='schools')
+router.register(r'students', StudentViewSet, basename='students')
 
 urlpatterns = [
     path('', include(router.urls)),
