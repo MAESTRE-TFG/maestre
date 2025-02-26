@@ -5,17 +5,17 @@ import { createContext, useContext, useEffect, useState } from "react"
 const ThemeContext = createContext({})
 
 export function ThemeProvider({ children, attribute = "class", defaultTheme = "system" }) {
-  const [theme, setTheme] = useState(null) // Inicializar como null para evitar inconsistencias
-  const [mounted, setMounted] = useState(false) // Estado para asegurarnos de que el cliente está listo
+  const [theme, setTheme] = useState(null)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
     const storedTheme = localStorage.getItem("theme") || defaultTheme
     setTheme(storedTheme)
-    setMounted(true) // Marcamos que el cliente ya se ha montado
+    setMounted(true)
   }, [])
 
   useEffect(() => {
-    if (!mounted || !theme) return // Evita cambios antes de que el estado esté definido
+    if (!mounted || !theme) return
 
     const root = window.document.documentElement
     root.classList.remove("light", "dark")
@@ -26,7 +26,7 @@ export function ThemeProvider({ children, attribute = "class", defaultTheme = "s
   }, [theme, mounted])
 
   if (!mounted) {
-    return <div className="invisible" /> // Evita renderizar contenido hasta que el cliente esté listo
+    return <div className="invisible" />
   }
 
   return (

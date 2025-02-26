@@ -5,13 +5,13 @@ import { CreateSchoolForm } from "@/components/school-create-form";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
+import { SidebarDemo } from "@/components/sidebar-demo"; // Import SidebarDemo
 
 export default function CreateSchool() {
   const router = useRouter();
   const { theme } = useTheme();
   const [error, setError] = useState(null);
   const [editMode, setEditMode] = useState(false);
-
 
   useEffect(() => {
     const user = localStorage.getItem('user');
@@ -65,23 +65,31 @@ export default function CreateSchool() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h1
-          className={cn(
-            "mt-6 text-center text-3xl font-extrabold text-zinc-100",
-            theme === "dark" ? "text-white" : "text-dark"
-          )}
-        >
-          Create your school for other teachers to join too
-        </h1>
-        <style jsx global>{`
-          @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
-        `}</style>
+    <SidebarDemo ContentComponent={() => (
+      <div className="relative flex flex-col justify-center items-center py-12 sm:px-8 lg:px-8 overflow-auto">
+        <br></br>
+        <br></br>
+        <br></br>
+        <div className="relative z-10 my-12"></div>
+        <br></br>
+        <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-full">
+          <h1
+            className={cn(
+              "mt-6 text-center text-3xl font-extrabold text-zinc-100",
+              theme === "dark" ? "text-white" : "text-dark"
+            )}
+          >
+            Create your school for other teachers to join too
+          </h1>
+          <style jsx global>{`
+            @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
+          `}</style>
+        </div>
+        <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+          <CreateSchoolForm onSubmit={handleSubmit} />
+        </div>
+        <div className="my-12"></div>
       </div>
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <CreateSchoolForm onSubmit={handleSubmit} />
-      </div>
-    </div>
+    )} />
   );
 }

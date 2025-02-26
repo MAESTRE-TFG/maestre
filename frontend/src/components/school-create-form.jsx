@@ -101,7 +101,7 @@ export function CreateSchoolForm({ onSubmit }) {
         style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
       >
         <LabelInputContainer className="mb-8">
-          <Label htmlFor="name">Name</Label>
+          <Label htmlFor="name">🏫 Name</Label>
           <Input
             id="name"
             name="name"
@@ -113,7 +113,7 @@ export function CreateSchoolForm({ onSubmit }) {
           />
         </LabelInputContainer>
         <LabelInputContainer className="mb-8">
-          <Label htmlFor="community">Region</Label>
+          <Label htmlFor="community">🌍 Region</Label>
           <select
             id="community"
             name="community"
@@ -133,7 +133,7 @@ export function CreateSchoolForm({ onSubmit }) {
           </select>
         </LabelInputContainer>
         <LabelInputContainer className="mb-8">
-          <Label htmlFor="city">City</Label>
+          <Label htmlFor="city">🏙️ City</Label>
           <Input
             id="city"
             name="city"
@@ -145,7 +145,7 @@ export function CreateSchoolForm({ onSubmit }) {
           />
         </LabelInputContainer>
         <LabelInputContainer className="mb-8">
-          <Label>Stages</Label>
+          <Label>📆 Stages</Label>
           <div className="flex flex-wrap gap-2">
             {ETAPAS.map((etapa) => (
               <button
@@ -194,7 +194,6 @@ export function CreateSchoolForm({ onSubmit }) {
           <BottomGradient isCancel />
         </button>
 
-        <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
       </form>
     </div>
   );
@@ -212,7 +211,14 @@ const BottomGradient = ({ isCancel }) => {
 const LabelInputContainer = ({ children, className }) => {
   return (
     <div className={cn("flex flex-col space-y-2 w-full", className)}>
-      {children}
+      {React.Children.map(children, child => {
+        if (child.type === Label) {
+          return React.cloneElement(child, {
+            style: { ...child.props.style, fontSize: "1.25rem" } // Increase font size
+          });
+        }
+        return child;
+      })}
     </div>
   );
 };

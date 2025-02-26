@@ -202,10 +202,39 @@ const ProfileEdit = () => {
   if (!isClient) return null;
 
   return (
-    <div className="flex flex-col justify-center items-center py-12 sm:px-8 lg:px-8 overflow-auto">
-      <div className="my-12"></div>
+    <div className="relative flex flex-col justify-center items-center py-12 sm:px-8 lg:px-8 overflow-auto">
+      {/* Background Images */}
+      {theme === "dark" ? (
+        <>
+          <img
+            src="/static/bubbles black/1.svg"
+            alt="Bubble"
+            className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
+          />
+          <img
+            src="/static/bubbles black/2.svg"
+            alt="Bubble"
+            className="absolute bottom-0 right-0 opacity-50 z-0"
+          />
+        </>
+      ) : (
+        <>
+          <img
+            src="/static/bubbles white/1.svg"
+            alt="Bubble"
+            className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
+          />
+          <img
+            src="/static/bubbles white/2.svg"
+            alt="Bubble"
+            className="absolute bottom-0 right-0 opacity-50 z-0"
+          />
+        </>
+      )}
+      {/* End of Background Images */}
+      <div className="relative z-10 my-12"></div>
       <br></br>
-      <div className="sm:mx-auto sm:w-full sm:max-w-full">
+      <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-full">
         <h1
           className={cn(
             "mt-6 text-center text-3xl font-extrabold text-zinc-100",
@@ -231,7 +260,7 @@ const ProfileEdit = () => {
         `}</style>
       </div>
       <br />
-      <div className="xl:mx-auto xl:w-full xl:max-w-full">
+      <div className="relative z-10 xl:mx-auto xl:w-full xl:max-w-full">
         {error && <p className="text-red-500">{error}</p>}
         {editMode ? (
           memoizedForm
