@@ -8,6 +8,7 @@ import { cn } from "@/lib/utils";
 import axios from "axios";
 import { ProfileEditForm } from "@/components/profile_edit-form";
 import { Label } from "@/components/ui/label";
+import { Modal } from "@/components/ui/modal"; // Import the Modal component
 
 const ProfileEdit = () => {
   const router = useRouter();
@@ -29,6 +30,8 @@ const ProfileEdit = () => {
   const [schools, setSchools] = useState([]);
   const [city, setCity] = useState("");
   const [school, setSchool] = useState("");
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [usernameInput, setUsernameInput] = useState("");
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -151,14 +154,7 @@ const ProfileEdit = () => {
   }, [formData, user?.id]);
 
   const handleDelete = useCallback(async () => {
-    const confirmationMessage = `¿Estás seguro de que deseas eliminar tu cuenta de MAESTRE? Esto eliminará también todos tus cursos y material subido a la plataforma. Esta acción NO se puede deshacer.\n\nPara borrar tu cuenta, escribe antes tu nombre de usuario (${user.username}):`;
-    const userInput = prompt(confirmationMessage);
-
-    if (userInput === null) {
-      return; // User cancelled the prompt
-    }
-
-    if (userInput === user.username) {
+    if (usernameInput === user.username) {
       try {
         await axios.delete(
           `http://localhost:8000/api/users/${user.id}/delete/`,
@@ -177,7 +173,16 @@ const ProfileEdit = () => {
     } else {
       alert("Username does not match. Account deletion cancelled.");
     }
-  }, [router, user?.id, user?.username]);
+  }, [router, user?.id, user?.username, usernameInput]);
+
+  const openDeleteModal = () => {
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setUsernameInput("");
+  };
 
   const memoizedForm = useMemo(
     () => (
@@ -197,8 +202,10 @@ const ProfileEdit = () => {
   if (!isClient) return null;
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-6xl">
+    <div className="flex flex-col justify-center items-center py-12 sm:px-8 lg:px-8 overflow-auto">
+      <div className="my-12"></div>
+      <br></br>
+      <div className="sm:mx-auto sm:w-full sm:max-w-full">
         <h1
           className={cn(
             "mt-6 text-center text-3xl font-extrabold text-zinc-100",
@@ -224,14 +231,14 @@ const ProfileEdit = () => {
         `}</style>
       </div>
       <br />
-      <div className="xl:mx-auto xl:w-full xl:max-w-full" style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+      <div className="xl:mx-auto xl:w-full xl:max-w-full">
         {error && <p className="text-red-500">{error}</p>}
         {editMode ? (
           memoizedForm
         ) : (
           <div
             className={cn(
-              "max-w-7xl w-full justify-center items-center mx-auto rounded-md md:rounded-2xl p-4 md:p-8 shadow-input",
+              "max-w-screen-xl w-full justify-center items-center mx-auto rounded-md md:rounded-2xl p-4 md:p-8 shadow-input",
               theme === "dark" ? "bg-black" : "bg-white"
             )}
           >
@@ -239,37 +246,33 @@ const ProfileEdit = () => {
             <div className="flex flex-col md:flex-row gap-6">
               <div className="flex-1 border border-gray-300 rounded-md p-4">
                 <LabelInputContainer className="mb-4">
-                  <Label>Username</Label>
+                  <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}>👤 Username</Label>
                   <p
                     className={cn(theme === "dark" ? "text-white" : "text-black")}
-                    style={{ fontFamily: "inherit" }}
                   >
                     {user?.username}
                   </p>
                 </LabelInputContainer>
                 <LabelInputContainer className="mb-4">
-                  <Label>Email Address</Label>
+                  <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}>📧 Email Address</Label>
                   <p
                     className={cn(theme === "dark" ? "text-white" : "text-black")}
-                    style={{ fontFamily: "inherit" }}
                   >
                     {user?.email}
                   </p>
                 </LabelInputContainer>
                 <LabelInputContainer className="mb-4">
-                  <Label>Name</Label>
+                  <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}>📛 Name</Label>
                   <p
                     className={cn(theme === "dark" ? "text-white" : "text-black")}
-                    style={{ fontFamily: "inherit" }}
                   >
                     {user?.name}
                   </p>
                 </LabelInputContainer>
                 <LabelInputContainer className="mb-4">
-                  <Label>Surname</Label>
+                  <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}>📝 Surname</Label>
                   <p
                     className={cn(theme === "dark" ? "text-white" : "text-black")}
-                    style={{ fontFamily: "inherit" }}
                   >
                     {user?.surname}
                   </p>
@@ -278,28 +281,25 @@ const ProfileEdit = () => {
               {user.region && user.city && user.school && (
                 <div className="flex-1 border border-gray-300 rounded-md p-4">
                 <LabelInputContainer className="mb-10">
-                  <Label>Region</Label>
+                  <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}>🌍 Region</Label>
                   <p
                     className={cn(theme === "dark" ? "text-white" : "text-black")}
-                    style={{ fontFamily: "inherit" }}
                   >
                     {user?.region}
                   </p>
                 </LabelInputContainer>
                 <LabelInputContainer className="mb-10">
-                  <Label>City</Label>
+                  <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}>🏙️ City</Label>
                   <p
                     className={cn(theme === "dark" ? "text-white" : "text-black")}
-                    style={{ fontFamily: "inherit" }}
                   >
                     {user?.city}
                   </p>
                 </LabelInputContainer>
                 <LabelInputContainer className="mb-4">
-                  <Label>School</Label>
+                  <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}>🏫 School</Label>
                   <p
                     className={cn(theme === "dark" ? "text-white" : "text-black")}
-                    style={{ fontFamily: "inherit" }}
                   >
                     {school?.name}
                   </p>
@@ -308,7 +308,7 @@ const ProfileEdit = () => {
               )}
             </div>
             </div>
-            <br />
+            <br/>
             <button
               onClick={() => setEditMode(true)}
               className={cn(
@@ -318,6 +318,7 @@ const ProfileEdit = () => {
                   : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
               )}
               type="submit"
+              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             >
               Edit &rarr;
               <BottomGradient />
@@ -332,13 +333,14 @@ const ProfileEdit = () => {
                     : "text-black bg-gradient-to-br from-white to-neutral-100 border border-green-300"
                 )}
                 type="button"
+                style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
               >
                 Complete Profile &rarr;
                 <BottomGradient />
               </button>
             )}
             <button
-              onClick={handleDelete}
+              onClick={openDeleteModal}
               className={cn(
                 "relative group/btn block w-full mx-auto rounded-md h-10 font-medium border border-transparent mt-4",
                 theme === "dark"
@@ -346,13 +348,58 @@ const ProfileEdit = () => {
                   : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-red-300"
               )}
               type="submit"
+              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             >
               Delete Account
               <BottomGradient isCancel />
             </button>
           </div>
         )}
+        <br />
       </div>
+      <Modal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} title="Delete Account">
+        <div className="p-4">
+          <h2 className="text-lg font-bold mb-4"
+            style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}
+          >
+            Delete Account</h2>
+          <p className="mb-4">
+            ¿Estás seguro de que deseas eliminar tu cuenta de MAESTRE? Esto eliminará también todos tus cursos y material subido a la plataforma. Esta acción NO se puede deshacer.
+          </p>
+          <p className="mb-4">
+            Para borrar tu cuenta, escribe antes tu nombre de usuario ({user.username}):
+          </p>
+          <input
+            type="text"
+            value={usernameInput}
+            onChange={(e) => setUsernameInput(e.target.value)}
+            className={cn(
+              "relative group/btn block w-full mx-auto rounded-md h-10 font-medium border border-orange-500 mt-4",
+              theme === "dark"
+                ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+                : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]"
+            )}
+          />
+          <br></br>
+          <div className="flex justify-end">
+            <button
+              onClick={closeDeleteModal}
+              className="mr-2 px-4 py-2 bg-gray-300 rounded-md"
+              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleDelete}
+              className="px-4 py-2 bg-red-500 text-white rounded-md"
+              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </Modal>
+      <div className="my-12"></div>
     </div>
   );
 }

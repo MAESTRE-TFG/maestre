@@ -37,7 +37,7 @@ export function SidebarDemo({ ContentComponent }) {
       router.push("/signin");
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        console.error('Invalid token:', error.response.data ? error.response.data.detail : 'No detail available');
+        console.error('Invalid token:', error.response.data && error.response.data.detail ? error.response.data.detail : 'No detail available');
         localStorage.removeItem('authToken');
         localStorage.removeItem('user');
         router.push("/signin");
@@ -105,7 +105,7 @@ export function SidebarDemo({ ContentComponent }) {
     <div
       className={cn(
         "rounded-md flex flex-col md:flex-row w-full flex-1 mx-auto border overflow-hidden",
-        "h-screen",
+        "h-screen overflow-y-auto",
         theme === "dark"
           ? "bg-neutral-800 border-neutral-700"
           : "bg-gray-100 border-neutral-200"
@@ -139,7 +139,7 @@ export function SidebarDemo({ ContentComponent }) {
           </div>
         </SidebarBody>
       </Sidebar>
-      <div className="flex-1 flex justify-center items-center p-6">
+      <div className="flex-1 flex justify-center items-center p-6 overflow-y-auto">
         <ContentComponent />
       </div>
     </div>

@@ -6,13 +6,11 @@ import { SidebarDemo } from "@/components/sidebar-demo";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import axios from "axios";
-import { ProfileEditForm } from "@/components/profile_edit-form";
 import { CompleteProfileForm } from "@/components/complete-profile-form";
 
 const ProfileEdit = () => {
   const router = useRouter();
   const { theme } = useTheme();
-  // Inicializamos sin usar window en el constructor
   const [user, setUser] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [isClient, setIsClient] = useState(false);
@@ -23,15 +21,13 @@ const ProfileEdit = () => {
     surname: "",
     region: "",
     city: "",
-    school: ""   // Se inicializa como string vacío
+    school: ""
   });
   const [error, setError] = useState(null);
-  const [isProfileCompleted, setIsProfileCompleted] = useState(null);
   const [schools, setSchools] = useState([]);
   const [city, setCity] = useState("");
 
   useEffect(() => {
-    // useEffect se ejecuta solo en el cliente
     setIsClient(true);
     const storedUser = localStorage.getItem("user");
     const storedFormData = localStorage.getItem("formData");
@@ -40,16 +36,24 @@ const ProfileEdit = () => {
       setUser(parsedUser);
       setFormData((prevData) => ({
         ...prevData,
-        username: parsedUser.username,
-        email: parsedUser.email,
-        name: parsedUser.name,
-        surname: parsedUser.surname,
+        username: parsedUser.username || "",
+        email: parsedUser.email || "",
+        name: parsedUser.name || "Default Name", // Set default value if name is empty
+        surname: parsedUser.surname || "Default Surname", // Set default value if surname is empty
       }));
     } else {
       router.push("/signin");
     }
     if (storedFormData) {
-      setFormData(JSON.parse(storedFormData));
+      const parsedFormData = JSON.parse(storedFormData);
+      setFormData((prevData) => ({
+        ...prevData,
+        ...parsedFormData,
+        name: parsedFormData.name || "Default Name", // Set default value if name is empty
+        surname: parsedFormData.surname || "Default Surname", // Set default value if surname is empty
+      }));
+      setCity(parsedFormData.city);
+      console.log("Parsed form data:", parsedFormData);
     }
   }, [router]);
 
@@ -64,6 +68,7 @@ const ProfileEdit = () => {
   }, [formData]);
 
   const fetchSchools = useCallback(async () => {
+    if (!city) return; 
     try {
       const response = await axios.get(`http://localhost:8000/api/schools/?city=${city}`, {
         headers: {
@@ -72,21 +77,36 @@ const ProfileEdit = () => {
       });
       setSchools(response.data);
     } catch (err) {
-      setError("Error fetching schools");
+      console.error("Error fetching schools:", err); // Log the error for debugging
+      setError("Error fetching schools. Please try again later.");
     }
   }, [city]);
 
   useEffect(() => {
-    if (city) {
-      fetchSchools();
-    }
-  }, [city]);
-
-  useEffect(() => {
-    if (city) {
-      fetchSchools();
-    }
+    fetchSchools();
   }, [city, fetchSchools]);
+
+  const handleComplete = useCallback(async () => {
+    try {
+      console.log("Submitting form data:", formData);
+      const response = await axios.put(
+        `http://localhost:8000/api/users/${user.id}/update/`,
+        formData,
+        {
+          headers: {
+            Authorization: `Token ${localStorage.getItem("authToken")}`,
+          },
+        }
+      );
+      localStorage.setItem("user", JSON.stringify(response.data));
+      localStorage.removeItem("formData");
+      setUser (response.data);
+      setEditMode(false);
+    } catch (err) {
+      console.error(err); // Log the error for debugging
+      setError("Update failed");
+    }
+  }, [formData, user?.id]);
 
   useEffect(() => {
     const handleRouteChange = () => {
@@ -107,32 +127,6 @@ const ProfileEdit = () => {
     }
   }, [city, router.events, fetchSchools]);
 
-  const handleComplete = useCallback(async () => {
-    try {
-      const response = await axios.put(
-        `http://localhost:8000/api/users/${user.id}/update/`,
-        {
-          ...formData,
-          region: formData.region,
-          city: formData.city,
-          school: formData.school,
-        },
-        {
-          headers: {
-            Authorization: `Token ${localStorage.getItem("authToken")}`,
-          },
-        }
-      );
-      console.log(formData);
-      localStorage.setItem("user", JSON.stringify(response.data));
-      localStorage.removeItem("formData");
-      setUser(response.data);
-      setEditMode(false);
-    } catch (err) {
-      setError("Update failed");
-    }
-  }, [formData, user?.id]);
-
   const handleCreateSchool = useCallback(() => {
     localStorage.setItem("formData", JSON.stringify(formData));
     router.push("/school_create");
@@ -141,7 +135,9 @@ const ProfileEdit = () => {
   if (!isClient) return null;
 
   return (
-    <div className="min-h-screen flex flex-col justify-center items-center py-12 sm:px-6 lg:px-8">
+    <div className="flex flex-col justify-center items-center py-12 sm:px-8 lg:px-8 overflow-auto">
+      <div className="my-12"></div>
+      <div className="sm:mx-auto sm:w-full sm:max-w-full"></div>
       <div className="sm:mx-auto sm:w-full sm:max-w-md rounded-md md:rounded-2xl">
         <h4
           className={cn(
@@ -156,47 +152,19 @@ const ProfileEdit = () => {
         `}</style>
       </div>
       <br />
+      {error && <div className="text-red-500">{error}</div>}
       <CompleteProfileForm 
         formData={formData}
         handleChange={handleChange}
         handleComplete={handleComplete}
-        handleCreateSchool={handleCreateSchool} // Pass the new handler
+        handleCreateSchool={handleCreateSchool}
         schools={schools}
+        error={error}
       />
     </div>
   );
 }
 
-const LabelInputContainer = ({ children, className }) => {
-  return (
-    <div className={cn("flex flex-col space-y-2 w-full", className)}>
-      {children}
-    </div>
-  );
-};
-
-const BottomGradient = ({ isCancel }) => {
-  return (
-    <>
-      <span
-        className={cn(
-          "group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0",
-          isCancel
-            ? "bg-gradient-to-r from-transparent via-orange-500 to-transparent"
-            : "bg-gradient-to-r from-transparent via-cyan-500 to-transparent"
-        )}
-      />
-      <span
-        className={cn(
-          "group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10",
-          isCancel
-            ? "bg-gradient-to-r from-transparent via-orange-500 to-transparent"
-            : "bg-gradient-to-r from-transparent via-indigo-500 to-transparent"
-        )}
-      />
-    </>
-  );
-};
 
 export default function Main() {
   return <SidebarDemo ContentComponent={ProfileEdit} />;

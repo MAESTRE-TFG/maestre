@@ -4,6 +4,7 @@ from rest_framework.test import APITestCase, APIClient
 from .models import CustomUser
 from rest_framework.authtoken.models import Token
 
+
 class UserTests(APITestCase):
     def setUp(self):
         self.user = CustomUser.objects.create_user(

@@ -32,34 +32,52 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
   const router = useRouter();
 
   return (
-    <div className={cn("max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white")}>
-      <style jsx global>{
-        `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');`
+    <div className={cn("max-w-4xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white")}>
+            <style jsx global>{
+        `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
+        select {
+          appearance: none;
+          background: ${theme === "dark" ? "#333" : "#fff"};
+          color: ${theme === "dark" ? "#fff" : "#000"};
+          border: 1px solid ${theme === "dark" ? "#555" : "#ccc"};
+          padding: 0.5rem;
+          border-radius: 0.375rem;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        select:focus {
+          outline: none;
+          border-color: ${theme === "dark" ? "#888" : "#007bff"};
+          box-shadow: 0 0 0 3px ${theme === "dark" ? "rgba(136, 136, 136, 0.5)" : "rgba(0, 123, 255, 0.25)"};
+        }
+        option {
+          background: ${theme === "dark" ? "#333" : "#fff"};
+          color: ${theme === "dark" ? "#fff" : "#000"};
+        }`
       }</style>
-      <form className="my-1" onSubmit={(e) => { e.preventDefault(); handleUpdate(); }} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+      <form className="my-1" onSubmit={(e) => { e.preventDefault(); handleUpdate(); }}>
       <div className="flex flex-col md:flex-row gap-6 mb-8">
-        <div className="flex-1 border border-gray-300 rounded-md p-4">
+        <div className="flex-1 md:w-1/2 border border-gray-300 rounded-md p-4">
           <LabelInputContainer className="mb-4">
-            <Label htmlFor="username">Username</Label>
+            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="username">👤 Username</Label>
             <Input id="username" name="username" placeholder="Username" type="text" required value={formData.username || ""} onChange={handleChange} />
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
-            <Label htmlFor="email">Email Address</Label>
+            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="email">📧 Email Address</Label>
             <Input id="email" name="email" placeholder="Email" type="email" required value={formData.email || ""} onChange={handleChange} />
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
-            <Label htmlFor="name">Name</Label>
+            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="name">📛 Name</Label>
             <Input id="name" name="name" placeholder="Name" type="text" required value={formData.name || ""} onChange={handleChange} />
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
-            <Label htmlFor="surname">Surname</Label>
+            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="surname">📝 Surname</Label>
             <Input id="surname" name="surname" placeholder="Surname" type="text" required value={formData.surname || ""} onChange={handleChange} />
           </LabelInputContainer>
         </div>
         {isProfileComplete && (
-          <div className="flex-1 border border-gray-300 rounded-md p-4">
+          <div className="flex-1 md:w-1/2 border border-gray-300 rounded-md p-4">
             <LabelInputContainer className="mb-4">
-              <Label htmlFor="region">Your Region</Label>
+              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="region">🌍 Region</Label>
               <select
                 id="region"
                 name="region"
@@ -80,11 +98,11 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
               </select>
             </LabelInputContainer>
             <LabelInputContainer className="mb-4">
-              <Label htmlFor="city">Your City</Label>
+              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="city">🏙️ City</Label>
               <Input id="city" name="city" placeholder="Sevilla" type="text" required value={formData.city || ""} onChange={handleChange} disabled={!isProfileComplete} />
             </LabelInputContainer>
             <LabelInputContainer className="mb-5">
-              <Label htmlFor="school">Your School</Label>
+              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="school">🏫 School</Label>
               <select
                 id="school"
                 name="school"
@@ -104,7 +122,7 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                 ))}
               </select>
             </LabelInputContainer>
-            <p className={cn("text-sm mb-2", theme === "dark" ? "text-white" : "text-black")}>
+            <p style={{ fontFamily: "'Alfa Slab One', sans-serif" }} className={cn("text-sm mb-2", theme === "dark" ? "text-white" : "text-black")}>
               ¿Can't find your school?
             </p>
             <button
@@ -113,7 +131,9 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                 theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
                 : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
               )}
-              type="submit">
+              type="submit"
+              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+            >
               Create one &rarr;
             <BottomGradient />
           </button>
@@ -125,7 +145,9 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
             theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
             : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
           )}
-          type="submit">
+          type="submit"
+          style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+        >
           Update &rarr;
           <BottomGradient />
         </button>
@@ -137,6 +159,7 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
               : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-red-300"
           )}
           type="button"
+          style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
           onClick={handleCancel}>
            &larr; Cancel
           <BottomGradient isCancel />
@@ -161,7 +184,14 @@ const LabelInputContainer = ({
 }) => {
   return (
     <div className={cn("flex flex-col space-y-2 w-full", className)}>
-      {children}
+      {React.Children.map(children, child => {
+        if (child.type === Label) {
+          return React.cloneElement(child, {
+            style: { ...child.props.style, fontSize: "1.25rem" } // Increase font size
+          });
+        }
+        return child;
+      })}
     </div>
   );
 };

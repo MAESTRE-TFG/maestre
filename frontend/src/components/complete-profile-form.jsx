@@ -28,35 +28,45 @@ const COMUNIDADES = [
   "Melilla",
 ];
 
-export function CompleteProfileForm({ formData, handleChange, handleCancel = () => {}, handleComplete, handleCreateSchool, schools, fetchSchools }) {
+export function CompleteProfileForm({ formData, handleChange, handleComplete, handleCreateSchool, schools, error }) {
   const { theme } = useTheme();
   const router = useRouter();
 
-  useEffect(() => {
-    if (fetchSchools) {
-      fetchSchools(formData.city);
-    }
-  }, [fetchSchools, formData.city]);
-
-  React.useEffect(() => {
-    if (formData.city) {
-      console.log("Schools in selected city:", schools);
-    }
-  }, [formData.city, schools]);
-
   const handleCancelClick = () => {
-    handleCancel();
     router.back();
   };
 
   return (
     <div className={cn("max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white")}>
       <style jsx global>{
-        `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');`
+        `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
+        select {
+          appearance: none;
+          background: ${theme === "dark" ? "#333" : "#fff"};
+          color: ${theme === "dark" ? "#fff" : "#000"};
+          border: 1px solid ${theme === "dark" ? "#555" : "#ccc"};
+          padding: 0.5rem;
+          border-radius: 0.375rem;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        select:focus {
+          outline: none;
+          border-color: ${theme === "dark" ? "#888" : "#007bff"};
+          box-shadow: 0 0 0 3px ${theme === "dark" ? "rgba(136, 136, 136, 0.5)" : "rgba(0, 123, 255, 0.25)"};
+        }
+        option {
+          background: ${theme === "dark" ? "#333" : "#fff"};
+          color: ${theme === "dark" ? "#fff" : "#000"};
+        }`
       }</style>
+      {error && (
+        <div className="text-red-500 text-sm mb-4">
+          {error}
+        </div>
+      )}
       <form className="my-8" onSubmit={(e) => { e.preventDefault(); handleComplete(); }} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="region">Your Region</Label>
+        <LabelInputContainer className="mb-5">
+          <Label htmlFor="region">🌍 Region</Label>
           <select
             id="region"
             name="region"
@@ -76,11 +86,11 @@ export function CompleteProfileForm({ formData, handleChange, handleCancel = () 
           </select>
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="city">Your City</Label>
+          <Label htmlFor="city">🏙️ City</Label>
           <Input id="city" name="city" placeholder="Sevilla" type="text" required value={formData.city} onChange={handleChange} />
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="school">Your School</Label>
+          <Label htmlFor="school">🏫 School</Label>
           <select
             id="school"
             name="school"
@@ -102,7 +112,7 @@ export function CompleteProfileForm({ formData, handleChange, handleCancel = () 
         <p className={cn("text-sm mb-2", theme === "dark" ? "text-white" : "text-black")}>
           ¿Can't find your school?
         </p>
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col">
           <button
             onClick={handleCreateSchool}
             className={cn("relative group/btn block w-full rounded-md h-10 font-medium border border-transparent mb-8", 
@@ -135,8 +145,6 @@ export function CompleteProfileForm({ formData, handleChange, handleCancel = () 
              &larr; Cancel
             <BottomGradient isCancel />
           </button>
-
-          <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
         </div>
       </form>
     </div>
@@ -159,7 +167,14 @@ const LabelInputContainer = ({
 }) => {
   return (
     <div className={cn("flex flex-col space-y-2 w-full", className)}>
-      {children}
+      {React.Children.map(children, child => {
+        if (child.type === Label) {
+          return React.cloneElement(child, {
+            style: { ...child.props.style, fontSize: "1.25rem" } // Increase font size
+          });
+        }
+        return child;
+      })}
     </div>
   );
 };

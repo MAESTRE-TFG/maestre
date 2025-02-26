@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -6,7 +5,6 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action
 from django.contrib.auth import authenticate
-from rest_framework.exceptions import AuthenticationFailed
 from .models import CustomUser
 from .serializers import CustomUserSerializer
 
@@ -19,7 +17,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     # Para poder usar el token de autenticación, necesitamos añadirlo a la lista de clases de autenticación
     authentication_classes = [TokenAuthentication]
-    
+
     def get_permissions(self):
         if self.action in ['signup', 'signin']:
             permission_classes = [AllowAny]
@@ -80,4 +78,3 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({"message": "Logged out successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        

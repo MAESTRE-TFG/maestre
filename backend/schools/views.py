@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -6,6 +5,7 @@ from rest_framework.authentication import TokenAuthentication
 from .models import School
 from .serializers import SchoolSerializer
 from users.models import CustomUser
+
 
 class SchoolViewSet(viewsets.ModelViewSet):
     serializer_class = SchoolSerializer
@@ -32,10 +32,10 @@ class SchoolViewSet(viewsets.ModelViewSet):
             user.save()
         except CustomUser.DoesNotExist:
             return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
-        
+
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
-    
+
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', True)
         instance = self.get_object()
