@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -16,6 +16,7 @@ const COMUNIDADES = [
   "Castilla-La Mancha",
   "Castilla y León",
   "Cataluña",
+  "Comunidad Valenciana",
   "Extremadura",
   "Galicia",
   "Madrid",
@@ -27,9 +28,26 @@ const COMUNIDADES = [
   "Melilla",
 ];
 
-export function CompleteProfileForm({ formData, handleChange, handleComplete, schools }) {
+export function CompleteProfileForm({ formData, handleChange, handleCancel = () => {}, handleComplete, handleCreateSchool, schools, fetchSchools }) {
   const { theme } = useTheme();
   const router = useRouter();
+
+  useEffect(() => {
+    if (fetchSchools) {
+      fetchSchools(formData.city);
+    }
+  }, [fetchSchools, formData.city]);
+
+  React.useEffect(() => {
+    if (formData.city) {
+      console.log("Schools in selected city:", schools);
+    }
+  }, [formData.city, schools]);
+
+  const handleCancelClick = () => {
+    handleCancel();
+    router.back();
+  };
 
   return (
     <div className={cn("max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white")}>
@@ -84,18 +102,17 @@ export function CompleteProfileForm({ formData, handleChange, handleComplete, sc
         <p className={cn("text-sm mb-2", theme === "dark" ? "text-white" : "text-black")}>
           ¿Can't find your school?
         </p>
-        <button
-          onClick={() => router.push("/school_create")}
-          className={cn("relative group/btn block w-full rounded-md h-10 font-medium border border-transparent mb-8", 
-            theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
-            : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
-          )}
-          type="submit">
-            Create one &rarr;
-          <BottomGradient />
-        </button>
-
-        <div className="flex gap-2">
+        <div className="flex flex-col gap-4">
+          <button
+            onClick={handleCreateSchool}
+            className={cn("relative group/btn block w-full rounded-md h-10 font-medium border border-transparent mb-8", 
+              theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
+              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-green-300"
+            )}
+            type="button">
+              Create one
+            <BottomGradient />
+          </button>
           <button
             onClick={() => router.push("/profile_edit")}
             className={cn("relative group/btn block w-full rounded-md h-10 font-medium border border-transparent", 
@@ -107,26 +124,32 @@ export function CompleteProfileForm({ formData, handleChange, handleComplete, sc
             <BottomGradient />
           </button>
           <button
-            className={cn("relative group/btn block w-full rounded-md h-10 font-medium border border-transparent", 
-              theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
-              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
+            className={cn(
+              "relative group/btn block w-full mx-auto rounded-md h-10 font-medium border border-transparent mt-4",
+              theme === "dark"
+                ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+                : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-red-300"
             )}
-            onClick={() => router.push("/profile_edit")}
             type="button"
-          >
-            Return &rarr;
-            <BottomGradient />
+            onClick={handleCancelClick}>
+             &larr; Cancel
+            <BottomGradient isCancel />
           </button>
+
+          <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
         </div>
       </form>
     </div>
   );
 }
 
-const BottomGradient = () => {
+
+const BottomGradient = ({ isCancel }) => {
   return (<>
-    <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-    <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
+    <span className={cn("group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0", 
+      isCancel ? "bg-gradient-to-r from-transparent via-orange-500 to-transparent" : "bg-gradient-to-r from-transparent via-cyan-500 to-transparent")} />
+    <span className={cn("group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10", 
+      isCancel ? "bg-gradient-to-r from-transparent via-orange-500 to-transparent" : "bg-gradient-to-r from-transparent via-indigo-500 to-transparent")} />
   </>);
 };
 

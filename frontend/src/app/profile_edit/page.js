@@ -12,7 +12,6 @@ import { Label } from "@/components/ui/label";
 const ProfileEdit = () => {
   const router = useRouter();
   const { theme } = useTheme();
-  // Inicializamos sin usar window en el constructor
   const [user, setUser] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [isClient, setIsClient] = useState(false);
@@ -33,14 +32,12 @@ const ProfileEdit = () => {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    // Si existe el parámetro editMode=true, activamos el modo edición
     if (searchParams.get("editMode") === "true") {
       setEditMode(true);
     }
   }, [searchParams]);
 
   useEffect(() => {
-    // useEffect se ejecuta solo en el cliente
     setIsClient(true);
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -52,13 +49,13 @@ const ProfileEdit = () => {
       setCity(parsedUser.city);
       setFormData((prevData) => ({
         ...prevData,
-        username: parsedUser.username,
-        email: parsedUser.email,
-        name: parsedUser.name,
-        surname: parsedUser.surname,
-        region: parsedUser.region,
-        city: parsedUser.city,
-        school: parsedUser.school
+        username: parsedUser.username || "",
+        email: parsedUser.email || "",
+        name: parsedUser.name || "",
+        surname: parsedUser.surname || "",
+        region: parsedUser.region || "",
+        city: parsedUser.city || "",
+        school: parsedUser.school || ""
       }));
     } else {
       router.push("/signin");
@@ -66,26 +63,26 @@ const ProfileEdit = () => {
   }, [router]);
 
   useEffect(() => {
-  const getSchools = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8000/api/schools/?city=${formData.city}`,
-        {
-          headers: {
-            Authorization: `Token ${localStorage.getItem("authToken")}`,
-          },
-        }
-      );
-      setSchools(response.data);
-    } catch (err) {
-      setError("Failed to fetch schools");
-    }
-  };
+    const getSchools = async () => {
+      try {
+        const response = await axios.get(
+          `http://localhost:8000/api/schools/?city=${formData.city}`,
+          {
+            headers: {
+              Authorization: `Token ${localStorage.getItem("authToken")}`,
+            },
+          }
+        );
+        setSchools(response.data);
+      } catch (err) {
+        setError("Failed to fetch schools");
+      }
+    };
 
-  if (formData.city) {
-    getSchools();
-  }
-}, [formData.city]);
+    if (formData.city) {
+      getSchools();
+    }
+  }, [formData.city]);
 
   useEffect(() => {
     const getSchoolById = async () => {
@@ -115,9 +112,24 @@ const ProfileEdit = () => {
     if (name === "city") {
       setCity(value);
     }
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
+    setFormData((prevData) => ({ ...prevData, [name]: value || "" }));
   }, []);
 
+  const fetchSchools = useCallback(async (city) => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8000/api/schools/?city=${city}`,
+        {
+          headers: {
+            Authorization: `Token ${localStorage.getItem("authToken")}`,
+          },
+        }
+      );
+      setSchools(response.data);
+    } catch (err) {
+      setError("Failed to fetch schools");
+    }
+  }, []);
 
   const handleUpdate = useCallback(async () => {
     try {
@@ -141,6 +153,10 @@ const ProfileEdit = () => {
   const handleDelete = useCallback(async () => {
     const confirmationMessage = `¿Estás seguro de que deseas eliminar tu cuenta de MAESTRE? Esto eliminará también todos tus cursos y material subido a la plataforma. Esta acción NO se puede deshacer.\n\nPara borrar tu cuenta, escribe antes tu nombre de usuario (${user.username}):`;
     const userInput = prompt(confirmationMessage);
+
+    if (userInput === null) {
+      return; // User cancelled the prompt
+    }
 
     if (userInput === user.username) {
       try {
@@ -171,15 +187,17 @@ const ProfileEdit = () => {
         handleUpdate={handleUpdate}
         handleCancel={() => setEditMode(false)}
         schools={schools}
+        isProfileComplete={isProfileCompleted}
+        fetchSchools={fetchSchools}
       />
     ),
-    [formData, handleChange, handleUpdate, schools]
+    [formData, handleChange, handleUpdate, schools, isProfileCompleted, fetchSchools]
   );
 
   if (!isClient) return null;
 
   return (
-    <div className="flex flex-col h-screen overflow-y-auto items-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen flex flex-col justify-center items-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-6xl">
         <h1
           className={cn(
@@ -213,7 +231,7 @@ const ProfileEdit = () => {
         ) : (
           <div
             className={cn(
-              "max-w-7xl w-full justify-center items-center mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input",
+              "max-w-7xl w-full justify-center items-center mx-auto rounded-md md:rounded-2xl p-4 md:p-8 shadow-input",
               theme === "dark" ? "bg-black" : "bg-white"
             )}
           >
@@ -311,7 +329,7 @@ const ProfileEdit = () => {
                   "relative group/btn block w-full rounded-md h-10 font-medium border border-transparent",
                   theme === "dark"
                     ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900"
-                    : "text-black bg-gradient-to-br from-white to-neutral-100 border border-blue-300"
+                    : "text-black bg-gradient-to-br from-white to-neutral-100 border border-green-300"
                 )}
                 type="button"
               >
@@ -325,7 +343,7 @@ const ProfileEdit = () => {
                 "relative group/btn block w-full mx-auto rounded-md h-10 font-medium border border-transparent mt-4",
                 theme === "dark"
                   ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-                  : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
+                  : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-red-300"
               )}
               type="submit"
             >

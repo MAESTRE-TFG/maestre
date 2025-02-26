@@ -34,6 +34,7 @@ const ProfileEdit = () => {
     // useEffect se ejecuta solo en el cliente
     setIsClient(true);
     const storedUser = localStorage.getItem("user");
+    const storedFormData = localStorage.getItem("formData");
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);
@@ -47,41 +48,75 @@ const ProfileEdit = () => {
     } else {
       router.push("/signin");
     }
+    if (storedFormData) {
+      setFormData(JSON.parse(storedFormData));
+    }
   }, [router]);
 
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
-    // Si el campo modificado es "city", actualizamos el estado 'city'
     if (name === "city") {
       setCity(value);
     }
-    setFormData((prevData) => ({ ...prevData, [name]: value }));
-  }, []);
+    const updatedFormData = { ...formData, [name]: value };
+    setFormData(updatedFormData);
+    localStorage.setItem("formData", JSON.stringify(updatedFormData));
+  }, [formData]);
+
+  const fetchSchools = useCallback(async () => {
+    try {
+      const response = await axios.get(`http://localhost:8000/api/schools/?city=${city}`, {
+        headers: {
+          Authorization: `Token ${localStorage.getItem("authToken")}`,
+        },
+      });
+      setSchools(response.data);
+    } catch (err) {
+      setError("Error fetching schools");
+    }
+  }, [city]);
 
   useEffect(() => {
-    const fetchSchools = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8000/api/schools/?city=${city}`, {
-          headers: {
-            Authorization: `Token ${localStorage.getItem("authToken")}`,
-          },
-        });
-        setSchools(response.data);
-      } catch (err) {
-        setError("Error fetching schools");
-      }
-    };
-
     if (city) {
       fetchSchools();
     }
   }, [city]);
 
+  useEffect(() => {
+    if (city) {
+      fetchSchools();
+    }
+  }, [city, fetchSchools]);
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      const storedFormData = localStorage.getItem("formData");
+      if (storedFormData) {
+        setFormData(JSON.parse(storedFormData));
+      }
+      if (city) {
+        fetchSchools();
+      }
+    };
+
+    if (router.events) {
+      router.events.on("routeChangeComplete", handleRouteChange);
+      return () => {
+        router.events.off("routeChangeComplete", handleRouteChange);
+      };
+    }
+  }, [city, router.events, fetchSchools]);
+
   const handleComplete = useCallback(async () => {
     try {
       const response = await axios.put(
         `http://localhost:8000/api/users/${user.id}/update/`,
-        formData,
+        {
+          ...formData,
+          region: formData.region,
+          city: formData.city,
+          school: formData.school,
+        },
         {
           headers: {
             Authorization: `Token ${localStorage.getItem("authToken")}`,
@@ -90,6 +125,7 @@ const ProfileEdit = () => {
       );
       console.log(formData);
       localStorage.setItem("user", JSON.stringify(response.data));
+      localStorage.removeItem("formData");
       setUser(response.data);
       setEditMode(false);
     } catch (err) {
@@ -97,11 +133,16 @@ const ProfileEdit = () => {
     }
   }, [formData, user?.id]);
 
+  const handleCreateSchool = useCallback(() => {
+    localStorage.setItem("formData", JSON.stringify(formData));
+    router.push("/school_create");
+  }, [formData, router]);
+
   if (!isClient) return null;
 
   return (
     <div className="min-h-screen flex flex-col justify-center items-center py-12 sm:px-6 lg:px-8">
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
+      <div className="sm:mx-auto sm:w-full sm:max-w-md rounded-md md:rounded-2xl">
         <h4
           className={cn(
             "mt-6 text-center text-3xl font-extrabold text-zinc-100",
@@ -119,6 +160,7 @@ const ProfileEdit = () => {
         formData={formData}
         handleChange={handleChange}
         handleComplete={handleComplete}
+        handleCreateSchool={handleCreateSchool} // Pass the new handler
         schools={schools}
       />
     </div>
