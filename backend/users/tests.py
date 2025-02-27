@@ -19,6 +19,7 @@ class UserTests(APITestCase):
         self.token = Token.objects.create(user=self.user)
 
     def test_create_user(self):
+        self.client.force_authenticate(user=self.user)
         data = {
             'username': 'newuser',
             'email': 'newuser@example.com',
@@ -43,6 +44,18 @@ class UserTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('username', response.data)
 
+    def test_create_user_with_existing_email(self):
+        data = {
+            'username': 'newuser',
+            'email': 'testuser@example.com',
+            'password': 'newpassword',
+            'name': 'New',
+            'surname': 'User'
+        }
+        response = self.client.post(self.create_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('email', response.data)
+
     def test_create_user_with_invalid_email(self):
         data = {
             'username': 'newuser',
@@ -54,6 +67,126 @@ class UserTests(APITestCase):
         response = self.client.post(self.create_url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('email', response.data)
+
+    def test_create_user_with_blank_username(self):
+        data = {
+            'username': '',
+            'email': 'newuser@example.com',
+            'password': 'newpassword',
+            'name': 'New',
+            'surname': 'User'
+        }
+        response = self.client.post(self.create_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('username', response.data)
+
+    def test_create_user_with_blank_email(self):
+        data = {
+            'username': 'newuser',
+            'email': '',
+            'password': 'newpassword',
+            'name': 'New',
+            'surname': 'User'
+        }
+        response = self.client.post(self.create_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('email', response.data)
+
+    def test_create_user_with_blank_password(self):
+        data = {
+            'username': 'newuser',
+            'email': 'newuser@example.com',
+            'password': '',
+            'name': 'New',
+            'surname': 'User'
+        }
+        response = self.client.post(self.create_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('password', response.data)
+
+    def test_create_user_with_blank_name(self):
+        data = {
+            'username': 'newuser',
+            'email': 'newuser@example.com',
+            'password': 'newpassword',
+            'name': '',
+            'surname': 'User'
+        }
+        response = self.client.post(self.create_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('name', response.data)
+
+    def test_create_user_with_blank_surname(self):
+        data = {
+            'username': 'newuser',
+            'email': 'newuser@example.com',
+            'password': 'newpassword',
+            'name': 'New',
+            'surname': ''
+        }
+        response = self.client.post(self.create_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('surname', response.data)
+
+    def test_create_user_with_max_length_username(self):
+        data = {
+            'username': 'a' * 151,
+            'email': 'newuser@example.com',
+            'password': 'newpassword',
+            'name': 'New',
+            'surname': 'User'
+        }
+        response = self.client.post(self.create_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('username', response.data)
+
+    def test_create_user_with_max_length_email(self):
+        data = {
+            'username': 'newuser',
+            'email': 'a' * 244 + '@example.com',
+            'password': 'newpassword',
+            'name': 'New',
+            'surname': 'User'
+        }
+        response = self.client.post(self.create_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('email', response.data)
+
+    def test_create_user_with_max_length_password(self):
+        data = {
+            'username': 'newuser',
+            'email': 'newuser@example.com',
+            'password': 'a' * 129,
+            'name': 'New',
+            'surname': 'User'
+        }
+        response = self.client.post(self.create_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('password', response.data)
+
+    def test_create_user_with_max_length_name(self):
+        data = {
+            'username': 'newuser',
+            'email': 'newuser@example.com',
+            'password': 'newpassword',
+            'name': 'a' * 151,
+            'surname': 'User'
+        }
+        response = self.client.post(self.create_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('name', response.data)
+
+    def test_create_user_with_max_length_surname(self):
+        data = {
+            'username': 'newuser',
+            'email': 'newuser@example.com',
+            'password': 'newpassword',
+            'name': 'New',
+            'surname': 'a' * 151
+        }
+        response = self.client.post(self.create_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('surname', response.data)
 
     def test_update_user(self):
         self.client.force_authenticate(user=self.user)
@@ -93,12 +226,53 @@ class UserTests(APITestCase):
         self.client.force_authenticate(user=self.user)
         url = reverse('customuser-detail', kwargs={'pk': self.user.pk})
         data = {
+            'old_password': 'testpassword',
             'password': 'newpassword123'
         }
         response = self.client.put(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.user.refresh_from_db()
         self.assertTrue(self.user.check_password('newpassword123'))
+
+    def test_update_user_with_blank_name(self):
+        self.client.force_authenticate(user=self.user)
+        url = reverse('customuser-detail', kwargs={'pk': self.user.pk})
+        data = {
+            'name': ''
+        }
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('name', response.data)
+
+    def test_update_user_with_blank_surname(self):
+        self.client.force_authenticate(user=self.user)
+        url = reverse('customuser-detail', kwargs={'pk': self.user.pk})
+        data = {
+            'surname': ''
+        }
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('surname', response.data)
+
+    def test_update_user_with_max_length_name(self):
+        self.client.force_authenticate(user=self.user)
+        url = reverse('customuser-detail', kwargs={'pk': self.user.pk})
+        data = {
+            'name': 'a' * 151
+        }
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('name', response.data)
+
+    def test_update_user_with_max_length_surname(self):
+        self.client.force_authenticate(user=self.user)
+        url = reverse('customuser-detail', kwargs={'pk': self.user.pk})
+        data = {
+            'surname': 'a' * 151
+        }
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('surname', response.data)
 
     def test_delete_user(self):
         self.client.force_authenticate(user=self.user)
