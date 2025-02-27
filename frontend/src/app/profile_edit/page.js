@@ -23,7 +23,9 @@ const ProfileEdit = () => {
     surname: "",
     region: "",
     city: "",
-    school: ""
+    school: "",
+    password: "",
+    confirmPassword: ""
   });
   const [error, setError] = useState(null);
   const [isProfileCompleted, setIsProfileCompleted] = useState(null);
@@ -135,6 +137,10 @@ const ProfileEdit = () => {
   }, []);
 
   const handleUpdate = useCallback(async () => {
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
     try {
       const response = await axios.put(
         `http://localhost:8000/api/users/${user.id}/update/`,
@@ -235,6 +241,7 @@ const ProfileEdit = () => {
       <div className="relative z-10 my-12"></div>
       <br></br>
       <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-full">
+        <div className="h-12"></div> {/* Add empty space */}
         <h1
           className={cn(
             "mt-6 text-center text-3xl font-extrabold text-zinc-100",

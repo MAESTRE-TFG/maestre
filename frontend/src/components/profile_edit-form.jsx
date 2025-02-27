@@ -58,11 +58,11 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
       <div className="flex flex-col md:flex-row gap-6 mb-8">
         <div className="flex-1 md:w-1/2 border border-gray-300 rounded-md p-4">
           <LabelInputContainer className="mb-4">
-            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="username">👤 Username</Label>
+            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }} htmlFor="username">👤 Username</Label>
             <Input id="username" name="username" placeholder="Username" type="text" required value={formData.username || ""} onChange={handleChange} />
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
-            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="email">📧 Email Address</Label>
+            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }} htmlFor="email">📧 Email Address</Label>
             <Input id="email" name="email" placeholder="Email" type="email" required value={formData.email || ""} onChange={handleChange} />
           </LabelInputContainer>
           <LabelInputContainer className="mb-4">
@@ -73,6 +73,17 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
             <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="surname">📝 Surname</Label>
             <Input id="surname" name="surname" placeholder="Surname" type="text" required value={formData.surname || ""} onChange={handleChange} />
           </LabelInputContainer>
+          <br />
+          <div className="flex flex-col md:flex-row gap-6 mb-4">
+            <LabelInputContainer className="flex-1">
+              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="password">🔒 New Password</Label>
+              <Input id="password" name="password" placeholder="Password" type="password" value={formData.password || ""} onChange={handleChange} />
+            </LabelInputContainer>
+            <LabelInputContainer className="flex-1">
+              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="confirmPassword">🔒 Confirm Password</Label>
+              <Input id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" type="password" value={formData.confirmPassword || ""} onChange={handleChange} />
+            </LabelInputContainer>
+          </div>
         </div>
         {isProfileComplete && (
           <div className="flex-1 md:w-1/2 border border-gray-300 rounded-md p-4">
