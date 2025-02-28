@@ -218,7 +218,7 @@ const ProfileEdit = () => {
             className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
           />
           <img
-            src="/static/bubbles black/2.svg"
+            src="/static/bubbles black/3.svg"
             alt="Bubble"
             className="absolute bottom-0 right-0 opacity-50 z-0"
           />
@@ -231,7 +231,7 @@ const ProfileEdit = () => {
             className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
           />
           <img
-            src="/static/bubbles white/2.svg"
+            src="/static/bubbles white/3.svg"
             alt="Bubble"
             className="absolute bottom-0 right-0 opacity-50 z-0"
           />
@@ -241,7 +241,7 @@ const ProfileEdit = () => {
       <div className="relative z-10 my-12"></div>
       <br></br>
       <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-full">
-        <div className="h-12"></div> {/* Add empty space */}
+        <div className="h-12"></div>
         <h1
           className={cn(
             "mt-6 text-center text-3xl font-extrabold text-zinc-100",
@@ -267,20 +267,36 @@ const ProfileEdit = () => {
         `}</style>
       </div>
       <br />
-      <div className="relative z-10 xl:mx-auto xl:w-full xl:max-w-full">
+      <div className="relative z-10 xl:mx-auto xl:w-full xl:max-w-6xl">
         {error && <p className="text-red-500">{error}</p>}
         {editMode ? (
           memoizedForm
         ) : (
-          <div
-            className={cn(
-              "max-w-screen-xl w-full justify-center items-center mx-auto rounded-md md:rounded-2xl p-4 md:p-8 shadow-input",
-              theme === "dark" ? "bg-black" : "bg-white"
-            )}
-          >
-            <div className="my-2">
-            <div className="flex flex-col md:flex-row gap-6">
-              <div className="flex-1 border border-gray-300 rounded-md p-4">
+          <div className={cn("max-w-4xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white", "min-w-[300px]")}>
+            <style jsx global>{
+              `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
+              select {
+                appearance: none;
+                background: ${theme === "dark" ? "#333" : "#fff"};
+                color: ${theme === "dark" ? "#fff" : "#000"};
+                border: 1px solid ${theme === "dark" ? "#555" : "#ccc"};
+                padding: 0.5rem;
+                border-radius: 0.375rem;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+              }
+              select:focus {
+                outline: none;
+                border-color: ${theme === "dark" ? "#888" : "#007bff"};
+                box-shadow: 0 0 0 3px ${theme === "dark" ? "rgba(136, 136, 136, 0.5)" : "rgba(0, 123, 255, 0.25)"};
+              }
+              option {
+                background: ${theme === "dark" ? "#333" : "#fff"};
+                color: ${theme === "dark" ? "#fff" : "#000"};
+              }`
+            }</style>
+            <div className="my-1">
+            <div className="flex flex-col md:flex-row gap-6 mb-8">
+              <div className="flex-1 md:w-1/2 border border-gray-300 rounded-md p-4">
                 <LabelInputContainer className="mb-4">
                   <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}>👤 Username</Label>
                   <p

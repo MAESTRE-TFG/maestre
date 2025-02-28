@@ -33,7 +33,8 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
 
   return (
     <div className={cn("max-w-4xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white")}>
-            <style jsx global>{
+      <div className="h-12"></div>
+      <style jsx global>{
         `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
         select {
           appearance: none;
@@ -74,10 +75,15 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
             <Input id="surname" name="surname" placeholder="Surname" type="text" required value={formData.surname || ""} onChange={handleChange} />
           </LabelInputContainer>
           <br />
+          <LabelInputContainer className="flex-1">
+              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="oldPassword">🔒 Confirm Old Password</Label>
+              <Input id="oldPassword" name="old_password" placeholder="Old Password" type="password" value={formData.old_password || ""} onChange={handleChange} />
+          </LabelInputContainer>
+          <br />
           <div className="flex flex-col md:flex-row gap-6 mb-4">
             <LabelInputContainer className="flex-1">
               <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="password">🔒 New Password</Label>
-              <Input id="password" name="password" placeholder="Password" type="password" value={formData.password || ""} onChange={handleChange} />
+              <Input id="password" name="password" placeholder="New Password" type="password" value={formData.password || ""} onChange={handleChange} />
             </LabelInputContainer>
             <LabelInputContainer className="flex-1">
               <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="confirmPassword">🔒 Confirm Password</Label>
