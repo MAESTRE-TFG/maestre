@@ -1,5 +1,6 @@
 from django.db import models
 
+
 # Create your models here.
 class School(models.Model):
     # Enumerado con todas las provincias de España
@@ -13,6 +14,6 @@ class School(models.Model):
         verbose_name = 'School'
         verbose_name_plural = 'Schools'
         ordering = ['name']
-        
+
     def __str__(self):
         return self.name

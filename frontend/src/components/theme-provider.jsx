@@ -4,35 +4,30 @@ import { createContext, useContext, useEffect, useState } from "react"
 
 const ThemeContext = createContext({})
 
-export function ThemeProvider({ children, attribute = 'class', defaultTheme = 'system', enableSystem = true, disableTransitionOnChange = false }) {
-  const [theme, setTheme] = useState(() => {
-    return defaultTheme
-  })
+export function ThemeProvider({ children, attribute = "class", defaultTheme = "system" }) {
+  const [theme, setTheme] = useState(null)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
+    const storedTheme = localStorage.getItem("theme") || defaultTheme
+    setTheme(storedTheme)
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!mounted || !theme) return
+
     const root = window.document.documentElement
-
-    // Remove transition temporarily if disableTransitionOnChange is true
-    if (disableTransitionOnChange) {
-      root.classList.add('disable-transitions')
-    }
-
-    root.classList.remove('light', 'dark')
+    root.classList.remove("light", "dark")
     root.classList.add(theme)
-    
-    if (attribute === 'class') {
-      root.setAttribute('data-theme', theme)
-    }
+    root.setAttribute("data-theme", theme)
 
-    localStorage.setItem('theme', theme)
+    localStorage.setItem("theme", theme)
+  }, [theme, mounted])
 
-    // Re-enable transitions after theme change
-    if (disableTransitionOnChange) {
-      setTimeout(() => {
-        root.classList.remove('disable-transitions')
-      }, 0)
-    }
-  }, [theme, attribute, disableTransitionOnChange])
+  if (!mounted) {
+    return <div className="invisible" />
+  }
 
   return (
     <ThemeContext.Provider value={{ theme, setTheme }}>

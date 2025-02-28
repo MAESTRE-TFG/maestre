@@ -5,9 +5,11 @@ from schools.models import School  # Importa el modelo School
 '''
 Como tenemos un modelo personalizado de usuario, necesitamos un administrador de usuario personalizado
 que herede de BaseUserManager. Este administrador de usuario personalizado se encargará de crear
-usuarios y superusuarios. Esto nos libra de mucha faena, se puede comprobar que todo está mucho mas simple 
+usuarios y superusuarios. Esto nos libra de mucha faena, se puede comprobar que todo está mucho mas simple
 en http://localhost:8000/admin/
 '''
+
+
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username, password=None, **extra_fields):
         if not email:
@@ -24,6 +26,7 @@ class CustomUserManager(BaseUserManager):
 
         return self.create_user(email, username, password, **extra_fields)
 
+
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=30, unique=True)
@@ -32,7 +35,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
-    school = models.ForeignKey(School, on_delete=models.SET_NULL, null=True, blank=True, related_name='users')  # Relación con School
+    school = models.ForeignKey(School, on_delete=models.SET_NULL, null=True, blank=True, related_name='users')
 
     objects = CustomUserManager()
 

@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -6,9 +5,9 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action
 from django.contrib.auth import authenticate
-from rest_framework.exceptions import AuthenticationFailed
 from .models import CustomUser
 from .serializers import CustomUserSerializer
+
 
 # Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
@@ -18,7 +17,7 @@ class UserViewSet(viewsets.ModelViewSet):
 
     # Para poder usar el token de autenticación, necesitamos añadirlo a la lista de clases de autenticación
     authentication_classes = [TokenAuthentication]
-    
+
     def get_permissions(self):
         if self.action in ['signup', 'signin']:
             permission_classes = [AllowAny]
@@ -43,7 +42,11 @@ class UserViewSet(viewsets.ModelViewSet):
 
     @action(detail=True, methods=['put'], permission_classes=[IsAuthenticated])
     def update_user(self, request, pk=None):
-        user = self.get_object()  # Obtiene el usuario según el ID en la URL
+        user = self.get_object()
+        if 'password' in request.data:
+            old_password = request.data.get('old_password')
+            if not user.check_password(old_password):
+                return Response({'old_password': 'Wrong password.'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = self.get_serializer(user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
@@ -73,7 +76,9 @@ class UserViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])
     def signout(self, request):
         try:
-            request.user.auth_token.delete()
-            return Response(status=status.HTTP_200_OK)
-        except AttributeError:
-            raise AuthenticationFailed('Invalid token.')
+            token = request.user.auth_token
+            if token:
+                token.delete()
+            return Response({"message": "Logged out successfully"}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)

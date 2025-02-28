@@ -7,6 +7,11 @@ import {
   IconSettings,
   IconUser,
   IconUserBolt,
+  IconPlus,
+  IconSchool,
+  IconBooks,
+  IconSun,
+  IconMoon,
 } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -15,7 +20,7 @@ import axios from 'axios';
 import { useRouter } from "next/navigation";
 
 export function SidebarDemo({ ContentComponent }) {
-  const { theme } = useTheme();
+  const { theme, setTheme } = useTheme();
   const router = useRouter();
   const [user, setUser] = useState(null);
   useEffect(() => {
@@ -37,7 +42,7 @@ export function SidebarDemo({ ContentComponent }) {
       router.push("/signin");
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        console.error('Invalid token:', error.response.data.detail);
+        console.error('Invalid token:', error.response.data && error.response.data.detail ? error.response.data.detail : 'No detail available');
         localStorage.removeItem('authToken');
         localStorage.removeItem('user');
         router.push("/signin");
@@ -47,12 +52,20 @@ export function SidebarDemo({ ContentComponent }) {
     }
   };
 
+  const handleProfileClick = () => {
+    if (!user) {
+      router.push("/signin");
+    } else {
+      router.push("http://localhost:3000/profile_edit");
+    }
+  };
+
   const links = [
     {
-      label: "Dashboard",
+      label: "Create",
       href: "http://localhost:3000/",
       icon: (
-        <IconBrandTabler
+        <IconPlus
           className={cn(
             "h-5 w-5 flex-shrink-0",
             theme == "dark" ? "text-neutral-200" : "text-neutral-700"
@@ -61,10 +74,10 @@ export function SidebarDemo({ ContentComponent }) {
       ),
     },
     {
-      label: "Profile",
+      label: "My Classes",
       href: "#",
       icon: (
-        <IconUserBolt
+        <IconSchool
           className={cn(
             "h-5 w-5 flex-shrink-0",
             theme == "dark" ? "text-neutral-200" : "text-neutral-700"
@@ -73,10 +86,10 @@ export function SidebarDemo({ ContentComponent }) {
       ),
     },
     {
-      label: "Settings",
+      label: "My Materials",
       href: "#",
       icon: (
-        <IconSettings
+        <IconBooks
           className={cn(
             "h-5 w-5 flex-shrink-0",
             theme == "dark" ? "text-neutral-200" : "text-neutral-700"
@@ -84,19 +97,18 @@ export function SidebarDemo({ ContentComponent }) {
         />
       ),
     },
-    // Only show the signout button if the user is authenticated
-    user && {
-      label: "Sign out",
-      href: "",
+    {
+      label: user ? user.name + " " + user.surname : "Sign in",
+      href: "profile_edit",
       icon: (
-        <IconArrowLeft
+        <IconUser
           className={cn(
             "h-5 w-5 flex-shrink-0",
             theme == "dark" ? "text-neutral-200" : "text-neutral-700"
           )}
         />
       ),
-      onClick: handleSignout,
+      onClick: handleProfileClick,
     },
   ].filter(Boolean); // Filter out any false values (e.g., if user is not authenticated)
 
@@ -105,14 +117,14 @@ export function SidebarDemo({ ContentComponent }) {
     <div
       className={cn(
         "rounded-md flex flex-col md:flex-row w-full flex-1 mx-auto border overflow-hidden",
-        "h-screen",
+        "h-screen overflow-y-auto",
         theme === "dark"
           ? "bg-neutral-800 border-neutral-700"
           : "bg-gray-100 border-neutral-200"
       )}
     >
       <Sidebar open={open} setOpen={setOpen} className={cn(open ? "w-84" : "w-60")}>
-        <SidebarBody className="justify-between gap-10">
+        <SidebarBody className={cn("justify-between gap-10",theme === "dark" ? "bg-neutral-900" : "bg-neutral-200")}>
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             {open ? <Logo /> : <LogoIcon />}
             <div className="mt-8 flex flex-col gap-2">
@@ -121,25 +133,28 @@ export function SidebarDemo({ ContentComponent }) {
               ))}
             </div>
           </div>
-          <div>
-            <SidebarLink
-              link={{
-                label: user ? user.name + " " + user.surname : "Sign in",
-                href: user ? "http://localhost:3000/profile_edit" : "/signin",
-                icon: (
-                  <IconUser
-                    className={cn(
-                      "h-5 w-5 flex-shrink-0",
-                      theme == "dark" ? "text-neutral-200" : "text-neutral-700"
-                    )}
-                  />
-                ),
-              }}
-            />
+          <div className="flex flex-col gap-2">
+            {user && (
+              <SidebarLink
+                link={{
+                  label: "Sign out",
+                  href: "",
+                  icon: (
+                    <IconArrowLeft
+                      className={cn(
+                        "h-5 w-5 flex-shrink-0",
+                        theme == "dark" ? "text-neutral-200" : "text-neutral-700"
+                      )}
+                    />
+                  ),
+                  onClick: handleSignout,
+                }}
+              />
+            )}
           </div>
         </SidebarBody>
       </Sidebar>
-      <div className="flex-1 flex justify-center items-center p-6">
+      <div className="flex-1 flex justify-center items-center p-6 overflow-y-auto">
         <ContentComponent />
       </div>
     </div>
