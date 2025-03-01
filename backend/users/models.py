@@ -1,13 +1,12 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
-from schools.models import School  # Importa el modelo School
+from schools.models import School
 
-'''
-Como tenemos un modelo personalizado de usuario, necesitamos un administrador de usuario personalizado
-que herede de BaseUserManager. Este administrador de usuario personalizado se encargará de crear
-usuarios y superusuarios. Esto nos libra de mucha faena, se puede comprobar que todo está mucho mas simple
-en http://localhost:8000/admin/
-'''
+
+# Since we have a custom user model, we need a custom user manager
+# that inherits from BaseUserManager. This custom user manager will handle creating
+# users and superusers. This saves us a lot of work, and it can be seen that everything is much simpler
+# at http://localhost:8000/admin/
 
 
 class CustomUserManager(BaseUserManager):

@@ -25,7 +25,7 @@ class UserTests(APITestCase):
 
     def test_create_user(self):
         self.client.force_authenticate(user=self.user)
-        new_school = School.objects.create(name='NewSchool')  # Create a new School instance
+        new_school = School.objects.create(name='NewSchool') 
         data = {
             'username': 'newuser',
             'email': 'newuser@example.com',
@@ -34,13 +34,13 @@ class UserTests(APITestCase):
             'surname': 'User',
             'region': 'Region',
             'city': 'City',
-            'school': new_school.id  # Use the ID of the new School instance
+            'school': new_school.id
         }
         response = self.client.post(self.create_url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(CustomUser.objects.count(), 2)
         self.assertEqual(CustomUser.objects.get(username='newuser').email, 'newuser@example.com')
-        self.assertEqual(CustomUser.objects.get(username='newuser').school, new_school)  # Check the school
+        self.assertEqual(CustomUser.objects.get(username='newuser').school, new_school)
 
     def test_create_user_with_existing_username(self):
         self.client.force_authenticate(user=self.user)
@@ -263,7 +263,7 @@ class UserTests(APITestCase):
         self.client.force_authenticate(user=None)
         url = reverse('customuser-detail', kwargs={'pk': self.user.pk})
         response = self.client.delete(url)
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)  # Update to 401
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_partial_update_user(self):
         self.client.force_authenticate(user=self.user)
@@ -454,4 +454,4 @@ class UserTests(APITestCase):
         self.assertEqual(self.user.surname, 'User')
         self.assertEqual(self.user.region, 'UpdatedRegion')
         self.assertEqual(self.user.city, 'UpdatedCity')
-        self.assertEqual(self.user.school, new_school)  # Check the school
+        self.assertEqual(self.user.school, new_school)

@@ -9,13 +9,9 @@ from .models import CustomUser
 from .serializers import CustomUserSerializer
 
 
-# Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
-    # Todas los conjuntos de vistas de Django Rest Framework requieren un queryset y un serializador
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
-
-    # Para poder usar el token de autenticación, necesitamos añadirlo a la lista de clases de autenticación
     authentication_classes = [TokenAuthentication]
 
     def get_permissions(self):

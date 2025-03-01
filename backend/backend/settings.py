@@ -149,6 +149,6 @@ REST_FRAMEWORK = {
 }
 
 
-# Esta configuración permite que Django use nuestro modelo de usuario personalizado
-# en lugar del modelo de usuario predeterminado que viene con Django
+# This configuration allows Django to use our custom user model
+# instead of the default user model that comes with Django
 AUTH_USER_MODEL = 'users.CustomUser'
