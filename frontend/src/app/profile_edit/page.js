@@ -8,7 +8,7 @@ import { cn } from "@/lib/utils";
 import axios from "axios";
 import { ProfileEditForm } from "@/components/profile_edit-form";
 import { Label } from "@/components/ui/label";
-import { Modal } from "@/components/ui/modal"; // Import the Modal component
+import { Modal } from "@/components/ui/modal";
 
 const ProfileEdit = () => {
   const router = useRouter();
@@ -113,7 +113,7 @@ const ProfileEdit = () => {
 
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
-    // Si el campo modificado es "city", actualizamos el estado 'city'
+    // ¡ATENTION! If the modified field is "city", update the 'city' state
     if (name === "city") {
       setCity(value);
     }

@@ -5,7 +5,7 @@ import { CreateSchoolForm } from "@/components/school-create-form";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
-import { SidebarDemo } from "@/components/sidebar-demo"; // Import SidebarDemo
+import { SidebarDemo } from "@/components/sidebar-demo";
 
 export default function CreateSchool() {
   const router = useRouter();
@@ -42,7 +42,7 @@ export default function CreateSchool() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Token ${token}`, // Añade el token de autenticación en el encabezado
+          "Authorization": `Token ${token}`,
         },
         body: JSON.stringify(formData),
       });

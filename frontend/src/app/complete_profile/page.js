@@ -38,8 +38,8 @@ const ProfileEdit = () => {
         ...prevData,
         username: parsedUser.username || "",
         email: parsedUser.email || "",
-        name: parsedUser.name || "Default Name", // Set default value if name is empty
-        surname: parsedUser.surname || "Default Surname", // Set default value if surname is empty
+        name: parsedUser.name || "Default Name",
+        surname: parsedUser.surname || "Default Surname",
       }));
     } else {
       router.push("/signin");
@@ -49,8 +49,8 @@ const ProfileEdit = () => {
       setFormData((prevData) => ({
         ...prevData,
         ...parsedFormData,
-        name: parsedFormData.name || "Default Name", // Set default value if name is empty
-        surname: parsedFormData.surname || "Default Surname", // Set default value if surname is empty
+        name: parsedFormData.name || "Default Name",
+        surname: parsedFormData.surname || "Default Surname",
       }));
       setCity(parsedFormData.city);
       console.log("Parsed form data:", parsedFormData);
@@ -77,7 +77,7 @@ const ProfileEdit = () => {
       });
       setSchools(response.data);
     } catch (err) {
-      console.error("Error fetching schools:", err); // Log the error for debugging
+      console.error("Error fetching schools:", err);
       setError("Error fetching schools. Please try again later.");
     }
   }, [city]);

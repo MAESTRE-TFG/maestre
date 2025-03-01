@@ -70,7 +70,7 @@ export function CreateSchoolForm({ onSubmit }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formDataCopy = { ...formData };
-    formDataCopy.stages = formDataCopy.stages.join(", "); // Convertir stages en una cadena separada por comas
+    formDataCopy.stages = formDataCopy.stages.join(", ");
     console.log(formDataCopy);
     onSubmit(formDataCopy);
   };
@@ -78,8 +78,8 @@ export function CreateSchoolForm({ onSubmit }) {
   const handleSelectStage = (etapa) => {
     setFormData((prev) => {
       const updatedStages = prev.stages.includes(etapa)
-        ? prev.stages.filter((e) => e !== etapa) // Desmarcar si ya está seleccionada
-        : [...prev.stages, etapa]; // Agregar si no está seleccionada
+        ? prev.stages.filter((e) => e !== etapa) // Uncheck if already selected
+        : [...prev.stages, etapa]; // Add if not selected
 
       return { ...prev, stages: updatedStages };
     });
@@ -214,7 +214,7 @@ const LabelInputContainer = ({ children, className }) => {
       {React.Children.map(children, child => {
         if (child.type === Label) {
           return React.cloneElement(child, {
-            style: { ...child.props.style, fontSize: "1.25rem" } // Increase font size
+            style: { ...child.props.style, fontSize: "1.25rem" }
           });
         }
         return child;

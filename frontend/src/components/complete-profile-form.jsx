@@ -170,7 +170,7 @@ const LabelInputContainer = ({
       {React.Children.map(children, child => {
         if (child.type === Label) {
           return React.cloneElement(child, {
-            style: { ...child.props.style, fontSize: "1.25rem" } // Increase font size
+            style: { ...child.props.style, fontSize: "1.25rem" }
           });
         }
         return child;

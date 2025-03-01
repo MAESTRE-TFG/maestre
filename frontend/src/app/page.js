@@ -35,7 +35,7 @@ const Home = () => {
         <div className="flex gap-2">
           {[...new Array(4)].map((_, i) => (
             <div
-              key={i} // Utiliza el índice directamente como clave
+              key={i}
               className={cn(
                 "h-20 w-full rounded-lg animate-pulse",
                 theme == "dark" ? "bg-neutral-800" : "bg-gray-100"
@@ -46,7 +46,7 @@ const Home = () => {
         <div className="flex gap-2 flex-1">
           {[...new Array(2)].map((_, i) => (
             <div
-              key={i} // Utiliza el índice directamente como clave
+              key={i}
               className={cn(
                 "h-full w-full rounded-lg animate-pulse",
                 theme == "dark" ? "bg-neutral-800" : "bg-gray-100"
