@@ -32,7 +32,7 @@ export function SidebarDemo({ ContentComponent }) {
 
   const handleSignout = async () => {
     try {
-      await axios.post('http://localhost:8000/api/users/signout/', {}, {
+      await axios.post('/api/users/signout/', {}, {
         headers: {
           'Authorization': `Token ${localStorage.getItem('authToken')}`
         }
@@ -56,14 +56,14 @@ export function SidebarDemo({ ContentComponent }) {
     if (!user) {
       router.push("/signin");
     } else {
-      router.push("http://localhost:3000/profile_edit");
+      router.push("/profile_edit");
     }
   };
 
   const links = [
     {
       label: "Create",
-      href: "http://localhost:3000/",
+      href: "#",
       icon: (
         <IconPlus
           className={cn(
@@ -75,7 +75,7 @@ export function SidebarDemo({ ContentComponent }) {
     },
     {
       label: "My Classes",
-      href: "#",
+      href: "/classrooms",
       icon: (
         <IconSchool
           className={cn(
