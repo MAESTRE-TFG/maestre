@@ -25,5 +25,7 @@ urlpatterns = [
                                                      'put': 'update',
                                                      'patch': 'partial_update',
                                                      'delete': 'destroy'}), name='school-detail'),
+    path('classrooms/<int:pk>/update/', ClassroomViewSet.as_view({'put': 'update'})),
+    path('classrooms/<int:pk>/delete/', ClassroomViewSet.as_view({'delete': 'destroy'})),
 
 ]

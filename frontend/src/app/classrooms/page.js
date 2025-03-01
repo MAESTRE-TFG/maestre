@@ -7,7 +7,6 @@ import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { Label } from "@/components/ui/label";
-import { Modal } from "@/components/ui/modal";
 
 const ClassroomsList = () => {
   const router = useRouter();
@@ -15,7 +14,6 @@ const ClassroomsList = () => {
   const [classes, setClasses] = useState([]);
   const [error, setError] = useState(null);
   const [isClient, setIsClient] = useState(false);
-  const [hasClassrooms, setHasClassrooms] = useState(false);
 
   useEffect(() => {
     setIsClient(true);
@@ -35,7 +33,7 @@ const ClassroomsList = () => {
   }, []);
 
   const handleEdit = (classId) => {
-    router.push(`/classrooms/edit/${classId}`);
+    router.push(`/classrooms/edit?id=${classId}&editMode=true`);
   };
 
   const handleCreate = () => {
@@ -50,12 +48,12 @@ const ClassroomsList = () => {
       {theme === "dark" ? (
         <>
           <img
-            src="/static/bubbles black/1.svg"
+            src="/static/bubbles black/5.svg"
             alt="Bubble"
             className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
           />
           <img
-            src="/static/bubbles black/3.svg"
+            src="/static/bubbles black/6.svg"
             alt="Bubble"
             className="absolute bottom-0 right-0 opacity-50 z-0"
           />
@@ -79,23 +77,23 @@ const ClassroomsList = () => {
       <br></br>
       <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-full">
         <div className="h-12"></div>
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center sticky top-0 bg-inherit">
           <h1
-            className={cn(
-              "mt-6 text-center text-3xl font-extrabold text-zinc-100 mx-auto",
-              theme === "dark" ? "text-white" : "text-dark"
-            )}
+          className={cn(
+            "mt-6 text-center text-3xl font-extrabold text-zinc-100",
+            theme === "dark" ? "text-white" : "text-dark"
+          )}
           >
             My Classes
           </h1>
-          {hasClassrooms && (
+          {classes.length > 0 && (
             <button
-              className={cn(
-                "ml-4 px-4 py-2 rounded-md text-sm font-medium",
-                theme === "dark"
-                  ? "text-white bg-zinc-800"
-                  : "text-black bg-gray-200"
-              )}
+            className={cn(
+              "mt-4 px-8 py-4 rounded-md text-lg font-medium",
+              theme === "dark"
+                ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+                : "text-black bg-blue-200"
+            )}
               onClick={() => router.push("/classrooms/new")}
             >
               + Create Classroom
@@ -115,14 +113,14 @@ const ClassroomsList = () => {
             <button
               onClick={handleCreate}
               className={cn(
-                "mt-4 px-6 py-3 rounded-md text-lg font-medium",
+                "mt-4 px-8 py-4 rounded-md text-lg font-medium",
                 theme === "dark"
                   ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-                  : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
+                  : "text-black bg-blue-200"
               )}
               style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             >
-              Create New Classroom
+              Create New Classroom + 
             </button>
           </div>
         ) : (
@@ -131,23 +129,33 @@ const ClassroomsList = () => {
               <div
                 key={classroom.id}
                 className={cn(
-                  "max-w-4xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input",
-                  theme === "dark" ? "bg-black" : "bg-white",
-                  "min-w-[300px]"
+                  "max-w-6xl w-full mx-auto rounded-none md:rounded-2xl p-8 md:p-16 shadow-input",
+                  theme === "dark" ? "bg-black text-white" : "bg-green-900 text-white",
+                  "min-w-[600px] border-4 border-white text-center"
                 )}
+                style={{
+                  fontFamily: "'Alfa Slab One', sans-serif",
+                  boxShadow: "inset 0 0 10px rgba(0,0,0,0.5)",
+                  backgroundImage: "url('https://res.cloudinary.com/danielmeilleurimg/tictactoe/chalkboard-250')",
+                  backgroundSize: "cover"
+                }}
               >
-                <div className="flex justify-between items-center">
+                <div className="flex flex-col justify-center items-center">
                   <div>
-                    <Label className="text-lg font-bold">{classroom.name}</Label>
-                    <p>{classroom.description}</p>
+                    <Label className="text-2xl font-bold text-white">{classroom.name}</Label>
+                    <br></br><br></br>
+                    <p className="text-lg text-white">{classroom.description}</p>
+                    <br></br>
+                    <p className="text-md text-white">Course: {classroom.academic_course}</p>
+                    <p className="text-md text-white">Año: {classroom.academic_year}</p>
                   </div>
                   <button
                     onClick={() => handleEdit(classroom.id)}
                     className={cn(
-                      "relative group/btn block rounded-md h-10 font-medium border border-transparent",
+                      "relative group/btn block rounded-md h-12 font-medium border border-transparent mt-4",
                       theme === "dark"
                         ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-                        : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
+                        : "text-black bg-blue-200"
                     )}
                     type="button"
                     style={{ fontFamily: "'Alfa Slab One', sans-serif" }}

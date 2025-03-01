@@ -6,7 +6,7 @@ import { SidebarDemo } from "@/components/sidebar-demo";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import axios from "axios";
-import { ProfileEditForm } from "@/components/profile_edit-form";
+import { ProfileEditForm } from "@/components/profile-edit-form";
 import { Label } from "@/components/ui/label";
 import { Modal } from "@/components/ui/modal";
 

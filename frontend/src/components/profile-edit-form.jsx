@@ -27,7 +27,7 @@ const COMUNIDADES = [
   "Melilla",
 ];
 
-export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCancel, schools, isProfileComplete }) {
+export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCancel, schools, isProfileComplete, authToken }) {
   const { theme } = useTheme();
   const router = useRouter();
 
@@ -157,83 +157,6 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
           </div>
         )}
       </div>
-        <button
-          className={cn("relative group/btn block w-full rounded-md h-10 font-medium border border-transparent", 
-            theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
-            : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
-          )}
-          type="submit"
-          style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-        >
-          Update &rarr;
-          <BottomGradient />
-        </button>
-        <button
-          className={cn(
-            "relative group/btn block w-full mx-auto rounded-md h-10 font-medium border border-transparent mt-4",
-            theme === "dark"
-              ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-red-300"
-          )}
-          type="button"
-          style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-          onClick={handleCancel}>
-           &larr; Cancel
-          <BottomGradient isCancel />
-        </button>
-      </form>
-    </div>
-  );
-}
-
-export function ClassroomEditForm({ formData, handleChange, handleUpdate, handleCancel }) {
-  const { theme } = useTheme();
-
-  return (
-    <div className={cn("max-w-4xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white")}>
-      <div className="h-12"></div>
-      <style jsx global>{
-        `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
-        select {
-          appearance: none;
-          background: ${theme === "dark" ? "#333" : "#fff"};
-          color: ${theme === "dark" ? "#fff" : "#000"};
-          border: 1px solid ${theme === "dark" ? "#555" : "#ccc"};
-          padding: 0.5rem;
-          border-radius: 0.375rem;
-          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-        }
-        select:focus {
-          outline: none;
-          border-color: ${theme === "dark" ? "#888" : "#007bff"};
-          box-shadow: 0 0 0 3px ${theme === "dark" ? "rgba(136, 136, 136, 0.5)" : "rgba(0, 123, 255, 0.25)"};
-        }
-        option {
-          background: ${theme === "dark" ? "#333" : "#fff"};
-          color: ${theme === "dark" ? "#fff" : "#000"};
-        }`
-      }</style>
-      <form className="my-1" onSubmit={(e) => { e.preventDefault(); handleUpdate(); }}>
-        <div className="flex flex-col md:flex-row gap-6 mb-8">
-          <div className="flex-1 md:w-1/2 border border-gray-300 rounded-md p-4">
-            <LabelInputContainer className="mb-4">
-              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }} htmlFor="name">🏫 Classroom Name</Label>
-              <Input id="name" name="name" placeholder="Classroom Name" type="text" required value={formData.name || ""} onChange={handleChange} />
-            </LabelInputContainer>
-            <LabelInputContainer className="mb-4">
-              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }} htmlFor="academic_course">📚 Academic Course</Label>
-              <Input id="academic_course" name="academic_course" placeholder="Academic Course" type="text" required value={formData.academic_course || ""} onChange={handleChange} />
-            </LabelInputContainer>
-            <LabelInputContainer className="mb-4">
-              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="description">📝 Description</Label>
-              <Input id="description" name="description" placeholder="Description" type="text" required value={formData.description || ""} onChange={handleChange} />
-            </LabelInputContainer>
-            <LabelInputContainer className="mb-4">
-              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="academic_year">📅 Academic Year</Label>
-              <Input id="academic_year" name="academic_year" placeholder="YYYY-YYYY" type="text" required value={formData.academic_year || ""} onChange={handleChange} />
-            </LabelInputContainer>
-          </div>
-        </div>
         <button
           className={cn("relative group/btn block w-full rounded-md h-10 font-medium border border-transparent", 
             theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 

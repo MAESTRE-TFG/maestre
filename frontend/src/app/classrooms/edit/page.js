@@ -1,31 +1,46 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect, useMemo, useCallback } from "react";
+import { useState, useEffect, useMemo, useCallback, useContext } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import axios from "axios";
-import { ClassroomEditForm } from "@/components/classroom_edit-form";
-import { Label } from "@/components/ui/label";
+import { ClassroomEditForm } from "@/components/classroom-edit-form";
 import { Modal } from "@/components/ui/modal";
+import { ErrorContext } from "@/context/ErrorContext";
 
 const ClassroomEdit = () => {
   const router = useRouter();
   const { theme } = useTheme();
   const [classroom, setClassroom] = useState(null);
-  const [editMode, setEditMode] = useState(false);
+  const [editMode, setEditMode] = useState(true); // Set editMode to true by default
   const [isClient, setIsClient] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     academic_course: "",
-    description: "",
-    academic_year: ""
+    academic_year: "",
+    description: ""
   });
-  const [error, setError] = useState(null);
+  const { setErrorMessage } = useContext(ErrorContext);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [nameInput, setNameInput] = useState("");
   const searchParams = useSearchParams();
+
+  const educationalStages = [
+    {
+      stage: "Primary",
+      courses: ["1º Primary", "2º Primary", "3º Primary", "4º Primary", "5º Primary", "6º Primary"],
+    },
+    {
+      stage: "Secondary",
+      courses: ["1º ESO", "2º ESO", "3º ESO", "4º ESO"],
+    },
+    {
+      stage: "High School",
+      courses: ["1º Bachillerato", "2º Bachillerato"],
+    },
+  ];
 
   useEffect(() => {
     if (searchParams.get("editMode") === "true") {
@@ -35,31 +50,29 @@ const ClassroomEdit = () => {
 
   useEffect(() => {
     setIsClient(true);
-    const fetchClassroom = async () => {
-      try {
-        const response = await axios.get(
-          `http://localhost:8000/api/classrooms/${searchParams.get("id")}/`,
-          {
-            headers: {
-              Authorization: `Token ${localStorage.getItem("authToken")}`,
-            },
-          }
-        );
-        const classroomData = response.data;
-        setClassroom(classroomData);
-        setFormData({
-          name: classroomData.name || "",
-          academic_course: classroomData.academic_course || "",
-          description: classroomData.description || "",
-          academic_year: classroomData.academic_year || ""
+    const classroomId = searchParams.get("id");
+    if (classroomId) {
+      axios
+        .get(`http://localhost:8000/api/classrooms/${classroomId}/`, {
+          headers: {
+            Authorization: `Token ${localStorage.getItem("authToken")}`,
+          },
+        })
+        .then((response) => {
+          setClassroom(response.data);
+          setFormData({
+            name: response.data.name || "",
+            academic_course: response.data.academic_course || "",
+            academic_year: response.data.academic_year || "",
+            description: response.data.description || "",
+          });
+        })
+        .catch((error) => {
+          setErrorMessage("Failed to fetch classroom data");
         });
-      } catch (err) {
-        setError("Failed to fetch classroom details");
-        router.push("/signin");
-      }
-    };
-
-    fetchClassroom();
+    } else {
+      router.push("/classrooms");
+    }
   }, [router, searchParams]);
 
   const handleChange = useCallback((e) => {
@@ -69,6 +82,15 @@ const ClassroomEdit = () => {
 
   const handleUpdate = useCallback(async () => {
     try {
+      if (!classroom) {
+        setErrorMessage("Classroom data is missing");
+        return;
+      }
+      const yearPattern = /^\d{4}-\d{4}$/;
+      if (formData.academic_year && !yearPattern.test(formData.academic_year)) {
+        setErrorMessage("Academic Year must be in the format 'YYYY-YYYY'.");
+        return;
+      }
       const response = await axios.put(
         `http://localhost:8000/api/classrooms/${classroom.id}/update/`,
         formData,
@@ -79,13 +101,17 @@ const ClassroomEdit = () => {
         }
       );
       setClassroom(response.data);
-      setEditMode(false);
+      router.push("/classrooms"); // Navigate back to classrooms page
     } catch (err) {
-      setError("Update failed");
+      setErrorMessage("Failed to update classroom data");
     }
-  }, [formData, classroom?.id]);
+  }, [formData, classroom?.id, router]);
 
   const handleDelete = useCallback(async () => {
+    if (!classroom) {
+      setErrorMessage("Classroom data is missing");
+      return;
+    }
     if (nameInput === classroom.name) {
       try {
         await axios.delete(
@@ -98,12 +124,12 @@ const ClassroomEdit = () => {
         );
         router.push("/classrooms");
       } catch (err) {
-        setError("Delete failed");
+        setErrorMessage("Delete failed");
       }
     } else {
       alert("Classroom name does not match. Deletion cancelled.");
     }
-  }, [router, classroom?.id, classroom?.name, nameInput]);
+  }, [router, classroom?.id, nameInput]);
 
   const openDeleteModal = () => {
     setIsDeleteModalOpen(true);
@@ -120,10 +146,11 @@ const ClassroomEdit = () => {
         formData={formData}
         handleChange={handleChange}
         handleUpdate={handleUpdate}
-        handleCancel={() => setEditMode(false)}
+        openDeleteModal={openDeleteModal}
+        educationalStages={educationalStages}
       />
     ),
-    [formData, handleChange, handleUpdate]
+    [formData, handleChange, handleUpdate, openDeleteModal, educationalStages]
   );
 
   if (!isClient) return null;
@@ -180,102 +207,7 @@ const ClassroomEdit = () => {
       </div>
       <br />
       <div className="relative z-10 xl:mx-auto xl:w-full xl:max-w-6xl">
-        {error && <p className="text-red-500">{error}</p>}
-        {editMode ? (
-          memoizedForm
-        ) : (
-          <div className={cn("max-w-4xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white", "min-w-[300px]")}>
-            <style jsx global>{
-              `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
-              select {
-                appearance: none;
-                background: ${theme === "dark" ? "#333" : "#fff"};
-                color: ${theme === "dark" ? "#fff" : "#000"};
-                border: 1px solid ${theme === "dark" ? "#555" : "#ccc"};
-                padding: 0.5rem;
-                border-radius: 0.375rem;
-                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-              }
-              select:focus {
-                outline: none;
-                border-color: ${theme === "dark" ? "#888" : "#007bff"};
-                box-shadow: 0 0 0 3px ${theme === "dark" ? "rgba(136, 136, 136, 0.5)" : "rgba(0, 123, 255, 0.25)"};
-              }
-              option {
-                background: ${theme === "dark" ? "#333" : "#fff"};
-                color: ${theme === "dark" ? "#fff" : "#000"};
-              }`
-            }</style>
-            <div className="my-1">
-            <div className="flex flex-col md:flex-row gap-6 mb-8">
-              <div className="flex-1 md:w-1/2 border border-gray-300 rounded-md p-4">
-                <LabelInputContainer className="mb-4">
-                  <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}>🏫 Classroom Name</Label>
-                  <p
-                    className={cn(theme === "dark" ? "text-white" : "text-black")}
-                  >
-                    {classroom?.name}
-                  </p>
-                </LabelInputContainer>
-                <LabelInputContainer className="mb-4">
-                  <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}>📚 Academic Course</Label>
-                  <p
-                    className={cn(theme === "dark" ? "text-white" : "text-black")}
-                  >
-                    {classroom?.academic_course}
-                  </p>
-                </LabelInputContainer>
-                <LabelInputContainer className="mb-4">
-                  <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}>📝 Description</Label>
-                  <p
-                    className={cn(theme === "dark" ? "text-white" : "text-black")}
-                  >
-                    {classroom?.description}
-                  </p>
-                </LabelInputContainer>
-                <LabelInputContainer className="mb-4">
-                  <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}>📅 Academic Year</Label>
-                  <p
-                    className={cn(theme === "dark" ? "text-white" : "text-black")}
-                  >
-                    {classroom?.academic_year}
-                  </p>
-                </LabelInputContainer>
-              </div>
-            </div>
-            </div>
-            <br/>
-            <button
-              onClick={() => setEditMode(true)}
-              className={cn(
-                "relative group/btn block w-full rounded-md h-10 font-medium border border-transparent mb-4",
-                theme === "dark"
-                  ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-                  : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
-              )}
-              type="submit"
-              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-            >
-              Edit &rarr;
-              <BottomGradient />
-            </button>
-            <button
-              onClick={openDeleteModal}
-              className={cn(
-                "relative group/btn block w-full mx-auto rounded-md h-10 font-medium border border-transparent mt-4",
-                theme === "dark"
-                  ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-                  : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-red-300"
-              )}
-              type="submit"
-              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-            >
-              Delete Classroom
-              <BottomGradient isCancel />
-            </button>
-          </div>
-        )}
-        <br />
+        {memoizedForm}
       </div>
       <Modal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} title="Delete Classroom">
         <div className="p-4">
@@ -287,7 +219,7 @@ const ClassroomEdit = () => {
             Are you sure you want to delete this classroom? This action cannot be undone.
           </p>
           <p className="mb-4">
-            To delete the classroom, please enter its name ({classroom.name}):
+            To delete the classroom, please enter its name ({classroom?.name}):
           </p>
           <input
             type="text"
@@ -322,38 +254,8 @@ const ClassroomEdit = () => {
       <div className="my-12"></div>
     </div>
   );
-}
-
-const LabelInputContainer = ({ children, className }) => {
-  return (
-    <div className={cn("flex flex-col space-y-2 w-full", className)}>
-      {children}
-    </div>
-  );
 };
 
-const BottomGradient = ({ isCancel }) => {
-  return (
-    <>
-      <span
-        className={cn(
-          "group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0",
-          isCancel
-            ? "bg-gradient-to-r from-transparent via-orange-500 to-transparent"
-            : "bg-gradient-to-r from-transparent via-cyan-500 to-transparent"
-        )}
-      />
-      <span
-        className={cn(
-          "group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10",
-          isCancel
-            ? "bg-gradient-to-r from-transparent via-orange-500 to-transparent"
-            : "bg-gradient-to-r from-transparent via-indigo-500 to-transparent"
-        )}
-      />
-    </>
-  );
-};
 
 export default function Main() {
   return <SidebarDemo ContentComponent={ClassroomEdit} />;
