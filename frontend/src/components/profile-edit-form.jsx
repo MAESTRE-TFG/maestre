@@ -77,7 +77,7 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
           <br />
           <LabelInputContainer className="flex-1">
               <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="oldPassword">🔒 Confirm Old Password</Label>
-              <Input id="oldPassword" name="old_password" placeholder="Old Password" type="password" value={formData.old_password || ""} onChange={handleChange} />
+              <Input id="oldPassword" name="oldPassword" placeholder="Old Password" type="password" value={formData.oldPassword || ""} onChange={handleChange} />
           </LabelInputContainer>
           <br />
           <div className="flex flex-col md:flex-row gap-6 mb-4">

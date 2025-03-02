@@ -99,7 +99,7 @@ export function SidebarDemo({ ContentComponent }) {
     },
     {
       label: user ? user.name + " " + user.surname : "Sign in",
-      href: "profile_edit",
+      href: "/profile_edit",
       icon: (
         <IconUser
           className={cn(
@@ -165,7 +165,7 @@ export const Logo = () => {
   return (
     <div className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20">
       <img
-        src={theme === "dark" ? "static/maestre_logo_2_dark.webp" : "static/maestre_logo_2.webp"}
+        src={theme === "dark" ? "/static/maestre_logo_2_dark.webp" : "/static/maestre_logo_2.webp"}
         className="h-12 w-12 flex-shrink-0 rounded-full"
         width={90}
         height={90}
@@ -193,7 +193,7 @@ export const LogoIcon = () => {
   return (
     <div className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20">
       <img
-        src={theme === "dark" ? "static/maestre_logo_2_dark.webp" : "static/maestre_logo_2.webp"}
+        src={theme === "dark" ? "/static/maestre_logo_2_dark.webp" : "/static/maestre_logo_2.webp"}
         className="h-12 w-12 flex-shrink-0 rounded-full"
         width={90}
         height={90}

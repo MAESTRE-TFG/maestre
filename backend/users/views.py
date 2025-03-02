@@ -40,9 +40,9 @@ class UserViewSet(viewsets.ModelViewSet):
     def update_user(self, request, pk=None):
         user = self.get_object()
         if 'password' in request.data:
-            old_password = request.data.get('old_password')
+            old_password = request.data.get('oldPassword')
             if not user.check_password(old_password):
-                return Response({'old_password': 'Wrong password.'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'oldPassword': 'Wrong password.'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = self.get_serializer(user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)

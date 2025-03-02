@@ -25,7 +25,8 @@ const ProfileEdit = () => {
     city: "",
     school: "",
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    oldPassword: "",
   });
   const [error, setError] = useState(null);
   const [isProfileCompleted, setIsProfileCompleted] = useState(null);
@@ -60,7 +61,7 @@ const ProfileEdit = () => {
         surname: parsedUser.surname || "",
         region: parsedUser.region || "",
         city: parsedUser.city || "",
-        school: parsedUser.school || ""
+        school: parsedUser.school || "",
       }));
     } else {
       router.push("/signin");
@@ -137,28 +138,61 @@ const ProfileEdit = () => {
   }, []);
 
   const handleUpdate = useCallback(async () => {
-    if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
-      return;
+    // Create a payload without password fields
+    const updatePayload = {
+      username: formData.username,
+      email: formData.email,
+      name: formData.name,
+      surname: formData.surname,
+      region: formData.region,
+      city: formData.city,
+      school: formData.school,
+    };
+    
+    // Only add password-related fields if user is updating password
+    if (formData.password && formData.oldPassword) {
+      if (formData.password !== formData.confirmPassword) {
+        setError("Passwords do not match");
+        return;
+      }
+      updatePayload.password = formData.password;
+      updatePayload.oldPassword = formData.oldPassword;
     }
     try {
       const response = await axios.put(
         `http://localhost:8000/api/users/${user.id}/update/`,
-        formData,
+        updatePayload,
         {
           headers: {
             Authorization: `Token ${localStorage.getItem("authToken")}`,
           },
         }
       );
-      localStorage.setItem("user", JSON.stringify(response.data));
-      setUser(response.data);
+    
+      // Store user data without password fields
+      const userToStore = {
+        ...response.data,
+        password: undefined,
+        oldPassword: undefined,
+        confirmPassword: undefined
+      };
+      
+      localStorage.setItem("user", JSON.stringify(userToStore));
+      setUser(userToStore);
+      
+      // Reset password fields
+      setFormData(prev => ({
+        ...prev,
+        password: "",
+        confirmPassword: "",
+        oldPassword: ""
+      }));
+      
       setEditMode(false);
     } catch (err) {
-      setError("Update failed");
+      setError(err.response?.data?.message || "Update failed");
     }
   }, [formData, user?.id]);
-
   const handleDelete = useCallback(async () => {
     if (usernameInput === user.username) {
       try {
