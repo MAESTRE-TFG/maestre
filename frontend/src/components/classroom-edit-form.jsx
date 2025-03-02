@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 import { useRouter } from "next/navigation";
 
-export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDeleteModal, educationalStages, setErrorMessage }) {
+export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDeleteModal, educationalStages }) {
   const { theme } = useTheme();
   const router = useRouter();
 
@@ -72,7 +72,14 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
           </div>
           <LabelInputContainer className="mb-4">
             <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="description">📝 Description</Label>
-            <textarea id="description" name="description" placeholder="Sample Description" className="w-full p-2 border rounded-md" rows="4" value={formData.description || ""} onChange={handleChange} />
+            <textarea id="description" name="description" placeholder="Sample Description"
+              className={cn(
+                "block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
+                theme === "dark"
+                  ? "bg-black border-gray-700 text-white"
+                  : "bg-white border-gray-300 text-black"
+              )}
+              rows="4" value={formData.description || ""} onChange={handleChange} />
           </LabelInputContainer>
         </div>
         <button

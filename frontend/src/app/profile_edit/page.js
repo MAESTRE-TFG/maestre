@@ -72,7 +72,7 @@ const ProfileEdit = () => {
     const getSchools = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/schools/?city=${formData.city}`,
+          `/api/schools/?city=${formData.city}`,
           {
             headers: {
               Authorization: `Token ${localStorage.getItem("authToken")}`,
@@ -94,7 +94,7 @@ const ProfileEdit = () => {
     const getSchoolById = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/schools/${formData.school}/`,
+          `/api/schools/${formData.school}/`,
           {
             headers: {
               Authorization: `Token ${localStorage.getItem("authToken")}`,
@@ -124,7 +124,7 @@ const ProfileEdit = () => {
   const fetchSchools = useCallback(async (city) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/schools/?city=${city}`,
+        `/api/schools/?city=${city}`,
         {
           headers: {
             Authorization: `Token ${localStorage.getItem("authToken")}`,
@@ -160,7 +160,7 @@ const ProfileEdit = () => {
     }
     try {
       const response = await axios.put(
-        `http://localhost:8000/api/users/${user.id}/update/`,
+        `/api/users/${user.id}/update/`,
         updatePayload,
         {
           headers: {
@@ -197,7 +197,7 @@ const ProfileEdit = () => {
     if (usernameInput === user.username) {
       try {
         await axios.delete(
-          `http://localhost:8000/api/users/${user.id}/delete/`,
+          `/api/users/${user.id}/delete/`,
           {
             headers: {
               Authorization: `Token ${localStorage.getItem("authToken")}`,
@@ -243,6 +243,38 @@ const ProfileEdit = () => {
 
   return (
     <div className="relative flex flex-col justify-center items-center py-12 sm:px-8 lg:px-8 overflow-auto">
+      {/* Floating Div */}
+      <div className="fixed top-0 left-0 w-full z-20 bg-inherit backdrop-blur-md">
+        <div className="relative z-20 sm:mx-auto sm:w-full sm:max-w-full">
+        <div className="h-12"></div>
+          <div className="flex justify-center items-center sticky top-0 bg-inherit px-4 space-x-4">
+          <h1
+            className={cn(
+              "mt-6 text-center text-3xl font-extrabold text-zinc-100",
+              theme === "dark" ? "text-white" : "text-dark"
+            )}
+          >
+            Hello{" "}
+            <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+              {user ? user.name : ""}
+            </span>{" "}
+            !
+          </h1>
+          <h4
+            className={cn(
+              "mt-6 text-center text-3xl font-extrabold text-zinc-100",
+              theme === "dark" ? "text-white" : "text-dark"
+            )}
+          >
+            See and edit your profile and data.
+          </h4>
+          <style jsx global>{`
+            @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
+          `}</style>
+        </div>
+        </div>
+      </div>
+      {/* End of Floating Div */}
       {/* Background Images */}
       {theme === "dark" ? (
         <>
@@ -272,37 +304,8 @@ const ProfileEdit = () => {
         </>
       )}
       {/* End of Background Images */}
-      <div className="relative z-10 my-12"></div>
-      <br></br>
-      <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-full">
-        <div className="h-12"></div>
-        <h1
-          className={cn(
-            "mt-6 text-center text-3xl font-extrabold text-zinc-100",
-            theme === "dark" ? "text-white" : "text-dark"
-          )}
-        >
-          Hello{" "}
-          <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-            {user ? user.name : ""}
-          </span>{" "}
-          !
-        </h1>
-        <h4
-          className={cn(
-            "mt-6 text-center text-3xl font-extrabold text-zinc-100",
-            theme === "dark" ? "text-white" : "text-dark"
-          )}
-        >
-          See and edit your profile and data.
-        </h4>
-        <style jsx global>{`
-          @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
-        `}</style>
-      </div>
-      <br />
+      <div className="relative z-10 my-12" style={{ height: "300px" }}></div>
       <div className="relative z-10 xl:mx-auto xl:w-full xl:max-w-6xl">
-        {error && <p className="text-red-500">{error}</p>}
         {editMode ? (
           memoizedForm
         ) : (

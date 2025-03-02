@@ -123,7 +123,7 @@ export function SidebarDemo({ ContentComponent }) {
           : "bg-gray-100 border-neutral-200"
       )}
     >
-      <Sidebar open={open} setOpen={setOpen} className={cn(open ? "w-84" : "w-60")}>
+      <Sidebar open={open} setOpen={setOpen} className={cn(open ? "w-84 z-50" : "w-60 z-50")}>
         <SidebarBody className={cn("justify-between gap-10",theme === "dark" ? "bg-neutral-900" : "bg-neutral-200")}>
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             {open ? <Logo /> : <LogoIcon />}
@@ -163,7 +163,7 @@ export function SidebarDemo({ ContentComponent }) {
 export const Logo = () => {
   const { theme } = useTheme();
   return (
-    <div className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20">
+    <div className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-50">
       <img
         src={theme === "dark" ? "/static/maestre_logo_2_dark.webp" : "/static/maestre_logo_2.webp"}
         className="h-12 w-12 flex-shrink-0 rounded-full"
@@ -191,7 +191,7 @@ export const Logo = () => {
 export const LogoIcon = () => {
   const { theme } = useTheme();
   return (
-    <div className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-20">
+    <div className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-50">
       <img
         src={theme === "dark" ? "/static/maestre_logo_2_dark.webp" : "/static/maestre_logo_2.webp"}
         className="h-12 w-12 flex-shrink-0 rounded-full"

@@ -26,21 +26,79 @@ const ClassroomEdit = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [nameInput, setNameInput] = useState("");
   const searchParams = useSearchParams();
+  const [userSchool, setUserSchool] = useState(null);
+  const [userStages, setUserStages] = useState(null);
+
+  useEffect(() => {
+    const user = localStorage.getItem('user');
+    if (user) {
+      const parsedUser = JSON.parse(user);
+      setUserSchool(parsedUser.school);
+    } else {
+      localStorage.removeItem('authToken');
+    }
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      router.push('/signup');
+      return;
+    }
+  }, [router]);
+
+
+  useEffect(() => {
+    const fetchStages = async () => {
+      if (userSchool) {
+        try {
+          const response = await fetch(`http://localhost:8000/api/schools/${userSchool}/`, {
+            headers: {
+              "Authorization": `Token ${localStorage.getItem('authToken')}`,
+            },
+          });
+          if (response.ok) {
+            const data = await response.json();
+            setUserStages(data.stages);
+          } else {
+            setErrorMessage("Failed to fetch stages");
+          }
+        } catch (err) {
+          setErrorMessage("Network error occurred");
+        }
+      }
+    };
+    fetchStages();
+  }, [userSchool, setErrorMessage]);
+
 
   const educationalStages = [
     {
-      stage: "Primary",
-      courses: ["1º Primary", "2º Primary", "3º Primary", "4º Primary", "5º Primary", "6º Primary"],
+      stage: "Infantil",
+      courses: ["1º Infantil", "2º Infantil", "3º Infantil"],
     },
     {
-      stage: "Secondary",
+      stage: "Primaria",
+      courses: ["1º Primaria", "2º Primaria", "3º Primaria", "4º Primaria", "5º Primaria", "6º Primaria"],
+    },
+    {
+      stage: "Secundaria",
       courses: ["1º ESO", "2º ESO", "3º ESO", "4º ESO"],
     },
     {
-      stage: "High School",
+      stage: "Bachillerato",
       courses: ["1º Bachillerato", "2º Bachillerato"],
     },
+    {
+      stage: "FP",
+      courses: ["1º FPB", "2º FPB"],
+    },
+    {
+      stage: "Ciclo Formativo",
+      courses: ["1º Grado Medio", "2º Grado Medio", "1º Grado Superior", "2º Grado Superior"]
+    },
   ];
+
+  const filteredEducationalStages = educationalStages.filter(stage => 
+    userStages && userStages.includes(stage.stage)
+  );
 
   useEffect(() => {
     if (searchParams.get("editMode") === "true") {
@@ -101,7 +159,7 @@ const ClassroomEdit = () => {
         }
       );
       setClassroom(response.data);
-      router.push("/classrooms"); // Navigate back to classrooms page
+      router.push("/classrooms");
     } catch (err) {
       setErrorMessage("Failed to update classroom data");
     }
@@ -147,10 +205,10 @@ const ClassroomEdit = () => {
         handleChange={handleChange}
         handleUpdate={handleUpdate}
         openDeleteModal={openDeleteModal}
-        educationalStages={educationalStages}
+        educationalStages={filteredEducationalStages}
       />
     ),
-    [formData, handleChange, handleUpdate, openDeleteModal, educationalStages]
+    [formData, handleChange, handleUpdate, openDeleteModal, filteredEducationalStages]
   );
 
   if (!isClient) return null;
@@ -161,12 +219,12 @@ const ClassroomEdit = () => {
       {theme === "dark" ? (
         <>
           <img
-            src="/static/bubbles black/1.svg"
+            src="/static/bubbles black/6.svg"
             alt="Bubble"
             className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
           />
           <img
-            src="/static/bubbles black/3.svg"
+            src="/static/bubbles black/5.svg"
             alt="Bubble"
             className="absolute bottom-0 right-0 opacity-50 z-0"
           />
@@ -174,12 +232,12 @@ const ClassroomEdit = () => {
       ) : (
         <>
           <img
-            src="/static/bubbles white/1.svg"
+            src="/static/bubbles white/6.svg"
             alt="Bubble"
             className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
           />
           <img
-            src="/static/bubbles white/3.svg"
+            src="/static/bubbles white/5.svg"
             alt="Bubble"
             className="absolute bottom-0 right-0 opacity-50 z-0"
           />
