@@ -2,7 +2,6 @@
 
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
 import { usePathname } from "next/navigation";
 import { Alert } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
@@ -18,38 +17,30 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export default function RootLayout({ children }) {
-  const pathname = usePathname();
+// Add this import at the top
+import { Alfa_Slab_One } from 'next/font/google';
 
+const alfaSlabOne = Alfa_Slab_One({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+});
+
+// In your RootLayout component, add the font class
+import { ThemeProvider } from "@/components/theme-provider";
+
+export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        <ErrorContextProvider>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem={false}
-            disableTransitionOnChange
-          >
-            <ErrorContext.Consumer>
-              {({ errorMessage, clearErrorMessage }) => (
-                errorMessage && (
-                  <div style={{ position: 'fixed', bottom: '20px', right: '20px', zIndex: 1000 }}>
-                    <Alert
-                      icon={<CheckIcon fontSize="inherit" />}
-                      variant="filled"
-                      severity="error"
-                      onClose={clearErrorMessage}
-                    >
-                      {errorMessage}
-                    </Alert>
-                  </div>
-                )
-              )}
-            </ErrorContext.Consumer>
-            {children}
-          </ThemeProvider>
-        </ErrorContextProvider>
+      <body>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
