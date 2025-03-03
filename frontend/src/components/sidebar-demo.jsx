@@ -3,26 +3,27 @@ import React, { useState, useEffect } from "react";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import {
   IconArrowLeft,
-  IconBrandTabler,
-  IconSettings,
   IconUser,
-  IconUserBolt,
   IconPlus,
   IconSchool,
   IconBooks,
-  IconSun,
-  IconMoon,
+  IconX,
 } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 import axios from 'axios';
 import { useRouter } from "next/navigation";
+import { ThemeSwitch } from "@/components/theme-switch";
+import { Modal } from "@/components/ui/modal";
 
 export function SidebarDemo({ ContentComponent }) {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
   const [user, setUser] = useState(null);
+  const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
+  const openLogoutModal = () => setLogoutModalOpen(true);
+  const closeLogoutModal = () => setLogoutModalOpen(false);
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
     if (storedUser) {
@@ -31,21 +32,22 @@ export function SidebarDemo({ ContentComponent }) {
   }, []);
 
   const handleSignout = async () => {
+    console.log('Signing out...');
     try {
-      await axios.post('/api/users/signout/', {}, {
+      await axios.post('http://localhost:8000/api/users/signout/', {}, {
         headers: {
           'Authorization': `Token ${localStorage.getItem('authToken')}`
         }
       });
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
-      router.push("/signin");
+      router.push("/profile/signin");
     } catch (error) {
       if (error.response && error.response.status === 401) {
         console.error('Invalid token:', error.response.data && error.response.data.detail ? error.response.data.detail : 'No detail available');
         localStorage.removeItem('authToken');
         localStorage.removeItem('user');
-        router.push("/signin");
+        router.push("/profile/signin");
       } else {
         console.error('Error Signing out:', error);
       }
@@ -54,9 +56,9 @@ export function SidebarDemo({ ContentComponent }) {
 
   const handleProfileClick = () => {
     if (!user) {
-      router.push("/signin");
+      router.push("/profile/signin");
     } else {
-      router.push("/profile_edit");
+      router.push("/profile/edit");
     }
   };
 
@@ -98,8 +100,8 @@ export function SidebarDemo({ ContentComponent }) {
       ),
     },
     {
-      label: user ? user.name + " " + user.surname : "Sign in",
-      href: "/profile_edit",
+      label: user ? user.name : "Sign in",
+      href: "/profile/edit",
       icon: (
         <IconUser
           className={cn(
@@ -124,21 +126,48 @@ export function SidebarDemo({ ContentComponent }) {
       )}
     >
       <Sidebar open={open} setOpen={setOpen} className={cn(open ? "w-84 z-50" : "w-60 z-50")}>
-        <SidebarBody className={cn("justify-between gap-10",theme === "dark" ? "bg-neutral-900" : "bg-neutral-200")}>
+        <SidebarBody className={cn("justify-between gap-10", theme === "dark" ? "bg-neutral-900 z-50" : "bg-neutral-200 z-50")}>
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
-            {open ? <Logo /> : <LogoIcon />}
-            <div className="mt-8 flex flex-col gap-2">
+            {open ? (
+              <>
+                <div className="flex justify-end p-2 md:hidden"> {/* Add md:hidden to hide on larger screens */}
+                  <IconX
+                    className={cn(
+                      "h-6 w-6 cursor-pointer",
+                      theme == "dark" ? "text-neutral-200" : "text-neutral-700"
+                    )}
+                    onClick={() => setOpen(false)} // Ensure this onClick event is present
+                  />
+                </div>
+                <Logo />
+              </>
+            ) : (
+              <LogoIcon />
+            )}
+            <div className="mt-8 flex flex-col gap-2 z-50">
               {links.map((link, idx) => (
                 <SidebarLink key={idx} link={link} onClick={link.onClick} />
               ))}
             </div>
           </div>
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 z-50">
+            <SidebarLink
+                link={{
+                  label: "Theme",
+                  href: "#",
+                  icon: (
+                    <ThemeSwitch
+                      checked={theme === "dark"}
+                      onChange={() => setTheme(theme === "dark" ? "light" : "dark")}
+                    />
+                  )
+                }}
+              />
             {user && (
               <SidebarLink
                 link={{
                   label: "Sign out",
-                  href: "",
+                  href: "#",
                   icon: (
                     <IconArrowLeft
                       className={cn(
@@ -147,7 +176,7 @@ export function SidebarDemo({ ContentComponent }) {
                       )}
                     />
                   ),
-                  onClick: handleSignout,
+                  onClick: openLogoutModal, // Cambia esto para abrir el modal
                 }}
               />
             )}
@@ -157,13 +186,45 @@ export function SidebarDemo({ ContentComponent }) {
       <div className="flex-1 flex justify-center items-center p-6 overflow-y-auto">
         <ContentComponent />
       </div>
+      <Modal isOpen={isLogoutModalOpen} onClose={closeLogoutModal} title="Confirm Logout">
+        <div className="p-4">
+          <h2 className="text-lg font-bold mb-4"
+            style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}
+          >
+            Confirm Logout
+          </h2>
+          <p className="mb-4">
+            Are you sure you want to log out? You will need to sign in again to access your account.
+          </p>
+          <div className="flex justify-end">
+            <button
+              onClick={closeLogoutModal}
+              className="mr-2 px-4 py-2 bg-gray-300 rounded-md"
+              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+            >
+              Cancel
+            </button>
+            <button
+              onClick={handleSignout} // Llama a la función de cierre de sesión
+              className="px-4 py-2 bg-red-500 text-white rounded-md"
+              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+            >
+              Logout
+            </button>
+          </div>
+        </div>
+      </Modal>
     </div>
   );
 }
 export const Logo = () => {
   const { theme } = useTheme();
+  const router = useRouter();
   return (
-    <div className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-50">
+    <div
+      className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-50 cursor-pointer"
+      onClick={() => router.push("/")} // Redirect to home page
+    >
       <img
         src={theme === "dark" ? "/static/maestre_logo_2_dark.webp" : "/static/maestre_logo_2.webp"}
         className="h-12 w-12 flex-shrink-0 rounded-full"
@@ -188,10 +249,15 @@ export const Logo = () => {
     </div>
   );
 };
+
 export const LogoIcon = () => {
   const { theme } = useTheme();
+  const router = useRouter();
   return (
-    <div className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-50">
+    <div
+      className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-50 cursor-pointer"
+      onClick={() => router.push("/")} // Redirect to home page
+    >
       <img
         src={theme === "dark" ? "/static/maestre_logo_2_dark.webp" : "/static/maestre_logo_2.webp"}
         className="h-12 w-12 flex-shrink-0 rounded-full"
@@ -203,3 +269,4 @@ export const LogoIcon = () => {
     </div>
   );
 };
+

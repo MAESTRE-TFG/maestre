@@ -3,7 +3,6 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
-import { ThemeSwitch } from "@/components/theme-switch";
 import { usePathname } from "next/navigation";
 import { Alert } from "@mui/material";
 import CheckIcon from "@mui/icons-material/Check";
@@ -49,7 +48,6 @@ export default function RootLayout({ children }) {
               )}
             </ErrorContext.Consumer>
             {children}
-            <ThemeSwitch />
           </ThemeProvider>
         </ErrorContextProvider>
       </body>

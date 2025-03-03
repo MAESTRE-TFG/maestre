@@ -12,7 +12,7 @@ const ClassroomsList = () => {
   const router = useRouter();
   const { theme } = useTheme();
   const [classes, setClasses] = useState([]);
-  const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [isClient, setIsClient] = useState(false);
 
   useEffect(() => {
@@ -26,7 +26,7 @@ const ClassroomsList = () => {
         });
         setClasses(response.data);
       } catch (err) {
-        setError("Failed to fetch classes");
+        setErrorMessage("Failed to fetch classes");
       }
     };
     fetchClasses();
@@ -40,13 +40,17 @@ const ClassroomsList = () => {
     router.push("/classrooms/new");
   };
 
+  const truncateDescription = (description) => {
+    return description.length > 40 ? `${description.substring(0, 60)}...` : description;
+  };
+
   if (!isClient) return null;
 
   return (
-    <div className="relative flex flex-col justify-center items-center py-12 sm:px-8 lg:px-8 overflow-auto">
+    <div className="relative flex flex-col justify-center items-center py-8 sm:px-8 lg:px-8 overflow-auto">
       {/* Floating Div */}
-      <div className="fixed top-0 left-0 w-full z-20 bg-inherit backdrop-blur-md">
-        <div className="relative z-20 sm:mx-auto sm:w-full sm:max-w-full">
+      <div className="fixed top-0 left-0 w-full z-10 bg-inherit backdrop-blur-md">
+        <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-full">
           <div className="h-12"></div>
           <div className="flex justify-center items-center sticky top-0 bg-inherit px-4 space-x-4">
             <h1
@@ -57,6 +61,7 @@ const ClassroomsList = () => {
             >
               My Classes
             </h1>
+            <div className="h-12"></div>
             {classes.length > 0 && (
               <button
                 className={cn(
@@ -87,11 +92,6 @@ const ClassroomsList = () => {
             alt="Bubble"
             className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
           />
-          <img
-            src="/static/bubbles black/6.svg"
-            alt="Bubble"
-            className="absolute bottom-0 right-0 opacity-50 z-0"
-          />
         </>
       ) : (
         <>
@@ -100,16 +100,11 @@ const ClassroomsList = () => {
             alt="Bubble"
             className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
           />
-          <img
-            src="/static/bubbles white/6.svg"
-            alt="Bubble"
-            className="absolute bottom-0 right-0 opacity-50 z-0"
-          />
         </>
       )}
       {/* End of Background Images */}
-      <div className="relative z-10 my-12" style={{ height: "300px" }}></div>
-      <div className="relative z-10 xl:mx-auto xl:w-full xl:max-w-6xl">
+      <div className="relative my-8" style={{ height: "250px" }}></div>
+      <div className="relative xl:mx-auto xl:w-full xl:max-w-6xl">
         {classes.length === 0 ? (
           <div className="text-center">
             <p className="text-lg font-bold">No classes found.</p>
@@ -128,14 +123,14 @@ const ClassroomsList = () => {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className={`grid ${classes.length === 1 ? "justify-center" : "grid-cols-1 md:grid-cols-2"} gap-6`}>
             {classes.map((classroom) => (
               <div
                 key={classroom.id}
                 className={cn(
-                  "max-w-6xl w-full mx-auto rounded-none md:rounded-2xl p-8 md:p-16 shadow-input relative",
+                  "max-w-full w-full mx-auto rounded-none md:rounded-2xl p-8 md:p-16 shadow-input relative",
                   theme === "dark" ? "bg-black text-white" : "bg-green-900 text-white",
-                  "min-w-[600px] border-4 border-white text-center"
+                  "border-4 border-white text-center"
                 )}
                 style={{
                   fontFamily: "'Alfa Slab One', sans-serif",
@@ -148,7 +143,7 @@ const ClassroomsList = () => {
                   <div>
                     <Label className="text-2xl font-bold text-white">{classroom.name}</Label>
                     <br></br><br></br>
-                    <p className="text-lg text-white">{classroom.description}</p>
+                    <p className="text-lg text-white">{truncateDescription(classroom.description)}</p>
                     <br></br>
                     <p className="text-md text-white">Course: {classroom.academic_course}</p>
                     <p className="text-md text-white">Año: {classroom.academic_year}</p>
@@ -173,7 +168,7 @@ const ClassroomsList = () => {
           </div>
         )}
       </div>
-      <div className="my-12"></div>
+      <div className="my-8"></div>
     </div>
   );
 };

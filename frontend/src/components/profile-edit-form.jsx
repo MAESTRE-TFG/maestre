@@ -33,7 +33,6 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
 
   return (
     <div className={cn("max-w-4xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white")}>
-      <div className="h-12"></div>
       <style jsx global>{
         `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
         select {

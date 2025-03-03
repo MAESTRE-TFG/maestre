@@ -10,7 +10,7 @@ import { SidebarDemo } from "@/components/sidebar-demo";
 export default function CreateSchool() {
   const router = useRouter();
   const { theme } = useTheme();
-  const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function CreateSchool() {
     }
     const token = localStorage.getItem('authToken');
     if (!token) {
-      router.push('/signup');
+      router.push('/profile/signup');
       return;
     }
   }, [router]);
@@ -50,17 +50,17 @@ export default function CreateSchool() {
       if (response.ok) {
         const data = await response.json();
         if (editMode) {
-          router.push("/profile_edit?editMode=true");
+          router.push("/profile/edit?editMode=true");
         }
         else {
-          router.push("/complete_profile");
+          router.push("/profile/complete");
         }
       } else {
         const data = await response.json();
-        setError(data.detail || "Failed to create school");
+        setErrorMessage(data.detail || "Failed to create school");
       }
     } catch (err) {
-      setError("Network error occurred");
+      setErrorMessage("Network error occurred");
     }
   };
 

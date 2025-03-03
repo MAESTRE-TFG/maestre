@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { SigninForm } from "../../components/signin-form-demo";
+import { SigninForm } from "@/components/signin-form-demo";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 export default function SignIn() {
   const router = useRouter();
   const { theme } = useTheme();
-  const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -36,10 +36,10 @@ export default function SignIn() {
         router.push("/");
       } else {
         const data = await response.json();
-        setError(data.detail || "Login failed");
+        setErrorMessage(data.detail || "Login failed");
       }
     } catch (err) {
-      setError("Network error occurred");
+      setErrorMessage("Network error occurred");
     }
   };
 
@@ -63,7 +63,7 @@ export default function SignIn() {
         `}</style>
       </div>
         <img 
-          src={theme === "dark" ? "static/maestre_logo_circle_black.png" : "static/maestre_logo_circle.png"} 
+          src={theme === "dark" ? "/static/maestre_logo_circle_black.png" : "static/maestre_logo_circle.png"} 
           alt="MAESTRE Logo" 
           className="mx-auto mt-4 w-44 h-44"
         />

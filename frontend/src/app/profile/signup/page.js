@@ -9,7 +9,7 @@ import { useState, useEffect } from "react";
 export default function SignUp() {
   const router = useRouter();
   const { theme } = useTheme();
-  const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -36,10 +36,10 @@ export default function SignUp() {
         router.push("/");
       } else {
         const data = await response.json();
-        setError(data.detail || "Registration failed");
+        setErrorMessage(data.detail || "Registration failed");
       }
     } catch (err) {
-      setError("Network error occurred");
+      setErrorMessage("Network error occurred");
     }
   };
 

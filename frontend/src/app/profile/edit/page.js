@@ -28,7 +28,7 @@ const ProfileEdit = () => {
     confirmPassword: "",
     oldPassword: "",
   });
-  const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [isProfileCompleted, setIsProfileCompleted] = useState(null);
   const [schools, setSchools] = useState([]);
   const [city, setCity] = useState("");
@@ -64,7 +64,7 @@ const ProfileEdit = () => {
         school: parsedUser.school || "",
       }));
     } else {
-      router.push("/signin");
+      router.push("/profile/signin");
     }
   }, [router]);
 
@@ -72,7 +72,7 @@ const ProfileEdit = () => {
     const getSchools = async () => {
       try {
         const response = await axios.get(
-          `/api/schools/?city=${formData.city}`,
+          `http://localhost:8000/api/schools/?city=${formData.city}`,
           {
             headers: {
               Authorization: `Token ${localStorage.getItem("authToken")}`,
@@ -81,7 +81,7 @@ const ProfileEdit = () => {
         );
         setSchools(response.data);
       } catch (err) {
-        setError("Failed to fetch schools");
+        setErrorMessage("Failed to fetch schools");
       }
     };
 
@@ -94,7 +94,7 @@ const ProfileEdit = () => {
     const getSchoolById = async () => {
       try {
         const response = await axios.get(
-          `/api/schools/${formData.school}/`,
+          `http://localhost:8000/api/schools/${formData.school}/`,
           {
             headers: {
               Authorization: `Token ${localStorage.getItem("authToken")}`,
@@ -103,7 +103,7 @@ const ProfileEdit = () => {
         );
         setSchool(response.data);
       } catch (err) {
-        setError("Failed to fetch school");
+        setErrorMessage("Failed to fetch school");
       }
     };
 
@@ -124,7 +124,7 @@ const ProfileEdit = () => {
   const fetchSchools = useCallback(async (city) => {
     try {
       const response = await axios.get(
-        `/api/schools/?city=${city}`,
+        `http://localhost:8000/api/schools/?city=${city}`,
         {
           headers: {
             Authorization: `Token ${localStorage.getItem("authToken")}`,
@@ -133,7 +133,7 @@ const ProfileEdit = () => {
       );
       setSchools(response.data);
     } catch (err) {
-      setError("Failed to fetch schools");
+      setErrorMessage("Failed to fetch schools");
     }
   }, []);
 
@@ -152,7 +152,7 @@ const ProfileEdit = () => {
     // Only add password-related fields if user is updating password
     if (formData.password && formData.oldPassword) {
       if (formData.password !== formData.confirmPassword) {
-        setError("Passwords do not match");
+        setErrorMessage("Passwords do not match");
         return;
       }
       updatePayload.password = formData.password;
@@ -160,7 +160,7 @@ const ProfileEdit = () => {
     }
     try {
       const response = await axios.put(
-        `/api/users/${user.id}/update/`,
+        `http://localhost:8000/api/users/${user.id}/update/`,
         updatePayload,
         {
           headers: {
@@ -190,14 +190,14 @@ const ProfileEdit = () => {
       
       setEditMode(false);
     } catch (err) {
-      setError(err.response?.data?.message || "Update failed");
+      setErrorMessage(err.response?.data?.message || "Update failed");
     }
   }, [formData, user?.id]);
   const handleDelete = useCallback(async () => {
     if (usernameInput === user.username) {
       try {
         await axios.delete(
-          `/api/users/${user.id}/delete/`,
+          `http://localhost:8000/api/users/${user.id}/delete/`,
           {
             headers: {
               Authorization: `Token ${localStorage.getItem("authToken")}`,
@@ -206,9 +206,9 @@ const ProfileEdit = () => {
         );
         localStorage.removeItem("authToken");
         localStorage.removeItem("user");
-        router.push("/signin");
+        router.push("/profile/signin");
       } catch (err) {
-        setError("Delete failed");
+        setErrorMessage("Delete failed");
       }
     } else {
       alert("Username does not match. Account deletion cancelled.");
@@ -244,34 +244,34 @@ const ProfileEdit = () => {
   return (
     <div className="relative flex flex-col justify-center items-center py-12 sm:px-8 lg:px-8 overflow-auto">
       {/* Floating Div */}
-      <div className="fixed top-0 left-0 w-full z-20 bg-inherit backdrop-blur-md">
+      <div className="fixed top-0 left-0 w-full z-10 bg-inherit backdrop-blur-md">
         <div className="relative z-20 sm:mx-auto sm:w-full sm:max-w-full">
-        <div className="h-12"></div>
-          <div className="flex justify-center items-center sticky top-0 bg-inherit px-4 space-x-4">
-          <h1
-            className={cn(
-              "mt-6 text-center text-3xl font-extrabold text-zinc-100",
-              theme === "dark" ? "text-white" : "text-dark"
-            )}
-          >
-            Hello{" "}
-            <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-              {user ? user.name : ""}
-            </span>{" "}
-            !
-          </h1>
-          <h4
-            className={cn(
-              "mt-6 text-center text-3xl font-extrabold text-zinc-100",
-              theme === "dark" ? "text-white" : "text-dark"
-            )}
-          >
-            See and edit your profile and data.
-          </h4>
-          <style jsx global>{`
-            @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
-          `}</style>
-        </div>
+          <div className="h-12"></div>
+          <div className="flex flex-col justify-center items-center sticky top-0 bg-inherit px-4 space-y-2">
+            <h1
+              className={cn(
+                "text-3xl font-extrabold text-zinc-100",
+                theme === "dark" ? "text-white" : "text-dark"
+              )}
+            >
+              Hello{" "}
+              <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+                {user ? user.name : ""}
+              </span>{" "}
+              !
+            </h1>
+            <h4
+              className={cn(
+                "text-xl font-extrabold text-zinc-100",
+                theme === "dark" ? "text-white" : "text-dark"
+              )}
+            >
+              See and edit your profile and data.
+            </h4>
+            <style jsx global>{`
+              @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
+            `}</style>
+          </div>
         </div>
       </div>
       {/* End of Floating Div */}
@@ -304,12 +304,12 @@ const ProfileEdit = () => {
         </>
       )}
       {/* End of Background Images */}
-      <div className="relative z-10 my-12" style={{ height: "300px" }}></div>
-      <div className="relative z-10 xl:mx-auto xl:w-full xl:max-w-6xl">
+      <div className="relative my-8" style={{ height: "250px"}}></div>
+      <div className="relative xl:mx-auto xl:w-full xl:max-w-7xl">
         {editMode ? (
           memoizedForm
         ) : (
-          <div className={cn("max-w-4xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white", "min-w-[300px]")}>
+          <div className={cn("w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white", "min-w-[300px]")}>
             <style jsx global>{
               `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
               select {
@@ -414,7 +414,7 @@ const ProfileEdit = () => {
             </button>
             {isProfileCompleted === false && (
               <button
-                onClick={() => router.push('/complete_profile')}
+                onClick={() => router.push('/profile/complete')}
                 className={cn(
                   "relative group/btn block w-full rounded-md h-10 font-medium border border-transparent",
                   theme === "dark"

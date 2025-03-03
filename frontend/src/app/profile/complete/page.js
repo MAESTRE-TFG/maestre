@@ -23,7 +23,7 @@ const ProfileEdit = () => {
     city: "",
     school: ""
   });
-  const [error, setError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [schools, setSchools] = useState([]);
   const [city, setCity] = useState("");
 
@@ -42,7 +42,7 @@ const ProfileEdit = () => {
         surname: parsedUser.surname || "Default Surname",
       }));
     } else {
-      router.push("/signin");
+      router.push("/profile/signin");
     }
     if (storedFormData) {
       const parsedFormData = JSON.parse(storedFormData);
@@ -78,7 +78,7 @@ const ProfileEdit = () => {
       setSchools(response.data);
     } catch (err) {
       console.error("Error fetching schools:", err);
-      setError("Error fetching schools. Please try again later.");
+      setErrorMessage("Error fetching schools. Please try again later.");
     }
   }, [city]);
 
@@ -88,6 +88,12 @@ const ProfileEdit = () => {
 
   const handleComplete = useCallback(async () => {
     try {
+      // Validate form data
+      if (!formData.username || !formData.email || !formData.name || !formData.surname || !formData.region || !formData.city || !formData.school) {
+        setErrorMessage("All fields are required.");
+        return;
+      }
+
       console.log("Submitting form data:", formData);
       const response = await axios.put(
         `http://localhost:8000/api/users/${user.id}/update/`,
@@ -98,13 +104,13 @@ const ProfileEdit = () => {
           },
         }
       );
+      console.log("Response data:", response.data);
       localStorage.setItem("user", JSON.stringify(response.data));
       localStorage.removeItem("formData");
-      setUser (response.data);
+      setUser(response.data);
       setEditMode(false);
     } catch (err) {
-      console.error(err);
-      setError("Update failed");
+      setErrorMessage(`Update failed: ${err.response ? JSON.stringify(err.response.data) : err.message}`);
     }
   }, [formData, user?.id]);
 
@@ -129,7 +135,7 @@ const ProfileEdit = () => {
 
   const handleCreateSchool = useCallback(() => {
     localStorage.setItem("formData", JSON.stringify(formData));
-    router.push("/school_create");
+    router.push("/schools/new");
   }, [formData, router]);
 
   if (!isClient) return null;
@@ -152,14 +158,12 @@ const ProfileEdit = () => {
         `}</style>
       </div>
       <br />
-      {error && <div className="text-red-500">{error}</div>}
       <CompleteProfileForm 
         formData={formData}
         handleChange={handleChange}
         handleComplete={handleComplete}
         handleCreateSchool={handleCreateSchool}
         schools={schools}
-        error={error}
       />
     </div>
   );

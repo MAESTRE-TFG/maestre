@@ -59,11 +59,6 @@ export function CompleteProfileForm({ formData, handleChange, handleComplete, ha
           color: ${theme === "dark" ? "#fff" : "#000"};
         }`
       }</style>
-      {error && (
-        <div className="text-red-500 text-sm mb-4">
-          {error}
-        </div>
-      )}
       <form className="my-8" onSubmit={(e) => { e.preventDefault(); handleComplete(); }} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
         <LabelInputContainer className="mb-5">
           <Label htmlFor="region">🌍 Region</Label>
@@ -124,7 +119,7 @@ export function CompleteProfileForm({ formData, handleChange, handleComplete, ha
             <BottomGradient />
           </button>
           <button
-            onClick={() => router.push("/profile_edit")}
+            onClick={() => router.push("/profile/edit")}
             className={cn("relative group/btn block w-full rounded-md h-10 font-medium border border-transparent", 
               theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
               : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"

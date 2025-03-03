@@ -39,7 +39,7 @@ const ClassroomEdit = () => {
     }
     const token = localStorage.getItem('authToken');
     if (!token) {
-      router.push('/signup');
+      router.push('/profile/signup');
       return;
     }
   }, [router]);
