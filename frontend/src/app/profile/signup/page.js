@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { SignupForm } from "../../components/signup-form-demo";
+import { SignupForm } from "@/components/signup-form-demo";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";

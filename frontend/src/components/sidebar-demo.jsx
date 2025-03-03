@@ -176,8 +176,8 @@ export function SidebarDemo({ ContentComponent }) {
                       )}
                     />
                   ),
-                  onClick: openLogoutModal, // Cambia esto para abrir el modal
                 }}
+                onClick={openLogoutModal}
               />
             )}
           </div>
@@ -186,10 +186,10 @@ export function SidebarDemo({ ContentComponent }) {
       <div className="flex-1 flex justify-center items-center p-6 overflow-y-auto">
         <ContentComponent />
       </div>
-      <Modal isOpen={isLogoutModalOpen} onClose={closeLogoutModal} title="Confirm Logout">
+      <Modal isOpen={isLogoutModalOpen} onClose={closeLogoutModal} title="Confirm Logout" style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}
+      >
         <div className="p-4">
           <h2 className="text-lg font-bold mb-4"
-            style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}
           >
             Confirm Logout
           </h2>
@@ -200,14 +200,12 @@ export function SidebarDemo({ ContentComponent }) {
             <button
               onClick={closeLogoutModal}
               className="mr-2 px-4 py-2 bg-gray-300 rounded-md"
-              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             >
               Cancel
             </button>
             <button
               onClick={handleSignout} // Llama a la función de cierre de sesión
               className="px-4 py-2 bg-red-500 text-white rounded-md"
-              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             >
               Logout
             </button>

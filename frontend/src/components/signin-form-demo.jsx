@@ -8,9 +8,10 @@ import { useTheme } from "@/components/theme-provider";
 export function SigninForm({ onSubmit }) {
   const { theme } = useTheme();
   const [formData, setFormData] = React.useState({
-    email: "",
+    emailOrUsername: "",  // Changed from email to emailOrUsername
     password: ""
   });
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -27,8 +28,16 @@ export function SigninForm({ onSubmit }) {
     <div className={cn("max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white")}>
       <form className="my-8" onSubmit={handleSubmit} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
         <LabelInputContainer className="mb-4">
-          <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="email">📧 Email Address</Label>
-          <Input id="email" name="email" placeholder="projectmayhem@fc.com" type="email" required value={formData.email} onChange={handleChange} />
+          <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="emailOrUsername">👤 Email or Username</Label>
+          <Input 
+            id="emailOrUsername" 
+            name="emailOrUsername" 
+            placeholder="email@example.com or username" 
+            type="text"           // Changed from type="email" to type="text"
+            required 
+            value={formData.emailOrUsername} 
+            onChange={handleChange} 
+          />
         </LabelInputContainer>
         <LabelInputContainer className="mb-8">
           <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="password">🔒 Password</Label>
