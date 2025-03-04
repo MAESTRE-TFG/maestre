@@ -64,7 +64,7 @@ export const CreateClassroomForm = ({ onSubmit, setErrorMessage, educationalStag
       <form className="my-8" onSubmit={handleSubmit}>
         <div className="flex flex-wrap gap-6 mb-10">
           <LabelInputContainer className="flex-1">
-            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }} htmlFor="name">🏫 Classroom Name</Label>
+            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }} htmlFor="name">🏫 Name</Label>
             <Input
               id="name"
               name="name"
@@ -76,7 +76,7 @@ export const CreateClassroomForm = ({ onSubmit, setErrorMessage, educationalStag
             />
           </LabelInputContainer>
           <LabelInputContainer className="flex-1">
-            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }} htmlFor="academic_course">📚 Academic Course</Label>
+            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }} htmlFor="academic_course">📚 Course</Label>
             <select
               id="academic_course"
               name="academic_course"
@@ -101,7 +101,7 @@ export const CreateClassroomForm = ({ onSubmit, setErrorMessage, educationalStag
             </select>
           </LabelInputContainer>
           <LabelInputContainer className="flex-1">
-            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }} htmlFor="academic_year">📅 Academic Year</Label>
+            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }} htmlFor="academic_year">📅 Year</Label>
             <Input
               id="academic_year"
               name="academic_year"

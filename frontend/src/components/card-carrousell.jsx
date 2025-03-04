@@ -25,12 +25,12 @@ const CardContent = ({ children }) => {
       "p-8 md:p-14 rounded-3xl mb-4",
       theme === "dark" ? "bg-neutral-800" : "bg-[#F5F5F7]"
     )}>
-      <p className={cn(
+      <div className={cn(
         "text-base md:text-2xl",
         theme === "dark" ? "text-neutral-400" : "text-neutral-600"
       )}>
         {children}
-      </p>
+      </div>
     </div>
   );
 };

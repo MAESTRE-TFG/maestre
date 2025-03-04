@@ -7,7 +7,7 @@ from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action
 from django.contrib.auth import authenticate
 from rest_framework.exceptions import AuthenticationFailed
-from .models import Student, Classroom
+from .models import Student
 from .serializers import StudentSerializer
 
 class StudentViewSet(viewsets.ModelViewSet):

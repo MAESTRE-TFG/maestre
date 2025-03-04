@@ -146,12 +146,12 @@ const ClassroomsList = () => {
                     <p className="text-lg text-white">{truncateDescription(classroom.description)}</p>
                     <br></br>
                     <p className="text-md text-white">Course: {classroom.academic_course}</p>
-                    <p className="text-md text-white">Año: {classroom.academic_year}</p>
+                    <p className="text-md text-white">Year: {classroom.academic_year}</p>
                   </div>
                   <button
                     onClick={() => handleEdit(classroom.id)}
                     className={cn(
-                      "absolute bottom-4 right-4 rounded-md h-10 px-6 font-medium border border-blue-500",
+                      "absolute bottom-4 right-4 rounded-md h-10 px-6 font-medium border border-green-400",
                       theme === "dark"
                         ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
                         : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]"

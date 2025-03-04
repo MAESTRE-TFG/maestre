@@ -5,6 +5,7 @@ from .views import ItemViewSet
 from users.views import UserViewSet
 from schools.views import SchoolListView, SchoolViewSet
 from classrooms.views import ClassroomViewSet
+from students.views import StudentViewSet
 
 router = DefaultRouter()
 router.register(r'items', ItemViewSet)
