@@ -9,13 +9,9 @@ from .models import CustomUser
 from .serializers import CustomUserSerializer
 
 
-# Create your views here.
 class UserViewSet(viewsets.ModelViewSet):
-    # Todas los conjuntos de vistas de Django Rest Framework requieren un queryset y un serializador
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
-
-    # Para poder usar el token de autenticación, necesitamos añadirlo a la lista de clases de autenticación
     authentication_classes = [TokenAuthentication]
 
     def get_permissions(self):
@@ -44,9 +40,9 @@ class UserViewSet(viewsets.ModelViewSet):
     def update_user(self, request, pk=None):
         user = self.get_object()
         if 'password' in request.data:
-            old_password = request.data.get('old_password')
+            old_password = request.data.get('oldPassword')
             if not user.check_password(old_password):
-                return Response({'old_password': 'Wrong password.'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'oldPassword': 'Wrong password.'}, status=status.HTTP_400_BAD_REQUEST)
         serializer = self.get_serializer(user, data=request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
@@ -62,15 +58,30 @@ class UserViewSet(viewsets.ModelViewSet):
     def signin(self, request):
         if request.user.is_authenticated:
             return Response({'detail': 'You are already signed in.'}, status=status.HTTP_400_BAD_REQUEST)
-        email = request.data.get('email')
+
+        email_or_username = request.data.get('emailOrUsername')
         password = request.data.get('password')
-        user = authenticate(request, email=email, password=password)
+
+        # Try to authenticate with email
+        user = None
+        if '@' in email_or_username:
+            user = authenticate(request, email=email_or_username, password=password)
+
+        # If email authentication failed, try username
+        if not user:
+            try:
+                user_obj = CustomUser.objects.get(username=email_or_username)
+                user = authenticate(request, email=user_obj.email, password=password)
+            except CustomUser.DoesNotExist:
+                pass
+
         if user is not None:
             token, created = Token.objects.get_or_create(user=user)
             serializer = self.get_serializer(user)
             response_data = serializer.data
             response_data['token'] = token.key
             return Response(response_data, status=status.HTTP_200_OK)
+
         return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
     @action(detail=False, methods=['post'], permission_classes=[IsAuthenticated])

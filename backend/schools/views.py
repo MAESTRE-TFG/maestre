@@ -23,7 +23,7 @@ class SchoolViewSet(viewsets.ModelViewSet):
         data = request.data.copy()
         serializer = self.get_serializer(data=data)
         if not serializer.is_valid():
-            print(serializer.errors)  # Imprime los errores de validación en la consola
+            print(serializer.errors)
         serializer.is_valid(raise_exception=True)
         school = serializer.save()
         try:
@@ -42,7 +42,7 @@ class SchoolViewSet(viewsets.ModelViewSet):
         data = request.data.copy()
         serializer = self.get_serializer(instance, data=data, partial=partial)
         if not serializer.is_valid():
-            print(serializer.errors)  # Imprime los errores de validación en la consola
+            print(serializer.errors)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)

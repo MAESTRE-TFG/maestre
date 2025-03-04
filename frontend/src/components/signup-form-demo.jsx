@@ -98,7 +98,7 @@ export function SignupForm({ onSubmit }) {
               : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
             )}
             style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-            onClick={() => window.location.href = "/signin"}>
+            onClick={() => window.location.href = "/profile/signin"}>
             Sign in
             <BottomGradient />
           </button>
@@ -124,7 +124,7 @@ const LabelInputContainer = ({
       {React.Children.map(children, child => {
         if (child.type === Label) {
           return React.cloneElement(child, {
-            style: { ...child.props.style, fontSize: "1.25rem" } // Increase font size
+            style: { ...child.props.style, fontSize: "1.25rem" }
           });
         }
         return child;

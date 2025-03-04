@@ -1,4 +1,4 @@
-"use client";;
+"use client";
 import React, {
   useEffect,
   useRef,
@@ -45,21 +45,22 @@ export const Carousel = ({
     }
   };
 
+  // Update scroll amount
   const scrollLeft = () => {
     if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: -300, behavior: "smooth" });
+      carouselRef.current.scrollBy({ left: -500, behavior: "smooth" });
     }
   };
 
   const scrollRight = () => {
     if (carouselRef.current) {
-      carouselRef.current.scrollBy({ left: 300, behavior: "smooth" });
+      carouselRef.current.scrollBy({ left: 500, behavior: "smooth" });
     }
   };
 
   const handleCardClose = (index) => {
     if (carouselRef.current) {
-      const cardWidth = isMobile() ? 230 : 384; // (md:w-96)
+      const cardWidth = isMobile() ? 300 : 480; // Increased card width
       const gap = isMobile() ? 4 : 8;
       const scrollPosition = (cardWidth + gap) * (index + 1);
       carouselRef.current.scrollTo({
@@ -75,62 +76,37 @@ export const Carousel = ({
   };
 
   return (
-    (<CarouselContext.Provider value={{ onCardClose: handleCardClose, currentIndex }}>
+    <CarouselContext.Provider value={{ onCardClose: handleCardClose, currentIndex }}>
       <div className="relative w-full">
-        <div
-          className="flex w-full overflow-x-scroll overscroll-x-auto py-10 md:py-20 scroll-smooth [scrollbar-width:none]"
+        <div 
           ref={carouselRef}
-          onScroll={checkScrollability}>
-          <div
-            className={cn(
-              "absolute right-0  z-[1000] h-auto  w-[5%] overflow-hidden bg-gradient-to-l"
-            )}></div>
-
-          <div
-            className={cn(
-              "flex flex-row justify-start gap-4 pl-4",
-              // remove max-w-4xl if you want the carousel to span the full width of its container
-              "max-w-7xl mx-auto"
-            )}>
+          onScroll={checkScrollability}
+          className="flex w-full overflow-x-scroll overscroll-x-auto py-10 md:py-20 scroll-smooth [scrollbar-width:none]">
+          <div className={cn(
+            "flex flex-row justify-start gap-8 pl-8 pr-8",
+            "max-w-7xl mx-auto"
+          )}>
             {items.map((item, index) => (
-              <motion.div
-                initial={{
-                  opacity: 0,
-                  y: 20,
-                }}
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                  transition: {
-                    duration: 0.5,
-                    delay: 0.2 * index,
-                    ease: "easeOut",
-                    once: true,
-                  },
-                }}
-                key={"card" + index}
-                className="last:pr-[5%] md:last:pr-[33%]  rounded-3xl">
+              <div key={`card-${index}`} className="rounded-3xl">
                 {item}
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
-        <div className="flex justify-end gap-2 mr-10">
-          <button
-            className="relative z-40 h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center disabled:opacity-50"
-            onClick={scrollLeft}
-            disabled={!canScrollLeft}>
-            <IconArrowNarrowLeft className="h-6 w-6 text-gray-500" />
-          </button>
-          <button
-            className="relative z-40 h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center disabled:opacity-50"
-            onClick={scrollRight}
-            disabled={!canScrollRight}>
-            <IconArrowNarrowRight className="h-6 w-6 text-gray-500" />
-          </button>
-        </div>
+        <button
+          className="absolute top-1/2 left-8 -translate-y-1/2 z-40 h-14 w-14 rounded-full bg-gray-100/90 hover:bg-gray-200/90 flex items-center justify-center disabled:opacity-50 transition-all"
+          onClick={scrollLeft}
+          disabled={!canScrollLeft}>
+          <IconArrowNarrowLeft className="h-8 w-8 text-gray-700" />
+        </button>
+        <button
+          className="absolute top-1/2 right-8 -translate-y-1/2 z-40 h-14 w-14 rounded-full bg-gray-100/90 hover:bg-gray-200/90 flex items-center justify-center disabled:opacity-50 transition-all"
+          onClick={scrollRight}
+          disabled={!canScrollRight}>
+          <IconArrowNarrowRight className="h-8 w-8 text-gray-700" />
+        </button>
       </div>
-    </CarouselContext.Provider>)
+    </CarouselContext.Provider>
   );
 };
 
@@ -171,67 +147,69 @@ export const Card = ({
     onCardClose(index);
   };
 
-  return (<>
-    <AnimatePresence>
-      {open && (
-        <div className="fixed inset-0 h-screen z-50 overflow-auto">
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="bg-black/80 backdrop-blur-lg h-full w-full fixed inset-0" />
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            ref={containerRef}
-            layoutId={layout ? `card-${card.title}` : undefined}
-            className="max-w-5xl mx-auto bg-white dark:bg-neutral-900 h-fit  z-[60] my-10 p-4 md:p-10 rounded-3xl font-sans relative">
-            <button
-              className="sticky top-4 h-8 w-8 right-0 ml-auto bg-black dark:bg-white rounded-full flex items-center justify-center"
-              onClick={handleClose}>
-              <IconX className="h-6 w-6 text-neutral-100 dark:text-neutral-900" />
-            </button>
-            <motion.p
-              layoutId={layout ? `category-${card.title}` : undefined}
-              className="text-base font-medium text-black dark:text-white">
-              {card.category}
-            </motion.p>
-            <motion.p
-              layoutId={layout ? `title-${card.title}` : undefined}
-              className="text-2xl md:text-5xl font-semibold text-neutral-700 mt-4 dark:text-white">
-              {card.title}
-            </motion.p>
-            <div className="py-10">{card.content}</div>
-          </motion.div>
+  return (
+    <>
+      <AnimatePresence>
+        {open && (
+          <div className="fixed inset-0 h-screen z-50 overflow-auto">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="bg-black/80 backdrop-blur-lg h-full w-full fixed inset-0" />
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              ref={containerRef}
+              layoutId={layout ? `card-${card.title}` : undefined}
+              className="max-w-5xl mx-auto bg-white dark:bg-neutral-900 h-fit z-[60] my-10 p-4 md:p-10 rounded-3xl font-sans relative">
+              <button
+                className="sticky top-4 h-8 w-8 right-0 ml-auto bg-black dark:bg-white rounded-full flex items-center justify-center"
+                onClick={handleClose}>
+                <IconX className="h-6 w-6 text-neutral-100 dark:text-neutral-900" />
+              </button>
+              <motion.p
+                layoutId={layout ? `category-${card.title}` : undefined}
+                className="text-base font-medium text-black dark:text-white">
+                {card.category}
+              </motion.p>
+              <motion.p
+                layoutId={layout ? `title-${card.title}` : undefined}
+                className="text-2xl md:text-5xl font-semibold text-neutral-700 mt-4 dark:text-white">
+                {card.title}
+              </motion.p>
+              <div className="py-10">{card.content}</div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+      <motion.button
+        layoutId={layout ? `card-${card.title}` : undefined}
+        onClick={handleOpen}
+        className="rounded-3xl bg-gray-100 dark:bg-neutral-900 h-80 w-72 md:h-[40rem] md:w-[32rem] overflow-hidden flex flex-col items-start justify-end relative z-10">
+        <div
+          className="absolute h-full top-0 inset-x-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent z-30 pointer-events-none" />
+        <div className="relative z-40 p-8">
+          <motion.p
+            layoutId={layout ? `category-${card.category}` : undefined}
+            className="text-white text-sm md:text-base font-medium font-sans text-left opacity-80">
+            {card.category}
+          </motion.p>
+          <motion.p
+            layoutId={layout ? `title-${card.title}` : undefined}
+            className="text-white text-xl md:text-3xl font-semibold max-w-xs text-left [text-wrap:balance] font-sans mt-2">
+            {card.title}
+          </motion.p>
         </div>
-      )}
-    </AnimatePresence>
-    <motion.button
-      layoutId={layout ? `card-${card.title}` : undefined}
-      onClick={handleOpen}
-      className="rounded-3xl bg-gray-100 dark:bg-neutral-900 h-80 w-56 md:h-[40rem] md:w-96 overflow-hidden flex flex-col items-start justify-start relative z-10">
-      <div
-        className="absolute h-full top-0 inset-x-0 bg-gradient-to-b from-black/50 via-transparent to-transparent z-30 pointer-events-none" />
-      <div className="relative z-40 p-8">
-        <motion.p
-          layoutId={layout ? `category-${card.category}` : undefined}
-          className="text-white text-sm md:text-base font-medium font-sans text-left">
-          {card.category}
-        </motion.p>
-        <motion.p
-          layoutId={layout ? `title-${card.title}` : undefined}
-          className="text-white text-xl md:text-3xl font-semibold max-w-xs text-left [text-wrap:balance] font-sans mt-2">
-          {card.title}
-        </motion.p>
-      </div>
-      <BlurImage
-        src={card.src}
-        alt={card.title}
-        fill
-        className="object-cover absolute z-10 inset-0" />
-    </motion.button>
-  </>);
+        <BlurImage
+          src={card.src}
+          alt={card.title}
+          fill
+          className="object-cover absolute z-10 inset-0" />
+      </motion.button>
+    </>
+  );
 };
 
 export const BlurImage = ({
@@ -244,7 +222,7 @@ export const BlurImage = ({
 }) => {
   const [isLoading, setLoading] = useState(true);
   return (
-    (<Image
+    <Image
       className={cn("transition duration-300", isLoading ? "blur-sm" : "blur-0", className)}
       onLoad={() => setLoading(false)}
       src={src}
@@ -254,6 +232,6 @@ export const BlurImage = ({
       decoding="async"
       blurDataURL={typeof src === "string" ? src : undefined}
       alt={alt ? alt : "Background of a beautiful view"}
-      {...rest} />)
+      {...rest} />
   );
 };

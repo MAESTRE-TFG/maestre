@@ -9,7 +9,7 @@ export function ThemeSwitch() {
   return (
     <button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="fixed top-4 right-4 p-2 rounded-full bg-zinc-800 dark:bg-zinc-200"
+      className="p-2 rounded-full bg-zinc-800 dark:bg-zinc-200 z-50"
     >
       {theme === "dark" ? (
         <Sun className="h-5 w-5 text-yellow-500" />

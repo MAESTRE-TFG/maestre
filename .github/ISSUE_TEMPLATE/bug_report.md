@@ -1,21 +1,21 @@
 ---
-name: 🐛 Reporte de Bug
-about: Reportar un error o problema en el código.
+name: 🐛 Bug Report
+about: Report an error or problem in the code.
 title: "[BUG] "
 labels: ["bug"]
 assignees: []
 ---
 
-**Descripción del problema:**
-Realizar X funcionalidad añadiendo X datos referente al requisito RNN-0NM...
-- Cambio 1
-- Cambio 2
+**Problem description:**
+Implement X functionality by adding X data related to requirement RNN-0NM...
+- Change 1
+- Change 2
 - ...
 
-**Pasos a reproducir:**
-1. Ir a '...'
-2. Hacer clic en '...'
-3. Se produce '...'
+**Steps to reproduce:**
+1. Go to '...'
+2. Click on '...'
+3. '...' happens
 
-**Comportamiento esperado:**
-Explica qué debería suceder.
+**Expected behavior:**
+Explain what should happen.

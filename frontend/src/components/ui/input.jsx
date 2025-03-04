@@ -7,7 +7,7 @@ import { useTheme } from "@/components/theme-provider";
 
 const Input = React.forwardRef(({ className, type, ...props }, ref) => {
   const { theme } = useTheme();
-  const radius = 100; // change this to increase the rdaius of the hover effect
+  const radius = 100;
   const [visible, setVisible] = React.useState(false);
 
   let mouseX = useMotionValue(0);

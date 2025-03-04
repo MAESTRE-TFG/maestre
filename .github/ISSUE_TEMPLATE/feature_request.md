@@ -1,24 +1,24 @@
 ---
-name: ✨ Solicitud de Funcionalidad
-about: Proponer una nueva funcionalidad o mejora.
+name: ✨ Feature Request
+about: Propose a new feature or improvement.
 title: "[Feature] "
 labels: ["enhancement"]
 assignees: []
 ---
 
-**Descripción de la funcionalidad:**
-Realizar X funcionalidad añadiendo X datos referente al requisito RNN-0NM...
-- Cambio 1
-- Cambio 2
+**Feature description:**
+Implement X functionality by adding X data related to requirement RNN-0NM...
+- Change 1
+- Change 2
 - ...
 
-**Motivación e impacto:**
-- Se ha mejorado ...
-- Se ha completado ...
+**Motivation and impact:**
+- Improved ...
+- Completed ...
 - ...
 
-**Consideraciones adicionales:**
-¿Algo más que deberíamos saber?
-- Se deben hacer tests unitarios
-- Se debe comprobar que el cambio funciona correctamente
+**Additional considerations:**
+Anything else we should know?
+- Unit tests must be performed
+- Ensure the change works correctly
 - ...

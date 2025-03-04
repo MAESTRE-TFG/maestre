@@ -225,7 +225,7 @@ class SchoolTests(APITestCase):
         self.assertEqual(self.school.city, 'Partially Updated City')
 
     def test_delete_school_without_authentication(self):
-        self.client.credentials()  # Remove authentication
+        self.client.credentials()
         url = reverse('school-detail', kwargs={'pk': self.school.pk})
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
