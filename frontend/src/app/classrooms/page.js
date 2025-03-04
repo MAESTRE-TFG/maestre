@@ -141,7 +141,12 @@ const ClassroomsList = () => {
               >
                 <div className="flex flex-col justify-center items-center">
                   <div>
-                    <Label className="text-2xl font-bold text-white">{classroom.name}</Label>
+                    <Label 
+                      className="text-2xl font-bold text-white cursor-pointer hover:underline" 
+                      onClick={() => router.push(`/classrooms/${classroom.id}`)}
+                    >
+                      {classroom.name}
+                    </Label>
                     <br></br><br></br>
                     <p className="text-lg text-white">{truncateDescription(classroom.description)}</p>
                     <br></br>
