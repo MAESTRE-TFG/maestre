@@ -5,12 +5,13 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 
-export function SigninForm({ onSubmit }) { // Change to SigninForm
+export function SigninForm({ onSubmit }) {
   const { theme } = useTheme();
   const [formData, setFormData] = React.useState({
-    email: "",
+    emailOrUsername: "",  // Changed from email to emailOrUsername
     password: ""
   });
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -25,16 +26,21 @@ export function SigninForm({ onSubmit }) { // Change to SigninForm
   };
   return (
     <div className={cn("max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white")}>
-      <style jsx global>{
-        `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');`
-      }</style>
       <form className="my-8" onSubmit={handleSubmit} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
         <LabelInputContainer className="mb-4">
-          <Label htmlFor="email">Email Address</Label>
-          <Input id="email" name="email" placeholder="projectmayhem@fc.com" type="email" required value={formData.email} onChange={handleChange} />
+          <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="emailOrUsername">👤 Email or Username</Label>
+          <Input 
+            id="emailOrUsername" 
+            name="emailOrUsername" 
+            placeholder="email@example.com or username" 
+            type="text"           // Changed from type="email" to type="text"
+            required 
+            value={formData.emailOrUsername} 
+            onChange={handleChange} 
+          />
         </LabelInputContainer>
         <LabelInputContainer className="mb-8">
-          <Label htmlFor="password">Password</Label>
+          <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="password">🔒 Password</Label>
           <Input id="password" name="password" placeholder="••••••••" type="password" required value={formData.password} onChange={handleChange} />
         </LabelInputContainer>
 
@@ -57,10 +63,11 @@ export function SigninForm({ onSubmit }) { // Change to SigninForm
           <button
             className={cn("relative group/btn mt-2 block w-full rounded-md h-10 font-medium border border-transparent", 
               theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
-              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
+              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-green-300"
             )}
-            onClick={() => window.location.href = "/signup"}>
-            Sign up &rarr;
+            style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+            onClick={() => window.location.href = "/profile/signup"}>
+            Sign up
             <BottomGradient />
           </button>
         </div>
@@ -82,7 +89,15 @@ const LabelInputContainer = ({
 }) => {
   return (
     <div className={cn("flex flex-col space-y-2 w-full", className)}>
-      {children}
+      {React.Children.map(children, child => {
+        if (child.type === Label) {
+          return React.cloneElement(child, {
+            style: { ...child.props.style, fontSize: "1.25rem" }
+          });
+        }
+        return child;
+      })}
     </div>
   );
 };
+

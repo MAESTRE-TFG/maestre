@@ -1,10 +1,11 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 
 const COMUNIDADES = [
   "Andalucía",
@@ -38,13 +39,14 @@ const ETAPAS = [
 
 export function CreateSchoolForm({ onSubmit }) {
   const { theme } = useTheme();
+  const router = useRouter();
   const user = JSON.stringify(localStorage.getItem("user"));
   const [formData, setFormData] = React.useState({
     name: "",
     community: "",
     city: "",
     stages: [],
-    user : user
+    user: user || ""
   });
 
   const handleChange = (e) => {
@@ -68,7 +70,7 @@ export function CreateSchoolForm({ onSubmit }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formDataCopy = { ...formData };
-    formDataCopy.stages = formDataCopy.stages.join(", "); // Convertir stages en una cadena separada por comas
+    formDataCopy.stages = formDataCopy.stages.join(", ");
     console.log(formDataCopy);
     onSubmit(formDataCopy);
   };
@@ -76,8 +78,8 @@ export function CreateSchoolForm({ onSubmit }) {
   const handleSelectStage = (etapa) => {
     setFormData((prev) => {
       const updatedStages = prev.stages.includes(etapa)
-        ? prev.stages.filter((e) => e !== etapa) // Desmarcar si ya está seleccionada
-        : [...prev.stages, etapa]; // Agregar si no está seleccionada
+        ? prev.stages.filter((e) => e !== etapa) // Uncheck if already selected
+        : [...prev.stages, etapa]; // Add if not selected
 
       return { ...prev, stages: updatedStages };
     });
@@ -99,7 +101,7 @@ export function CreateSchoolForm({ onSubmit }) {
         style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
       >
         <LabelInputContainer className="mb-8">
-          <Label htmlFor="name">Name</Label>
+          <Label htmlFor="name">🏫 Name</Label>
           <Input
             id="name"
             name="name"
@@ -111,7 +113,7 @@ export function CreateSchoolForm({ onSubmit }) {
           />
         </LabelInputContainer>
         <LabelInputContainer className="mb-8">
-          <Label htmlFor="community">Community</Label>
+          <Label htmlFor="community">🌍 Region</Label>
           <select
             id="community"
             name="community"
@@ -131,7 +133,7 @@ export function CreateSchoolForm({ onSubmit }) {
           </select>
         </LabelInputContainer>
         <LabelInputContainer className="mb-8">
-          <Label htmlFor="city">City</Label>
+          <Label htmlFor="city">🏙️ City</Label>
           <Input
             id="city"
             name="city"
@@ -143,7 +145,7 @@ export function CreateSchoolForm({ onSubmit }) {
           />
         </LabelInputContainer>
         <LabelInputContainer className="mb-8">
-          <Label>Stages</Label>
+          <Label>📆 Stages</Label>
           <div className="flex flex-wrap gap-2">
             {ETAPAS.map((etapa) => (
               <button
@@ -172,33 +174,51 @@ export function CreateSchoolForm({ onSubmit }) {
             "relative group/btn block w-full rounded-md h-10 font-medium border border-transparent",
             theme === "dark"
               ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border"
+              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
           )}
           type="submit"
         >
           Create school &rarr;
           <BottomGradient />
         </button>
+        <button
+          className={cn(
+            "relative group/btn block w-full mx-auto rounded-md h-10 font-medium border border-transparent mt-4",
+            theme === "dark"
+              ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-red-300"
+          )}
+          type="button"
+          onClick={() => router.back()}>
+          &larr; Cancel
+          <BottomGradient isCancel />
+        </button>
 
-        <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
       </form>
     </div>
   );
 }
 
-const BottomGradient = () => {
-  return (
-    <>
-      <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-      <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
-    </>
-  );
+const BottomGradient = ({ isCancel }) => {
+  return (<>
+    <span className={cn("group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0", 
+      isCancel ? "bg-gradient-to-r from-transparent via-orange-500 to-transparent" : "bg-gradient-to-r from-transparent via-cyan-500 to-transparent")} />
+    <span className={cn("group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10", 
+      isCancel ? "bg-gradient-to-r from-transparent via-orange-500 to-transparent" : "bg-gradient-to-r from-transparent via-indigo-500 to-transparent")} />
+  </>);
 };
 
 const LabelInputContainer = ({ children, className }) => {
   return (
     <div className={cn("flex flex-col space-y-2 w-full", className)}>
-      {children}
+      {React.Children.map(children, child => {
+        if (child.type === Label) {
+          return React.cloneElement(child, {
+            style: { ...child.props.style, fontSize: "1.25rem" }
+          });
+        }
+        return child;
+      })}
     </div>
   );
 };

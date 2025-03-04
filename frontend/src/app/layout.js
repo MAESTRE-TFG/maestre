@@ -2,10 +2,10 @@
 
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { ThemeProvider } from "@/components/theme-provider";
-import { ThemeSwitch } from "@/components/theme-switch";
-import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
+import { Alert } from "@mui/material";
+import CheckIcon from "@mui/icons-material/Check";
+import { ErrorContextProvider, ErrorContext } from "@/context/ErrorContext";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -17,30 +17,29 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-export default function RootLayout({ children }) {
-  const pathname = usePathname();
+// Add this import at the top
+import { Alfa_Slab_One } from 'next/font/google';
 
+const alfaSlabOne = Alfa_Slab_One({
+  weight: '400',
+  subsets: ['latin'],
+  display: 'swap',
+});
+
+// In your RootLayout component, add the font class
+import { ThemeProvider } from "@/components/theme-provider";
+
+export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
+      <body>
         <ThemeProvider
           attribute="class"
-          defaultTheme="dark"
-          enableSystem={false}
+          defaultTheme="system"
+          enableSystem
           disableTransitionOnChange
         >
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={pathname}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-            >
-              {children}
-            </motion.div>
-          </AnimatePresence>
-          <ThemeSwitch />
+          {children}
         </ThemeProvider>
       </body>
     </html>

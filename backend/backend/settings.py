@@ -44,13 +44,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'rest_framework',  # Add this
-    'rest_framework.authtoken',  # Add this
-    'api',  # Add this
-    'corsheaders',  # Add this
-    'users',
+    'rest_framework',
+    'rest_framework.authtoken',
+    'api',
+    'corsheaders',
     'schools',
     'students',
+    'users',
+    'classrooms',
 ]
 
 MIDDLEWARE = [
@@ -149,6 +150,6 @@ REST_FRAMEWORK = {
 }
 
 
-# Esta configuración permite que Django use nuestro modelo de usuario personalizado
-# en lugar del modelo de usuario predeterminado que viene con Django
+# This configuration allows Django to use our custom user model
+# instead of the default user model that comes with Django
 AUTH_USER_MODEL = 'users.CustomUser'
