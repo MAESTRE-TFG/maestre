@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'api',
     'corsheaders',
     'schools',
+    'students',
     'users',
     'classrooms',
 ]
