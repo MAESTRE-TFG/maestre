@@ -26,6 +26,24 @@ const secondaryVariant = {
   },
 };
 
+const getFileTypeFromExtension = (filename) => {
+  if (!filename) return 'Unknown';
+
+  const extension = filename.split('.').pop().toLowerCase();
+  const mimeTypes = {
+    'pdf': 'application/pdf',
+    'doc': 'application/msword',
+    'docx': 'application/word',
+    'png': 'image/png',
+    'jpg': 'image/jpeg',
+    'jpeg': 'image/jpeg',
+    'pptx': 'application/powerpoint',
+    'txt': 'text/plain',
+  };
+
+  return mimeTypes[extension] || 'Unknown';
+};
+
 export const FileUpload = ({
   onChange,
   classroomId // Add this prop
@@ -175,6 +193,10 @@ export const FileUpload = ({
             className="relative z-20 font-sans font-normal text-neutral-400 dark:text-neutral-400 text-base mt-2">
             Drag or drop your files here or click to upload
           </p>
+          <p
+            className="relative z-20 font-sans font-normal text-neutral-400 dark:text-neutral-400 text-xs mt-1 italic">
+            Supported formats: PDF, DOC, DOCX, PNG, JPG, PPTX, TXT
+          </p>
           <div className="relative w-full mt-10 max-w-xl mx-auto">
             {files.length > 0 &&
               files.map((file, idx) => (
@@ -237,7 +259,7 @@ export const FileUpload = ({
                       animate={{ opacity: 1 }}
                       layout
                       className="px-1 py-0.5 rounded-md bg-gray-100 dark:bg-neutral-800 ">
-                      {file.type || (file.file && file.file.endsWith('.pdf') ? 'application/pdf' : 'Unknown')}
+                      {file.type || getFileTypeFromExtension(file.name) || 'Unknown'}
                     </motion.p>
 
                     <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} layout>

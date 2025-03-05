@@ -7,7 +7,7 @@ class Document(models.Model):
     name = models.CharField(max_length=255)
     file = models.FileField(
         upload_to='documents/',
-        validators=[FileExtensionValidator(allowed_extensions=['pdf'])]
+        validators=[FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx', 'png', 'jpg', 'pptx'])]
     )
     classroom = models.ForeignKey(Classroom, on_delete=models.CASCADE, related_name='documents')
 
