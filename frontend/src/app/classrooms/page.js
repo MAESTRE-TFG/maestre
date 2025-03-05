@@ -17,9 +17,14 @@ const ClassroomsList = () => {
 
   useEffect(() => {
     setIsClient(true);
+    const user = JSON.parse(localStorage.getItem('user'));
+    console.log(user.id)
     const fetchClasses = async () => {
       try {
         const response = await axios.get("http://localhost:8000/api/classrooms/", {
+          params: {
+            creator: user.id 
+          },
           headers: {
             Authorization: `Token ${localStorage.getItem("authToken")}`,
           },
