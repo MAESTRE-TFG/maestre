@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { IconUpload } from "@tabler/icons-react";
 import { useDropzone } from "react-dropzone";
 import axios from 'axios';
+import { Modal } from "@/components/ui/modal";
 
 const mainVariant = {
   initial: {
@@ -51,6 +52,11 @@ export const FileUpload = ({
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
   const [fileSizes, setFileSizes] = useState({});
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [fileToDelete, setFileToDelete] = useState(null);
+  const [showErrorModal, setShowErrorModal] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   // Add this function at the top of your component
   const getFileSize = async (url) => {
     try {
@@ -113,19 +119,40 @@ export const FileUpload = ({
       formData.append('name', file.name);
       formData.append('file', file);
       formData.append('classroom', classroomId);
-  
+
       const response = await axios.post('http://localhost:8000/api/materials/', formData, {
         headers: {
           'Authorization': `Token ${localStorage.getItem("authToken")}`,
           'Content-Type': 'multipart/form-data',
         }
       });
-  
+
       // Update the files state with the new file from the server response
       setFiles(prevFiles => [...prevFiles, response.data]);
       onChange && onChange(newFiles);
     } catch (error) {
-      console.error('Error uploading file:', error);
+      // More robust error handling
+      if (error.response) {
+        // The request was made and the server responded with a status code
+        // that falls out of the range of 2xx
+        if (error.response.status === 400) {
+          const errorMsg = error.response.data && error.response.data.error
+            ? error.response.data.error
+            : "Failed to upload file. Maximum limit reached.";
+          setErrorMessage(errorMsg);
+          setShowErrorModal(true);
+        }
+      } else if (error.request) {
+        // The request was made but no response was received
+        console.error('No response received:', error.request);
+        setErrorMessage("Network error. Please try again later.");
+        setShowErrorModal(true);
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.error('Error setting up request:', error.message);
+        setErrorMessage("An error occurred. Please try again.");
+        setShowErrorModal(true);
+      }
     }
   };
   
@@ -144,20 +171,20 @@ export const FileUpload = ({
 
   const handleDelete = async (e, file) => {
     e.stopPropagation();
-    
-    // Add confirmation dialog
-    if (!window.confirm(`Are you sure you want to delete ${file.name}?`)) {
-      return;
-    }
-    
+    setFileToDelete(file);
+    setShowDeleteModal(true);
+  };
+
+  // Add this new function to handle the actual deletion
+  const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8000/api/materials/${file.id}/`, {
+      await axios.delete(`http://localhost:8000/api/materials/${fileToDelete.id}/`, {
         headers: {
           'Authorization': `Token ${localStorage.getItem("authToken")}`,
         }
       });
-      setFiles(prevFiles => prevFiles.filter(f => f.id !== file.id));
-      
+      setFiles(prevFiles => prevFiles.filter(f => f.id !== fileToDelete.id));
+
       // Reset the file input to allow re-uploading the same file
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
@@ -165,8 +192,11 @@ export const FileUpload = ({
     } catch (error) {
       console.error('Error deleting file:', error);
       alert('Failed to delete file. Please try again.');
+    } finally {
+      setShowDeleteModal(false);
+      setFileToDelete(null);
     }
-  }
+  };
   
   return (
     (<div className="w-full" {...getRootProps()}>
@@ -184,6 +214,58 @@ export const FileUpload = ({
           className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,white,transparent)]">
           <GridPattern />
         </div>
+        <Modal
+          isOpen={showDeleteModal}
+          onClose={() => setShowDeleteModal(false)}
+        >
+          <div title="Delete File">
+            <p className="mb-6 text-neutral-600 dark:text-neutral-300">
+              Are you sure you want to delete "{fileToDelete?.name}"?
+            </p>
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowDeleteModal(false);
+                }}
+                className="font-bold py-2 px-4 rounded bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white hover:bg-gray-400 dark:hover:bg-gray-700"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  confirmDelete();
+                }}
+                className="font-bold py-2 px-4 rounded bg-red-500 dark:bg-red-600 text-white hover:bg-red-600 dark:hover:bg-red-700"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </Modal>
+
+        <Modal
+          isOpen={showErrorModal}
+          onClose={() => setShowErrorModal(false)}
+        >
+          <div title="File Limit Reached">
+            <p className="mb-6 text-neutral-600 dark:text-neutral-300">
+              {errorMessage}
+            </p>
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setShowErrorModal(false);
+                }}
+                className="font-bold py-2 px-4 rounded bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-700"
+              >
+                OK
+              </button>
+            </div>
+          </div>
+        </Modal>
         <div className="flex flex-col items-center justify-center">
           <p
             className="relative z-20 font-sans font-bold text-neutral-700 dark:text-neutral-300 text-base">
