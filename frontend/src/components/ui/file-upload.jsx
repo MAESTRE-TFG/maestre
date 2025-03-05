@@ -32,6 +32,40 @@ export const FileUpload = ({
 }) => {
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
+  const [fileSizes, setFileSizes] = useState({});
+  // Add this function at the top of your component
+  const getFileSize = async (url) => {
+    try {
+      const response = await fetch(url, { method: 'HEAD' });
+      const size = response.headers.get('content-length');
+      return size ? parseInt(size) : null;
+    } catch (error) {
+      console.error('Error getting file size:', error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const fetchFileSizes = async () => {
+      const sizes = {};
+      for (const file of files) {
+        if (file.file && typeof file.file === 'string') {
+          const fileUrl = file.file.startsWith('http')
+            ? file.file
+            : `http://localhost:8000${file.file}`;
+          const size = await getFileSize(fileUrl);
+          if (size) {
+            sizes[file.id] = size;
+          }
+        }
+      }
+      setFileSizes(sizes);
+    };
+
+    if (files.length > 0) {
+      fetchFileSizes();
+    }
+  }, [files]);
   
   // Fetch existing files when component mounts
   useEffect(() => {
@@ -89,6 +123,32 @@ export const FileUpload = ({
       console.log(error);
     },
   });
+
+  const handleDelete = async (e, file) => {
+    e.stopPropagation();
+    
+    // Add confirmation dialog
+    if (!window.confirm(`Are you sure you want to delete ${file.name}?`)) {
+      return;
+    }
+    
+    try {
+      await axios.delete(`http://localhost:8000/api/materials/${file.id}/`, {
+        headers: {
+          'Authorization': `Token ${localStorage.getItem("authToken")}`,
+        }
+      });
+      setFiles(prevFiles => prevFiles.filter(f => f.id !== file.id));
+      
+      // Reset the file input to allow re-uploading the same file
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    } catch (error) {
+      console.error('Error deleting file:', error);
+      alert('Failed to delete file. Please try again.');
+    }
+  }
   
   return (
     (<div className="w-full" {...getRootProps()}>
@@ -137,12 +197,13 @@ export const FileUpload = ({
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          // Handle differently based on whether it's a local file or server file
                           if (file.file && typeof file.file === 'string') {
-                            // Server file - open the URL
-                            window.open(file.file, '_blank');
+                            // Fix the URL construction
+                            const fileUrl = file.file.startsWith('http') 
+                              ? file.file 
+                              : `http://localhost:8000${file.file}`;
+                            window.open(fileUrl, '_blank');
                           } else {
-                            // Local file - create object URL
                             const url = URL.createObjectURL(file);
                             const a = document.createElement('a');
                             a.href = url;
@@ -159,13 +220,14 @@ export const FileUpload = ({
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                         </svg>
                       </button>
-                      <motion.p
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        layout
-                        className="rounded-lg px-2 py-1 w-fit flex-shrink-0 text-sm text-neutral-600 dark:bg-neutral-800 dark:text-white shadow-input">
-                        {file.size ? `${(file.size / (1024 * 1024)).toFixed(2)} MB` : 'N/A'}
-                      </motion.p>
+                      <button
+                        onClick={(e) => handleDelete(e, file)}
+                        className="p-2 rounded-lg hover:bg-red-100 dark:hover:bg-red-900 transition-colors"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-red-600 dark:text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
                     </div>
                   </div>
                   <div

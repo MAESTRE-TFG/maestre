@@ -401,7 +401,6 @@ const ClassroomPage = () => {
               theme === "dark" ? "text-white" : "text-gray-800")} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Materials</h2>
             <div className="grid gap-4">
               {/* Materials list will go here */}
-              <p className={theme === "dark" ? "text-gray-300" : "text-gray-500"}>No materials available</p>
               <FileUploadDemo classroomId={params.id}/>
             </div>
           </div>
