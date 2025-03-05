@@ -243,7 +243,14 @@ const ClassroomPage = () => {
               {/* Student list will go here */}
               {students && students.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {students.map((student) => (
+                  {students
+                    .sort((a, b) => {
+                      // First sort by name
+                      const nameComparison = a.name.localeCompare(b.name);
+                      // If names are the same, sort by surname
+                      return nameComparison !== 0 ? nameComparison : a.surname.localeCompare(b.surname);
+                    })
+                    .map((student) => (
                     <div
                       key={student.id}
                       className={cn(
@@ -323,7 +330,7 @@ const ClassroomPage = () => {
                 <div className={cn("p-8 rounded-lg w-96", 
                   theme === "dark" ? "bg-neutral-800" : "bg-white")}>
                   <h3 className={cn("text-xl font-bold mb-4", 
-                    theme === "dark" ? "text-white" : "text-gray-800")}>
+                    theme === "dark" ? "text-white" : "text-gray-800")} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
                     {editMode ? 'Edit Student' : 'Add New Student'}
                   </h3>
                   <form onSubmit={(e) => {
