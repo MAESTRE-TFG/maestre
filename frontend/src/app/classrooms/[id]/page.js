@@ -17,6 +17,8 @@ const ClassroomPage = () => {
   const [studentSurname, setStudentSurname] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [students, setStudents] = useState([]);
+  const [editMode, setEditMode] = useState(false);
+  const [student, setStudent] = useState(null)
 
   useEffect(() => {
     const fetchClassroom = async () => {
@@ -38,7 +40,7 @@ const ClassroomPage = () => {
     fetchClassroom();
   }, [params.id])
 
-useEffect(() => {
+  useEffect(() => {
     const fetchStudents = async () => {
       if (!params.id) return;
       
@@ -53,7 +55,7 @@ useEffect(() => {
           },
         });
         setStudents(response.data);
-        console.log("Students fetched:", response.data);
+        console.log("Students fetched:", response.data);  
       } catch (err) {
         setErrorMessage("Failed to fetch students");
         console.error("Error fetching students:", err);
@@ -62,6 +64,48 @@ useEffect(() => {
     
     fetchStudents();
   }, [params.id]);
+
+  const handleDelete = async (student) => {
+    try {
+      await axios.delete(`http://localhost:8000/api/students/${student.id}/`, {
+        headers: {
+          Authorization: `Token ${localStorage.getItem("authToken")}`,
+        }
+      });
+      window.location.reload();
+    } catch (error) {
+      console.error('Error deleting student:', error);
+    }
+  }
+
+  const handleEdit = async(e) => {
+    setIsSubmitting(true);
+    
+    try {
+      await axios.put(`http://localhost:8000/api/students/${student.id}/`, {
+        name: studentName,
+        surname: studentSurname,
+        classroom: params.id
+      }, {
+        headers: {
+          'Authorization': `Token ${localStorage.getItem("authToken")}`,
+          'Content-Type': 'application/json'
+        }
+      });
+
+      setShowModal(false);
+      setStudentName('');
+      setStudentSurname('');
+      setEditMode(false);
+      // Optionally refresh the students list here
+      window.location.reload(); // Reload the page to reflect the updated student list
+    } catch (error) {
+      console.error('Error editing student:', error);
+      setErrorMessage('Failed to edit student');
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -83,6 +127,7 @@ useEffect(() => {
       setStudentName('');
       setStudentSurname('');
       // Optionally refresh the students list here
+      window.location.reload(); // Reload the page to reflect the updated student list
     } catch (error) {
       console.error('Error adding student:', error);
       setErrorMessage('Failed to add student');
@@ -112,11 +157,12 @@ useEffect(() => {
                       "text-3xl font-extrabold text-zinc-100",
                       theme === "dark" ? "text-white" : "text-dark"
                     )}
+                    style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
                   >
                     · {classroom.name} ·
                   </h1>
                   <span className={cn(
-                    "text-lg font-medium",
+                    "text-lg font-medium mt-1",
                     theme === "dark" ? "text-gray-300" : "text-gray-600"
                   )}>
                     {classroom.academic_course}
@@ -185,7 +231,7 @@ useEffect(() => {
           <div className={cn("rounded-lg shadow p-6", 
             theme === "dark" ? "bg-neutral-700 border-neutral-500" : "bg-white border-gray-200")}>
             <h2 className={cn("text-2xl font-bold mb-4", 
-              theme === "dark" ? "text-white" : "text-gray-800")}>Students</h2>
+              theme === "dark" ? "text-white" : "text-gray-800")} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Students</h2>
             <div className="grid gap-4">
               {/* Student list will go here */}
               {students && students.length > 0 ? (
@@ -200,15 +246,53 @@ useEffect(() => {
                           : "bg-gray-50 border-gray-200"
                       )}
                     >
-                    <div className={cn(
-                      "text-lg font-semibold",
-                      theme === "dark" ? "text-white" : "text-gray-800"
-                    )}>
-                      {student.name} {student.surname || ''}
+                      <div className="flex justify-between items-center">
+                        <div className={cn(
+                          "text-lg font-semibold",
+                          theme === "dark" ? "text-white" : "text-gray-800"
+                        )}>
+                          {student.name} {student.surname || ''}
+                        </div>
+                        <div className="flex space-x-1">
+                          <button
+                            onClick={() => {
+                              setStudentName(student.name);
+                              setStudentSurname(student.surname);
+                              setShowModal(true);
+                              setEditMode(true);
+                              setStudent(student)
+                            }}
+                            className={cn(
+                              "p-2 rounded-full hover:bg-opacity-80",
+                              theme === "dark" ? "hover:bg-neutral-700" : "hover:bg-gray-200"
+                            )}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className={cn(
+                              "h-5 w-5",
+                              theme === "dark" ? "text-blue-400" : "text-blue-500"
+                            )} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={() => handleDelete(student)}
+                            className={cn(
+                              "p-2 rounded-full hover:bg-opacity-80",
+                              theme === "dark" ? "hover:bg-neutral-700" : "hover:bg-gray-200"
+                            )}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" className={cn(
+                              "h-5 w-5",
+                              theme === "dark" ? "text-red-400" : "text-red-500"
+                            )} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
             ) : (
               <p className={theme === "dark" ? "text-gray-300" : "text-gray-500"}>
                 No students enrolled yet
@@ -232,8 +316,17 @@ useEffect(() => {
                 <div className={cn("p-8 rounded-lg w-96", 
                   theme === "dark" ? "bg-neutral-800" : "bg-white")}>
                   <h3 className={cn("text-xl font-bold mb-4", 
-                    theme === "dark" ? "text-white" : "text-gray-800")}>Add New Student</h3>
-                  <form onSubmit={handleSubmit}>
+                    theme === "dark" ? "text-white" : "text-gray-800")}>
+                    {editMode ? 'Edit Student' : 'Add New Student'}
+                  </h3>
+                  <form onSubmit={(e) => {
+                    e.preventDefault();
+                    if (editMode) {
+                      handleEdit(e);
+                    } else {
+                      handleSubmit(e);
+                    }
+                  }}>
                     <div className="mb-4">
                       <label className={cn("block text-sm font-bold mb-2", 
                         theme === "dark" ? "text-gray-300" : "text-gray-700")}>
@@ -277,7 +370,7 @@ useEffect(() => {
                         className={cn("font-bold py-2 px-4 rounded disabled:opacity-50", 
                           theme === "dark" ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-500 hover:bg-blue-700 text-white")}
                       >
-                        {isSubmitting ? 'Adding...' : 'Add Student'}
+                        {isSubmitting ? 'Adding...' : editMode ? 'Edit Student' : 'Add Student'}
                       </button>
                     </div>
                   </form>
@@ -290,7 +383,7 @@ useEffect(() => {
           <div className={cn("rounded-lg shadow p-6", 
             theme === "dark" ? "bg-neutral-700 border-transparent" : "bg-white border-gray-200")}>
             <h2 className={cn("text-2xl font-bold mb-4", 
-              theme === "dark" ? "text-white" : "text-gray-800")}>Materials</h2>
+              theme === "dark" ? "text-white" : "text-gray-800")} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Materials</h2>
             <div className="grid gap-4">
               {/* Materials list will go here */}
               <p className={theme === "dark" ? "text-gray-300" : "text-gray-500"}>No materials available</p>
