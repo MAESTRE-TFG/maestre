@@ -5,6 +5,7 @@ from .views import ItemViewSet
 from users.views import UserViewSet
 from schools.views import SchoolListView, SchoolViewSet
 from classrooms.views import ClassroomViewSet
+from students.views import StudentViewSet
 
 router = DefaultRouter()
 router.register(r'items', ItemViewSet)
@@ -27,5 +28,7 @@ urlpatterns = [
                                                      'delete': 'destroy'}), name='school-detail'),
     path('classrooms/<int:pk>/update/', ClassroomViewSet.as_view({'put': 'update'})),
     path('classrooms/<int:pk>/delete/', ClassroomViewSet.as_view({'delete': 'destroy'})),
+    path('students/by-classroom/', StudentViewSet.as_view({'get': 'by_classroom'})),
+
 
 ]

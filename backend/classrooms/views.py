@@ -12,6 +12,15 @@ class ClassroomViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        creator_id = self.request.query_params.get('creator')
+        if creator_id:
+            try:
+                # Convert to integer to ensure it's a valid ID
+                creator_id = int(creator_id)
+                return Classroom.objects.filter(creator_id=creator_id)
+            except (ValueError, TypeError):
+                # Handle case where creator_id is not a valid integer
+                return Classroom.objects.none()
         return Classroom.objects.all()
 
     def create(self, request, *args, **kwargs):

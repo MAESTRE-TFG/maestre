@@ -22,7 +22,7 @@ const ClassroomEdit = () => {
     academic_year: "",
     description: ""
   });
-  const { setErrorMessage } = useContext(ErrorContext);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [nameInput, setNameInput] = useState("");
   const searchParams = useSearchParams();

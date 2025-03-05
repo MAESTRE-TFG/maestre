@@ -126,7 +126,7 @@ export function SidebarDemo({ ContentComponent }) {
       )}
     >
       <Sidebar open={open} setOpen={setOpen} className={cn(open ? "w-84 z-50" : "w-60 z-50")}>
-        <SidebarBody className={cn("justify-between gap-10", theme === "dark" ? "bg-neutral-900 z-50" : "bg-neutral-200 z-50")}>
+        <SidebarBody className={cn("justify-between gap-10", theme === "dark" ? "bg-neutral-800 z-50" : "bg-neutral-100 z-50")}>
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             {open ? (
               <>
@@ -183,7 +183,7 @@ export function SidebarDemo({ ContentComponent }) {
           </div>
         </SidebarBody>
       </Sidebar>
-      <div className="flex-1 flex justify-center items-center p-6 overflow-y-auto">
+      <div className="flex-1 flex justify-center items-center overflow-y-auto">
         <ContentComponent />
       </div>
       <Modal isOpen={isLogoutModalOpen} onClose={closeLogoutModal} title="Confirm Logout" style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}

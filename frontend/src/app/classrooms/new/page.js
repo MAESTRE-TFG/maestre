@@ -5,14 +5,14 @@ import Link from "next/link";
 import { CreateClassroomForm } from "@/components/classroom-create-form";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
-import { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { ErrorContext } from "@/context/ErrorContext";
 
 export default function CreateClassroom() {
   const router = useRouter();
   const { theme } = useTheme();
-  const { setErrorMessage } = useContext(ErrorContext);
+  const [errorMessage, setErrorMessage] = useState(null);
   const [userSchool, setUserSchool] = useState(null);
   const [userStages, setUserStages] = useState(null);
 
@@ -52,9 +52,7 @@ export default function CreateClassroom() {
       }
     };
     fetchStages();
-  }, [userSchool, setErrorMessage]);
-
-
+  }, [userSchool]);
   const educationalStages = [
     {
       stage: "Infantil",
@@ -102,7 +100,7 @@ export default function CreateClassroom() {
         router.push("/classrooms");
       } else {
         const data = await response.json();
-        setErrorMessage(data.detail || "Failed to create classroom");
+        setErrorMessage("Failed to create classroom");
       }
     } catch (err) {
       setErrorMessage("Network error occurred");

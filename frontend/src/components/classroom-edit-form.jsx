@@ -37,11 +37,11 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
         <div className="flex flex-col gap-6 mb-8">
           <div className="flex flex-wrap gap-6 mb-4">
             <LabelInputContainer className="flex-1">
-              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }} htmlFor="name">🏫 Classroom Name</Label>
+              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }} htmlFor="name">🏫 Name</Label>
               <Input id="name" name="name" placeholder="Applied Maths 1º ESO" type="text" required value={formData.name || ""} onChange={handleChange} />
             </LabelInputContainer>
             <LabelInputContainer className="flex-1">
-              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }} htmlFor="academic_course">📚 Academic Course</Label>
+              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }} htmlFor="academic_course">📚 Course</Label>
               <select
                 id="academic_course"
                 name="academic_course"
@@ -66,7 +66,7 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
               </select>
             </LabelInputContainer>
             <LabelInputContainer className="flex-1">
-              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="academic_year">📅 Academic Year</Label>
+              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="academic_year">📅 Year</Label>
               <Input id="academic_year" name="academic_year" placeholder="YYYY-YYYY" type="text" required value={formData.academic_year || ""} onChange={handleChange} />
             </LabelInputContainer>
           </div>

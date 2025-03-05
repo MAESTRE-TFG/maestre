@@ -5,6 +5,7 @@ import { useTheme } from "@/components/theme-provider";
 import { useRouter } from "next/navigation";
 import { IconBrandGithub, IconMail } from "@tabler/icons-react";
 import { CardCarrousell } from "@/components/card-carrousell";
+import Image from "next/image";
 
 const Home = () => {
   const { theme } = useTheme();
@@ -44,15 +45,17 @@ const Home = () => {
   ];
 
   return (
-    <div className={`min-h-screen ${theme === 'dark' ? 'bg-neutral-900 text-white' : 'bg-white text-black'}`}>
+    <div className={`min-h-screen w-full ${theme === 'dark' ? 'bg-neutral-900 text-white' : 'bg-white text-black'}`}>
       <div className="relative my-8" style={{ height: "2000px" }}></div>
       
       {/* Hero Section */}
       <section className="flex flex-col items-center justify-center text-center relative z-20">
-        <img
+        <Image
           src={theme === "dark" ? "/static/maestre_logo_circle_black.png" : "/static/maestre_logo_circle.png"}
           alt="Maestre Logo"
-          className="w-64 h-64 mb-8"
+          width={256}
+          height={256}
+          className="mb-8"
         />
         <h1 className={`text-6xl font-bold mb-4 font-alfa-slab-one ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
           MAESTRE
@@ -98,7 +101,13 @@ const Home = () => {
         <div className="flex flex-wrap justify-center gap-8 max-w-4xl mx-auto">
           {teamMembers.map((member) => (
             <div key={member.name} className={`p-6 rounded-lg ${theme === 'dark' ? 'bg-neutral-800' : 'bg-gray-100'}`}>
-              <img src={member.image} alt={member.name} className="w-32 h-32 rounded-full mx-auto mb-4" />
+              <Image 
+                src={member.image} 
+                alt={member.name} 
+                width={128}
+                height={128}
+                className="rounded-full mx-auto mb-4" 
+              />
               <h3 className={`text-xl font-bold text-center mb-2 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
                 {member.name}
               </h3>
