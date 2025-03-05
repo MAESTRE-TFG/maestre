@@ -72,7 +72,8 @@ const ClassroomPage = () => {
           Authorization: `Token ${localStorage.getItem("authToken")}`,
         }
       });
-      window.location.reload();
+      // Update students state directly by filtering out the deleted student
+      setStudents(prevStudents => prevStudents.filter(s => s.id !== student.id));
     } catch (error) {
       console.error('Error deleting student:', error);
     }
@@ -98,7 +99,12 @@ const ClassroomPage = () => {
       setStudentSurname('');
       setEditMode(false);
       // Optionally refresh the students list here
-      window.location.reload(); // Reload the page to reflect the updated student list
+      setStudents(prevStudents => {
+        const updatedStudents = prevStudents.map(s => 
+          s.id === student.id ? { ...s, name: studentName, surname: studentSurname } : s
+        );
+        return updatedStudents;
+      });
     } catch (error) {
       console.error('Error editing student:', error);
       setErrorMessage('Failed to edit student');
@@ -112,7 +118,7 @@ const ClassroomPage = () => {
     setIsSubmitting(true);
 
     try {
-      await axios.post('http://localhost:8000/api/students/', {
+      const response = await axios.post('http://localhost:8000/api/students/', {
         name: studentName,
         surname: studentSurname,
         classroom_id: params.id
@@ -123,11 +129,12 @@ const ClassroomPage = () => {
         }
       });
 
+      // Add the newly created student to the state
+      setStudents(prevStudents => [...prevStudents, response.data]);
+      
       setShowModal(false);
       setStudentName('');
       setStudentSurname('');
-      // Optionally refresh the students list here
-      window.location.reload(); // Reload the page to reflect the updated student list
     } catch (error) {
       console.error('Error adding student:', error);
       setErrorMessage('Failed to add student');
