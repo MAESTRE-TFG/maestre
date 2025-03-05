@@ -6,6 +6,7 @@ from users.views import UserViewSet
 from schools.views import SchoolListView, SchoolViewSet
 from classrooms.views import ClassroomViewSet
 from students.views import StudentViewSet
+from materials.views import DocumentViewSet
 
 router = DefaultRouter()
 router.register(r'items', ItemViewSet)
@@ -13,6 +14,7 @@ router.register(r'users', UserViewSet)
 router.register(r'schools', SchoolViewSet, basename='schools')
 router.register(r'students', StudentViewSet, basename='students')
 router.register(r'classrooms', ClassroomViewSet, basename='classroom')
+router.register(r'materials', DocumentViewSet, basename='materials')
 
 urlpatterns = [
     path('', include(router.urls)),
