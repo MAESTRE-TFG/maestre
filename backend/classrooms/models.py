@@ -2,7 +2,6 @@ from django.db import models
 from django.core.validators import RegexValidator
 from users.models import CustomUser
 
-
 class Classroom(models.Model):
     name = models.CharField(max_length=100)
     academic_course = models.CharField(max_length=50)
