@@ -1,101 +1,165 @@
+"use client";
+import { useEffect, useState } from "react";
+import { SidebarDemo } from "@/components/sidebar-demo";
+import { useTheme } from "@/components/theme-provider";
+import { useRouter } from "next/navigation";
+import { IconBrandGithub, IconMail } from "@tabler/icons-react";
+import { CardCarrousell } from "@/components/card-carrousell";
 import Image from "next/image";
 
-export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+const Home = () => {
+  const { theme } = useTheme();
+  const router = useRouter();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+  useEffect(() => {
+    const user = localStorage.getItem('user');
+    if (!user) {
+      localStorage.removeItem('authToken');
+      setIsAuthenticated(false);
+    }
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      router.push('/profile/signup');
+      return;
+    }
+    setIsAuthenticated(true);
+  }, [router]);
+
+
+  const teamMembers = [
+    {
+      name: "Antonio Macías",
+      role: "Software Engineer",
+      image: "/static/team/antonio.webp",
+      github: "https://github.com/antoniommff",
+      email: "mailto:antmacfer1@alum.us.es"
+    },
+    {
+      name: "Rafael Pulido",
+      role: "Software Engineer",
+      image: "/static/team/rafa.webp",
+      github: "https://github.com/rafpulcif",
+      email: "mailto:rafpulcif@alum.us.es"
+    }
+  ];
+
+  return (
+    <div className={`min-h-screen w-full ${theme === 'dark' ? 'bg-neutral-900 text-white' : 'bg-white text-black'}`}>
+      <div className="relative my-8" style={{ height: "2000px" }}></div>
+      
+      {/* Hero Section */}
+      <section className="flex flex-col items-center justify-center text-center relative z-20">
+        <Image
+          src={theme === "dark" ? "/static/maestre_logo_circle_black.png" : "/static/maestre_logo_circle.png"}
+          alt="Maestre Logo"
+          width={256}
+          height={256}
+          className="mb-8"
+        />
+        <h1 className={`text-6xl font-bold mb-4 font-alfa-slab-one ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+          MAESTRE
+        </h1>
+        <p className={`text-xl mb-8 max-w-2xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+          Empowering educators with intelligent tools for seamless teaching and assessment
+        </p>
+      </section>
+
+      <br></br>
+
+      {/* Tools Carousel */}
+      <section className="w-full relative z-10 max-h-[500px]">
+        <CardCarrousell />
+      </section>
+
+      {/* CTA Section */}
+      {!isAuthenticated && (
+        <section className="py-20 px-4 text-center">
+          <h2 className="text-4xl font-bold mb-8 font-alfa-slab-one">
+            Ready to Transform Your Teaching?
+          </h2>
+          <button
+            onClick={() => router.push('/profile/signin')}
+            className={`px-8 py-4 rounded-lg text-lg font-bold transition-all ${
+              theme === 'dark' 
+                ? 'bg-white text-black hover:bg-gray-200' 
+                : 'bg-black text-white hover:bg-gray-800'
+            }`}
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+            Sign in as a Teacher
+          </button>
+        </section>
+      )}
+
+      <div className="relative my-8" style={{ height: "500px" }}></div>
+
+      {/* Team Section */}
+      <section className="py-20 px-4">
+        <h2 className={`text-4xl font-bold text-center mb-12 font-alfa-slab-one ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+          Meet Our Team
+        </h2>
+        <div className="flex flex-wrap justify-center gap-8 max-w-4xl mx-auto">
+          {teamMembers.map((member) => (
+            <div key={member.name} className={`p-6 rounded-lg ${theme === 'dark' ? 'bg-neutral-800' : 'bg-gray-100'}`}>
+              <Image 
+                src={member.image} 
+                alt={member.name} 
+                width={128}
+                height={128}
+                className="rounded-full mx-auto mb-4" 
+              />
+              <h3 className={`text-xl font-bold text-center mb-2 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+                {member.name}
+              </h3>
+              <p className={`text-center mb-4 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+                {member.role}
+              </p>
+              <div className="flex justify-center gap-4">
+                <a href={member.github} target="_blank" rel="noopener noreferrer" className={theme === 'dark' ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-black'}>
+                  <IconBrandGithub className="w-6 h-6" />
+                </a>
+                <a href={member.email} className={theme === 'dark' ? 'text-gray-300 hover:text-white' : 'text-gray-700 hover:text-black'}>
+                  <IconMail className="w-6 h-6" />
+                </a>
+              </div>
+            </div>
+          ))}
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
+      </section>
+
+      {/* Footer */}
+      <footer className={`py-12 px-4 ${theme === 'dark' ? 'bg-neutral-800' : 'bg-gray-100'}`}>
+        <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <h3 className="text-lg font-bold mb-4">About Maestre</h3>
+            <p>An innovative educational platform designed to enhance teaching and learning experiences.</p>
+          </div>
+          <div>
+            <h3 className="text-lg font-bold mb-4">Useful Links</h3>
+            <ul>
+              <li><a href="https://github.com/MAESTRE-TFG/maestre" target="_blank" rel="noopener noreferrer">GitHub Repository</a></li>
+              <li><a href="/docs">Documentation</a></li>
+              <li><a href="/privacy">Privacy Policy</a></li>
+              <li><a href="/terms">Terms of Service</a></li>
+            </ul>
+          </div>
+          <div>
+            <h3 className="text-lg font-bold mb-4">Contact</h3>
+            <p>Email: contact@maestre.com</p>
+            <p>Location: Sevilla, Spain</p>
+          </div>
+        </div>
+        <div className="text-center mt-8 pt-8 border-t border-gray-700">
+          <p>© 2025 Maestre. All rights reserved.</p>
+          <p className="mt-2">Licensed under MIT License</p>
+        </div>
       </footer>
     </div>
   );
+};
+
+export default function Main() {
+  return <SidebarDemo ContentComponent={Home} />;
 }
+
+
