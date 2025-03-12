@@ -629,6 +629,7 @@ Antonio Macías and Rafael Pulido, the two creators of this project:
         <a href="https://github.com/antoniommff">
             <img src="https://avatars.githubusercontent.com/u/91947070?v=4" width="100px;" alt="Antonio Macías"/>
             <br />
+		            <sub><b>Antonio Macías</b></sub>
             <sub><b>Project Manager, Analyst Developer, Software Engineer</b></sub>
         </a>
 	</td>
