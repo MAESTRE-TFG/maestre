@@ -93,18 +93,20 @@ export const Carousel = ({
             ))}
           </div>
         </div>
-        <button
-          className="absolute top-1/2 left-8 -translate-y-1/2 z-40 h-14 w-14 rounded-full bg-gray-100/90 hover:bg-gray-200/90 flex items-center justify-center disabled:opacity-50 transition-all"
-          onClick={scrollLeft}
-          disabled={!canScrollLeft}>
-          <IconArrowNarrowLeft className="h-8 w-8 text-gray-700" />
-        </button>
-        <button
-          className="absolute top-1/2 right-8 -translate-y-1/2 z-40 h-14 w-14 rounded-full bg-gray-100/90 hover:bg-gray-200/90 flex items-center justify-center disabled:opacity-50 transition-all"
-          onClick={scrollRight}
-          disabled={!canScrollRight}>
-          <IconArrowNarrowRight className="h-8 w-8 text-gray-700" />
-        </button>
+        <div className="flex justify-center gap-4 mt-2">
+          <button
+            className="h-14 w-14 rounded-full bg-gray-100/90 hover:bg-gray-200/90 flex items-center justify-center disabled:opacity-50 transition-all"
+            onClick={scrollLeft}
+            disabled={!canScrollLeft}>
+            <IconArrowNarrowLeft className="h-8 w-8 text-gray-700" />
+          </button>
+          <button
+            className="h-14 w-14 rounded-full bg-gray-100/90 hover:bg-gray-200/90 flex items-center justify-center disabled:opacity-50 transition-all"
+            onClick={scrollRight}
+            disabled={!canScrollRight}>
+            <IconArrowNarrowRight className="h-8 w-8 text-gray-700" />
+          </button>
+        </div>
       </div>
     </CarouselContext.Provider>
   );
@@ -151,7 +153,7 @@ export const Card = ({
     <>
       <AnimatePresence>
         {open && (
-          <div className="fixed inset-0 h-screen z-50 overflow-auto">
+          <div className="fixed inset-0 h-screen z-[9999] overflow-auto"> {/* Increased z-index from z-50 to z-[9999] */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -163,7 +165,7 @@ export const Card = ({
               exit={{ opacity: 0 }}
               ref={containerRef}
               layoutId={layout ? `card-${card.title}` : undefined}
-              className="max-w-5xl mx-auto bg-white dark:bg-neutral-900 h-fit z-[60] my-10 p-4 md:p-10 rounded-3xl font-sans relative">
+              className="max-w-5xl mx-auto bg-white dark:bg-neutral-900 h-fit z-[10000] my-10 p-4 md:p-10 rounded-3xl font-sans relative"> {/* Increased z-index from z-[60] to z-[10000] */}
               <button
                 className="sticky top-4 h-8 w-8 right-0 ml-auto bg-black dark:bg-white rounded-full flex items-center justify-center"
                 onClick={handleClose}>

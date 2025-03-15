@@ -49,7 +49,7 @@ const Home = () => {
       <div className="relative my-8" style={{ height: "2000px" }}></div>
       
       {/* Hero Section */}
-      <section className="flex flex-col items-center justify-center text-center relative z-20">
+      <section className="flex flex-col items-center justify-center text-center relative">
         <Image
           src={theme === "dark" ? "/static/maestre_logo_circle_black.png" : "/static/maestre_logo_circle.png"}
           alt="Maestre Logo"
