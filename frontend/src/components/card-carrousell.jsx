@@ -40,6 +40,7 @@ const data = [
     category: "Assessment",
     title: "Create Engaging Exams",
     src: "/static/tools/exam_maker.webp",
+    page: "exam_maker",
     content: <CardContent>
       Create comprehensive exams with our intuitive exam maker. Features include:
       <ul className="list-disc ml-6 mt-4">
@@ -54,6 +55,7 @@ const data = [
     category: "Assessment",
     title: "Generate Tests Efficiently",
     src: "/static/tools/test_maker.webp",
+    page: "test_maker",
     content: <CardContent>
       Streamline your test creation process with AI-powered assistance:
       <ul className="list-disc ml-6 mt-4">
@@ -68,6 +70,7 @@ const data = [
     category: "Organization",
     title: "Plan Your Classes",
     src: "/static/tools/planner.webp",
+    page: "class_planner",
     content: <CardContent>
       Stay organized with our comprehensive planning tools:
       <ul className="list-disc ml-6 mt-4">
@@ -82,6 +85,7 @@ const data = [
     category: "Language",
     title: "Translate Materials",
     src: "/static/tools/translator.webp",
+    page: "translator",
     content: <CardContent>
       Break language barriers in your classroom:
       <ul className="list-disc ml-6 mt-4">

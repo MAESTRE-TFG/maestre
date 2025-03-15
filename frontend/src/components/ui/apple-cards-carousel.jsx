@@ -14,7 +14,9 @@ import {
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
+import Link from "next/link";
 import { useOutsideClick } from "@/hooks/use-outside-click";
+import { useTheme } from "@/components/theme-provider"; // Add this import
 
 export const CarouselContext = createContext({
   onCardClose: () => {},
@@ -45,7 +47,6 @@ export const Carousel = ({
     }
   };
 
-  // Update scroll amount
   const scrollLeft = () => {
     if (carouselRef.current) {
       carouselRef.current.scrollBy({ left: -500, behavior: "smooth" });
@@ -60,7 +61,7 @@ export const Carousel = ({
 
   const handleCardClose = (index) => {
     if (carouselRef.current) {
-      const cardWidth = isMobile() ? 300 : 480; // Increased card width
+      const cardWidth = isMobile() ? 300 : 480;
       const gap = isMobile() ? 4 : 8;
       const scrollPosition = (cardWidth + gap) * (index + 1);
       carouselRef.current.scrollTo({
@@ -120,7 +121,8 @@ export const Card = ({
   const [open, setOpen] = useState(false);
   const containerRef = useRef(null);
   const { onCardClose, currentIndex } = useContext(CarouselContext);
-
+  const { theme } = useTheme(); // Add this line to access the theme
+  
   useEffect(() => {
     function onKeyDown(event) {
       if (event.key === "Escape") {
@@ -153,7 +155,7 @@ export const Card = ({
     <>
       <AnimatePresence>
         {open && (
-          <div className="fixed inset-0 h-screen z-[9999] overflow-auto"> {/* Increased z-index from z-50 to z-[9999] */}
+          <div className="fixed inset-0 h-screen z-[9999] overflow-auto">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -165,12 +167,14 @@ export const Card = ({
               exit={{ opacity: 0 }}
               ref={containerRef}
               layoutId={layout ? `card-${card.title}` : undefined}
-              className="max-w-5xl mx-auto bg-white dark:bg-neutral-900 h-fit z-[10000] my-10 p-4 md:p-10 rounded-3xl font-sans relative"> {/* Increased z-index from z-[60] to z-[10000] */}
-              <button
-                className="sticky top-4 h-8 w-8 right-0 ml-auto bg-black dark:bg-white rounded-full flex items-center justify-center"
-                onClick={handleClose}>
-                <IconX className="h-6 w-6 text-neutral-100 dark:text-neutral-900" />
-              </button>
+              className="max-w-5xl mx-auto bg-white dark:bg-neutral-900 h-fit z-[10000] my-10 p-4 md:p-10 rounded-3xl font-sans relative">
+              <div className="flex justify-end gap-4">
+                <button
+                  className="h-8 w-8 bg-black dark:bg-white rounded-full flex items-center justify-center"
+                  onClick={handleClose}>
+                  <IconX className="h-6 w-6 text-neutral-100 dark:text-neutral-900" />
+                </button>
+              </div>
               <motion.p
                 layoutId={layout ? `category-${card.title}` : undefined}
                 className="text-base font-medium text-black dark:text-white">
@@ -182,6 +186,19 @@ export const Card = ({
                 {card.title}
               </motion.p>
               <div className="py-10">{card.content}</div>
+              <Link
+                href={`/tools/${card.page}`}
+                style={{ fontFamily: "Alfa Slab One"}}
+                className={cn(
+                  "inline-flex items-center justify-items-center rounded-full transition-all",
+                  "font-medium text-sm py-2 px-6",
+                  "border border-transparent,",
+                  theme === "dark" 
+                    ? "bg-white text-black hover:bg-neutral-200" 
+                    : "bg-black text-white hover:bg-neutral-800"
+                )}>
+                Try Now!
+              </Link>
             </motion.div>
           </div>
         )}
