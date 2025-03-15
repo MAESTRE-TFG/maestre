@@ -56,57 +56,6 @@ export const FileUpload = ({
   const [fileToDelete, setFileToDelete] = useState(null);
   const [showErrorModal, setShowErrorModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [fileToEdit, setFileToEdit] = useState(null);
-  const [newFileName, setNewFileName] = useState("");
-
-  const handleEdit = async (e, file) => {
-    e.stopPropagation();
-    setFileToEdit(file);
-    setNewFileName(file.name);
-    setShowEditModal(true);
-  };
-
-  // Add this function to handle the name update
-  const confirmEdit = async () => {
-    try {
-      // Get the original file extension
-      const originalExtension = fileToEdit.name.split('.').pop();
-
-      // Make sure the new name has the same extension
-      let updatedFileName = newFileName;
-      if (!newFileName.endsWith(`.${originalExtension}`)) {
-        // If user removed or changed extension, restore it
-        const nameWithoutExtension = newFileName.split('.')[0];
-        updatedFileName = `${nameWithoutExtension}.${originalExtension}`;
-      }
-
-      const response = await axios.patch(`http://localhost:8000/api/materials/${fileToEdit.id}/`,
-        { name: updatedFileName },
-        {
-          headers: {
-            'Authorization': `Token ${localStorage.getItem("authToken")}`,
-          }
-        }
-      );
-
-      // Update the file in the files state
-      setFiles(prevFiles =>
-        prevFiles.map(f => f.id === fileToEdit.id ? { ...f, name: updatedFileName } : f)
-      );
-
-      // If we had to fix the extension, update the displayed value
-      if (updatedFileName !== newFileName) {
-        setNewFileName(updatedFileName);
-      }
-    } catch (error) {
-      console.error('Error updating file name:', error);
-      alert('Failed to update file name. Please try again.');
-    } finally {
-      setShowEditModal(false);
-      setFileToEdit(null);
-    }
-  };
 
   // Add this function at the top of your component
   const getFileSize = async (url) => {
@@ -317,45 +266,6 @@ export const FileUpload = ({
             </div>
           </div>
         </Modal>
-
-        {/* Add the Edit Name Modal */}
-        <Modal
-          isOpen={showEditModal}
-          onClose={() => setShowEditModal(false)}
-        >
-          <div title="Edit File Name">
-            <p className="mb-4 text-neutral-600 dark:text-neutral-300">
-              Enter a new name for the file:
-            </p>
-            <input
-              type="text"
-              value={newFileName}
-              onChange={(e) => setNewFileName(e.target.value)}
-              className="w-full p-2 mb-6 border rounded dark:bg-neutral-800 dark:border-neutral-700 dark:text-white"
-              onClick={(e) => e.stopPropagation()}
-            />
-            <div className="flex justify-end space-x-2">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowEditModal(false);
-                }}
-                className="font-bold py-2 px-4 rounded bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white hover:bg-gray-400 dark:hover:bg-gray-700"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  confirmEdit();
-                }}
-                className="font-bold py-2 px-4 rounded bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-700"
-              >
-                Save
-              </button>
-            </div>
-          </div>
-        </Modal>
         <div className="flex flex-col items-center justify-center">
           <p
             className="relative z-20 font-sans font-bold text-neutral-700 dark:text-neutral-300 text-base">
@@ -388,14 +298,6 @@ export const FileUpload = ({
                       {file.name}
                     </motion.p>
                     <div className="flex items-center gap-2">
-                      <button
-                        onClick={(e) => {e.stopPropagation(); handleEdit(e, file)}}
-                        className="p-2 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                      </button>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
