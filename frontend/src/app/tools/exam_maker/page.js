@@ -152,165 +152,165 @@ const ExamMaker = () => {
             `}</style>
             
             <form className="my-8 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8" 
-              onSubmit={handleSubmit} 
-              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-              
-              <div className="space-y-6">
-                <LabelInputContainer>
-                  <Label htmlFor="subject">📚 Subject</Label>
-                  <Input 
-                    id="subject" 
-                    name="subject" 
-                    placeholder="Mathematics, Science, History, etc." 
-                    type="text" 
-                    required 
-                    value={formData.subject} 
-                    onChange={handleChange} 
-                  />
-                </LabelInputContainer>
-
-                <LabelInputContainer>
-                  <Label htmlFor="numQuestions">❓ Number of Questions</Label>
-                  <Input 
-                    id="numQuestions" 
-                    name="numQuestions" 
-                    type="number" 
-                    min="1" 
-                    max="50" 
-                    required 
-                    value={formData.numQuestions} 
-                    onChange={handleChange} 
-                  />
-                </LabelInputContainer>
-
-                <LabelInputContainer>
-                  <Label htmlFor="questionType">🔤 Question Type</Label>
-                  <select
-                    id="questionType"
-                    name="questionType"
-                    required
-                    value={formData.questionType}
-                    onChange={handleChange}
-                  >
-                    {questionTypes.map(type => (
-                      <option key={type.value} value={type.value}>
-                        {type.label}
-                      </option>
-                    ))}
-                  </select>
-                </LabelInputContainer>
-              </div>
-
-              <div className="space-y-6">
-                <LabelInputContainer>
-                  <Label htmlFor="classroom">🏫 Classroom (Difficulty Level)</Label>
-                  <select
-                    id="classroom"
-                    name="classroom"
-                    required
-                    value={formData.classroom}
-                    onChange={handleChange}
-                  >
-                    <option value="" disabled>Select a classroom</option>
-                    {loading ? (
-                      <option value="" disabled>Loading classrooms...</option>
-                    ) : (
-                      classrooms.map(classroom => (
-                        <option key={classroom.id} value={classroom.id}>
-                          {classroom.name} - {classroom.academic_course}
+                onSubmit={handleSubmit} 
+                style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+                
+                <div className="space-y-6">
+                  <LabelInputContainer>
+                    <Label htmlFor="subject">📚 Subject</Label>
+                    <Input 
+                      id="subject" 
+                      name="subject" 
+                      placeholder="Mathematics, Science, History, etc." 
+                      type="text" 
+                      required 
+                      value={formData.subject} 
+                      onChange={handleChange} 
+                    />
+                  </LabelInputContainer>
+            
+                  <LabelInputContainer>
+                    <Label htmlFor="numQuestions">❓ Number of Questions</Label>
+                    <Input 
+                      id="numQuestions" 
+                      name="numQuestions" 
+                      type="number" 
+                      min="1" 
+                      max="50" 
+                      required 
+                      value={formData.numQuestions} 
+                      onChange={handleChange} 
+                    />
+                  </LabelInputContainer>
+            
+                  <LabelInputContainer>
+                    <Label htmlFor="questionType">🔤 Question Type</Label>
+                    <select
+                      id="questionType"
+                      name="questionType"
+                      required
+                      value={formData.questionType}
+                      onChange={handleChange}
+                    >
+                      {questionTypes.map(type => (
+                        <option key={type.value} value={type.value}>
+                          {type.label}
                         </option>
-                      ))
+                      ))}
+                    </select>
+                  </LabelInputContainer>
+                </div>
+                
+                <div className="space-y-6">
+                  <LabelInputContainer>
+                    <Label htmlFor="classroom">🏫 Classroom (Difficulty Level)</Label>
+                    <select
+                      id="classroom"
+                      name="classroom"
+                      required
+                      value={formData.classroom}
+                      onChange={handleChange}
+                    >
+                      <option value="" disabled>Select a classroom</option>
+                      {loading ? (
+                        <option value="" disabled>Loading classrooms...</option>
+                      ) : (
+                        classrooms.map(classroom => (
+                          <option key={classroom.id} value={classroom.id}>
+                            {classroom.name} - {classroom.academic_course}
+                          </option>
+                        ))
+                      )}
+                    </select>
+                  </LabelInputContainer>
+            
+                  <LabelInputContainer>
+                    <Label htmlFor="scoringStyle">📊 Scoring Style</Label>
+                    <div className="flex flex-wrap items-center gap-4">
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="radio"
+                          id="equalPoints"
+                          name="scoringStyle"
+                          value="equal"
+                          checked={formData.scoringStyle === "equal"}
+                          onChange={handleChange}
+                          className="form-radio"
+                        />
+                        <label 
+                          htmlFor="equalPoints"
+                          className={theme === "dark" ? "text-white" : "text-gray-900"}
+                        >
+                          Equal Points
+                        </label>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="radio"
+                          id="customPoints"
+                          name="scoringStyle"
+                          value="custom"
+                          checked={formData.scoringStyle === "custom"}
+                          onChange={handleChange}
+                          className="form-radio"
+                        />
+                        <label 
+                          htmlFor="customPoints"
+                          className={theme === "dark" ? "text-white" : "text-gray-900"}
+                        >
+                          Custom Points
+                        </label>
+                      </div>
+                    </div>
+                    {formData.scoringStyle === "custom" && (
+                      <textarea
+                        id="customScoringDetails"
+                        name="customScoringDetails"
+                        placeholder="Specify your scoring system (e.g., Q1: 10pts, Q2: 15pts...)"
+                        rows="3"
+                        className={cn(
+                          "flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background mt-4",
+                          "placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2",
+                          "focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
+                          theme === "dark" ? "bg-zinc-800 text-white border-zinc-700" : "bg-white text-black border-gray-300"
+                        )}
+                        value={formData.customScoringDetails || ""}
+                        onChange={handleChange}
+                      />
                     )}
-                  </select>
-                </LabelInputContainer>
-
-                <LabelInputContainer>
-                  <Label htmlFor="scoringStyle">📊 Scoring Style</Label>
-                  <div className="flex items-center space-x-6">
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="radio"
-                        id="equalPoints"
-                        name="scoringStyle"
-                        value="equal"
-                        checked={formData.scoringStyle === "equal"}
-                        onChange={handleChange}
-                        className="form-radio"
-                      />
-                      <label 
-                        htmlFor="equalPoints"
-                        className={theme === "dark" ? "text-white" : "text-gray-900"}
-                      >
-                        Equal Points
-                      </label>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <input
-                        type="radio"
-                        id="customPoints"
-                        name="scoringStyle"
-                        value="custom"
-                        checked={formData.scoringStyle === "custom"}
-                        onChange={handleChange}
-                        className="form-radio"
-                      />
-                      <label 
-                        htmlFor="customPoints"
-                        className={theme === "dark" ? "text-white" : "text-gray-900"}
-                      >
-                        Custom Points
-                      </label>
-                    </div>
-                  </div>
-                  {formData.scoringStyle === "custom" && (
+                  </LabelInputContainer>
+            
+                  <LabelInputContainer>
+                    <Label htmlFor="additionalInfo">📝 Additional Information</Label>
                     <textarea
-                      id="customScoringDetails"
-                      name="customScoringDetails"
-                      placeholder="Specify your scoring system (e.g., Q1: 10pts, Q2: 15pts...)"
-                      rows="3"
+                      id="additionalInfo"
+                      name="additionalInfo"
+                      placeholder="Specific topics to cover, special instructions, etc."
+                      rows="4"
                       className={cn(
-                        "flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background mt-4",
+                        "flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background",
                         "placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2",
                         "focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
                         theme === "dark" ? "bg-zinc-800 text-white border-zinc-700" : "bg-white text-black border-gray-300"
                       )}
-                      value={formData.customScoringDetails || ""}
+                      value={formData.additionalInfo}
                       onChange={handleChange}
-                    />
+                    ></textarea>
+                  </LabelInputContainer>
+                </div>
+
+                <button
+                  className={cn(
+                    "relative group/btn col-span-1 md:col-span-2 block w-full rounded-md h-12 font-medium border border-transparent", 
+                    theme === "dark" 
+                      ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
+                      : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-green-300"
                   )}
-                </LabelInputContainer>
-
-                <LabelInputContainer>
-                  <Label htmlFor="additionalInfo">📝 Additional Information</Label>
-                  <textarea
-                    id="additionalInfo"
-                    name="additionalInfo"
-                    placeholder="Specific topics to cover, special instructions, etc."
-                    rows="4"
-                    className={cn(
-                      "flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background",
-                      "placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2",
-                      "focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-                      theme === "dark" ? "bg-zinc-800 text-white border-zinc-700" : "bg-white text-black border-gray-300"
-                    )}
-                    value={formData.additionalInfo}
-                    onChange={handleChange}
-                  ></textarea>
-                </LabelInputContainer>
-              </div>
-
-              <button
-                className={cn(
-                  "relative group/btn col-span-2 block w-full rounded-md h-12 font-medium border border-transparent", 
-                  theme === "dark" 
-                    ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
-                    : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-green-300"
-                )}
-                type="submit">
-                Generate Exam &rarr;
-                <BottomGradient />
-              </button>
-            </form>
+                  type="submit">
+                  Generate Exam &rarr;
+                  <BottomGradient />
+                </button>
+              </form>
           </div>
         </div>
       </div>
