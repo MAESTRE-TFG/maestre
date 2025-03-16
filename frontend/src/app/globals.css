@@ -4,8 +4,9 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
+html, body {
   font-family: 'DM Sans', Arial, Helvetica, sans-serif;
+  overflow-y: auto;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -81,3 +82,31 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Alfa Slab One', cursive;
   }
 }
+
+.mac-card {
+  width: 190px;
+  height: 254px;
+  margin: 0 auto;
+  background-color: #011522;
+  border-radius: 8px;
+  z-index: 1;
+ }
+ 
+ .mac-tools {
+  display: flex;
+  align-items: center;
+  padding: 9px;
+ }
+ 
+ .mac-circle {
+  padding: 0 4px;
+ }
+ 
+ .mac-box {
+  display: inline-block;
+  align-items: center;
+  width: 10px;
+  height: 10px;
+  padding: 1px;
+  border-radius: 50%;
+ }
