@@ -20,7 +20,7 @@ const Modal = ({ isOpen, onClose, children }) => {
   if (!isOpen) return null;
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black bg-opacity-50">
       <div
         className={cn(
           "w-full max-w-md p-6 relative rounded-lg shadow-lg",

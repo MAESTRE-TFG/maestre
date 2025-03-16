@@ -63,9 +63,9 @@ export default function SignIn() {
         `}</style>
       </div>
         <img 
-          src={theme === "dark" ? "/static/maestre_logo_circle_black.png" : "static/maestre_logo_circle.png"} 
+          src={theme === "dark" ? "/static/maestre_logo_circle_black.png" : "/static/maestre_logo_circle.png"} 
           alt="MAESTRE Logo" 
-          className="mx-auto mt-4 w-44 h-44"
+          className="mx-auto mt-4 w-32 h-32"
         />
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <SigninForm onSubmit={handleSubmit} />
