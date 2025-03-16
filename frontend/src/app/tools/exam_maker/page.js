@@ -1,5 +1,5 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -22,8 +22,94 @@ const ExamMaker = () => {
     classroom: "",
     scoringStyle: "equal",
     customScoringDetails: "",
-    additionalInfo: ""
+    additionalInfo: "",
+    totalPoints: 10
   });
+  const promptRef = useRef("");
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [examResult, setExamResult] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
+  // Wrap the function in useCallback to prevent recreation on every render
+  const parseFormDataToNaturalLanguage = useCallback((data) => {
+    // Question type mapping
+    const questionTypeMap = {
+      multiple_choice: "opción múltiple",
+      true_false: "verdadero/falso",
+      short_answer: "respuesta corta",
+      essay: "desarrollo",
+      fill_blank: "completar espacios en blanco",
+      matching: "relacionar conceptos",
+      mixed: "tipos variados"
+    };
+
+    // Scoring style mapping
+    const scoringStyleMap = {
+      equal: "que cada pregunta tenga el mismo valor",
+      custom: "personalizada"
+    };
+
+    // Find the classroom name based on the selected ID
+    let classroomName = data.classroom;
+    if (data.classroom && classrooms.length > 0) {
+      const selectedClassroom = classrooms.find(c => c.id.toString() === data.classroom.toString());
+      if (selectedClassroom) {
+        classroomName = `${selectedClassroom.name} - ${selectedClassroom.academic_course}`;
+      }
+    }
+
+    return {
+      subject: data.subject,
+      numQuestions: data.numQuestions,
+      questionType: questionTypeMap[data.questionType] || data.questionType,
+      classroom: classroomName,
+      scoringStyle: scoringStyleMap[data.scoringStyle] || data.scoringStyle,
+      totalPoints: data.totalPoints,
+      customScoringDetails: data.customScoringDetails ? data.customScoringDetails : "",
+      additionalInfo: data.additionalInfo
+    };
+  }, [classrooms]); // Only recreate when classrooms change
+
+  // Update the prompt whenever relevant form data changes
+  useEffect(() => {
+    // Parse form data to natural language
+    const parsedData = parseFormDataToNaturalLanguage(formData);
+    const user = JSON.parse(localStorage.getItem('user'));
+    
+    // Base prompt construction with parsed data
+    let prompt = `Genera un examen sobre ${parsedData.subject} que incluya ${parsedData.numQuestions} 
+                  preguntas de tipo ${parsedData.questionType}. Este examen se debe ajustar  
+                  a la normativa, contenidos educativos y competencias establecidas 
+                  para el nivel de ${parsedData.classroom} de la comunidad autónoma de ${user.region}.`;
+    
+    // Add scoring details with more explicit instructions for equal distribution
+    if (formData.scoringStyle === "equal") {
+      const pointsPerQuestion = (parsedData.totalPoints / parsedData.numQuestions).toFixed(2);
+      prompt += ` Los puntos totales serán ${parsedData.totalPoints}, distribuidos equitativamente entre las ${parsedData.numQuestions} preguntas 
+                 (${pointsPerQuestion} puntos por cada pregunta).`;
+    } else {
+      prompt += ` Los puntos totales serán ${parsedData.totalPoints} repartidos de forma ${parsedData.scoringStyle}.`;
+    }
+
+    // Add extra details based on conditions
+    if (parsedData.scoringStyle === "personalizada" && parsedData.additionalInfo) {
+      prompt += ` Detalles de puntuación: ${parsedData.customScoringDetails}. Información adicional: ${parsedData.additionalInfo}. 
+                 Asegúrate de que las preguntas sean claras, precisas y acordes al tema y nivel indicado.`;
+    } else if (parsedData.scoringStyle === "personalizada") {
+      prompt += ` Detalles de puntuación: ${parsedData.customScoringDetails}.`;
+    } else if (parsedData.additionalInfo) {
+      prompt += ` Información adicional: ${parsedData.additionalInfo}.`;
+    }
+
+    // Update the prompt reference
+    promptRef.current = prompt;
+    
+    // Log the updated prompt for debugging
+    console.log("Updated prompt:", promptRef.current);
+  }, [
+    formData,
+    parseFormDataToNaturalLanguage
+  ]); // Now we only depend on formData and the memoized function
 
   useEffect(() => {
     const user = localStorage.getItem('user');
@@ -67,138 +153,339 @@ const ExamMaker = () => {
       [name]: value
     }));
   };
+  
+const formatExamText = (text) => {
+  if (!text) return '';
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      // Here you would send the data to your AI model endpoint
-      // For now, we'll just log the data
-      console.log("Generating exam with:", formData);
-      
-      // Mock API call
-      // const response = await axios.post("http://localhost:8000/api/exams/generate/", formData, {
-      //   headers: {
-      //     Authorization: `Token ${localStorage.getItem("authToken")}`,
-      //   },
-      // });
-      
-      // Redirect to the generated exam or show success message
-      // router.push(`/exams/${response.data.id}`);
-    } catch (err) {
-      setErrorMessage("Failed to generate exam");
-      console.error("Error generating exam:", err);
+  // Create a copy of the text to work with
+  let formattedText = text;
+
+  // Define formatting rules
+  const formattingRules = [
+    // Text styling
+    {
+      pattern: /\*\*(.*?)\*\*|\*(?!\*)(.*?)(?<!\*)\*/g,
+      replacement: '<strong>$1$2</strong>'
+    },
+    {
+      pattern: /__(.*?)__|_(?!_)(.*?)(?<!_)_/g,
+      replacement: '<em>$1$2</em>'
+    },
+    {
+      pattern: /~~(.*?)~~/g,
+      replacement: '<u>$1</u>'
+    },
+
+    // Headers
+    {
+      pattern: /^# (.*?)$/gm,
+      replacement: '<h1 class="text-2xl font-bold my-4">$1</h1>'
+    },
+    {
+      pattern: /^## (.*?)$/gm,
+      replacement: '<h2 class="text-xl font-bold my-3">$1</h2>'
+    },
+    {
+      pattern: /^### (.*?)$/gm,
+      replacement: '<h3 class="text-lg font-bold my-2">$1</h3>'
+    },
+
+    // Question formats
+    {
+      pattern: /^(Pregunta|Ejercicio|Problema)\s*(\d+)[:.]\s*(.*?)$/gm,
+      replacement: '<div class="my-4 question-block"><span class="font-bold text-lg">$1 $2:</span> $3</div>'
+    },
+    {
+      pattern: /^(Q|Question)\s*(\d+)[:\.]\s*(.*?)$/gm,
+      replacement: '<div class="my-4 question-block"><span class="font-bold text-lg">Question $2:</span> $3</div>'
+    },
+
+    // Lists and choices
+    {
+      pattern: /^(\d+)\.\s+(.*?)$/gm,
+      replacement: '<div class="ml-4 my-1 numbered-item"><span class="font-bold mr-2">$1.</span>$2</div>'
+    },
+    {
+      pattern: /^[-•]\s+(.*?)$/gm,
+      replacement: '<div class="ml-4 my-1 bullet-item">• $1</div>'
+    },
+    {
+      pattern: /^([A-Za-z])[)\.]\s+(.*?)$/gm,
+      replacement: '<div class="ml-6 my-1 choice-item"><span class="font-semibold mr-2">$1)</span> $2</div>'
     }
-  };
-
-  const questionTypes = [
-    { value: "multiple_choice", label: "Multiple Choice" },
-    { value: "true_false", label: "True/False" },
-    { value: "short_answer", label: "Short Answer" },
-    { value: "essay", label: "Essay" },
-    { value: "fill_blank", label: "Fill in the Blank" },
-    { value: "matching", label: "Matching" },
-    { value: "mixed", label: "Mixed (Various Types)" }
   ];
 
-  const scoringStyles = [
-    { value: "equal", label: "Equal Points (All questions worth the same)" },
-    { value: "custom", label: "Custom Points (Assign different values to questions)" }
-  ];
+  // Apply all formatting rules
+  formattingRules.forEach(rule => {
+    formattedText = formattedText.replace(rule.pattern, rule.replacement);
+  });
 
-  return (
-    <div className={cn("min-h-screen")}>
-      <div className="flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-4xl">
-          <h1 className={cn("text-3xl md:text-4xl font-bold mb-6 text-center", 
-            theme === "dark" ? "text-white" : "text-gray-900")} 
-            style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-            AI Exam Generator
-          </h1>
+  // Handle paragraphs and line breaks
+  const paragraphs = formattedText.split(/\n\n+/);
+  formattedText = paragraphs.map(para => {
+    // Skip if already HTML
+    if (para.trim().startsWith('<')) return para;
+
+    // Process line breaks
+    const lines = para.split(/\n/);
+    return lines.length > 1
+      ? `<p class="my-2">${lines.join('<br>')}</p>`
+      : `<p class="my-2">${para}</p>`;
+  }).join('\n');
+
+  // Add wrapper div for consistent styling
+  return `<div class="exam-content">${formattedText}</div>`;
+};
+
+// Add this function to create a document-friendly version of the exam
+const createDocumentVersion = (examText) => {
+  // Add page styling for print/document version
+  const documentStyles = `
+    <style>
+      @page {
+        size: A4;
+        margin: 2cm;
+      }
+      body {
+        font-family: 'Arial', sans-serif;
+        line-height: 1.5;
+      }
+      h1 {
+        font-size: 18pt;
+        text-align: center;
+        margin-bottom: 0.5cm;
+      }
+      h2 {
+        font-size: 14pt;
+        margin-bottom: 0.3cm;
+      }
+      .question-block {
+        margin: 0.5cm 0;
+      }
+      .choice-item {
+        margin-left: 1cm;
+      }
+      .footer {
+        text-align: center;
+        font-size: 9pt;
+        margin-top: 1cm;
+        color: #666;
+      }
+    </style>
+  `;
+  
+  // Create HTML document structure
+  return `<!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>Exam Document</title>
+      ${documentStyles}
+    </head>
+    <body>
+      ${formatExamText(examText)}
+      <div class="footer">Generated with Maestre AI Exam Generator</div>
+    </body>
+    </html>`;
+};
+
+// Remove both existing handleSubmit functions and replace with this single combined version
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setIsGenerating(true);
+  setErrorMessage(null);
+  
+  try {
+    console.log("Generating exam with prompt:", promptRef.current);
+    
+    // Call to local Ollama instance for initial exam generation
+    const response = await axios.post("http://localhost:11434/api/generate", {
+      model: "llama3.2:3b", // or whichever model you're using
+      prompt: promptRef.current,
+      stream: false
+    });
+    
+    // Handle the response
+    if (response.data && response.data.response) {
+      // Store the raw exam content
+      const rawExamContent = response.data.response;
+      
+      // Create a formatting prompt to improve the structure
+      const formattingPrompt = `
+        Please reformat the following exam to ensure it has:
+        1. A clear title and subtitle
+        2. Properly numbered questions
+        3. Consistent formatting for multiple choice options (using A), B), C), etc.)
+        4. Clear point values for each question
+        5. Proper spacing between sections
+        
+        Here's the exam to reformat:
+        
+        ${rawExamContent}
+      `;
+      
+      // Make a second call to format the exam
+      const formattingResponse = await axios.post("http://localhost:11434/api/generate", {
+        model: "llama3.2:3b",
+        prompt: formattingPrompt,
+        stream: false
+      });
+      
+      if (formattingResponse.data && formattingResponse.data.response) {
+        // Use the formatted version
+        setExamResult(formattingResponse.data.response);
+        setShowModal(true);
+        console.log("Exam formatted successfully");
+      } else {
+        // Fallback to the original version if formatting fails
+        setExamResult(rawExamContent);
+        setShowModal(true);
+        console.log("Using original exam format");
+      }
+    } else {
+      throw new Error("Invalid response from Ollama");
+    }
+  } catch (err) {
+    setErrorMessage("Failed to generate exam: " + (err.message || "Unknown error"));
+    console.error("Error generating exam:", err);
+  } finally {
+    setIsGenerating(false);
+  }
+};
+
+// Remove the standalone button that appears outside the component's return statement
+// DELETE THIS ENTIRE BUTTON:
+// <button
+//   onClick={() => {
+//     // Create document-friendly version
+//     ...
+//   }}
+//   className={cn(
+//     "px-4 py-2 rounded-md", 
+//     theme === "dark" ? "bg-green-700 hover:bg-green-600" : "bg-green-500 hover:bg-green-600 text-white"
+//   )}
+// >
+//   Save as HTML
+// </button>
+
+const questionTypes = [
+  { value: "multiple_choice", label: "Multiple Choice" },
+  { value: "true_false", label: "True/False" },
+  { value: "short_answer", label: "Short Answer" },
+  { value: "essay", label: "Essay" },
+  { value: "fill_blank", label: "Fill in the Blank" },
+  { value: "matching", label: "Matching" },
+  { value: "mixed", label: "Mixed (Various Types)" }
+];
+
+return (
+  <div className={cn("min-h-screen")}>
+    <div className="flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-4xl">
+        <h1 className={cn("text-3xl md:text-4xl font-bold mb-6 text-center", 
+          theme === "dark" ? "text-white" : "text-gray-900")} 
+          style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+          AI Exam Generator
+        </h1>
+        
+        <p className={cn("text-center mb-8", 
+          theme === "dark" ? "text-gray-300" : "text-gray-600")}>
+          Create customized exams for your students with our AI-powered tool
+        </p>
+
+        {errorMessage && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+            {errorMessage}
+          </div>
+        )}
+
+        <div className={cn("max-w-4xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", 
+          theme === "dark" ? "bg-black" : "bg-white")}>
+          <style jsx global>{`
+            @import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
+            select {
+              appearance: none;
+              background: ${theme === "dark" ? "#333" : "#fff"};
+              color: ${theme === "dark" ? "#fff" : "#000"};
+              border: 1px solid ${theme === "dark" ? "#555" : "#ccc"};
+              padding: 0.5rem;
+              border-radius: 0.375rem;
+              box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+              width: 100%;
+            }
+            select:focus {
+              outline: none;
+              border-color: ${theme === "dark" ? "#888" : "#007bff"};
+              box-shadow: 0 0 0 3px ${theme === "dark" ? "rgba(136, 136, 136, 0.5)" : "rgba(0, 123, 255, 0.25)"};
+            }
+            option {
+              background: ${theme === "dark" ? "#333" : "#fff"};
+              color: ${theme === "dark" ? "#fff" : "#000"};
+            }
+          `}</style>
           
-          <p className={cn("text-center mb-8", 
-            theme === "dark" ? "text-gray-300" : "text-gray-600")}>
-            Create customized exams for your students with our AI-powered tool
-          </p>
-
-          {errorMessage && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-              {errorMessage}
-            </div>
-          )}
-
-          <div className={cn("max-w-4xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", 
-            theme === "dark" ? "bg-black" : "bg-white")}>
-            <style jsx global>{`
-              @import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
-              select {
-                appearance: none;
-                background: ${theme === "dark" ? "#333" : "#fff"};
-                color: ${theme === "dark" ? "#fff" : "#000"};
-                border: 1px solid ${theme === "dark" ? "#555" : "#ccc"};
-                padding: 0.5rem;
-                border-radius: 0.375rem;
-                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-                width: 100%;
-              }
-              select:focus {
-                outline: none;
-                border-color: ${theme === "dark" ? "#888" : "#007bff"};
-                box-shadow: 0 0 0 3px ${theme === "dark" ? "rgba(136, 136, 136, 0.5)" : "rgba(0, 123, 255, 0.25)"};
-              }
-              option {
-                background: ${theme === "dark" ? "#333" : "#fff"};
-                color: ${theme === "dark" ? "#fff" : "#000"};
-              }
-            `}</style>
+          <form className="my-8 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8" 
+              onSubmit={handleSubmit} 
+              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+              
+              <div className="space-y-6">
+                <LabelInputContainer>
+                  <Label htmlFor="subject">📚 Subject</Label>
+                  <Input 
+                    id="subject" 
+                    name="subject" 
+                    placeholder="Mathematics, Science, History, etc." 
+                    type="text" 
+                    required 
+                    value={formData.subject} 
+                    onChange={handleChange} 
+                  />
+                </LabelInputContainer>
+          
+                <LabelInputContainer>
+                  <Label htmlFor="numQuestions">❓ Number of Questions</Label>
+                  <Input 
+                    id="numQuestions" 
+                    name="numQuestions" 
+                    type="number" 
+                    min="1" 
+                    max="20" 
+                    required 
+                    value={formData.numQuestions} 
+                    onChange={handleChange} 
+                  />
+                </LabelInputContainer>
             
-            <form className="my-8 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8" 
-                onSubmit={handleSubmit} 
-                style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-                
-                <div className="space-y-6">
-                  <LabelInputContainer>
-                    <Label htmlFor="subject">📚 Subject</Label>
-                    <Input 
-                      id="subject" 
-                      name="subject" 
-                      placeholder="Mathematics, Science, History, etc." 
-                      type="text" 
-                      required 
-                      value={formData.subject} 
-                      onChange={handleChange} 
-                    />
-                  </LabelInputContainer>
+                <LabelInputContainer>
+                  <Label htmlFor="maxPoints">🎯 Maximum Points</Label>
+                  <Input 
+                    id="maxPoints" 
+                    name="maxPoints" 
+                    type="number" 
+                    min="1" 
+                    max="1000" 
+                    required 
+                    value={formData.totalPoints} 
+                    onChange={handleChange} 
+                  />
+                </LabelInputContainer>
             
-                  <LabelInputContainer>
-                    <Label htmlFor="numQuestions">❓ Number of Questions</Label>
-                    <Input 
-                      id="numQuestions" 
-                      name="numQuestions" 
-                      type="number" 
-                      min="1" 
-                      max="50" 
-                      required 
-                      value={formData.numQuestions} 
-                      onChange={handleChange} 
-                    />
-                  </LabelInputContainer>
-            
-                  <LabelInputContainer>
-                    <Label htmlFor="questionType">🔤 Question Type</Label>
-                    <select
-                      id="questionType"
-                      name="questionType"
-                      required
-                      value={formData.questionType}
-                      onChange={handleChange}
-                    >
-                      {questionTypes.map(type => (
-                        <option key={type.value} value={type.value}>
-                          {type.label}
-                        </option>
-                      ))}
-                    </select>
-                  </LabelInputContainer>
+                <LabelInputContainer>
+                  <Label htmlFor="questionType">🔤 Question Type</Label>
+                  <select
+                    id="questionType"
+                    name="questionType"
+                    required
+                    value={formData.questionType}
+                    onChange={handleChange}
+                  >
+                    {questionTypes.map(type => (
+                      <option key={type.value} value={type.value}>
+                        {type.label}
+                      </option>
+                    ))}
+                  </select>
+                </LabelInputContainer>
                 </div>
                 
                 <div className="space-y-6">
@@ -311,6 +598,88 @@ const ExamMaker = () => {
                   <BottomGradient />
                 </button>
               </form>
+              
+              {isGenerating && (
+                <div className="mt-8 text-center">
+                  <div className="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div>
+                  <p className={theme === "dark" ? "text-white mt-2" : "text-gray-800 mt-2"}>
+                    Generating your exam...
+                  </p>
+                </div>
+              )}
+              
+              {/* Replace the existing exam result display with this modal */}
+              {showModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+                  <div 
+                    className={cn(
+                      "relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-lg shadow-xl p-6",
+                      theme === "dark" ? "bg-zinc-800 text-white" : "bg-white text-black"
+                    )}
+                  >
+                    <button 
+                      onClick={() => setShowModal(false)}
+                      className={cn(
+                        "absolute top-4 right-4 p-2 rounded-full",
+                        theme === "dark" ? "hover:bg-zinc-700" : "hover:bg-gray-200"
+                      )}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </button>
+                    
+                    <h2 className="text-2xl font-bold mb-4">{formData.subject} Exam</h2>
+                    
+                    <div 
+                      className={cn(
+                        "prose max-w-none mb-6",
+                        theme === "dark" ? "prose-invert" : ""
+                      )}
+                      dangerouslySetInnerHTML={{ __html: formatExamText(examResult) }}
+                    ></div>
+                    
+                    <div className="flex justify-end space-x-3 mt-6">
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(examResult);
+                          alert("Exam copied to clipboard!");
+                        }}
+                        className={cn(
+                          "px-4 py-2 rounded-md", 
+                          theme === "dark" ? "bg-zinc-700 hover:bg-zinc-600" : "bg-gray-200 hover:bg-gray-300"
+                        )}
+                      >
+                        Copy
+                      </button>
+                      <button
+                        onClick={() => {
+                          const docVersion = createDocumentVersion(examResult);
+                          
+                          // Create a Blob with HTML content
+                          const blob = new Blob([docVersion], { type: 'text/html' });
+                          const url = URL.createObjectURL(blob);
+                          
+                          // Create download link
+                          const a = document.createElement('a');
+                          a.href = url;
+                          a.download = `${formData.subject}_exam.html`;
+                          document.body.appendChild(a);
+                          a.click();
+                          document.body.removeChild(a);
+                        }}
+                        className={cn(
+                          "px-4 py-2 rounded-md", 
+                          theme === "dark" ? "bg-green-700 hover:bg-green-600" : "bg-green-500 hover:bg-green-600 text-white"
+                        )}
+                      >
+                        Save as HTML
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
           </div>
         </div>
       </div>
