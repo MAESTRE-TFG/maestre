@@ -12,16 +12,26 @@ class ClassroomViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
-        creator_id = self.request.query_params.get('creator')
-        if creator_id:
-            try:
-                # Convert to integer to ensure it's a valid ID
-                creator_id = int(creator_id)
-                return Classroom.objects.filter(creator_id=creator_id)
-            except (ValueError, TypeError):
-                # Handle case where creator_id is not a valid integer
-                return Classroom.objects.none()
-        return Classroom.objects.all()
+        user = self.request.user
+        if user.is_authenticated:
+            return Classroom.objects.filter(creator=user)
+        return Classroom.objects.none()
+
+    def retrieve(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            if request.user != instance.creator and not request.user.is_staff:
+                return Response(
+                    {"detail": "You do not have permission to access this classroom."},
+                    status=status.HTTP_403_FORBIDDEN
+                )
+            serializer = self.get_serializer(instance)
+            return Response(serializer.data)
+        except Exception:
+            return Response(
+                {"detail": "Classroom not found or access denied."},
+                status=status.HTTP_404_NOT_FOUND
+            )
 
     def create(self, request, *args, **kwargs):
         data = request.data.copy()

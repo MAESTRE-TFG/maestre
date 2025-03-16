@@ -6,6 +6,7 @@ import { useTheme } from "@/components/theme-provider";
 import { useParams } from 'next/navigation';
 const axios = require('axios');
 import { FileUploadDemo } from '@/components/file-upload-demo';
+import { MaterialsPage } from "@/components/materials-page";
 
 const ClassroomPage = () => {
   const [activeTab, setActiveTab] = useState('students')
@@ -398,19 +399,18 @@ const ClassroomPage = () => {
           <div className={cn("rounded-lg shadow p-6", 
             theme === "dark" ? "bg-neutral-700 border-transparent" : "bg-white border-gray-200")}>
             <h2 className={cn("text-2xl font-bold mb-4", 
-              theme === "dark" ? "text-white" : "text-gray-800")} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Materials</h2>
-            <div className="grid gap-4">
-              {/* Materials list will go here */}
-              <FileUploadDemo classroomId={params.id}/>
-            </div>
+              theme === "dark" ? "text-white" : "text-gray-800")} 
+              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+              Materials
+            </h2>
+            <MaterialsPage classroomId={params.id} />
           </div>
         )}
-      
       </div>
-
     </div>
-  )
-}
+  );
+};
+
 const BottomGradient = ({ isCreate }) => {
   return (<>
     <span className={cn("group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0",
