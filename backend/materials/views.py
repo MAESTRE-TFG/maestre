@@ -26,3 +26,17 @@ class DocumentViewSet(viewsets.ModelViewSet):
                     status=status.HTTP_400_BAD_REQUEST
                 )
         return super().create(request, *args, **kwargs)
+
+    def update_tags(self, request, pk=None):
+        document = self.get_object()
+        tag_ids = request.data.get('tag_ids', [])
+
+        try:
+            document.tags.set(tag_ids)
+            serializer = self.get_serializer(document)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response(
+                {'error': str(e)},
+                status=status.HTTP_400_BAD_REQUEST
+            )
