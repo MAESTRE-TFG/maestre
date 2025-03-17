@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'students',
     'users',
     'classrooms',
+    'tags',
     'materials',
 ]
 

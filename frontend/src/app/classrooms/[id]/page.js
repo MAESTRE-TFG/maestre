@@ -6,9 +6,22 @@ import { useTheme } from "@/components/theme-provider";
 import { useParams } from 'next/navigation';
 const axios = require('axios');
 import { FileUploadDemo } from '@/components/file-upload-demo';
+import { MaterialsPage } from "@/components/materials-page";
 
 const ClassroomPage = () => {
-  const [activeTab, setActiveTab] = useState('students')
+  // Modify the initial state to use localStorage
+  const [activeTab, setActiveTab] = useState(() => {
+    // Try to get the saved tab from localStorage, default to 'students' if not found
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('classroomActiveTab') || 'students';
+    }
+    return 'students';
+  });
+  
+  // Add an effect to save the tab selection
+  useEffect(() => {
+    localStorage.setItem('classroomActiveTab', activeTab);
+  }, [activeTab]);
   const { theme } = useTheme()
   const params = useParams()
   const [classroom, setClassroom] = useState(null)
@@ -149,7 +162,7 @@ const ClassroomPage = () => {
       <div className="fixed top-0 left-0 w-full z-10 bg-inherit backdrop-blur-md">
         <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-full">
           <div className="h-12"></div>
-          <div className="flex justify-center items-center sticky top-0 bg-inherit px-4 space-x-4">
+          <div className="flex justify-center items-center sticky top-0 bg-inherit px-4 space-x-4 z-900">
             
             {classroom ? (
               <div className="flex flex-col items-center space-y-2">
@@ -401,19 +414,18 @@ const ClassroomPage = () => {
           <div className={cn("rounded-lg shadow p-6", 
             theme === "dark" ? "bg-neutral-700 border-transparent" : "bg-white border-gray-200")}>
             <h2 className={cn("text-2xl font-bold mb-4", 
-              theme === "dark" ? "text-white" : "text-gray-800")} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Materials</h2>
-            <div className="grid gap-4">
-              {/* Materials list will go here */}
-              <FileUploadDemo classroomId={params.id}/>
-            </div>
+              theme === "dark" ? "text-white" : "text-gray-800")} 
+              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+              Materials
+            </h2>
+            <MaterialsPage classroomId={params.id} />
           </div>
         )}
-      
       </div>
-
     </div>
-  )
-}
+  );
+};
+
 const BottomGradient = ({ isCreate }) => {
   return (<>
     <span className={cn("group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0",
