@@ -25,7 +25,8 @@ const ExamMaker = () => {
     customScoringDetails: "",
     additionalInfo: "",
     totalPoints: 10,
-    llmModel: "llama3.2:3b" // Default model
+    llmModel: "llama3.2:3b", // Default model
+    examName: "" // Added exam name field
   });
   const promptRef = useRef("");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -532,6 +533,18 @@ return (
                 </LabelInputContainer>
           
                 <LabelInputContainer>
+                  <Label htmlFor="examName">📝 Exam Name</Label>
+                  <Input 
+                    id="examName" 
+                    name="examName" 
+                    placeholder="Midterm Exam, Final Test, Chapter 5 Quiz, etc." 
+                    type="text" 
+                    value={formData.examName} 
+                    onChange={handleChange} 
+                  />
+                </LabelInputContainer>
+          
+                <LabelInputContainer>
                   <Label htmlFor="numQuestions">❓ Number of Questions</Label>
                   <Input 
                     id="numQuestions" 
@@ -737,7 +750,7 @@ return (
                             </svg>
                           </button>
                           
-                          <h2 className="text-2xl font-bold mb-4">{formData.subject} Exam</h2>
+                          <h2 className="text-2xl font-bold mb-4">{formData.examName}</h2>
                           
                           <div 
                             className={cn(
@@ -803,7 +816,7 @@ return (
                             // Generate the PDF
                             const pdfDoc = createPDFVersion(examResult);
                             const pdfBlob = pdfDoc.output('blob');
-                            const fileName = `${formData.subject}_exam.pdf`;
+                            const fileName = `${formData.examName}.pdf`;
                             
                             // Save the PDF locally
                             pdfDoc.save(fileName);
