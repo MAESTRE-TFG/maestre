@@ -11,7 +11,7 @@ const ToolList = () => {
 
   return (
     <div className="min-h-screen pt-24 px-8">
-      <div className="relative my-8" style={{ height: "700px" }}></div>
+      <div className="relative my-8" style={{ height: "650px" }}></div>
 
       {/* Header Section */}
       <div className="w-full text-center mb-12">

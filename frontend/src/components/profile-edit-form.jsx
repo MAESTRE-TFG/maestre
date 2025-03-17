@@ -142,7 +142,7 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
               ¿Can't find your school?
             </p>
             <button
-              onClick={() => router.push("/school_create")}
+              onClick={() => router.push("/schools/new")}
               className={cn("relative group/btn block w-full rounded-md h-10 font-medium border border-transparent", 
                 theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
                 : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"

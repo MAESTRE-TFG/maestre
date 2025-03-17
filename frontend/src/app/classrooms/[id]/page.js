@@ -317,12 +317,15 @@ const ClassroomPage = () => {
             <div className="flex justify-center m-4">
               <button
                 onClick={() => setShowModal(true)}
-                className={cn("font-bold py-2 px-4 rounded", 
-                  theme === "dark" 
-                    ? "bg-blue-600 hover:bg-blue-700 text-white" 
-                    : "bg-blue-500 hover:bg-blue-600 text-white")}
+                className={cn("relative group/btn block w-full rounded-md h-10 font-medium border border-transparent", 
+                  theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
+                  : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
+                )}
+                type="submit"
+                style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
               >
-                Add Student
+                Add Student &rarr;
+              <BottomGradient />
               </button>
             </div>
             {/* Add Student Modal */}

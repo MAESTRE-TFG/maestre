@@ -8,6 +8,7 @@ import { SidebarDemo } from "@/components/sidebar-demo";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import React from "react";
+import jsPDF from "jspdf";
 
 const ExamMaker = () => {
   const { theme } = useTheme();
@@ -23,12 +24,19 @@ const ExamMaker = () => {
     scoringStyle: "equal",
     customScoringDetails: "",
     additionalInfo: "",
-    totalPoints: 10
+    totalPoints: 10,
+    llmModel: "llama3.2:3b" // Default model
   });
   const promptRef = useRef("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [examResult, setExamResult] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [pdfToUplaod, setPdfToUpload] = useState(null);
+
+  const llmModels = [
+    { value: "llama3.2:3b", label: "Llama 3.2 3B" },
+    { value: "deepseek-r1:latest", label: "DeepSeek R1" }
+  ];
 
   // Wrap the function in useCallback to prevent recreation on every render
   const parseFormDataToNaturalLanguage = useCallback((data) => {
@@ -289,6 +297,22 @@ const createDocumentVersion = (examText) => {
     </html>`;
 };
 
+// Add this function to create a PDF version of the exam
+const createPDFVersion = (examText) => {
+  const doc = new jsPDF();
+  const formattedText = formatExamText(examText);
+
+  // Add content to the PDF
+  doc.fromHTML(formattedText, 10, 10, {
+    width: 180,
+  });
+
+  // Add footer
+  doc.text("Generated with Maestre AI Exam Generator", 105, doc.internal.pageSize.height - 10, null, null, "center");
+
+  return doc;
+};
+
 // Remove both existing handleSubmit functions and replace with this single combined version
 const handleSubmit = async (e) => {
   e.preventDefault();
@@ -300,7 +324,7 @@ const handleSubmit = async (e) => {
     
     // Call to local Ollama instance for initial exam generation
     const response = await axios.post("http://localhost:11434/api/generate", {
-      model: "llama3.2:3b", // or whichever model you're using
+      model: formData.llmModel, // Use selected model
       prompt: promptRef.current,
       stream: false
     });
@@ -346,27 +370,49 @@ const handleSubmit = async (e) => {
       throw new Error("Invalid response from Ollama");
     }
   } catch (err) {
-    setErrorMessage("Failed to generate exam: " + (err.message || "Unknown error"));
+    if (err.response && err.response.status === 404) {
+      setErrorMessage("API endpoint not found (404). Please check the URL and try again.");
+    } else {
+      setErrorMessage("Failed to generate exam: " + (err.message || "Unknown error"));
+    }
     console.error("Error generating exam:", err);
   } finally {
     setIsGenerating(false);
   }
 };
 
-// Remove the standalone button that appears outside the component's return statement
-// DELETE THIS ENTIRE BUTTON:
-// <button
-//   onClick={() => {
-//     // Create document-friendly version
-//     ...
-//   }}
-//   className={cn(
-//     "px-4 py-2 rounded-md", 
-//     theme === "dark" ? "bg-green-700 hover:bg-green-600" : "bg-green-500 hover:bg-green-600 text-white"
-//   )}
-// >
-//   Save as HTML
-// </button>
+const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName) => {
+  const formData = new FormData();
+  formData.append('name', fileName);
+  formData.append('file', pdfBlob);
+  formData.append('classroom', classroomId);
+
+  try {
+    const token = localStorage.getItem('authToken');
+    await axios.post('http://localhost:8000/api/materials/', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Token ${token}`
+      }
+    });
+    alert('PDF saved as a material for the selected class.');
+  } catch (error) {
+    if (error.response) {
+      if (error.response.status === 400) {
+        const errorMsg = error.response.data && error.response.data.error
+          ? error.response.data.error
+          : "Failed to upload file. Maximum limit reached.";
+        alert(errorMsg);
+      }
+    } else if (error.request) {
+      console.error('No response received:', error.request);
+      alert("Network error. Please try again later.");
+    } else {
+      console.error('Error setting up request:', error.message);
+      alert("An error occurred. Please try again.");
+    }
+  }
+};
 
 const questionTypes = [
   { value: "multiple_choice", label: "Multiple Choice" },
@@ -380,6 +426,7 @@ const questionTypes = [
 
 return (
   <div className={cn("min-h-screen")}>
+    <div className="relative my-8" style={{ height: "100px" }}></div>
     <div className="flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="w-full max-w-4xl">
         <h1 className={cn("text-3xl md:text-4xl font-bold mb-6 text-center", 
@@ -486,9 +533,9 @@ return (
                     ))}
                   </select>
                 </LabelInputContainer>
-                </div>
+              </div>
                 
-                <div className="space-y-6">
+              <div className="space-y-6">
                   <LabelInputContainer>
                     <Label htmlFor="classroom">🏫 Classroom (Difficulty Level)</Label>
                     <select
@@ -566,6 +613,23 @@ return (
                       />
                     )}
                   </LabelInputContainer>
+
+                  <LabelInputContainer>
+                    <Label htmlFor="llmModel">🤖 LLM Model</Label>
+                    <select
+                      id="llmModel"
+                      name="llmModel"
+                      required
+                      value={formData.llmModel}
+                      onChange={handleChange}
+                    >
+                      {llmModels.map(model => (
+                        <option key={model.value} value={model.value}>
+                          {model.label}
+                        </option>
+                      ))}
+                    </select>
+                  </LabelInputContainer>
             
                   <LabelInputContainer>
                     <Label htmlFor="additionalInfo">📝 Additional Information</Label>
@@ -584,20 +648,22 @@ return (
                       onChange={handleChange}
                     ></textarea>
                   </LabelInputContainer>
-                </div>
+              </div>
 
-                <button
+              <button
                   className={cn(
                     "relative group/btn col-span-1 md:col-span-2 block w-full rounded-md h-12 font-medium border border-transparent", 
                     theme === "dark" 
                       ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
                       : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-green-300"
                   )}
-                  type="submit">
+                  type="submit"
+                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+              >
                   Generate Exam &rarr;
                   <BottomGradient />
-                </button>
-              </form>
+              </button>
+          </form>
               
               {isGenerating && (
                 <div className="mt-8 text-center">
@@ -607,74 +673,104 @@ return (
                   </p>
                 </div>
               )}
-              
-              {/* Replace the existing exam result display with this modal */}
-              {showModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
-                  <div 
-                    className={cn(
-                      "relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-lg shadow-xl p-6",
-                      theme === "dark" ? "bg-zinc-800 text-white" : "bg-white text-black"
-                    )}
-                  >
-                    <button 
-                      onClick={() => setShowModal(false)}
-                      className={cn(
-                        "absolute top-4 right-4 p-2 rounded-full",
-                        theme === "dark" ? "hover:bg-zinc-700" : "hover:bg-gray-200"
-                      )}
-                    >
-                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                      </svg>
-                    </button>
-                    
-                    <h2 className="text-2xl font-bold mb-4">{formData.subject} Exam</h2>
-                    
-                    <div 
-                      className={cn(
-                        "prose max-w-none mb-6",
-                        theme === "dark" ? "prose-invert" : ""
-                      )}
-                      dangerouslySetInnerHTML={{ __html: formatExamText(examResult) }}
-                    ></div>
-                    
-                    <div className="flex justify-end space-x-3 mt-6">
-                      <button
-                        onClick={() => {
-                          navigator.clipboard.writeText(examResult);
-                          alert("Exam copied to clipboard!");
-                        }}
+                      {showModal && (
+                      <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black bg-opacity-50">
+                        <div 
                         className={cn(
-                          "px-4 py-2 rounded-md", 
-                          theme === "dark" ? "bg-zinc-700 hover:bg-zinc-600" : "bg-gray-200 hover:bg-gray-300"
+                          "relative w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-lg shadow-xl p-6",
+                          theme === "dark" ? "bg-zinc-800 text-white" : "bg-white text-black"
                         )}
-                      >
-                        Copy
+                        >
+                        <button 
+                          onClick={() => setShowModal(false)}
+                          className={cn(
+                          "fixed top-4 right-4 p-2 rounded-full", // Changed to absolute
+                            theme === "dark" ? "hover:bg-zinc-700" : "hover:bg-gray-200"
+                            )}
+                            style={{ position: 'fixed', top: '1rem', right: '1rem' }}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <line x1="18" y1="6" x2="6" y2="18"></line>
+                            <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                          </button>
+                          
+                          <h2 className="text-2xl font-bold mb-4">{formData.subject} Exam</h2>
+                          
+                          <div 
+                            className={cn(
+                            "prose max-w-none mb-6",
+                            theme === "dark" ? "prose-invert" : ""
+                            )}
+                            dangerouslySetInnerHTML={{ __html: formatExamText(examResult) }}
+                          ></div>
+                          
+                          <div className="sticky bottom-0 left-0 right-0 p-5 bg-opacity-90 bg-inherit flex justify-end space-x-3">
+                            <button
+                            onClick={() => {
+                            navigator.clipboard.writeText(examResult);
+                            alert("Exam copied to clipboard!");
+                          }}
+                          className={cn(
+                            "relative group/btn px-4 py-2 rounded-md", 
+                            theme === "dark" 
+                              ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
+                              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
+                          )}
+                          style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                           >
+                          Copy
+                          <BottomGradient />
+                          </button>
+                        <button
+                          onClick={() => {
+                            const docVersion = createDocumentVersion(examResult);
+
+                            // Create a Blob with HTML content
+                            const blob = new Blob([docVersion], { type: 'text/html' });
+                            const url = URL.createObjectURL(blob);
+
+                            // Create download link
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.download = `${formData.subject}_exam.html`;
+                            document.body.appendChild(a);
+                            a.click();
+                            document.body.removeChild(a);
+                          }}
+                          className={cn(
+                            "relative group/btn px-4 py-2 rounded-md", 
+                            theme === "dark" 
+                              ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
+                              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-red-300"
+                          )}
+                          style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                        >
+                        Save as HTML
+                        <BottomGradient />
                       </button>
                       <button
-                        onClick={() => {
-                          const docVersion = createDocumentVersion(examResult);
+                        onClick={async () => {
+                          const pdfDoc = createPDFVersion(examResult);
+                          const pdfBlob = pdfDoc.output('blob');
+                          const fileName = `${formData.subject}_exam.pdf`;
                           
-                          // Create a Blob with HTML content
-                          const blob = new Blob([docVersion], { type: 'text/html' });
-                          const url = URL.createObjectURL(blob);
-                          
-                          // Create download link
-                          const a = document.createElement('a');
-                          a.href = url;
-                          a.download = `${formData.subject}_exam.html`;
-                          document.body.appendChild(a);
-                          a.click();
-                          document.body.removeChild(a);
+                          // Save the PDF locally
+                          pdfDoc.save(fileName);
+
+                          // Upload the PDF as a material for the selected class
+                          await uploadPDFToClassroom(pdfBlob, formData.classroom, fileName);
                         }}
                         className={cn(
-                          "px-4 py-2 rounded-md", 
-                          theme === "dark" ? "bg-green-700 hover:bg-green-600" : "bg-green-500 hover:bg-green-600 text-white"
+                          "relative group/btn px-4 py-2 rounded-md", 
+                          theme === "dark" 
+                            ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
+                            : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-yellow-300"
                         )}
+                        style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
                       >
-                        Save as HTML
+                        Save as PDF
+                        <BottomGradient />
                       </button>
                     </div>
                   </div>
@@ -685,7 +781,7 @@ return (
       </div>
     </div>
   );
-}
+};
 
 const BottomGradient = () => {
   return (
