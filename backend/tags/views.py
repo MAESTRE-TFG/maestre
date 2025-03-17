@@ -68,3 +68,33 @@ class TagViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['get'])
+    def filtered_documents_user(self, request):
+        if not request.user.is_authenticated:
+            return Response({'error': 'Authentication required'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        # Get tags from comma-separated string
+        tags_string = request.query_params.get('tags', '')
+        tag_names = [name.strip() for name in tags_string.split(',') if name.strip()]
+
+        if not tag_names:
+            return Response({'error': 'Tags are required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # Get all tags that match the provided names and belong to the user
+            tags = Tag.objects.filter(name__in=tag_names, creator=request.user)
+
+            # Get documents that have ALL the specified tags and belong to the user
+            from materials.models import Document
+            documents = Document.objects.filter(creator=request.user).distinct()
+
+            # Filter by tags
+            for tag in tags:
+                documents = documents.filter(tags=tag)
+
+            from materials.serializers import DocumentSerializer
+            serializer = DocumentSerializer(documents, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

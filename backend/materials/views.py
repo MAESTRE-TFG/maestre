@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from classrooms.models import Classroom
 from .models import Document
 from .serializers import DocumentSerializer
+from rest_framework.decorators import permission_classes
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
@@ -40,3 +41,12 @@ class DocumentViewSet(viewsets.ModelViewSet):
                 {'error': str(e)},
                 status=status.HTTP_400_BAD_REQUEST
             )
+
+
+@permission_classes([IsAuthenticated])
+def get_all_user_materials(request):
+    materials = Document.objects.filter(
+        classroom__members=request.user
+    ).select_related('classroom').prefetch_related('tags')
+    serializer = DocumentSerializer(materials, many=True)
+    return Response(serializer.data)

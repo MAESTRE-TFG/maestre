@@ -108,7 +108,7 @@ export function SidebarDemo({ ContentComponent }) {
     },
     {
       label: "My Materials",
-      href: user ? "/" : "/profile/signin",
+      href: user ? "/materials" : "/profile/signin",
       icon: (
         <IconBooks
           className={cn(
