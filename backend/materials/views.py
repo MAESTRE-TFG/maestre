@@ -1,7 +1,6 @@
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from django.shortcuts import get_object_or_404
 from classrooms.models import Classroom
 from .models import Document
 from .serializers import DocumentSerializer
@@ -18,12 +17,12 @@ class DocumentViewSet(viewsets.ModelViewSet):
         return Document.objects.filter(classroom__creator=self.request.user)
 
     def create(self, request, *args, **kwargs):
-        classroom_id = request.data.get('classroom_id')
+        classroom_id = request.data.get('classroom')
         if classroom_id:
-            classroom = get_object_or_404(Classroom, id=classroom_id)
-            if classroom.documents.count() >= 50:
+            classroom = Classroom.objects.get(id=classroom_id)
+            if classroom.documents.count() >= 5:
                 return Response(
-                    {"error": "This classroom already has the maximum number of files (50)."},
+                    {"error": "This classroom already has the maximum number of files (5)."},
                     status=status.HTTP_400_BAD_REQUEST
                 )
         return super().create(request, *args, **kwargs)

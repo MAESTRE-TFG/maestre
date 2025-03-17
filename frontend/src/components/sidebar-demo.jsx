@@ -84,7 +84,7 @@ export function SidebarDemo({ ContentComponent }) {
   const links = [
     {
       label: "Create",
-      href: "/create",
+      href: "/tools",
       icon: (
         <IconPlus
           className={cn(
