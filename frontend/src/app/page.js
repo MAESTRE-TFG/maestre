@@ -47,22 +47,8 @@ const Home = () => {
 
   return (
     <div className={`min-h-screen w-full ${theme === 'dark' ? 'bg-neutral-900 text-white' : 'bg-white text-black'}`}>
-      <div className="relative my-8" style={isAuthenticated ? {height: "2450px"} : { height: "2700px" }}></div>
+      <div className="relative my-8" style={isAuthenticated ? {height: "2100px"} : { height: "2700px" }}></div>
       {/* Hero Section */}
-      <section className="flex flex-col items-center justify-center text-center relative">
-        <Image
-          src={theme === "dark" ? "/static/maestre_logo_circle_black.png" : "/static/maestre_logo_circle.png"}
-          alt="Maestre Logo"
-          width={256}
-          height={256}
-          className="mb-8"
-        />
-        <h1 className={`text-6xl font-bold mb-4 font-alfa-slab-one ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-          MAESTRE
-        </h1>
-        <p className={`text-xl mb-8 max-w-2xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-          Empowering educators with intelligent tools for seamless teaching and assessment
-        </p>
       <section className="hidden md:flex flex-col items-center justify-center text-center relative z-10">
         <div className="h-screen">
           <LampDemo />
@@ -70,7 +56,7 @@ const Home = () => {
       </section>
 
       {/* Logo Section */}
-      <section className="py-16 text-center relative z-10 md:mt-[-400px]">
+      <section className="py-16 text-center relative z-10 md:mt-[-300px]">
         <div className="flex flex-col items-center justify-center gap-4">
           <div className="flex items-center justify-center gap-4">
             <Image
@@ -195,6 +181,7 @@ const Home = () => {
       </footer>
     </div>
   );
+
 };
 
 export default function Main() {
