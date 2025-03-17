@@ -40,7 +40,7 @@ const data = [
     category: "Assessment",
     title: "Create Engaging Exams",
     src: "/static/tools/exam_maker.webp",
-    page: "exam_maker",
+    page: "exam-maker",
     sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
     content: <CardContent>
       Create comprehensive exams with our intuitive exam maker. Features include:
@@ -56,7 +56,7 @@ const data = [
     category: "Assessment",
     title: "Generate Tests Efficiently",
     src: "/static/tools/test_maker.webp",
-    page: "test_maker",
+    page: "test-maker",
     sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
     content: <CardContent>
       Streamline your test creation process with AI-powered assistance:
@@ -72,7 +72,7 @@ const data = [
     category: "Organization",
     title: "Plan Your Classes",
     src: "/static/tools/planner.webp",
-    page: "class_planner",
+    page: "class-planner",
     sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
     content: <CardContent>
       Stay organized with our comprehensive planning tools:

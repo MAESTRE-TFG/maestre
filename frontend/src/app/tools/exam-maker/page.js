@@ -298,22 +298,101 @@ const createDocumentVersion = (examText) => {
 };
 
 // Add this function to create a PDF version of the exam
+// Improve the PDF generation function to better handle HTML content
 const createPDFVersion = (examText) => {
-  const doc = new jsPDF();
-  const formattedText = formatExamText(examText);
-
-  // Add content to the PDF
-  doc.fromHTML(formattedText, 10, 10, {
-    width: 180,
+  const doc = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4'
   });
-
+  
+  // Add a title to the PDF
+  doc.setFontSize(18);
+  doc.text(`${formData.subject} Exam`, 105, 20, { align: 'center' });
+  
+  // Format the content for PDF
+  const formattedHTML = formatExamText(examText);
+  
+  // Use fromHTML with better styling
+  doc.fromHTML(formattedHTML, 15, 30, {
+    width: 180,
+    elementHandlers: {
+      '#ignore': function(element, renderer) {
+        return true;
+      }
+    }
+  });
+  
   // Add footer
-  doc.text("Generated with Maestre AI Exam Generator", 105, doc.internal.pageSize.height - 10, null, null, "center");
-
+  const totalPages = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= totalPages; i++) {
+    doc.setPage(i);
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(
+      `Generated with Maestre AI Exam Generator - Page ${i} of ${totalPages}`,
+      105, 
+      doc.internal.pageSize.height - 10, 
+      { align: 'center' }
+    );
+  }
+  
   return doc;
 };
 
-// Remove both existing handleSubmit functions and replace with this single combined version
+// Enhance the uploadPDFToClassroom function to handle errors better
+const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName) => {
+  if (!classroomId) {
+    alert('Please select a classroom before saving the PDF.');
+    return false;
+  }
+  
+  const formData = new FormData();
+  formData.append('name', fileName);
+  formData.append('file', pdfBlob, fileName);
+  formData.append('classroom', classroomId);
+
+  try {
+    const token = localStorage.getItem('authToken');
+    if (!token) {
+      alert('You must be logged in to save materials.');
+      return false;
+    }
+    
+    const response = await axios.post('http://localhost:8000/api/materials/', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        'Authorization': `Token ${token}`
+      }
+    });
+    
+    console.log('PDF uploaded successfully:', response.data);
+    return true;
+  } catch (error) {
+    console.error('Error uploading PDF:', error);
+    
+    if (error.response) {
+      if (error.response.status === 400) {
+        const errorMsg = error.response.data && error.response.data.error
+          ? error.response.data.error
+          : "Failed to upload file. Maximum limit reached.";
+        alert(errorMsg);
+      } else if (error.response.status === 401) {
+        alert("Authentication error. Please log in again.");
+      } else {
+        alert(`Error: ${error.response.status} - ${error.response.statusText}`);
+      }
+    } else if (error.request) {
+      alert("Network error. Please check your connection and try again.");
+    } else {
+      alert("An error occurred while uploading the PDF. Please try again.");
+    }
+    
+    return false;
+  }
+};
+
+// Define the handleSubmit function properly
 const handleSubmit = async (e) => {
   e.preventDefault();
   setIsGenerating(true);
@@ -324,7 +403,7 @@ const handleSubmit = async (e) => {
     
     // Call to local Ollama instance for initial exam generation
     const response = await axios.post("http://localhost:11434/api/generate", {
-      model: formData.llmModel, // Use selected model
+      model: formData.llmModel, // Use the selected model
       prompt: promptRef.current,
       stream: false
     });
@@ -350,7 +429,7 @@ const handleSubmit = async (e) => {
       
       // Make a second call to format the exam
       const formattingResponse = await axios.post("http://localhost:11434/api/generate", {
-        model: "llama3.2:3b",
+        model: formData.llmModel,
         prompt: formattingPrompt,
         stream: false
       });
@@ -370,47 +449,10 @@ const handleSubmit = async (e) => {
       throw new Error("Invalid response from Ollama");
     }
   } catch (err) {
-    if (err.response && err.response.status === 404) {
-      setErrorMessage("API endpoint not found (404). Please check the URL and try again.");
-    } else {
-      setErrorMessage("Failed to generate exam: " + (err.message || "Unknown error"));
-    }
+    setErrorMessage("Failed to generate exam: " + (err.message || "Unknown error"));
     console.error("Error generating exam:", err);
   } finally {
     setIsGenerating(false);
-  }
-};
-
-const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName) => {
-  const formData = new FormData();
-  formData.append('name', fileName);
-  formData.append('file', pdfBlob);
-  formData.append('classroom', classroomId);
-
-  try {
-    const token = localStorage.getItem('authToken');
-    await axios.post('http://localhost:8000/api/materials/', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': `Token ${token}`
-      }
-    });
-    alert('PDF saved as a material for the selected class.');
-  } catch (error) {
-    if (error.response) {
-      if (error.response.status === 400) {
-        const errorMsg = error.response.data && error.response.data.error
-          ? error.response.data.error
-          : "Failed to upload file. Maximum limit reached.";
-        alert(errorMsg);
-      }
-    } else if (error.request) {
-      console.error('No response received:', error.request);
-      alert("Network error. Please try again later.");
-    } else {
-      console.error('Error setting up request:', error.message);
-      alert("An error occurred. Please try again.");
-    }
   }
 };
 
@@ -750,16 +792,46 @@ return (
                         <BottomGradient />
                       </button>
                       <button
-                        onClick={async () => {
-                          const pdfDoc = createPDFVersion(examResult);
-                          const pdfBlob = pdfDoc.output('blob');
-                          const fileName = `${formData.subject}_exam.pdf`;
-                          
-                          // Save the PDF locally
-                          pdfDoc.save(fileName);
-
-                          // Upload the PDF as a material for the selected class
-                          await uploadPDFToClassroom(pdfBlob, formData.classroom, fileName);
+                        onClick={async (event) => {
+                          try {
+                            // Show loading state
+                            const saveButton = event.currentTarget;
+                            const originalText = saveButton.innerText;
+                            saveButton.innerText = "Saving...";
+                            saveButton.disabled = true;
+                            
+                            // Generate the PDF
+                            const pdfDoc = createPDFVersion(examResult);
+                            const pdfBlob = pdfDoc.output('blob');
+                            const fileName = `${formData.subject}_exam.pdf`;
+                            
+                            // Save the PDF locally
+                            pdfDoc.save(fileName);
+                            
+                            // Upload the PDF to the classroom
+                            const uploadSuccess = await uploadPDFToClassroom(pdfBlob, formData.classroom, fileName);
+                            
+                            // Show success message if upload was successful
+                            if (uploadSuccess) {
+                              alert(`PDF saved successfully to ${classrooms.find(c => c.id.toString() === formData.classroom.toString())?.name || 'selected classroom'}.`);
+                              // Hide the button after successful upload
+                              saveButton.style.display = 'none';
+                            } else {
+                              // Only restore button state if upload failed
+                              saveButton.innerText = originalText;
+                              saveButton.disabled = false;
+                            }
+                          } catch (err) {
+                            console.error("Error saving PDF:", err);
+                            alert("There was an error creating or saving the PDF. Please try again.");
+                          } finally {
+                            // Restore button state
+                            const saveButton = event.currentTarget;
+                            if (saveButton) {
+                              saveButton.innerText = "Save as PDF";
+                              saveButton.disabled = false;
+                            }
+                          }
                         }}
                         className={cn(
                           "relative group/btn px-4 py-2 rounded-md", 
