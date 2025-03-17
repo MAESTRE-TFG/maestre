@@ -5,8 +5,8 @@ from classrooms.models import Classroom
 import os
 
 def validate_file_limit(classroom):
-    if classroom.documents.count() >= 50:
-        raise ValidationError('A classroom cannot have more than 3 files.')
+    if classroom.documents.count() >= 5:
+        raise ValidationError('A classroom cannot have more than 5 files.')
 
 class Document(models.Model):
     name = models.CharField(max_length=255)
@@ -20,14 +20,16 @@ class Document(models.Model):
         Classroom, 
         on_delete=models.CASCADE, 
         related_name='documents',
-        validators=[validate_file_limit]
     )
 
     def clean(self):
         if not self.pk:  # Only check on creation
-            if self.classroom and self.classroom.documents.count() >= 50:
-                raise ValidationError('A classroom cannot have more than 3 files.')
+            validate_file_limit(self.classroom)
         super().clean()
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return self.name

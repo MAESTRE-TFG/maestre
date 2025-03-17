@@ -79,7 +79,7 @@ const ClassroomsList = () => {
                 style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
               >
                 Create Classroom +
-                <BottomGradient isCreate />
+                <BottomGradient isCreate={true} />
               </button>
             )}
             <style jsx global>{`
@@ -124,7 +124,7 @@ const ClassroomsList = () => {
               style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             >
               Create New Classroom + 
-              <BottomGradient isCreate />
+              <BottomGradient isCreate={true} />
             </button>
           </div>
         ) : (
@@ -170,7 +170,21 @@ const ClassroomsList = () => {
                     style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
                   >
                     Edit &rarr;
-                    <BottomGradient />
+                    <BottomGradient isCreate={false} />
+                  </button>
+                  <button
+                    onClick={() => router.push(`/classrooms/${classroom.id}`)}
+                    className={cn(
+                      "absolute bottom-4 left-4 rounded-md h-10 px-6 font-medium border border-green-400",
+                      theme === "dark"
+                        ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+                        : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]"
+                    )}
+                    type="button"
+                    style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                  >
+                    Open class
+                    <BottomGradient isCreate={false} />
                   </button>
                 </div>
               </div>
