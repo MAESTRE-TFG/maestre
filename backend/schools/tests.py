@@ -245,3 +245,39 @@ class SchoolTests(APITestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(School.objects.count(), 1)
+
+    def test_filter_schools_by_city(self):
+        School.objects.create(
+            name='Another School',
+            community='Another Community',
+            city='Another City',
+            stages='Primary'
+        )
+
+        response = self.client.get(f"{self.create_url}?city=Test City")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['name'], 'Test School')
+
+        response = self.client.get(f"{self.create_url}?city=Another City")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['name'], 'Another School')
+
+        response = self.client.get(self.create_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+    def test_user_school_assignment_after_creation(self):
+        data = {
+            'name': 'New School',
+            'community': 'New Community',
+            'city': 'New City',
+            'stages': 'Primary, Secondary'
+        }
+        response = self.client.post(self.create_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.user.refresh_from_db()
+        self.assertIsNotNone(self.user.school)
+        self.assertEqual(self.user.school.name, 'New School')

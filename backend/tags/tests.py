@@ -17,7 +17,7 @@ class TagTests(APITestCase):
         self.client = APIClient()
         self.token = Token.objects.create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
-        self.create_url = reverse('tag-list')
+        self.create_url = reverse('tags')
 
     def test_create_tag(self):
         data = {
@@ -130,3 +130,163 @@ class TagTests(APITestCase):
         response = self.client.post(self.create_url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('color', response.data)
+
+    def test_get_tag_detail(self):
+        tag = Tag.objects.create(
+            name='Detail Tag',
+            color='#FF0000',
+            creator=self.user
+        )
+        url = reverse('tag-detail', kwargs={'pk': tag.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['name'], 'Detail Tag')
+        self.assertEqual(response.data['color'], '#FF0000')
+
+    def test_access_other_user_tag(self):
+        # Create another user
+        other_user = CustomUser.objects.create_user(
+            username='otheruser',
+            email='other@example.com',
+            password='otherpassword'
+        )
+        
+        # Create a tag for the other user
+        other_tag = Tag.objects.create(
+            name='Other User Tag',
+            color='#00FF00',
+            creator=other_user
+        )
+        
+        # Try to access the other user's tag
+        url = reverse('tag-detail', kwargs={'pk': other_tag.pk})
+        response = self.client.get(url)
+        
+        # Should return 404 as users should only access their own tags
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_update_other_user_tag(self):
+        # Create another user
+        other_user = CustomUser.objects.create_user(
+            username='otheruser',
+            email='other@example.com',
+            password='otherpassword'
+        )
+        
+        # Create a tag for the other user
+        other_tag = Tag.objects.create(
+            name='Other User Tag',
+            color='#00FF00',
+            creator=other_user
+        )
+        
+        # Try to update the other user's tag
+        url = reverse('tag-detail', kwargs={'pk': other_tag.pk})
+        data = {
+            'name': 'Attempted Update'
+        }
+        response = self.client.patch(url, data, format='json')
+        
+        # Should return 404 as users should only update their own tags
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        
+        # Verify the tag wasn't updated
+        other_tag.refresh_from_db()
+        self.assertEqual(other_tag.name, 'Other User Tag')
+
+    def test_delete_other_user_tag(self):
+        # Create another user
+        other_user = CustomUser.objects.create_user(
+            username='otheruser',
+            email='other@example.com',
+            password='otherpassword'
+        )
+        
+        # Create a tag for the other user
+        other_tag = Tag.objects.create(
+            name='Other User Tag',
+            color='#00FF00',
+            creator=other_user
+        )
+        
+        # Try to delete the other user's tag
+        url = reverse('tag-detail', kwargs={'pk': other_tag.pk})
+        response = self.client.delete(url)
+        
+        # Should return 404 as users should only delete their own tags
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        
+        # Verify the tag wasn't deleted
+        self.assertTrue(Tag.objects.filter(pk=other_tag.pk).exists())
+
+    def test_list_only_user_tags(self):
+        # Create tags for the current user
+        Tag.objects.create(
+            name='User Tag 1',
+            color='#FF0000',
+            creator=self.user
+        )
+        Tag.objects.create(
+            name='User Tag 2',
+            color='#00FF00',
+            creator=self.user
+        )
+        
+        # Create another user
+        other_user = CustomUser.objects.create_user(
+            username='otheruser',
+            email='other@example.com',
+            password='otherpassword'
+        )
+        
+        # Create a tag for the other user
+        Tag.objects.create(
+            name='Other User Tag',
+            color='#0000FF',
+            creator=other_user
+        )
+        
+        # Get the list of tags
+        response = self.client.get(self.create_url)
+        
+        # Should only return the current user's tags
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+        tag_names = [tag['name'] for tag in response.data]
+        self.assertIn('User Tag 1', tag_names)
+        self.assertIn('User Tag 2', tag_names)
+        self.assertNotIn('Other User Tag', tag_names)
+
+    def test_create_tag_with_blank_name(self):
+        data = {
+            'name': '',
+            'color': '#FF0000'
+        }
+        response = self.client.post(self.create_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('name', response.data)
+
+    def test_create_tag_with_long_name(self):
+        data = {
+            'name': 'a' * 101,  # Assuming max length is 100
+            'color': '#FF0000'
+        }
+        response = self.client.post(self.create_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('name', response.data)
+
+    def test_filtered_documents_action(self):
+        # This test assumes there's a filtered_documents action in the TagViewSet
+        # Create a tag
+        tag = Tag.objects.create(
+            name='Filter Tag',
+            color='#FF0000',
+            creator=self.user
+        )
+        
+        # Try to access the filtered_documents action
+        url = reverse('tag-filtered-documents')
+        response = self.client.get(url, {'tags': tag.name})
+        
+        # The response should be successful (even if no documents are found)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
