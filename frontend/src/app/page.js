@@ -5,6 +5,9 @@ import { useTheme } from "@/components/theme-provider";
 import { useRouter } from "next/navigation";
 import { IconBrandGithub, IconMail } from "@tabler/icons-react";
 import { CardCarrousell } from "@/components/card-carrousell";
+import { LampDemo } from "@/components/lamp-demo";
+import { DemoWindow } from "@/components/demo-window";
+import { cn } from "@/lib/utils";
 import Image from "next/image";
 
 const Home = () => {
@@ -14,17 +17,15 @@ const Home = () => {
 
   useEffect(() => {
     const user = localStorage.getItem('user');
-    if (!user) {
-      localStorage.removeItem('authToken');
-      setIsAuthenticated(false);
-    }
     const token = localStorage.getItem('authToken');
-    if (!token) {
-      router.push('/profile/signup');
+    
+    if (!user || !token) {
+      setIsAuthenticated(false);
       return;
     }
+    
     setIsAuthenticated(true);
-  }, [router]);
+  }, []);
 
 
   const teamMembers = [
@@ -46,30 +47,39 @@ const Home = () => {
 
   return (
     <div className={`min-h-screen w-full ${theme === 'dark' ? 'bg-neutral-900 text-white' : 'bg-white text-black'}`}>
-      <div className="relative my-8" style={{ height: "2000px" }}></div>
-      
+      <div className="relative my-8 hidden md:block" style={isAuthenticated ? {height: "2300px"} : { height: "2700px" }}></div>
+      <div className="block md:hidden relative my-8" style={isAuthenticated ? {height: "2000px"} : { height: "2400px" }}></div>
       {/* Hero Section */}
-      <section className="flex flex-col items-center justify-center text-center relative z-20">
-        <Image
-          src={theme === "dark" ? "/static/maestre_logo_circle_black.png" : "/static/maestre_logo_circle.png"}
-          alt="Maestre Logo"
-          width={256}
-          height={256}
-          className="mb-8"
-        />
-        <h1 className={`text-6xl font-bold mb-4 font-alfa-slab-one ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-          MAESTRE
-        </h1>
-        <p className={`text-xl mb-8 max-w-2xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-          Empowering educators with intelligent tools for seamless teaching and assessment
-        </p>
+      <section className="hidden md:flex flex-col items-center justify-center text-center relative z-10">
+        <div className="h-screen">
+          <LampDemo />
+        </div>
       </section>
 
-      <br></br>
-
-      {/* Tools Carousel */}
-      <section className="w-full relative z-10 max-h-[500px]">
-        <CardCarrousell />
+      {/* Logo Section */}
+      <section className="py-16 text-center relative z-10 md:mt-[-300px]">
+        <div className="flex flex-col items-center justify-center gap-4">
+          <div className="flex items-center justify-center gap-4">
+            <Image
+              src={theme === "dark" ? "/static/maestre_logo_circle_black.png" : "/static/maestre_logo_circle.png"}
+              alt="Maestre Logo"
+              width={128}
+              height={128}
+              className="rounded-xl"
+            />
+            <h2 className={`text-5xl font-bold font-alfa-slab-one ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+              MAESTRE
+            </h2>
+          </div>
+          <p className={`text-xl mt-2 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+            Choose one of our automated tools and start creating!
+          </p>
+        </div>
+      </section>
+  
+      {/* Demo Video */}
+      <section className="px-4 relative z-10">
+        <DemoWindow />
       </section>
 
       {/* CTA Section */}
@@ -80,27 +90,43 @@ const Home = () => {
           </h2>
           <button
             onClick={() => router.push('/profile/signin')}
-            className={`px-8 py-4 rounded-lg text-lg font-bold transition-all ${
-              theme === 'dark' 
-                ? 'bg-white text-black hover:bg-gray-200' 
-                : 'bg-black text-white hover:bg-gray-800'
-            }`}
+            className={cn(
+              "mt-4 px-8 py-4 rounded-md text-lg font-medium border border-green-500 relative group/btn",
+              "hover:shadow-[0_0_20px_2px_rgba(34,197,94,0.3)] transition-shadow duration-800",
+              theme === "dark"
+                ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+                : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]"
+            )}
+            style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
           >
             Sign in as a Teacher
+            <BottomGradient />
           </button>
         </section>
       )}
 
-      <div className="relative my-8" style={{ height: "500px" }}></div>
+      {/* Tools Carousel */}
+      <hr className="w-3/4 mx-auto" />
+      <section className="py-16">
+        <h2 className={`text-4xl font-bold text-center font-alfa-slab-one mb-8 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+          Explore our tools
+        </h2>
+        <CardCarrousell />
+      </section>
 
       {/* Team Section */}
-      <section className="py-20 px-4">
+      <section className="pb-10">
         <h2 className={`text-4xl font-bold text-center mb-12 font-alfa-slab-one ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
           Meet Our Team
         </h2>
         <div className="flex flex-wrap justify-center gap-8 max-w-4xl mx-auto">
           {teamMembers.map((member) => (
-            <div key={member.name} className={`p-6 rounded-lg ${theme === 'dark' ? 'bg-neutral-800' : 'bg-gray-100'}`}>
+            <div 
+              key={member.name} 
+              className={`p-6 rounded-lg transition-transform duration-300 hover:scale-105 hover:shadow-xl w-[300px] ${
+                theme === 'dark' ? 'bg-neutral-800' : 'bg-gray-100'
+              }`}
+            >
               <Image 
                 src={member.image} 
                 alt={member.name} 
@@ -150,16 +176,24 @@ const Home = () => {
           </div>
         </div>
         <div className="text-center mt-8 pt-8 border-t border-gray-700">
-          <p>© 2025 Maestre. All rights reserved.</p>
+          <p> © 2025 Maestre </p>
           <p className="mt-2">Licensed under MIT License</p>
         </div>
       </footer>
     </div>
   );
+
 };
 
 export default function Main() {
   return <SidebarDemo ContentComponent={Home} />;
 }
 
-
+const BottomGradient = ({ isCreate }) => {
+  return (<>
+    <span className={cn("group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0", 
+      isCreate ? "bg-gradient-to-r from-transparent via-green-500 to-transparent" : "bg-gradient-to-r from-transparent via-cyan-500 to-transparent")} />
+    <span className={cn("group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10", 
+      isCreate ? "bg-gradient-to-r from-transparent via-green-500 to-transparent" : "bg-gradient-to-r from-transparent via-indigo-500 to-transparent")} />
+  </>);
+};

@@ -3,6 +3,8 @@
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { usePathname } from "next/navigation";
+import { Alfa_Slab_One } from 'next/font/google';
+import { ThemeProvider } from "@/components/theme-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,8 +16,6 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// Add this import at the top
-import { Alfa_Slab_One } from 'next/font/google';
 
 const alfaSlabOne = Alfa_Slab_One({
   weight: '400',
@@ -23,8 +23,6 @@ const alfaSlabOne = Alfa_Slab_One({
   display: 'swap',
 });
 
-// In your RootLayout component, add the font class
-import { ThemeProvider } from "@/components/theme-provider";
 
 export default function RootLayout({ children }) {
   return (

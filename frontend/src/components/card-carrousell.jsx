@@ -10,7 +10,7 @@ export function CardCarrousell() {
   ));
 
   return (
-    <div className="w-full py-20">
+    <div className="w-full">
       <div className="relative max-w-[90vw] mx-auto">
         <Carousel items={cards} opts={{ slidesToScroll: 2 }} />
       </div>
@@ -22,7 +22,7 @@ const CardContent = ({ children }) => {
   const { theme } = useTheme();
   return (
     <div className={cn(
-      "p-8 md:p-14 rounded-3xl mb-4",
+      "p-8 md:p-14 rounded-3xl mb-4 transition-transform duration-300 hover:scale-105",
       theme === "dark" ? "bg-neutral-800" : "bg-[#F5F5F7]"
     )}>
       <div className={cn(
@@ -40,6 +40,8 @@ const data = [
     category: "Assessment",
     title: "Create Engaging Exams",
     src: "/static/tools/exam_maker.webp",
+    page: "exam-maker",
+    sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
     content: <CardContent>
       Create comprehensive exams with our intuitive exam maker. Features include:
       <ul className="list-disc ml-6 mt-4">
@@ -54,6 +56,8 @@ const data = [
     category: "Assessment",
     title: "Generate Tests Efficiently",
     src: "/static/tools/test_maker.webp",
+    page: "test-maker",
+    sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
     content: <CardContent>
       Streamline your test creation process with AI-powered assistance:
       <ul className="list-disc ml-6 mt-4">
@@ -68,6 +72,8 @@ const data = [
     category: "Organization",
     title: "Plan Your Classes",
     src: "/static/tools/planner.webp",
+    page: "class-planner",
+    sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
     content: <CardContent>
       Stay organized with our comprehensive planning tools:
       <ul className="list-disc ml-6 mt-4">
@@ -82,6 +88,8 @@ const data = [
     category: "Language",
     title: "Translate Materials",
     src: "/static/tools/translator.webp",
+    page: "translator",
+    sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
     content: <CardContent>
       Break language barriers in your classroom:
       <ul className="list-disc ml-6 mt-4">

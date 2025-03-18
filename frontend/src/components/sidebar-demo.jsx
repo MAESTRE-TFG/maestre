@@ -39,15 +39,29 @@ export function SidebarDemo({ ContentComponent }) {
           'Authorization': `Token ${localStorage.getItem('authToken')}`
         }
       });
+      
+      closeLogoutModal();
+      
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
-      router.push("/profile/signin");
+      
+      setUser(null);
+      
+      setTimeout(() => {
+        router.push("/profile/signin");
+      }, 100);
+      
     } catch (error) {
       if (error.response && error.response.status === 401) {
-        console.error('Invalid token:', error.response.data && error.response.data.detail ? error.response.data.detail : 'No detail available');
+        console.error('Invalid token:', error.response.data?.detail || 'No detail available');
+        
         localStorage.removeItem('authToken');
         localStorage.removeItem('user');
-        router.push("/profile/signin");
+        setUser(null);
+        
+        setTimeout(() => {
+          router.push("/profile/signin");
+        }, 100);
       } else {
         console.error('Error Signing out:', error);
       }
@@ -65,7 +79,7 @@ export function SidebarDemo({ ContentComponent }) {
   const links = [
     {
       label: "Create",
-      href: "#",
+      href: "/tools",
       icon: (
         <IconPlus
           className={cn(
@@ -77,7 +91,7 @@ export function SidebarDemo({ ContentComponent }) {
     },
     {
       label: "My Classes",
-      href: "/classrooms",
+      href: user ? "/classrooms" : "/profile/signin",
       icon: (
         <IconSchool
           className={cn(
@@ -89,7 +103,7 @@ export function SidebarDemo({ ContentComponent }) {
     },
     {
       label: "My Materials",
-      href: "#",
+      href: user ? "/materials" : "/profile/signin",
       icon: (
         <IconBooks
           className={cn(
@@ -101,7 +115,7 @@ export function SidebarDemo({ ContentComponent }) {
     },
     {
       label: user ? user.name : "Sign in",
-      href: "/profile/edit",
+      href: user ? "/profile/edit" : "/profile/signin",
       icon: (
         <IconUser
           className={cn(
