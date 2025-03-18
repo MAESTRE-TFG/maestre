@@ -88,7 +88,6 @@ const ProfileEdit = () => {
 
   const handleComplete = useCallback(async () => {
     try {
-      // Validate form data
       if (!formData.username || !formData.email || !formData.name || !formData.surname || !formData.region || !formData.city || !formData.school) {
         setErrorMessage("All fields are required.");
         return;

@@ -47,7 +47,8 @@ const Home = () => {
 
   return (
     <div className={`min-h-screen w-full ${theme === 'dark' ? 'bg-neutral-900 text-white' : 'bg-white text-black'}`}>
-      <div className="relative my-8" style={isAuthenticated ? {height: "2350px"} : { height: "2700px" }}></div>
+      <div className="relative my-8 hidden md:block" style={isAuthenticated ? {height: "2300px"} : { height: "2700px" }}></div>
+      <div className="block md:hidden relative my-8" style={isAuthenticated ? {height: "2000px"} : { height: "2400px" }}></div>
       {/* Hero Section */}
       <section className="hidden md:flex flex-col items-center justify-center text-center relative z-10">
         <div className="h-screen">

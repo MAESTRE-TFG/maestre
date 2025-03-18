@@ -36,9 +36,7 @@ const ClassroomPage = () => {
 
   useEffect(() => {
     const fetchClassroom = async () => {
-      try {
-        // Import axios at the top of the file
-        
+      try {        
         const response = await axios.get(`http://localhost:8000/api/classrooms/${params.id}`, {
           headers: {
             Authorization: `Token ${localStorage.getItem("authToken")}`,
@@ -212,7 +210,6 @@ const ClassroomPage = () => {
           </div>
         </div>
       </div>
-      {/* End of Floating Div */}
       {/* Navigation tabs */}
       <div className={cn("flex mb-8 border-b mt-28",
         theme === "dark" ? "border-neutral-700" : "border-gray-200")}>

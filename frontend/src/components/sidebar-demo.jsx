@@ -40,17 +40,13 @@ export function SidebarDemo({ ContentComponent }) {
         }
       });
       
-      // Close modal first
       closeLogoutModal();
       
-      // Clear local storage
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
       
-      // Update user state
       setUser(null);
       
-      // Navigate after cleanup
       setTimeout(() => {
         router.push("/profile/signin");
       }, 100);
@@ -59,7 +55,6 @@ export function SidebarDemo({ ContentComponent }) {
       if (error.response && error.response.status === 401) {
         console.error('Invalid token:', error.response.data?.detail || 'No detail available');
         
-        // Clear storage and state even on error
         localStorage.removeItem('authToken');
         localStorage.removeItem('user');
         setUser(null);

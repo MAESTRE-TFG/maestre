@@ -33,7 +33,7 @@ export function SigninForm({ onSubmit }) {
             id="emailOrUsername" 
             name="emailOrUsername" 
             placeholder="email@example.com or username" 
-            type="text"           // Changed from type="email" to type="text"
+            type="text"
             required 
             value={formData.emailOrUsername} 
             onChange={handleChange} 

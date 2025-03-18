@@ -85,9 +85,15 @@ class TagViewSet(viewsets.ModelViewSet):
             # Get all tags that match the provided names and belong to the user
             tags = Tag.objects.filter(name__in=tag_names, creator=request.user)
 
-            # Get documents that have ALL the specified tags and belong to the user
+            # Get classrooms created by the user
+            from classrooms.models import Classroom
+            user_classrooms = Classroom.objects.filter(creator=request.user)
+
+            # Get documents from those classrooms
             from materials.models import Document
-            documents = Document.objects.filter(creator=request.user).distinct()
+            documents = Document.objects.filter(
+                classroom_id__in=user_classrooms.values_list('id', flat=True)
+            ).distinct()
 
             # Filter by tags
             for tag in tags:

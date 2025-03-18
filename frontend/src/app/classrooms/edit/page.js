@@ -14,7 +14,7 @@ const ClassroomEdit = () => {
   const router = useRouter();
   const { theme } = useTheme();
   const [classroom, setClassroom] = useState(null);
-  const [editMode, setEditMode] = useState(true); // Set editMode to true by default
+  const [editMode, setEditMode] = useState(true);
   const [isClient, setIsClient] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
