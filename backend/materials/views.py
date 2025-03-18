@@ -12,10 +12,22 @@ class DocumentViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
+        queryset = Document.objects.filter(classroom__creator=self.request.user)
+
+        # Filter by classroom if provided
         classroom_id = self.request.query_params.get('classroom_id')
         if classroom_id:
-            return Document.objects.filter(classroom_id=classroom_id)
-        return Document.objects.filter(classroom__creator=self.request.user)
+            queryset = queryset.filter(classroom_id=classroom_id)
+
+        # Filter by tag names if provided
+        tag_names = self.request.query_params.get('tag_names')
+        if tag_names:
+            # Split the comma-separated tag names
+            tag_names_list = tag_names.split(',')
+            # Filter documents that have any of these tags
+            queryset = queryset.filter(tags__name__in=tag_names_list).distinct()
+
+        return queryset
 
     def create(self, request, *args, **kwargs):
         classroom_id = request.data.get('classroom')
@@ -42,11 +54,9 @@ class DocumentViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
-
-@permission_classes([IsAuthenticated])
-def get_all_user_materials(request):
-    materials = Document.objects.filter(
-        classroom__members=request.user
-    ).select_related('classroom').prefetch_related('tags')
-    serializer = DocumentSerializer(materials, many=True)
-    return Response(serializer.data)
+    def get_all_user_materials(request):
+        materials = Document.objects.filter(
+            classroom__creator=request.user
+        ).select_related('classroom').prefetch_related('tags')
+        serializer = DocumentSerializer(materials, many=True)
+        return Response(serializer.data)

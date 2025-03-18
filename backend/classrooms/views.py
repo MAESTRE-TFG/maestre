@@ -14,50 +14,36 @@ class ClassroomViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if user.is_authenticated:
-            return Classroom.objects.filter(creator=user)
+            return Classroom.objects.all()
         return Classroom.objects.none()
 
-    def retrieve(self, request, *args, **kwargs):
-        try:
-            instance = self.get_object()
-            if request.user != instance.creator and not request.user.is_staff:
-                return Response(
-                    {"detail": "You do not have permission to access this classroom."},
-                    status=status.HTTP_403_FORBIDDEN
+    def check_object_permissions(self, request, obj):
+        if request.method not in ['GET', 'HEAD', 'OPTIONS']:
+            if request.user != obj.creator and not request.user.is_staff:
+                self.permission_denied(
+                    request,
+                    message="You do not have permission to perform this action."
                 )
-            serializer = self.get_serializer(instance)
-            return Response(serializer.data)
-        except Exception:
-            return Response(
-                {"detail": "Classroom not found or access denied."},
-                status=status.HTTP_404_NOT_FOUND
-            )
-
-    def create(self, request, *args, **kwargs):
-        data = request.data.copy()
-        serializer = self.get_serializer(data=data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save(creator=request.user)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return super().check_object_permissions(request, obj)
 
     def update(self, request, *args, **kwargs):
+        instance = self.get_object()  # This will trigger permission checks
         partial = kwargs.pop('partial', True)
-        instance = self.get_object()
-        if request.user != instance.creator and not request.user.is_staff:
-            return Response({"detail": "You do not have permission to perform this action."},
-                            status=status.HTTP_403_FORBIDDEN)
-        data = request.data.copy()
-        serializer = self.get_serializer(instance, data=data, partial=partial)
-        if not serializer.is_valid():
-            print(serializer.errors)
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        if request.user != instance.creator and not request.user.is_staff:
-            return Response({"detail": "You do not have permission to perform this action."},
-                            status=status.HTTP_403_FORBIDDEN)
+        self.get_object()  # This will trigger permission checks
         return super().destroy(request, *args, **kwargs)
+
+    def perform_create(self, serializer):
+        serializer.save(creator=self.request.user)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

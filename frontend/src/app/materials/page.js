@@ -131,7 +131,8 @@ const MaterialsList = () => {
     try {
       const params = {};
       if (selectedTags.length > 0) {
-        params.tags = selectedTags.join(',');
+        // Change from sending tag names to sending tag_names parameter
+        params.tag_names = selectedTags.join(',');
       }
       if (selectedClassroom) {
         params.classroom_id = selectedClassroom.id;
@@ -142,6 +143,10 @@ const MaterialsList = () => {
           Authorization: `Token ${localStorage.getItem('authToken')}`
         }
       });
+      // Log the request and response for debugging
+      console.log('Request params:', params);
+      console.log('Response data:', response.data);
+      
       setMaterials(response.data.map(material => ({
         ...material,
         classroom: material.classroom || null
