@@ -110,6 +110,7 @@ export const FileUpload = ({
     }
   };
 
+
   // Add this function at the top of your component
   const getFileSize = async (url) => {
     try {
@@ -259,6 +260,7 @@ export const FileUpload = ({
             </div>
           </div>
         </Modal>
+
 
         <div className="flex flex-col items-center justify-center">
           <p
