@@ -24,12 +24,12 @@
 - [Overview](#overview)
 - [Features](#features)
 - [Project Structure](#project-structure)
-	- [Project Index](#project-index)
+  - [Project Index](#project-index)
 - [Local deployment](#local-deployment)
-	- [Prerequisites](#prerequisites)
-	- [Installation](#installation)
-	- [Usage](#usage)
-	- [Testing](#testing)
+  - [Prerequisites](#prerequisites)
+  - [Installation](#installation)
+  - [Usage](#usage)
+  - [Testing](#testing)
 - [Project Roadmap](#project-roadmap)
 - [Contributing](#contributing)
 - [License](#license)
@@ -441,9 +441,10 @@
 
 Before getting started with FISIOFIND, ensure your runtime environment meets the following requirements:
 
-- **Programming Language:** Python
-- **Package Manager:** Npm, Pip
-- **Database:** Postrgres
+- **Programming Language:** [Python](https://www.python.org/)
+- **Package Manager:** [Npm](https://www.npmjs.com/), [Pip](https://pypi.org/project/pip/)
+- **Database:** [PostgreSQL](https://www.postgresql.org/)
+- **LLM:** [Ollama](https://ollama.com/) -> [llama3.2-3b](https://ollama.com/library/llama3.2) and [deepseek-r1](https://ollama.com/library/deepseek-r1)
 
 
 ###  Installation
@@ -548,12 +549,12 @@ For a detailed coverage study:
 - [X] **`Task 4`**: CRUD for content
 
 **Sprint 2**
-- [ ] **`Task 1`**: Manage materials and students (replanned from Sprint 1)
-- [ ] **`Task 2`**: Implement unit tests
-- [ ] **`Task 3`**: Modify the homepage styles
+- [X] **`Task 1`**: Manage materials and students (replanned from Sprint 1)
+- [X] **`Task 2`**: Implement unit tests
+- [X] **`Task 3`**: Modify the homepage styles
 - [ ] **`Task 4`**: Error management
-- [ ] **`Task 5`**: Exam generation
-- [ ] **`Task 5`**: Research on AI APIs
+- [X] **`Task 5`**: Exam generation
+- [X] **`Task 5`**: Research on AI APIs
 
 **Sprint 3**
 
