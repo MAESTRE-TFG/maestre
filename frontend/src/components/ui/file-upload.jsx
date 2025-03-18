@@ -47,8 +47,8 @@ const getFileTypeFromExtension = (filename) => {
 
 export const FileUpload = ({
   onChange,
-  classroomId, // Add this prop
-  onUploadComplete // Add this prop to handle refresh
+  classroomId,
+  onUploadComplete
 }) => {
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
@@ -60,7 +60,6 @@ export const FileUpload = ({
   const [showEditModal, setShowEditModal] = useState(false);
   const [fileToEdit, setFileToEdit] = useState(null);
   const [newFileName, setNewFileName] = useState("");
-  // Add the missing isUploading state
   const [isUploading, setIsUploading] = useState(false);
 
   const handleEdit = async (e, file) => {

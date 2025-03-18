@@ -7,20 +7,26 @@ import { FileUploadDemo } from '@/components/file-upload-demo';
 
 export function MaterialsPage({ classroomId }) {
   const { theme } = useTheme();
+  const [error, setError] = useState(null);
+
   const [materials, setMaterials] = useState([]);
   const [tags, setTags] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
-  const [showTagModal, setShowTagModal] = useState(false);
-  const [newTagName, setNewTagName] = useState('');
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [deleteMode, setDeleteMode] = useState(false);
+
+  const [showTagModal, setShowTagModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  
+  const [newTagName, setNewTagName] = useState('');
   const [fileToDelete, setFileToDelete] = useState(null);
   const [fileToEdit, setFileToEdit] = useState(null);
   const [newFileName, setNewFileName] = useState("");
-  // Add a refreshTrigger state to force re-fetching
-  const [refreshTrigger, setRefreshTrigger] = useState(0);
+
+  const [refreshTrigger, setRefreshTrigger] = useState(0);  // Add a refreshTrigger state to force re-fetching
+
 
   const TAG_COLORS = [
     { name: 'Purple', value: '#A350C4' },
@@ -87,13 +93,11 @@ export function MaterialsPage({ classroomId }) {
     }
   };
 
-  // Add these functions to handle deleting material
   const handleDelete = (material) => {
     setFileToDelete(material);
     setShowDeleteModal(true);
   };
 
-  // Add the missing confirmDelete function
   const confirmDelete = async () => {
     try {
       await axios.delete(`http://localhost:8000/api/materials/${fileToDelete.id}/`, {
@@ -115,14 +119,13 @@ export function MaterialsPage({ classroomId }) {
     }
   };
 
-  // Add a function to refresh materials
   const refreshMaterials = () => {
-    console.log("Refreshing materials..."); // Add this for debugging
+    console.log("Refreshing materials...");
     setRefreshTrigger(prev => prev + 1);
   };
 
   useEffect(() => {
-    console.log("Effect triggered, refreshTrigger:", refreshTrigger); // Add this for debugging
+    console.log("Effect triggered, refreshTrigger:", refreshTrigger);
     fetchMaterials();
     fetchTags();
   }, [classroomId, selectedTags, refreshTrigger]);
@@ -136,7 +139,7 @@ export function MaterialsPage({ classroomId }) {
       if (selectedTags.length > 0) {
         const response = await axios.get('http://localhost:8000/api/tags/filtered_documents/', {
           params: {
-            tags: selectedTags,  // Django will handle this as a list automatically
+            tags: selectedTags,
             classroom_id: classroomId
           },
           paramsSerializer: {
@@ -174,11 +177,6 @@ export function MaterialsPage({ classroomId }) {
     }
   };
 
-  // Update handleCreateTag to handle material association
-  // Add error state
-  const [error, setError] = useState(null);
-
-  // Update handleCreateTag
   const handleCreateTag = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);

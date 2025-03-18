@@ -9,25 +9,7 @@ const MaterialsList = () => {
   const { theme } = useTheme();
   const [materials, setMaterials] = useState([]);
   const [tags, setTags] = useState([]);
-  const [selectedTags, setSelectedTags] = useState([]);
-  const [showTagModal, setShowTagModal] = useState(false);
-  const [showEditTagsModal, setShowEditTagsModal] = useState(false);
-  const [editingMaterial, setEditingMaterial] = useState(null);
-  const [selectedMaterialTags, setSelectedMaterialTags] = useState([]);
-  const [deleteMode, setDeleteMode] = useState(false);
-  const [isClient, setIsClient] = useState(false);
-  // Add these new state variables and functions
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [fileToDelete, setFileToDelete] = useState(null);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [fileToEdit, setFileToEdit] = useState(null);
-  const [newFileName, setNewFileName] = useState("");
-  const [newTagName, setNewTagName] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Add new state for loading
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [classrooms, setClassrooms] = useState([]);
 
   const TAG_COLORS = [
     { name: 'Purple', value: '#A350C4' },
@@ -41,12 +23,31 @@ const MaterialsList = () => {
     { name: 'Grey', value: '#808080' }
   ];
 
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [selectedMaterialTags, setSelectedMaterialTags] = useState([]);
+  const [selectedClassroom, setSelectedClassroom] = useState(null);
   const [selectedColor, setSelectedColor] = useState(TAG_COLORS[0].value);
 
-  // Add this state to track if we're creating a tag from the edit modal
+  const [showTagModal, setShowTagModal] = useState(false);
+  const [showEditTagsModal, setShowEditTagsModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+
+  const [editingMaterial, setEditingMaterial] = useState(null);
+  const [deleteMode, setDeleteMode] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [creatingTagFromEdit, setCreatingTagFromEdit] = useState(false);
 
-  // Add these functions to handle editing material name
+  const [fileToDelete, setFileToDelete] = useState(null);
+  const [fileToEdit, setFileToEdit] = useState(null);
+  const [newFileName, setNewFileName] = useState("");
+  const [newTagName, setNewTagName] = useState('');
+
+  const [error, setError] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+
   const handleEdit = (material) => {
     setFileToEdit(material);
     setNewFileName(material.name);
@@ -104,7 +105,7 @@ const MaterialsList = () => {
     try {
       await axios.delete(`http://localhost:8000/api/materials/${fileToDelete.id}/`, {
         headers: {
-          'Authorization': `Token ${localStorage.getItem("authToken")}`,
+          'Authorization': `Token ${localStorage.getItem('authToken')}`,
         }
       });
 
@@ -119,32 +120,32 @@ const MaterialsList = () => {
     }
   };
 
+  const handleClassroomSelect = (classroom) => {
+    setSelectedClassroom(prev => prev?.id === classroom.id ? null : classroom);
+  };
+
   // Update fetchMaterials function
   const fetchMaterials = useCallback(async () => {
     setIsLoading(true);
     setError(null);
     try {
+      const params = {};
       if (selectedTags.length > 0) {
-        const response = await axios.get('http://localhost:8000/api/tags/filtered_documents_user/', {
-          params: {
-            tags: selectedTags.join(',') // Convert array to comma-separated string
-          },
-          headers: {
-            Authorization: `Token ${localStorage.getItem('authToken')}`
-          }
-        });
-        setMaterials(response.data);
-      } else {
-        const response = await axios.get('http://localhost:8000/api/materials/', {
-          params: {
-            all: true // Add a flag to get all materials
-          },
-          headers: {
-            Authorization: `Token ${localStorage.getItem('authToken')}`
-          }
-        });
-        setMaterials(response.data);
+        params.tags = selectedTags.join(',');
       }
+      if (selectedClassroom) {
+        params.classroom_id = selectedClassroom.id;
+      }
+      const response = await axios.get('http://localhost:8000/api/materials/', {
+        params,
+        headers: {
+          Authorization: `Token ${localStorage.getItem('authToken')}`
+        }
+      });
+      setMaterials(response.data.map(material => ({
+        ...material,
+        classroom: material.classroom || null
+      })));
     } catch (error) {
       const errorMessage = error.response?.data?.error || 'Failed to fetch materials. Please try again later.';
       setError(errorMessage);
@@ -152,13 +153,14 @@ const MaterialsList = () => {
     } finally {
       setIsLoading(false);
     }
-  }, [selectedTags]);
+  }, [selectedTags, selectedClassroom]);
 
   useEffect(() => {
     setIsClient(true);
     fetchMaterials();
     fetchTags();
-  }, [selectedTags, fetchMaterials]);
+    fetchClassrooms();
+  }, [selectedTags, selectedClassroom, fetchMaterials]);
 
   // Update fetchTags function
   const fetchTags = async () => {
@@ -172,6 +174,20 @@ const MaterialsList = () => {
     } catch (error) {
       console.error('Error fetching tags:', error);
       setError('Failed to fetch tags. Please try again later.');
+    }
+  };
+
+  const fetchClassrooms = async () => {
+    try {
+      const response = await axios.get('http://localhost:8000/api/classrooms/', {
+        headers: {
+          Authorization: `Token ${localStorage.getItem('authToken')}`
+        }
+      });
+      setClassrooms(response.data);
+    } catch (error) {
+      console.error('Error fetching classrooms:', error);
+      setError('Failed to fetch classrooms. Please try again later.');
     }
   };
 
@@ -281,6 +297,14 @@ const MaterialsList = () => {
     }
   };
 
+  const handleSearch = (e) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredMaterials = materials.filter(material =>
+    material.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   // Update the return JSX to handle loading and error states
   if (!isClient) return null;
 
@@ -319,7 +343,8 @@ const MaterialsList = () => {
       <div className="relative my-8" style={{ height: "250px" }}></div>
 
       {/* Main Content */}
-      <div className="relative xl:mx-auto xl:w-full xl:max-w-6xl">
+      {/* <div className="relative xl:mx-auto xl:w-full xl:max-w-6xl"> */}
+      <div className="relative xl:mx-auto xl:w-full xl:max-w-6xl h-[calc(100vh)] overflow-y-auto">
         {error && (
           <div className="p-4 rounded-lg bg-red-100 text-red-700 mb-4">
             {error}
@@ -396,6 +421,28 @@ const MaterialsList = () => {
                     </button>
                   )}
                 </div>
+              ))}
+            </div>
+
+            {/* Classroom Filter Section */}
+            <div className="flex flex-wrap gap-2 items-center mb-6">
+              <div className="flex items-center gap-2">
+                <span className={cn("font-bold", theme === "dark" ? "text-white" : "text-gray-800")}>
+                  Filter by Classroom:
+                </span>
+              </div>
+              {classrooms.map(classroom => (
+                <button
+                  key={classroom.id}
+                  onClick={() => handleClassroomSelect(classroom)}
+                  className={cn(
+                    "px-3 py-1 rounded-full transition-colors font-bold",
+                    selectedClassroom?.id === classroom.id ? "ring-2 ring-offset-2 ring-blue-500" : ""
+                  )}
+                  style={{ backgroundColor: selectedClassroom?.id === classroom.id ? '#4777DA' : '#E5E7EB' }}
+                >
+                  {classroom.name}
+                </button>
               ))}
             </div>
               {/* Delete Confirmation Modal */}
@@ -637,11 +684,26 @@ const MaterialsList = () => {
                   </div>
                 </div>
               )}
-            {/* Materials List (Updated to match file-upload style) */}
+
+              <div className="group mb-6 relative max-w-2xl">
+                <svg className="icon absolute left-4 top-1/2 transform -translate-y-1/2 fill-current text-gray-500" aria-hidden="true" viewBox="0 0 24 24">
+                  <g>
+                    <path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path>
+                  </g>
+                </svg>
+                <input
+                  type="text"
+                  value={searchQuery}
+                  onChange={handleSearch}
+                  className="input w-full h-12 pl-12 pr-4 border-2 border-blue-400 rounded-lg outline-none bg-gray-200 text-gray-800 transition duration-300 ease-in-out focus:border-blue-400 focus:bg-white focus:shadow-lg"
+                  placeholder="Search materials..."
+                />
+              </div>
+
             <div className="w-full mt-6">
-              {materials.length > 0 ? (
+              {filteredMaterials.length > 0 ? (
                 <div className="relative w-full max-w-xl mx-auto">
-                  {materials.map((material, idx) => (
+                  {filteredMaterials.map((material, idx) => (
                     <div
                       key={material.id}
                       className={cn(
@@ -712,11 +774,6 @@ const MaterialsList = () => {
                         </div>
                       </div>
                       <div className="flex text-sm md:flex-row flex-col items-start md:items-center w-full mt-2 justify-between text-neutral-600 dark:text-neutral-400">
-                        {material.classroom?.name && (
-                          <p className="px-1 py-0.5 rounded-md bg-gray-100 dark:bg-neutral-800">
-                            {material.classroom.name}
-                          </p>
-                        )}
                         <div className="flex flex-wrap gap-1 mt-1 md:mt-0">
                           {material.tags?.map(tag => (
                             <span
@@ -727,6 +784,11 @@ const MaterialsList = () => {
                               {tag.name}
                             </span>
                           ))}
+                          {material.classroom?.name && (
+                            <span className="px-2 py-0.5 text-xs rounded-full font-bold text-white bg-gray-500">
+                              {material.classroom.name}
+                            </span>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -741,7 +803,6 @@ const MaterialsList = () => {
           </>
         )}
       </div>
-      <div className="my-8"></div>
     </div>
   );
 };
