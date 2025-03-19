@@ -570,12 +570,13 @@ For a detailed coverage study:
 
 ##  Contributing
 
-- **💬 [Join the Discussions](https://github.com/MAESTRE-TFG/maestre/discussions)**: Share your insights, provide feedback, or ask questions.
 - **🐛 [Report Issues](https://github.com/MAESTRE-TFG/maestre/issues)**: Submit bugs found or log feature requests for the `maestre.git` project.
+
 - **💡 [Submit Pull Requests](https://github.com/MAESTRE-TFG/maestre/blob/main/CONTRIBUTING.md)**: Review open PRs, and submit your own PRs.
 
 <details closed>
 <summary>Contributing Guidelines</summary>
+
 
 1. **Fork the Repository**: Start by forking the project repository to your github account.
 
@@ -589,9 +590,9 @@ For a detailed coverage study:
    git checkout -b feat/new-feature-x
    ```
 
-4. **Make Your Changes**: Develop and test your changes locally.
+4. **Make Your Changes**: Develop and *test* your changes locally.
 
-5. **Commit Your Changes**: Commit with a clear message describing your updates.
+5. **Commit Your Changes**: Commit with a clear message describing your updates following the *conventional commits* standards and trying to make them as '*atomimc*' as possible.
    ```sh
    git commit -m 'Feat: Implemented new feature x.'
    ```
@@ -601,7 +602,7 @@ For a detailed coverage study:
    git push origin feat/new-feature-x
    ```
 
-7. **Submit a Pull Request**: Create a PR against the original project repository. Clearly describe the changes and their motivations.
+7. **Submit a Pull Request**: Create a PR against the original project repository pointing to the develop branch. **Clearly describe the changes and their motivations using the provided template**.
 
 8. **Review**: Once your PR is reviewed and approved, it will be merged into the main branch. Congratulations on your contribution!
 </details>
