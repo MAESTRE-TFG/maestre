@@ -11,8 +11,6 @@
 
 ##  Contributing
 
-- **💬 [Join the Discussions](https://github.com/MAESTRE-TFG/maestre/discussions)**: Share your insights, provide feedback, or ask questions.
-
 - **🐛 [Report Issues](https://github.com/MAESTRE-TFG/maestre/issues)**: Submit bugs found or log feature requests for the `maestre.git` project.
 
 - **💡 [Submit Pull Requests](https://github.com/MAESTRE-TFG/maestre/blob/main/CONTRIBUTING.md)**: Review open PRs, and submit your own PRs.
