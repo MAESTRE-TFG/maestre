@@ -73,21 +73,26 @@
 
 ```sh
 └── maestre/
-    ├── .github
+    ├── .github/
     │   ├── ISSUE_TEMPLATE
     │   └── PULL_REQUEST_TEMPLATE.md
-    ├── backend
-    │   ├── api
-    │   ├── backend
-    │   ├── classrooms
-    │   ├── materials
-    │   ├── schools
-    │   ├── students
-    │   └── users
-    └── frontend
-    	├── public
-    	├── src
-    	└── static
+    ├── CONTRIBUTING.md
+    ├── LICENSE
+    ├── README.md
+    ├── backend/
+    │   ├── api/
+    │   ├── backend/
+    │   ├── classrooms/
+    │   ├── materials/
+    │   ├── media/
+    │   ├── schools/
+    │   ├── students/
+    │   ├── tags/
+    │   └── users/
+    └── frontend/
+    	├── public/
+    	├── src/
+    	└── static/
 ```
 
 
@@ -105,6 +110,119 @@
 					<tr>
 						<td><code>❯ Contains the issue template(s) used for reporting bugs and requesting features.</code></td>
 					</tr>
+				</blockquote>
+			</details>
+		</blockquote>
+	</details>
+	<!-- backend Submodule -->
+	<details>
+		<summary><b>backend</b></summary>
+		<blockquote>
+			<table>
+			<tr>
+				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/.coverage'>.coverage</a></b></td>
+				<td><code>❯ Generated file storing code coverage data from tests.</code></td>
+			</tr>
+			<tr>
+				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/manage.py'>manage.py</a></b></td>
+				<td><code>❯ Django management script for administrative tasks.</code></td>
+			</tr>
+			<tr>
+				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/requirements.txt'>requirements.txt</a></b></td>
+				<td><code>❯ List of Python dependencies required for the backend.</code></td>
+			</tr>
+			</table>
+			<details>
+				<summary><b>api</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><code>❯ Contains API endpoints (likely using Django REST Framework) exposing backend services.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>backend</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/backend/urls.py'>urls.py</a></b></td>
+						<td><code>❯ URL configuration mapping routes to views for the Django project.</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/backend/wsgi.py'>wsgi.py</a></b></td>
+						<td><code>❯ WSGI entry point used by production servers to serve the Django app.</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/backend/asgi.py'>asgi.py</a></b></td>
+						<td><code>❯ ASGI entry point enabling asynchronous support.</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/backend/settings.py'>settings.py</a></b></td>
+						<td><code>❯ Django settings file containing configuration for database, apps, middleware, etc.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>classrooms</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><code>❯ Contains the Django app/module for managing classroom-related data and views.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>materials</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><code>❯ Modules related to managing materials or resources (e.g. inventory) in the application.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>schools</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><code>❯ Contains the Django app/module handling school-related models, views, and functionality.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>students</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><code>❯ Contains functionality related to student management within the backend.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>tags</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><code>❯ Contains functionality related to materials' tags.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>users</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><code>❯ Contains the Django app/module handling user models, authentication, and related views.</code></td>
+					</tr>
+					</table>
 				</blockquote>
 			</details>
 		</blockquote>
@@ -327,109 +445,6 @@
 			</details>
 		</blockquote>
 	</details>
-	<!-- backend Submodule -->
-	<details>
-		<summary><b>backend</b></summary>
-		<blockquote>
-			<table>
-			<tr>
-				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/.coverage'>.coverage</a></b></td>
-				<td><code>❯ Generated file storing code coverage data from tests.</code></td>
-			</tr>
-			<tr>
-				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/manage.py'>manage.py</a></b></td>
-				<td><code>❯ Django management script for administrative tasks.</code></td>
-			</tr>
-			<tr>
-				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/requirements.txt'>requirements.txt</a></b></td>
-				<td><code>❯ List of Python dependencies required for the backend.</code></td>
-			</tr>
-			</table>
-			<details>
-				<summary><b>users</b></summary>
-				<blockquote>
-					<table>
-					<tr>
-						<td><code>❯ Contains the Django app/module handling user models, authentication, and related views.</code></td>
-					</tr>
-					</table>
-				</blockquote>
-			</details>
-			<details>
-				<summary><b>students</b></summary>
-				<blockquote>
-					<table>
-					<tr>
-						<td><code>❯ Contains functionality related to student management within the backend.</code></td>
-					</tr>
-					</table>
-				</blockquote>
-			</details>
-			<details>
-				<summary><b>materials</b></summary>
-				<blockquote>
-					<table>
-					<tr>
-						<td><code>❯ Modules related to managing materials or resources (e.g. inventory) in the application.</code></td>
-					</tr>
-					</table>
-				</blockquote>
-			</details>
-			<details>
-				<summary><b>api</b></summary>
-				<blockquote>
-					<table>
-					<tr>
-						<td><code>❯ Contains API endpoints (likely using Django REST Framework) exposing backend services.</code></td>
-					</tr>
-					</table>
-				</blockquote>
-			</details>
-			<details>
-				<summary><b>backend</b></summary>
-				<blockquote>
-					<table>
-					<tr>
-						<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/backend/urls.py'>urls.py</a></b></td>
-						<td><code>❯ URL configuration mapping routes to views for the Django project.</code></td>
-					</tr>
-					<tr>
-						<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/backend/wsgi.py'>wsgi.py</a></b></td>
-						<td><code>❯ WSGI entry point used by production servers to serve the Django app.</code></td>
-					</tr>
-					<tr>
-						<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/backend/asgi.py'>asgi.py</a></b></td>
-						<td><code>❯ ASGI entry point enabling asynchronous support.</code></td>
-					</tr>
-					<tr>
-						<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/backend/settings.py'>settings.py</a></b></td>
-						<td><code>❯ Django settings file containing configuration for database, apps, middleware, etc.</code></td>
-					</tr>
-					</table>
-				</blockquote>
-			</details>
-			<details>
-				<summary><b>classrooms</b></summary>
-				<blockquote>
-					<table>
-					<tr>
-						<td><code>❯ Contains the Django app/module for managing classroom-related data and views.</code></td>
-					</tr>
-					</table>
-				</blockquote>
-			</details>
-			<details>
-				<summary><b>schools</b></summary>
-				<blockquote>
-					<table>
-					<tr>
-						<td><code>❯ Contains the Django app/module handling school-related models, views, and functionality.</code></td>
-					</tr>
-					</table>
-				</blockquote>
-			</details>
-		</blockquote>
-	</details>
 </details>
 
 
@@ -543,23 +558,25 @@ For a detailed coverage study:
 ##  Project Roadmap
 
 **Sprint 1**
-- [X] **`Task 1`**: <strike>Mock-ups</strike>
-- [X] **`Task 2`**: User registration
-- [X] **`Task 3`**: Data modeling
-- [X] **`Task 4`**: CRUD for content
+- [X] **`Task 1.1`**: User management - signin/login/logout/edit
+- [X] **`Task 1.2`**: Classroom functionality
+- [X] **`Task 1.3`**: Students management
+- [X] **`Task 1.4`**: Base interface - Home
+- [X] **`Task 1.5`**: First unit testing
 
 **Sprint 2**
-- [X] **`Task 1`**: Manage materials and students (replanned from Sprint 1)
-- [X] **`Task 2`**: Implement unit tests
-- [X] **`Task 3`**: Modify the homepage styles
-- [ ] **`Task 4`**: Error management
-- [X] **`Task 5`**: Exam generation
-- [X] **`Task 5`**: Research on AI APIs
+- [X] **`Task 2.1`**: Materials management (replanned from Sprint 1)
+- [X] **`Task 2.2`**: **Exam generation tool**
+- [X] **`Task 2.3`**: Styled interface
+- [X] **`Task 2.4`**: Complete unit test suite (replanned from Sprint 1)
 
 **Sprint 3**
 
-- [ ] **`Task 1`**: TODO
-- [ ] ...
+- [ ] **`Task 3.1`**: Error management  (replanned from Sprint 2)
+- [ ] **`Task 3.2`**: User policy & terms management
+- [ ] **`Task 3.3`**: **Planning tool**
+- [ ] **`Task 3.4`**: Error management
+- [ ] **`Task 3.5`**: Exam generation tool testing & improovements
 
 **Sprint 4**
 
