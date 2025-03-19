@@ -579,8 +579,9 @@ For a detailed coverage study:
 
 **Sprint 4**
 
-- [ ] **`Task 1`**: TODO.
-- [ ] ...
+- [ ] **`Task 4.1`**: Traduction tool
+- [ ] **`Task 4.2`**: Planner tool
+- [ ] **`Task 4.3`**: Final Testing report
 
 ---
 
