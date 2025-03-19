@@ -575,8 +575,7 @@ For a detailed coverage study:
 - [ ] **`Task 3.1`**: Error management  (replanned from Sprint 2)
 - [ ] **`Task 3.2`**: User policy & terms management
 - [ ] **`Task 3.3`**: **Planning tool**
-- [ ] **`Task 3.4`**: Error management
-- [ ] **`Task 3.5`**: Exam generation tool testing & improovements
+- [ ] **`Task 3.4`**: Exam generation tool testing & improovements
 
 **Sprint 4**
 
