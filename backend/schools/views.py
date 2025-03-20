@@ -22,9 +22,7 @@ class SchoolViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
         serializer = self.get_serializer(data=data)
-        if not serializer.is_valid():
-            print(serializer.errors)
-        serializer.is_valid(raise_exception=True)
+        serializer.is_valid(raise_exception=True)  # Ensure only valid fields are processed
         school = serializer.save()
         try:
             user = CustomUser.objects.get(id=request.user.id)
@@ -41,17 +39,20 @@ class SchoolViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         data = request.data.copy()
         serializer = self.get_serializer(instance, data=data, partial=partial)
-        if not serializer.is_valid():
-            print(serializer.errors)
-        serializer.is_valid(raise_exception=True)
+        serializer.is_valid(raise_exception=True)  # Ensure only valid fields are processed
         self.perform_update(serializer)
         return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+        except School.DoesNotExist:
+            return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
         if not request.user.is_staff:
             return Response({"detail": "You do not have permission to perform this action."},
                             status=status.HTTP_403_FORBIDDEN)
-        return super().destroy(request, *args, **kwargs)
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class SchoolListView(generics.ListCreateAPIView):
