@@ -536,21 +536,21 @@ Run the test suite using the following command:
 **Using `pip`** &nbsp; [<img align="center" src="https://img.shields.io/badge/Pip-3776AB.svg?style={badge_style}&logo=pypi&logoColor=white" />](https://pypi.org/project/pip/)
 
 ```sh
-❯ pytest
+❯ run manage.py test
 ```
 
 Or choose an specific module to test using:
 
 ```sh
-❯ pytest classroom
+❯ run manage.py test [module]
 ```
 
 For a detailed coverage study:
 
 ```sh
-❯ pytest
-❯ pytest --cov=backend
-❯ pytest --cov=backend --cov-report=html
+❯ coverage run manage.py test [module]
+❯ coverage report
+❯ coverage html
 ```
 
 
