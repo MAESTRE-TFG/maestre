@@ -113,57 +113,89 @@ class TagTests(TestCase):
 
 
     def test_user_tags_unauthenticated(self):
-        """Test retrieving user tags without authentication"""
         self.client.force_authenticate(user=None)  # Unauthenticate the client
         response = self.client.get('/api/tags/user_tags/')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        self.assertIn('Authentication required', str(response.data))
+        self.assertIn('Authentication credentials were not provided.', str(response.data))
 
     def test_filtered_documents_no_classroom(self):
-        """Test filtering documents without providing a classroom ID"""
         self.document.tags.add(self.tag)
         response = self.client.get('/api/tags/filtered_documents/', {'tags': 'Test Tag'})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('classroom_id', str(response.data))
 
     def test_filtered_documents_no_tags(self):
-        """Test filtering documents without providing tags"""
         response = self.client.get('/api/tags/filtered_documents/', {'classroom_id': self.classroom.id})
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('Tags are required', str(response.data))
 
     def test_filtered_documents_empty_result(self):
-        """Test filtering documents with tags that do not match any document"""
         response = self.client.get('/api/tags/filtered_documents/', {'tags': 'Nonexistent Tag', 'classroom_id': self.classroom.id})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 0)
 
     def test_create_tag_invalid_data(self):
-        """Test creating a tag with invalid data"""
         response = self.client.post('/api/tags/', {"name": "", "color": "invalid"}, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('Invalid hexadecimal color code', str(response.data))
         self.assertIn('This field may not be blank.', str(response.data))
-        self.assertIn('Invalid hexadecimal color code.', str(response.data))
+        
 
     def test_destroy_tag_unauthenticated(self):
-        """Test deleting a tag without authentication"""
         self.client.force_authenticate(user=None)  # Unauthenticate the client
         response = self.client.delete(f'/api/tags/{self.tag.id}/')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        self.assertIn('Authentication required', str(response.data))
+        self.assertIn('Authentication credentials were not provided.', str(response.data))  # Adjusted assertion
 
     def test_destroy_nonexistent_tag(self):
-        """Test deleting a tag that does not exist"""
         response = self.client.delete('/api/tags/999/')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertIn('Tag not found', str(response.data))
 
     def test_create_tag_with_default_color(self):
-        """Test creating a tag without specifying a color (should use default)"""
         response = self.client.post('/api/tags/', {"name": "Default Color Tag"}, format='json')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Tag.objects.get(name="Default Color Tag").color, "#808080")
-        
+
+    def test_create_tag_missing_color(self):
+        response = self.client.post('/api/tags/', {"name": "Tag Without Color"}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Tag.objects.get(name="Tag Without Color").color, "#808080")  # Default color
+
+    def test_create_tag_invalid_data_combined(self):
+        response = self.client.post('/api/tags/', {"name": "", "color": "12345"}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('This field may not be blank.', str(response.data))
+        self.assertIn('Invalid hexadecimal color code.', str(response.data))
+
+    def test_filtered_documents_invalid_classroom_id(self):
+        response = self.client.get('/api/tags/filtered_documents/', {'tags': 'Test Tag', 'classroom_id': 'invalid'})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('classroom_id must be a valid integer.', str(response.data))  # Updated assertion
+
+    def test_filtered_documents_no_results(self):
+        response = self.client.get('/api/tags/filtered_documents/', {'tags': 'Nonexistent Tag', 'classroom_id': self.classroom.id})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+    def test_user_tags_no_tags(self):
+        Tag.objects.all().delete()  # Remove all tags
+        response = self.client.get('/api/tags/user_tags/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+    def test_destroy_tag_invalid_user(self):
+        other_user = User.objects.create_user(username="otheruser", email="other@example.com", password="password")
+        other_tag = Tag.objects.create(name="Other User Tag", creator=other_user)
+        response = self.client.delete(f'/api/tags/{other_tag.id}/')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertIn('Tag not found', str(response.data))
+
+    def test_filtered_documents_user_no_tags(self):
+        response = self.client.get('/api/tags/filtered_documents_user/', {'tags': ''})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('Tags are required', str(response.data))
+
     def test_cleanup_generated_data(self):
         # Ensure data exists before cleanup
         self.assertEqual(User.objects.count(), 1)
@@ -182,4 +214,3 @@ class TagTests(TestCase):
         self.assertEqual(Tag.objects.count(), 0)
         self.assertEqual(Classroom.objects.count(), 0)
         self.assertEqual(Document.objects.count(), 0)
-

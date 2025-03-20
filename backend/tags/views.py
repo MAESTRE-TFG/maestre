@@ -52,6 +52,14 @@ class TagViewSet(viewsets.ModelViewSet):
         tag_names = request.query_params.getlist('tags')
         classroom_id = request.query_params.get('classroom_id')
 
+        if not classroom_id:
+            return Response({'error': 'classroom_id is required'}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            classroom_id = int(classroom_id)
+        except ValueError:
+            return Response({'error': 'classroom_id must be a valid integer.'}, status=status.HTTP_400_BAD_REQUEST)
+
         if not tag_names:
             return Response({'error': 'Tags are required'}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -101,6 +109,9 @@ class TagViewSet(viewsets.ModelViewSet):
             # Filter by tags
             for tag in tags:
                 documents = documents.filter(tags=tag)
+
+            if not documents.exists():
+                return Response([], status=status.HTTP_200_OK)
 
             from materials.serializers import DocumentSerializer
             serializer = DocumentSerializer(documents, many=True)

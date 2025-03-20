@@ -396,9 +396,6 @@ class UserTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_signout_token_deletion_twice(self):
-        """
-        Verifica que luego de hacer signout y eliminar el token, volver a usarlo en otra petición retorne error.
-        """
 
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
         url_signout = reverse('customuser-signout')
@@ -409,9 +406,7 @@ class UserTests(APITestCase):
         self.assertEqual(response2.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_signin_after_signout(self):
-        """
-        Verifica que después del signout se pueda volver a iniciar sesión y se genere un token nuevo.
-        """
+
         signin_url = reverse('customuser-signin')
         data = {
             'email': 'testuser@example.com',
