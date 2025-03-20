@@ -25,8 +25,9 @@ class DocumentViewSet(viewsets.ModelViewSet):
         if tag_names:
             # Split the comma-separated tag names
             tag_names_list = tag_names.split(',')
-            # Filter documents that have any of these tags
-            queryset = queryset.filter(tags__name__in=tag_names_list).distinct()
+            # Filter documents that have ALL the specified tags
+            for tag_name in tag_names_list:
+                queryset = queryset.filter(tags__name=tag_name)
 
         return queryset
 

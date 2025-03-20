@@ -14,10 +14,8 @@ export function AIToolsCards() {
   const [selectedToolPath, setSelectedToolPath] = useState("");
 
   useEffect(() => {
-    // Run the auth check when component mounts
     checkAuthStatus();
     
-    // Add event listener for storage changes (in case user logs in/out in another tab)
     window.addEventListener('storage', checkAuthStatus);
     
     return () => {
@@ -43,7 +41,6 @@ export function AIToolsCards() {
         const userData = JSON.parse(user);
         console.log("User data:", userData);
         
-        // Check if profile is complete
         const isComplete = userData.region && 
                           userData.city && 
                           userData.school;

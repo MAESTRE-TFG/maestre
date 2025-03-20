@@ -5,6 +5,8 @@ from rest_framework.response import Response
 from .models import Tag
 from .serializers import TagSerializer
 from rest_framework.exceptions import ValidationError
+from materials.serializers import DocumentSerializer
+from materials.models import Document
 
 
 class TagViewSet(viewsets.ModelViewSet):
@@ -20,7 +22,7 @@ class TagViewSet(viewsets.ModelViewSet):
         except Exception as e:
             raise ValidationError(str(e))
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get'], url_path='user_tags')
     def user_tags(self, request):
         if not request.user.is_authenticated:
             return Response({'error': 'Authentication required'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -42,7 +44,7 @@ class TagViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
-    @action(detail=False, methods=['get'])
+    @action(detail=False, methods=['get'], url_path='filtered_documents')
     def filtered_documents(self, request):
         if not request.user.is_authenticated:
             return Response({'error': 'Authentication required'}, status=status.HTTP_401_UNAUTHORIZED)
@@ -57,14 +59,15 @@ class TagViewSet(viewsets.ModelViewSet):
             # Get all tags that match the provided names and belong to the user
             tags = Tag.objects.filter(name__in=tag_names, creator=request.user)
 
-            # Get documents that have ALL the specified tags and belong to the classroom
-            from materials.models import Document
+            if not tags.exists():
+                return Response([], status=status.HTTP_200_OK)
+
+            # Get documents that belong to the classroom and have ALL the specified tags
             documents = Document.objects.filter(classroom_id=classroom_id)
             for tag in tags:
                 documents = documents.filter(tags=tag)
 
-            from materials.serializers import DocumentSerializer
-            serializer = DocumentSerializer(documents, many=True)
+            serializer = DocumentSerializer(documents.distinct(), many=True)
             return Response(serializer.data)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

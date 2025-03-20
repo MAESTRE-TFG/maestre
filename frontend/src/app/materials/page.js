@@ -336,13 +336,13 @@ const MaterialsList = () => {
         <img
           src="/static/bubbles black/5.svg"
           alt="Bubble"
-          className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
+          className="absolute top-100 left-10 w-1/2 opacity-50 z-0"
         />
       ) : (
         <img
           src="/static/bubbles white/5.svg"
           alt="Bubble"
-          className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
+          className="absolute top-100 left-10 w-1/2 opacity-50 z-0"
         />
       )}
 
