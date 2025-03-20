@@ -83,48 +83,57 @@ const ExamMaker = () => {
   useEffect(() => {
     // Parse form data to natural language
     const parsedData = parseFormDataToNaturalLanguage(formData);
-    const user = JSON.parse(localStorage.getItem('user'));
     
-    // Base prompt construction with parsed data
-    let prompt = `Genera un examen sobre ${parsedData.subject} que incluya ${parsedData.numQuestions} 
-                  preguntas de tipo ${parsedData.questionType}. Este examen se debe ajustar  
-                  a la normativa, contenidos educativos y competencias establecidas 
-                  para el nivel de ${parsedData.classroom} de la comunidad autónoma de ${user.region}.`;
-    
-    // Add scoring details with more explicit instructions for equal distribution
-    if (formData.scoringStyle === "equal") {
-      const pointsPerQuestion = (parsedData.totalPoints / parsedData.numQuestions).toFixed(2);
-      prompt += ` Los puntos totales serán ${parsedData.totalPoints}, distribuidos equitativamente entre las ${parsedData.numQuestions} preguntas 
-                 (${pointsPerQuestion} puntos por cada pregunta).`;
-    } else {
-      prompt += ` Los puntos totales serán ${parsedData.totalPoints} repartidos de forma ${parsedData.scoringStyle}.`;
-    }
+    // Only proceed if we have localStorage available (client-side)
+    if (typeof window !== 'undefined') {
+      const userStr = localStorage.getItem('user');
+      if (!userStr) return;
+      
+      try {
+        const user = JSON.parse(userStr);
+        
+        // Base prompt construction with parsed data
+        let prompt = `Genera un examen sobre ${parsedData.subject} que incluya ${parsedData.numQuestions} 
+                      preguntas de tipo ${parsedData.questionType}. Este examen se debe ajustar  
+                      a la normativa, contenidos educativos y competencias establecidas 
+                      para el nivel de ${parsedData.classroom} de la comunidad autónoma de ${user.region || 'España'}.`;
+        
+        // Add scoring details with more explicit instructions for equal distribution
+        if (formData.scoringStyle === "equal") {
+          const pointsPerQuestion = (parsedData.totalPoints / parsedData.numQuestions).toFixed(2);
+          prompt += ` Los puntos totales serán ${parsedData.totalPoints}, distribuidos equitativamente entre las ${parsedData.numQuestions} preguntas 
+                     (${pointsPerQuestion} puntos por cada pregunta).`;
+        } else {
+          prompt += ` Los puntos totales serán ${parsedData.totalPoints} repartidos de forma ${parsedData.scoringStyle}.`;
+        }
 
-    // Add extra details based on conditions
-    if (parsedData.scoringStyle === "personalizada" && parsedData.additionalInfo) {
-      prompt += ` Detalles de puntuación: ${parsedData.customScoringDetails}. Información adicional: ${parsedData.additionalInfo}. 
-                 Asegúrate de que las preguntas sean claras, precisas y acordes al tema y nivel indicado.`;
-    } else if (parsedData.scoringStyle === "personalizada") {
-      prompt += ` Detalles de puntuación: ${parsedData.customScoringDetails}.`;
-    } else if (parsedData.additionalInfo) {
-      prompt += ` Información adicional: ${parsedData.additionalInfo}.`;
-    }
+        // Add extra details based on conditions
+        if (parsedData.scoringStyle === "personalizada" && parsedData.additionalInfo) {
+          prompt += ` Detalles de puntuación: ${parsedData.customScoringDetails}. Información adicional: ${parsedData.additionalInfo}. 
+                     Asegúrate de que las preguntas sean claras, precisas y acordes al tema y nivel indicado.`;
+        } else if (parsedData.scoringStyle === "personalizada") {
+          prompt += ` Detalles de puntuación: ${parsedData.customScoringDetails}.`;
+        } else if (parsedData.additionalInfo) {
+          prompt += ` Información adicional: ${parsedData.additionalInfo}.`;
+        }
 
-    // Update the prompt reference
-    promptRef.current = prompt;
-    
-    // Log the updated prompt for debugging
-    console.log("Updated prompt:", promptRef.current);
-  }, [
-    formData,
-    parseFormDataToNaturalLanguage
-  ]); // Now we only depend on formData and the memoized function
+        // Update the prompt reference
+        promptRef.current = prompt;
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+      }
+    }
+  }, [formData, parseFormDataToNaturalLanguage]); // Only depend on formData and the memoized function
 
   useEffect(() => {
-    const user = localStorage.getItem('user');
-    if (!user) {
+    // Only run this effect on the client side
+    if (typeof window === 'undefined') return;
+    
+    const userStr = localStorage.getItem('user');
+    if (!userStr) {
       localStorage.removeItem('authToken');
     }
+    
     const token = localStorage.getItem('authToken');
     if (!token) {
       router.push('/profile/signup');
@@ -134,7 +143,7 @@ const ExamMaker = () => {
     // Fetch user's classrooms
     const fetchClassrooms = async () => {
       try {
-        const parsedUser = JSON.parse(user);
+        const parsedUser = JSON.parse(userStr);
         const response = await axios.get("http://localhost:8000/api/classrooms/", {
           params: {
             creator: parsedUser.id
@@ -153,7 +162,7 @@ const ExamMaker = () => {
     };
 
     fetchClassrooms();
-  }, [router]);
+  }, [router]); // Only depend on router
 
   const handleChange = (e) => {
     const { name, value } = e.target;

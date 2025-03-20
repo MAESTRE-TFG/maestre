@@ -4,6 +4,7 @@ import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link'; // Add this import
 
 const MaterialsList = () => {
   const { theme } = useTheme();
@@ -801,7 +802,7 @@ const MaterialsList = () => {
                 </div>
               ) : (
                 <div className="text-center py-8 text-neutral-500 dark:text-neutral-400">
-                  No materials found. {selectedTags.length > 0 ? "Try removing some tag filters." : ""}
+                  No materials found. Add material to one of your <Link href="/classrooms" className="text-blue-500 hover:underline">classrooms</Link> and come back later ;)
                 </div>
               )}
             </div>
