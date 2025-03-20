@@ -379,7 +379,7 @@ class DocumentTests(APITestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 3)  # Should return all docs due to OR logic
+        self.assertEqual(len(response.data), 1)  # Should return all docs due to AND logic
 
     def test_document_serializer_fields(self):
         tag = Tag.objects.create(name='SerializerTag', creator=self.user)
