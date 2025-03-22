@@ -197,7 +197,7 @@ export function SidebarDemo({ ContentComponent }) {
           </div>
         </SidebarBody>
       </Sidebar>
-      <div className="flex-1 flex justify-center items-center overflow-y-auto">
+      <div className="flex-1 flex justify-center items-start overflow-y-auto pt-8">
         <ContentComponent />
       </div>
       <Modal isOpen={isLogoutModalOpen} onClose={closeLogoutModal} title="Confirm Logout" style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}
