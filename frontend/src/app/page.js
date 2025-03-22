@@ -165,7 +165,7 @@ const Home = () => {
             <ul>
               <li><a href="https://github.com/MAESTRE-TFG/maestre" target="_blank" rel="noopener noreferrer">GitHub Repository</a></li>
               <li><a href="/docs">Documentation</a></li>
-              <li><a href="/privacy">Privacy Policy</a></li>
+              <li><a href="/terms">Privacy Policy</a></li>
               <li><a href="/terms">Terms of Service</a></li>
             </ul>
           </div>
