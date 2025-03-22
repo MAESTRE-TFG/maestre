@@ -17,7 +17,8 @@ class TagTests(APITestCase):
         self.client = APIClient()
         self.token = Token.objects.create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
-        self.create_url = reverse('tags')
+        # Update the URL name to match what's in your urls.py
+        self.create_url = reverse('tag-list')  # Changed from 'tags' to 'tag-list'
 
     def test_create_tag(self):
         data = {
@@ -276,7 +277,6 @@ class TagTests(APITestCase):
         self.assertIn('name', response.data)
 
     def test_filtered_documents_action(self):
-        # This test assumes there's a filtered_documents action in the TagViewSet
         # Create a tag
         tag = Tag.objects.create(
             name='Filter Tag',
@@ -284,9 +284,8 @@ class TagTests(APITestCase):
             creator=self.user
         )
         
-        # Try to access the filtered_documents action
-        url = reverse('tag-filtered-documents')
+        # Update the URL name to match what's in your urls.py
+        url = reverse('tag-filter-documents')  # Adjusted to match your actual URL pattern
         response = self.client.get(url, {'tags': tag.name})
         
-        # The response should be successful (even if no documents are found)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
