@@ -39,15 +39,15 @@ export default function TermsPage() {
   useEffect(() => {
     const checkUserRole = async () => {
       try {
-        const token = localStorage.getItem('accessToken');
+        const token = localStorage.getItem('authToken');
         if (!token) {
           console.log("No token found, user not authenticated");
           return;
         }
         
-        const response = await axios.get("http://localhost:8000/api/app_user/check-role/", {
+        const response = await axios.get("http://localhost:8000/api/users/check_role/", {
           headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Token ${token}`
           }
         });
         
@@ -127,16 +127,16 @@ export default function TermsPage() {
       setTerms([
         {
           id: termsOfUse?.id || 1,
-          title: "Términos de Uso",
-          content: termsOfUse?.content || "El contenido de los términos de uso se mostrará aquí.",
+          title: "Terms of use",
+          content: termsOfUse?.content || "Terms of use content will be displayed here.",
           version: termsOfUse?.version || "v1.0",
           icon: <IconFileText className="h-6 w-6 text-green-600" />,
           tag: 'terms',
         },
         {
           id: cookiePolicy?.id || 2,
-          title: "Política de Cookies",
-          content: cookiePolicy?.content || "El contenido de la política de cookies se mostrará aquí.",
+          title: "Cookie policy",
+          content: cookiePolicy?.content || "Cookie policy content will be displayed here.",
           version: cookiePolicy?.version || "v1.0",
           icon: <IconCookie className="h-6 w-6 text-amber-600" />,
           tag: 'cookies',
