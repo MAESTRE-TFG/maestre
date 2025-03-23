@@ -494,7 +494,7 @@ Then we proceed to install the dependencies:
 ```sh
 ❯ pip install -r requirements.txt
 ```
-**Using `npm`** &nbsp; [<img align="center" src="" />]()
+**Using `npm`** &nbsp; [<img align="center" src="https://img.shields.io/badge/npm-CB3837.svg?style=flat&logo=npm&logoColor=white" />](https://www.npmjs.com/)
 
 We now install the frontend framework dependencies in the `frontend` directory:
 
@@ -523,7 +523,7 @@ Additionaly, the first time the project is locally deployed, we need to create a
 
 After the local backend server is running, we can run the frontend server **in a new terminal window**:
 
-**Using `npm`** &nbsp; [<img align="center" src="" />]()
+**Using `npm`** &nbsp; [<img align="center" src="https://img.shields.io/badge/npm-CB3837.svg?style=flat&logo=npm&logoColor=white" />](https://www.npmjs.com/)
 
 ```sh
 ❯ cd ../../fronted
