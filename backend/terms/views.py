@@ -1,5 +1,7 @@
-from rest_framework import filters, viewsets
+from rest_framework import filters, viewsets, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.response import Response
+from rest_framework.decorators import action
 from .models import Terms
 from .serializers import TermsSerializer
 
@@ -13,14 +15,28 @@ class TermsViewSet(viewsets.ModelViewSet):
     queryset = Terms.objects.all().order_by('-updated_at')
     serializer_class = TermsSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['tag']
+    search_fields = ['tag', 'name']
 
     def get_permissions(self):
-        if self.action in ['list', 'retrieve']:
+        if self.action in ['list', 'retrieve', 'check_admin_status']:
             permission_classes = [AllowAny]
         else:
             permission_classes = [IsAdmin]
         return [permission() for permission in permission_classes]
+
+    @action(detail=False, methods=['get'])
+    def check_admin_status(self, request):
+        is_admin = False
+        username = None
+
+        if request.user.is_authenticated:
+            is_admin = request.user.is_staff
+            username = request.user.username or request.user.email
+
+        return Response({
+            'is_admin': is_admin,
+            'username': username
+        })
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -33,4 +49,15 @@ class TermsViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user)
 
     def perform_update(self, serializer):
+        # No need to override this method if it doesn't add functionality
         serializer.save()
+
+    def create(self, request, *args, **kwargs):
+        # Handle the unique tag constraint at the API level
+        tag = request.data.get('tag')
+        if tag and Terms.objects.filter(tag=tag).exists():
+            return Response(
+                {'tag': [f'A "{dict(Terms.TAG_CHOICES).get(tag, tag)}" document already exists.']},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        return super().create(request, *args, **kwargs)

@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { getApiBaseUrl } from "@/lib/api";
-import { useState, useEffect, useMemo, useCallbacke } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
@@ -244,50 +244,33 @@ const ProfileEdit = () => {
 
   return (
     <div className="relative flex flex-col justify-center items-center py-12 sm:px-8 lg:px-8 overflow-auto">
-      {/* Floating Div */}
-      <div className="fixed top-0 left-0 w-full z-10 bg-inherit backdrop-blur-md">
-        <div className="relative z-20 sm:mx-auto sm:w-full sm:max-w-full">
-          <div className="h-12"></div>
-          <div className="flex flex-col justify-center items-center sticky top-0 bg-inherit px-4 space-y-2">
-            <h1
-              className={cn(
-                "text-3xl font-extrabold text-zinc-100",
-                theme === "dark" ? "text-white" : "text-dark"
-              )}
-            >
-              Hello{" "}
-              <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-                {user ? user.name : ""}
-              </span>{" "}
-              !
-            </h1>
-            <h4
-              className={cn(
-                "text-xl font-extrabold text-zinc-100",
-                theme === "dark" ? "text-white" : "text-dark"
-              )}
-            >
-              See and edit your profile and data.
-            </h4>
-            <style jsx global>{`
-              @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
-            `}</style>
-          </div>
-        </div>
+
+      {/* Header Section */}
+      <div className="w-full text-center mb-12">
+        <h1 className={`text-4xl font-bold font-alfa-slab-one mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+        Hello{" "}
+          <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+            {user ? user.name : ""}
+          </span>{" "}
+        !
+        </h1>
+        <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+          See and edit your profile and data.
+        </p>
       </div>
-      {/* End of Floating Div */}
+
       {/* Background Images */}
       {theme === "dark" ? (
         <>
           <img
             src="/static/bubbles black/1.svg"
             alt="Bubble"
-            className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
+            className="absolute top-0 left-0 w-1/5 opacity-50 z-0"
           />
           <img
             src="/static/bubbles black/3.svg"
             alt="Bubble"
-            className="absolute bottom-0 right-0 opacity-50 z-0"
+            className="absolute bottom-0 right-12 opacity-50 z-0"
           />
         </>
       ) : (
@@ -295,18 +278,17 @@ const ProfileEdit = () => {
           <img
             src="/static/bubbles white/1.svg"
             alt="Bubble"
-            className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
+            className="absolute top-0 left-0 w-1/5 opacity-50 z-0"
           />
           <img
             src="/static/bubbles white/3.svg"
             alt="Bubble"
-            className="absolute bottom-0 right-0 opacity-50 z-0"
+            className="absolute bottom-0 right-12 opacity-50 z-0"
           />
         </>
       )}
       {/* End of Background Images */}
-      <div className="relative my-8" style={{ height: "250px"}}></div>
-      <div className="relative xl:mx-auto xl:w-full xl:max-w-7xl">
+      <div className="relative xl:mx-auto xl:w-full xl:max-w-[90rem]">
         {editMode ? (
           memoizedForm
         ) : (

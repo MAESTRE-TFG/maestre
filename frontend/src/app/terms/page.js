@@ -3,6 +3,8 @@
 import React, { useEffect, useState } from "react";
 import { getApiBaseUrl } from "@/lib/api";
 import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
+import { useTheme } from "@/components/theme-provider";
+import { SidebarDemo } from "@/components/sidebar-demo";
 import {
   IconFileText,
   IconCookie,
@@ -30,40 +32,36 @@ const POLICY_ORDER = {
 export default function TermsPage() {
   const [terms, setTerms] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { theme } = useTheme();
 
-  // ----------- 1) Error global + fade (para editar, borrar, fetch, etc.) -----------
+  // ----------- 1) Global error + fade (for editing, deleting, fetch, etc.) -----------
   const [error, setError] = useState(null);
   const [fadeOut, setFadeOut] = useState(false);
 
-  // ----------- 2) Error local del modal + fade (para errores al crear un término) -----------
+  // ----------- 2) Local modal error + fade (for errors when creating a term) -----------
   const [modalError, setModalError] = useState(null);
   const [modalFadeOut, setModalFadeOut] = useState(false);
 
-  // Bandera de "no hay términos"
   const [noTermsFound, setNoTermsFound] = useState(false);
 
-  // Para ver si es admin, y recoger su username si hace falta
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminUsername, setAdminUsername] = useState("");
 
-  // Para editar (esto no usa modal, sino inline)
   const [editMode, setEditMode] = useState(null);
   const [editContent, setEditContent] = useState("");
   const [editVersion, setEditVersion] = useState("");
 
-  // Para añadir un nuevo término (esto sí usa modal)
   const [showAddForm, setShowAddForm] = useState(false);
   const [newTermType, setNewTermType] = useState("");
   const [newTermContent, setNewTermContent] = useState("");
   const [newTermVersion, setNewTermVersion] = useState("");
 
-  // Modal para ver contenido completo
   const [activeTermId, setActiveTermId] = useState(null);
 
-  // -------------------- useEffect: Fade out del error global --------------------
+  // -------------------- useEffect: Fade out for global error --------------------
   useEffect(() => {
     if (error) {
-      setFadeOut(false); // Reset fade
+      setFadeOut(false);
       const timerFade = setTimeout(() => setFadeOut(true), 3000);
       const timerClear = setTimeout(() => setError(null), 4000);
       return () => {
@@ -73,7 +71,7 @@ export default function TermsPage() {
     }
   }, [error]);
 
-  // -------------------- useEffect: Fade out del error específico del modal --------------------
+  // -------------------- useEffect: Fade out for modal specific error --------------------
   useEffect(() => {
     if (modalError) {
       setModalFadeOut(false); // Reset fade
@@ -85,38 +83,60 @@ export default function TermsPage() {
       };
     }
   }, [modalError]);
-
-  // -------------------- Comprobar si es Admin --------------------
   // First useEffect for admin role check
   useEffect(() => {
     const checkUserRole = async () => {
       try {
         const token = localStorage.getItem("token");
-        if (!token) {
-          console.log("No token found, user not authenticated");
+        const user = localStorage.getItem('user');
+        if (!user) {
+          console.log("No user found, user not authenticated");
+          setIsAdmin(false);
           return;
-        }
-
-        console.log("Token found:", token.substring(0, 10) + "...");
-        
-        const response = await axios.get(
-          `${getApiBaseUrl()}/api/app_user/check-role/`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
+        }        
+  
+        try {
+          const parsedUser = JSON.parse(user);
+          console.log("User data:", parsedUser);
+          if (parsedUser && parsedUser.is_staff === true) {
+            console.log("User is admin based on stored user data");
+            setIsAdmin(true);
+            setAdminUsername(parsedUser.username || parsedUser.email || "Admin User");
+            return;
           }
-        );
-
-        if (response.data && response.data.user_role === "admin") {
-          setIsAdmin(true);
-          setAdminUsername(response.data.username);
+        } catch (parseErr) {
+          console.log("Could not parse user data:", parseErr);
+        }
+        
+        // Fallback to API check
+        try {
+          const response = await axios.get(
+            `${getApiBaseUrl()}/api/terms/check_role/`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+        
+          if (response.data && response.data.is_admin) {
+            console.log("User is admin based on API response");
+            setIsAdmin(true);
+            setAdminUsername(response.data.user_role === 'admin' ? "Admin User" : "User");
+          } else {
+            console.log("User is not admin based on API response");
+            setIsAdmin(false);
+          }
+        } catch (err) {
+          console.error("Error checking user role via API:", err);
+          setIsAdmin(false);
         }
       } catch (err) {
-        console.error("Error checking user role:", err);
+        console.error("Error in admin check process:", err);
+        setIsAdmin(false);
       }
     };
-
+  
     if (typeof window !== "undefined") {
       checkUserRole();
     }
@@ -140,20 +160,22 @@ export default function TermsPage() {
     }
   }, [terms]); // This will run whenever terms are loaded
 
-  // -------------------- Cargar los términos --------------------
   useEffect(() => {
     const fetchTerms = async () => {
       try {
         const token = localStorage.getItem("token");
 
-        // 1) Intento con token
         if (token) {
           try {
+            // Fix the API endpoint URL - it should match the router registration in urls.py
             const response = await axios.get(
-              `${getApiBaseUrl()}/api/terms/list/`,
+              `${getApiBaseUrl()}/api/terms/`,  // Changed from /api/terms/list/
               {
                 headers: { Authorization: `Bearer ${token}` },
-                timeout: 5000,
+                timeout: 10000,
+                validateStatus: function (status) {
+                  return status >= 200 && status < 500;
+                }
               }
             );
             if (response.data && response.data.length > 0) {
@@ -161,14 +183,13 @@ export default function TermsPage() {
               return;
             }
           } catch (authErr) {
-            console.log("Authenticated request failed:", authErr.response?.status);
+            console.log("Authenticated request failed:", authErr.response?.status || authErr.message);
             if (authErr.response?.status === 401) {
               console.log("Authentication token may be expired");
             }
           }
         }
 
-        // 2) Intento sin token (público)
         try {
           const publicResponse = await axios.get(
             `${getApiBaseUrl()}/api/terms/list/`,
@@ -183,7 +204,6 @@ export default function TermsPage() {
           setNoTermsFound(true);
         }
 
-        // Si llegamos aquí, no se pudo cargar nada:
         setNoTermsFound(true);
       } catch (err) {
         console.error("Error fetching terms:", err);
@@ -210,19 +230,19 @@ export default function TermsPage() {
 
           switch (tag) {
             case "cookies":
-              title = "Política de Cookies";
+              title = "Cookie Policy";
               icon = <IconCookie className="h-6 w-6 text-amber-600" />;
               break;
             case "terms":
-              title = "Términos de Uso";
+              title = "Terms of Use";
               icon = <IconFileText className="h-6 w-6 text-green-600" />;
               break;
             case "license":
-              title = "Licencias";
+              title = "Licenses";
               icon = <IconFileText className="h-6 w-6 text-purple-600" />;
               break;
             case "privacy":
-              title = "Política de Privacidad";
+              title = "Privacy Policy";
               icon = <IconLock className="h-6 w-6 text-blue-600" />;
               break;
           }
@@ -250,7 +270,7 @@ export default function TermsPage() {
     fetchTerms();
   }, []);
 
-  // -------------------- Manejo edición de términos (usa error global) --------------------
+  // -------------------- Handling term editing (uses global error) --------------------
   const handleEdit = (id, content, version) => {
     setEditMode(id);
     setEditContent(content);
@@ -259,8 +279,7 @@ export default function TermsPage() {
 
   const handleSave = async (id) => {
     if (!editContent.trim()) {
-      // Error de edición => error global
-      setError("El contenido no puede estar vacío. Por favor, ingrese el contenido del término.");
+      setError("Content cannot be empty. Please enter the term content.");
       return;
     }
 
@@ -276,30 +295,39 @@ export default function TermsPage() {
       const currentTerm = terms.find((term) => term.id === id);
       let tag = "terms";
       if (currentTerm) {
-        if (currentTerm.title === "Política de Cookies") tag = "cookies";
-        else if (currentTerm.title === "Política de Privacidad") tag = "privacy";
-        else if (currentTerm.title === "Licencias") tag = "license";
+        tag = currentTerm.tag;
       }
 
-      await axios.put(
-        `${getApiBaseUrl()}/api/terms/update/${id}/`,
+      // Update to match the serializer fields
+      const response = await axios.put(
+        `${getApiBaseUrl()}/api/terms/${id}/`,
         {
           content: editContent,
           version: editVersion,
           tag: tag,
+          name: currentTerm.title // Add name field which is required by the serializer
         },
         {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
+          timeout: 10000,
+          validateStatus: function (status) {
+            return status >= 200 && status < 500;
+          }
         }
       );
 
+      // Update the local state with the response data
       setTerms((prev) =>
         prev.map((term) =>
           term.id === id
-            ? { ...term, content: editContent, version: editVersion, tag }
+            ? { 
+                ...term, 
+                content: editContent, 
+                version: editVersion
+              }
             : term
         )
       );
@@ -308,12 +336,12 @@ export default function TermsPage() {
       setLoading(false);
     } catch (err) {
       console.error("Error updating term:", err.response?.data || err);
-      setError("Error al actualizar el término. Por favor, inténtelo de nuevo.");
+      setError(err.response?.data?.detail || "Error updating the term. Please try again.");
       setLoading(false);
     }
   };
 
-  // Borrar término (usa error global)
+  // Delete term (uses global error)
   const handleDelete = async (id) => {
     try {
       setLoading(true);
@@ -324,7 +352,7 @@ export default function TermsPage() {
         return;
       }
 
-      await axios.delete(`${getApiBaseUrl()}/api/terms/delete/${id}/`, {
+      await axios.delete(`${getApiBaseUrl()}/api/terms/${id}/`, {  // Changed from /api/terms/delete/${id}/
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -333,36 +361,36 @@ export default function TermsPage() {
       const updatedTerms = terms.filter((term) => term.id !== id);
       setTerms(updatedTerms);
 
-      // Si borramos todo y no quedan términos, mostramos la vista "no hay términos"
+      // If we delete everything and no terms remain, show the "no terms" view
       if (updatedTerms.length === 0) {
         setNoTermsFound(true);
       }
     } catch (err) {
       console.error("Error deleting term:", err.response?.data || err);
-      setError("Error al eliminar el término. Por favor, inténtelo de nuevo.");
+      setError("Error deleting the term. Please try again.");
     } finally {
       setLoading(false);
     }
   };
 
-  // -------------------- Manejo de añadir nuevo término (usa error del modal) --------------------
+  // -------------------- Handling adding new term (uses modal error) --------------------
   const getAvailableTermTypes = () => {
     const allTypes = [
-      { value: "terms", label: "Términos de Uso" },
-      { value: "cookies", label: "Política de Cookies" },
-      { value: "privacy", label: "Política de Privacidad" },
-      { value: "license", label: "Licencias" },
+      { value: "terms", label: "Terms of Use" },
+      { value: "cookies", label: "Cookie Policy" },
+      { value: "privacy", label: "Privacy Policy" },
+      { value: "license", label: "Licenses" },
     ];
     const existingTypes = terms.map((term) => term.tag);
 
-    // Permitimos solo uno por cada tipo que ya exista
+    // Allow only one for each type that already exists
     return allTypes.filter((type) => !existingTypes.includes(type.value));
   };
 
   const handleAddTerm = async () => {
-    // Error del modal si campos vacíos
+    // Modal error if fields are empty
     if (!newTermType || !newTermContent) {
-      setModalError("Por favor, complete todos los campos.");
+      setModalError("Please complete all fields.");
       return;
     }
 
@@ -376,14 +404,32 @@ export default function TermsPage() {
       }
 
       const versionToUse = newTermVersion.trim() || "v1.0";
+    
+      // Get the title based on the term type
+      let title = "";
+      switch (newTermType) {
+        case "terms":
+          title = "Terms of Use";
+          break;
+        case "cookies":
+          title = "Cookie Policy";
+          break;
+        case "privacy":
+          title = "Privacy Policy";
+          break;
+        case "license":
+          title = "Licenses";
+          break;
+      }
 
+      // Update to match the serializer fields
       const response = await axios.post(
-        `${getApiBaseUrl()}/api/terms/create/`,
+        `${getApiBaseUrl()}/api/terms/`,
         {
           content: newTermContent,
           version: versionToUse,
           tag: newTermType,
-          modifier: adminUsername,
+          name: title // Add name field which is required by the serializer
         },
         {
           headers: {
@@ -393,23 +439,19 @@ export default function TermsPage() {
         }
       );
 
-      let title = "";
+      // Create the icon based on the term type
       let icon = null;
       switch (newTermType) {
         case "terms":
-          title = "Términos de Uso";
           icon = <IconFileText className="h-6 w-6 text-green-600" />;
           break;
         case "cookies":
-          title = "Política de Cookies";
           icon = <IconCookie className="h-6 w-6 text-amber-600" />;
           break;
         case "privacy":
-          title = "Política de Privacidad";
           icon = <IconLock className="h-6 w-6 text-blue-600" />;
           break;
         case "license":
-          title = "Licencias";
           icon = <IconFileText className="h-6 w-6 text-purple-600" />;
           break;
       }
@@ -433,10 +475,10 @@ export default function TermsPage() {
         return updated;
       });
 
-      // Si estaba la vista de "no hay términos", la quitamos
+      // If we were in the "no terms" view, remove it
       setNoTermsFound(false);
 
-      // Cerrar modal y reset
+      // Close modal and reset
       setShowAddForm(false);
       setNewTermType("");
       setNewTermContent("");
@@ -445,9 +487,9 @@ export default function TermsPage() {
     } catch (err) {
       console.error("Error adding term:", err.response?.data || err);
       const errorMessage =
-        err.response?.data?.error ||
-        err.response?.data?.message ||
-        "Error al añadir el término. Por favor, inténtelo de nuevo.";
+        err.response?.data?.detail ||
+        err.response?.data?.tag?.[0] ||
+        "Error adding the term. Please try again.";
       setModalError(errorMessage);
       setLoading(false);
     }
@@ -462,183 +504,187 @@ export default function TermsPage() {
   function getStaticPdfFilename(tag) {
     switch (tag) {
       case "cookies":
-        return "1_cookies_fisiofind.pdf";
+        return "1_cookies.pdf";
       case "terms":
-        return "2_terms_fisiofind.pdf";
+        return "2_terms.pdf";
       case "privacy":
-        return "3_privacy_fisiofind.pdf";
+        return "3_privacy.pdf";
       case "license":
-        return "4_license_fisiofind.pdf";
+        return "4_license.pdf";
       default:
         return "";
     }
   }
 
-  // -------------------- Render Principal --------------------
+  // -------------------- Main Render --------------------
   return (
-    <div className="container mx-auto py-16 px-4 sm:px-6 lg:px-8 max-w-7xl">
-      <h1 className="text-3xl font-bold text-center mb-12">
-        FISIO FIND - INFORMACIÓN LEGAL
-      </h1>
+    <SidebarDemo ContentComponent={() => 
+      <div className="container mx-auto py-16 px-4 sm:px-6 lg:px-8 max-w-7xl">
+        
+      {/* Header Section */}
+      <div className="w-full text-center mb-12">
+        <h1 className={`text-4xl font-bold font-alfa-slab-one mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+          MAESTRE - Legal Information
+        </h1>
+        <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+          Welcome to our legal information section. Here you'll find all the necessary documents and policies that govern the use of our platform. Please review them carefully to understand your rights and responsibilities.
+        </p>
+      </div>
 
-      {/* --------- ERROR GLOBAL (solo para edición/borrado/fetch) --------- */}
-      {error && (
-        <div
-          className={`
-            mb-8 text-center bg-red-50 border border-red-200 p-4 rounded-md 
-            transition-opacity duration-1000 ease-out 
-            ${fadeOut ? "opacity-0" : "opacity-100"}
-          `}
-        >
-          <p className="text-red-600 font-semibold">{error}</p>
-        </div>
-      )}
+        {/* --------- GLOBAL ERROR (only for editing/deleting/fetch) --------- */}
+        {error && (
+          <div
+            className={`
+              mb-8 text-center bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 p-4 rounded-md 
+              transition-opacity duration-1000 ease-out 
+              ${fadeOut ? "opacity-0" : "opacity-100"}
+            `}
+          >
+            <p className="text-red-600 dark:text-red-400 font-semibold">{error}</p>
+          </div>
+        )}
 
-      {loading ? (
-        // -------- Loading skeleton --------
-        <div className="container mx-auto py-12">
-          <h2 className="text-2xl font-semibold text-center mb-4">Cargando...</h2>
-          <BentoGrid className="max-w-6xl mx-auto">
-            {[1, 2, 3, 4].map((item) => (
-              <BentoGridItem
-                key={item}
-                header={<TermSkeleton />}
-                title="Cargando..."
-                description="Por favor espere mientras cargamos el contenido."
-                icon={<IconRefresh className="h-4 w-4 text-neutral-500 animate-spin" />}
-                className={item === 3 ? "md:col-span-3" : ""}
-              />
-            ))}
-          </BentoGrid>
-        </div>
-      ) : noTermsFound ? (
-        // -------- No hay términos --------
-        <div className="max-w-2xl mx-auto text-center p-8 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-sm">
-          <IconAlertCircle className="h-12 w-12 text-amber-500 mx-auto mb-4" />
-          <h2 className="text-xl font-semibold mb-2">Términos No Disponibles</h2>
-          <p className="text-gray-600 dark:text-gray-300 mb-4">
-            No se pudieron cargar los términos y condiciones en este momento. Esto puede
-            deberse a que:
-          </p>
-          <ul className="text-left text-gray-600 dark:text-gray-300 mb-4 pl-8 list-disc">
-            <li>Los términos están siendo actualizados</li>
-            <li>Se requiere iniciar sesión para acceder a esta información</li>
-            <li>Hay un problema temporal con el servidor</li>
-          </ul>
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            Si necesita acceder a esta información, por favor inicie sesión o póngase en
-            contacto con nuestro equipo de soporte.
-          </p>
+        {loading ? (
+          // -------- Loading skeleton --------
+          <div className="container mx-auto py-12">
+            <h2 className="text-2xl font-semibold text-center mb-4 text-foreground">Loading...</h2>
+            <BentoGrid className="max-w-6xl mx-auto">
+              {[1, 2, 3, 4].map((item) => (
+                <BentoGridItem
+                  key={item}
+                  header={<TermSkeleton />}
+                  title="Loading..."
+                  description="Please wait while we load the content."
+                  icon={<IconRefresh className="h-4 w-4 text-neutral-500 animate-spin" />}
+                  className={item === 3 ? "md:col-span-3" : ""}
+                />
+              ))}
+            </BentoGrid>
+          </div>
+        ) : noTermsFound ? (
+          // -------- No terms found --------
+          <div className="max-w-2xl mx-auto text-center p-8 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-sm">
+            <IconAlertCircle className="h-12 w-12 text-amber-500 mx-auto mb-4" />
+            <h2 className="text-xl font-semibold mb-2 text-foreground">Terms Not Available</h2>
+            <p className="text-muted-foreground mb-4">
+              The terms and conditions could not be loaded at this time. This may be because:
+            </p>
+            <ul className="text-left text-muted-foreground mb-4 pl-8 list-disc">
+              <li>The terms are being updated</li>
+              <li>You need to log in to access this information</li>
+              <li>There is a temporary server issue</li>
+            </ul>
+            <p className="text-sm text-muted-foreground">
+              If you need to access this information, please log in or contact our support team.
+            </p>
 
-          {isAdmin && (
-            <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-              <h3 className="text-lg font-semibold mb-4">Panel de Administrador</h3>
-              <button
-                onClick={() => setShowAddForm(true)}
-                className="px-6 py-2 font-medium rounded-xl flex items-center gap-2 mx-auto"
-              >
-                <IconPlus className="h-5 w-5" />
-                Añadir Nuevo Término
-              </button>
-            </div>
-          )}
+            {isAdmin && (
+              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                <h3 className="text-lg font-semibold mb-4">Admin Panel</h3>
+                <button
+                  onClick={() => setShowAddForm(true)}
+                  className="px-6 py-2 font-medium bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-xl flex items-center gap-2 mx-auto hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+                >
+                  <IconPlus className="h-5 w-5" />
+                  Add New Term
+                </button>
+              </div>
+            )}
 
-          {/* ------------- MODAL: AÑADIR NUEVO TÉRMINO cuando no hay ninguno ------------- */}
-          {showAddForm && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-2xl w-full relative">
-                {/* Error local del modal */}
-                {modalError && (
-                  <div
-                    className={`
-                      mb-4 text-center bg-red-50 border border-red-200 p-4 rounded-md
-                      transition-opacity duration-1000 ease-out
-                      ${modalFadeOut ? "opacity-0" : "opacity-100"}
-                    `}
-                  >
-                    <p className="text-red-600 font-semibold">{modalError}</p>
+            {/* ------------- MODAL: ADD NEW TERM when there are none ------------- */}
+            {showAddForm && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-2xl w-full relative">
+                  {/* Local modal error */}
+                  {modalError && (
+                    <div
+                      className={`
+                        mb-4 text-center bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 p-4 rounded-md
+                        transition-opacity duration-1000 ease-out
+                        ${modalFadeOut ? "opacity-0" : "opacity-100"}
+                      `}
+                    >
+                      <p className="text-red-600 dark:text-red-400 font-semibold">{modalError}</p>
+                    </div>
+                  )}
+
+                  <h2 className="text-xl font-bold mb-4">Add New Term</h2>
+
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-1">Term Type</label>
+                    <select
+                      value={newTermType}
+                      onChange={(e) => setNewTermType(e.target.value)}
+                      className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md"
+                    >
+                      <option value="">Select a type</option>
+                      <option value="terms">Terms of Use</option>
+                      <option value="cookies">Cookie Policy</option>
+                      <option value="privacy">Privacy Policy</option>
+                      <option value="license">Licenses</option>
+                    </select>
                   </div>
-                )}
 
-                <h2 className="text-xl font-bold mb-4">Añadir Nuevo Término</h2>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-1">Content</label>
+                    <textarea
+                      value={newTermContent}
+                      onChange={(e) => setNewTermContent(e.target.value)}
+                      className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md h-64"
+                      placeholder="Enter the HTML content of the term..."
+                    />
+                  </div>
 
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-1">
-                    Tipo de Término
-                  </label>
-                  <select
-                    value={newTermType}
-                    onChange={(e) => setNewTermType(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                  >
-                    <option value="">Seleccione un tipo</option>
-                    <option value="terms">Términos de Uso</option>
-                    <option value="cookies">Política de Cookies</option>
-                    <option value="privacy">Política de Privacidad</option>
-                    <option value="license">Licencias</option>
-                  </select>
-                </div>
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium mb-1">Version</label>
+                    <input
+                      type="text"
+                      className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md"
+                      placeholder='E.g. "v1.0"'
+                      value={newTermVersion}
+                      onChange={(e) => setNewTermVersion(e.target.value)}
+                    />
+                  </div>
 
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-1">Contenido</label>
-                  <textarea
-                    value={newTermContent}
-                    onChange={(e) => setNewTermContent(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-md h-64"
-                    placeholder="Ingrese el contenido HTML del término..."
-                  />
-                </div>
-
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-1">Versión</label>
-                  <input
-                    type="text"
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                    placeholder='Ej: "v1.0"'
-                    value={newTermVersion}
-                    onChange={(e) => setNewTermVersion(e.target.value)}
-                  />
-                </div>
-
-                <div className="flex justify-end space-x-2">
-                  <button
-                    onClick={() => setShowAddForm(false)}
-                    className="px-6 py-2 bg-gray-100 text-gray-600 font-medium rounded-xl transition-colors hover:bg-gray-200 flex items-center gap-2"
-                  >
-                    <IconX className="h-5 w-5" />
-                    Cancelar
-                  </button>
-                  <button
-                    onClick={handleAddTerm}
-                    className="px-6 py-2 bg-[#05AC9C] text-white font-medium rounded-xl transition-colors hover:bg-[#048F83] flex items-center gap-2"
-                  >
-                    <IconCheck className="h-5 w-5" />
-                    Guardar
-                  </button>
+                  <div className="flex justify-end space-x-2">
+                    <button
+                      onClick={() => setShowAddForm(false)}
+                      className="px-6 py-2 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-medium rounded-xl transition-colors hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center gap-2"
+                    >
+                      <IconX className="h-5 w-5" />
+                      Cancel
+                    </button>
+                    <button
+                      onClick={handleAddTerm}
+                      className="px-6 py-2 bg-[#05AC9C] text-white font-medium rounded-xl transition-colors hover:bg-[#048F83] flex items-center gap-2"
+                    >
+                      <IconCheck className="h-5 w-5" />
+                      Save
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
       ) : (
-        // -------- Sí hay términos (vista normal) --------
+        // -------- Terms exist (normal view) --------
         <>
-          {/* Botón para añadir término si eres Admin y quedan tipos disponibles */}
+          {/* Button to add term if you're Admin and there are available types */}
           {isAdmin && (
             <div className="mb-10 text-center">
               <button
                 onClick={() => setShowAddForm(true)}
-                className="px-6 py-2 font-medium rounded-xl flex items-center gap-2 mx-auto"
+                className="px-6 py-2 font-medium bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-xl flex items-center gap-2 mx-auto hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
               >
                 <IconPlus className="h-5 w-5" />
-                Añadir Nuevo Término
+                Add New Term
               </button>
             </div>
           )}
 
           <BentoGrid className="max-w-6xl mx-auto">
             {terms.map((term, i) => {
-              // Helper para truncar texto
+              // Helper to truncate text
               const truncateByWords = (text, wordLimit) => {
                 const words = text.split(" ");
                 if (words.length <= wordLimit) return text;
@@ -648,7 +694,7 @@ export default function TermsPage() {
               const termTag = term.tag;
               let firstSentence = "";
 
-              // Lógica de truncado según el tag
+              // Truncation logic based on tag
               if (termTag === "terms" || termTag === "license") {
                 const content = term.content.split("## 4. ")[1] || term.content;
                 firstSentence = truncateByWords(content, 45);
@@ -672,18 +718,18 @@ export default function TermsPage() {
                   }
                   description={
                     editMode === term.id ? (
-                      // -------- Modo edición (inline) --------
+                      // -------- Edit mode (inline) --------
                       <div className="space-y-4">
                         <textarea
                           value={editContent}
                           onChange={(e) => setEditContent(e.target.value)}
-                          className="w-full p-2 border border-gray-300 rounded-md h-64 text-sm font-mono"
-                          placeholder="Escriba el contenido en formato Markdown..."
+                          className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md h-64 text-sm font-mono"
+                          placeholder="Write content in Markdown format..."
                         />
                         <div className="flex justify-end space-x-2">
                           <button
                             onClick={() => setEditMode(null)}
-                            className="p-2 bg-gray-200 text-gray-700 rounded-full hover:bg-gray-300 transition-colors"
+                            className="p-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
                           >
                             <IconX size={16} />
                           </button>
@@ -696,7 +742,7 @@ export default function TermsPage() {
                         </div>
                       </div>
                     ) : (
-                      // -------- Modo visualización --------
+                      // -------- View mode --------
                       <div className="text-sm">
                         <div className="prose dark:prose-invert prose-sm">
                           <ReactMarkdown
@@ -712,7 +758,7 @@ export default function TermsPage() {
                             onClick={() => setActiveTermId(term.id)}
                             className="px-3 py-1.5 bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded-md text-xs font-medium hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
                           >
-                            Ver documento completo
+                            View full document
                           </button>
 
                           {isAdmin && (
@@ -739,13 +785,13 @@ export default function TermsPage() {
                   }
                   icon={term.icon}
                   className={
-                    term.title === "Términos de Uso"
+                    term.title === "Terms of Use"
                       ? "md:col-span-2"
-                      : term.title === "Política de Cookies"
+                      : term.title === "Cookie Policy"
                       ? "md:col-span-1"
-                      : term.title === "Política de Privacidad"
+                      : term.title === "Privacy Policy"
                       ? "md:col-span-1"
-                      : term.title === "Licencias"
+                      : term.title === "Licenses"
                       ? "md:col-span-2"
                       : ""
                   }
@@ -754,32 +800,29 @@ export default function TermsPage() {
             })}
           </BentoGrid>
 
-          {/* Info adicional */}
+          {/* Additional info */}
           <div className="max-w-4xl mx-auto mb-16 prose dark:prose-invert prose-sm text-center space-y-6">
             <br />
             <br />
             <p className="text-gray-600 dark:text-gray-300">
-              Estos acuerdos son aplicables a todos los usuarios que accedan a la
-              plataforma FisioFind, ya sea a través de navegadores web o aplicaciones
-              móviles.
+              These agreements apply to all users who access the FisioFind platform, 
+              whether through web browsers or mobile applications.
             </p>
             <p className="text-gray-600 dark:text-gray-300">
-              FisioFind se reserva el derecho de modificar estos acuerdos en función
-              de cambios legislativos o necesidades operativas.
+              Maestre reserves the right to modify these agreements based on 
+              legislative changes or operational needs.
             </p>
-            <p>
-              El presente acuerdo se regirá e interpretará de acuerdo con la legislación
-              española.
+            <p className="text-gray-600 dark:text-gray-300">
+              This agreement will be governed and interpreted in accordance with Spanish legislation.
             </p>
-            <p>
-              La utilización de la plataforma implica la aceptación íntegra de todas las
-              condiciones aquí expuestas.
+            <p className="text-gray-600 dark:text-gray-300">
+              Use of the platform implies full acceptance of all conditions set forth herein.
             </p>
             <br />
             <hr className="my-8 border-gray-200 dark:border-gray-700" />
           </div>
 
-          {/* Modal para ver documento completo */}
+          {/* Modal to view full document */}
           {activeTermId !== null && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
               <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
@@ -815,26 +858,26 @@ export default function TermsPage() {
                       <div className="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
                         <button
                           onClick={() => {
-                            // 1) Decidir el PDF según el "tag" del término
+                            // 1) Determine the PDF based on the term's "tag"
                             const pdfFile = getStaticPdfFilename(activeTerm.tag || "");
                             if (!pdfFile) {
-                              // Por si no hay coincidencia
-                              alert("No existe un PDF para este tipo de término.");
+                              // In case there's no match
+                              alert("No PDF exists for this type of term.");
                               return;
                             }
 
-                            // 2) Construir la URL pública (carpeta /public/pdfs/06_terms/)
+                            // 2) Build the public URL (folder /public/pdfs/06_terms/)
                             const pdfUrl = `/pdfs/06_terms/${pdfFile}`;
 
-                            // 3) Crear enlace "invisible" y forzar click para descargar
+                            // 3) Create "invisible" link and force click to download
                             const link = document.createElement("a");
                             link.href = pdfUrl;
-                            link.download = pdfFile; // Para que el navegador lo baje directamente
+                            link.download = pdfFile; // For the browser to download it directly
                             document.body.appendChild(link);
                             link.click();
                             document.body.removeChild(link);
                           }}
-                          className="px-4 py-2 bg-blue-600 text-white rounded-md hover-bg-blue-700 flex items-center"
+                          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center"
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -850,7 +893,7 @@ export default function TermsPage() {
                               d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
                             />
                           </svg>
-                          Descargar documento
+                          Download document
                         </button>
                       </div>
                     </>
@@ -860,7 +903,6 @@ export default function TermsPage() {
             </div>
           )}
 
-          {/* ------------- MODAL: AÑADIR NUEVO TÉRMINO cuando sí hay términos ------------- */}
           {showAddForm && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
               <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-2xl w-full relative">
@@ -868,7 +910,7 @@ export default function TermsPage() {
                 {modalError && (
                   <div
                     className={`
-                      mb-4 text-center bg-red-50 border border-red-200 p-4 rounded-md
+                      mb-4 text-center bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 p-4 rounded-md
                       transition-opacity duration-1000 ease-out
                       ${modalFadeOut ? "opacity-0" : "opacity-100"}
                     `}
@@ -877,16 +919,16 @@ export default function TermsPage() {
                   </div>
                 )}
 
-                <h2 className="text-xl font-bold mb-4">Añadir Nuevo Término</h2>
+                <h2 className="text-xl font-bold mb-4">Add new term</h2>
 
                 <div className="mb-4">
-                  <label className="block text-sm font-medium mb-1">Tipo de Término</label>
+                  <label className="block text-sm font-medium mb-1">Term Type</label>
                   <select
                     value={newTermType}
                     onChange={(e) => setNewTermType(e.target.value)}
                     className="w-full p-2 border border-gray-300 rounded-md"
                   >
-                    <option value="">Seleccione un tipo</option>
+                    <option value="">Select a term type</option>
                     {getAvailableTermTypes().map((type) => (
                       <option key={type.value} value={type.value}>
                         {type.label}
@@ -896,17 +938,17 @@ export default function TermsPage() {
                 </div>
 
                 <div className="mb-4">
-                  <label className="block text-sm font-medium mb-1">Contenido</label>
+                  <label className="block text-sm font-medium mb-1">Content</label>
                   <textarea
                     value={newTermContent}
                     onChange={(e) => setNewTermContent(e.target.value)}
                     className="w-full p-2 border border-gray-300 rounded-md h-64"
-                    placeholder="Ingrese el contenido HTML del término..."
+                    placeholder="Enter the content of the term in Markdown format..."
                   />
                 </div>
 
                 <div className="mb-4">
-                  <label className="block text-sm font-medium mb-1">Versión</label>
+                  <label className="block text-sm font-medium mb-1">Version</label>
                   <input
                     type="text"
                     className="w-full p-2 border border-gray-300 rounded-md"
@@ -919,32 +961,33 @@ export default function TermsPage() {
                 <div className="flex justify-end space-x-2">
                   <button
                     onClick={() => setShowAddForm(false)}
-                    className="px-6 py-2 bg-gray-100 text-gray-600 font-medium rounded-xl transition-colors hover:bg-gray-200 flex items-center gap-2"
+                    className="px-6 py-2 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-medium rounded-xl transition-colors hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center gap-2"
                   >
                     <IconX className="h-5 w-5" />
-                    Cancelar
+                    Cancel
                   </button>
                   <button
                     onClick={handleAddTerm}
                     className="px-6 py-2 bg-[#05AC9C] text-white font-medium rounded-xl transition-colors hover:bg-[#048F83] flex items-center gap-2"
                   >
                     <IconCheck className="h-5 w-5" />
-                    Guardar
+                    Save
                   </button>
                 </div>
               </div>
             </div>
           )}
 
-          <div className="text-center mt-8 text-sm text-gray-500">
-            <p>Última actualización: {new Date().toLocaleDateString()}</p>
+          <div className="text-center mt-8 text-sm text-gray-500 dark:text-gray-400">
+            <p>Last updated: {new Date().toLocaleDateString()}</p>
             <p>
-              Si tiene alguna pregunta sobre nuestros términos o no puede acceder a ellos, por favor
-              contáctenos.
+              If you have any questions about our terms or cannot access them, please
+              contact us.
             </p>
           </div>
         </>
       )}
     </div>
+    } />
   );
 }

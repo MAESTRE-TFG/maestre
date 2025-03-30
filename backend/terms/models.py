@@ -7,7 +7,7 @@ from django.conf import settings
 
 class Terms(models.Model):
     TAG_CHOICES = [
-        ('terms', 'Terms of Use'),
+        ('terms', 'Terms and Conditions of Use'),
         ('cookies', 'Cookie Policy'),
         ('privacy', 'Privacy Policy'),
         ('license', 'License'),
