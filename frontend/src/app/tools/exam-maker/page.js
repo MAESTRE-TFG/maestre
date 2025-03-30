@@ -82,56 +82,53 @@ const ExamMaker = () => {
 
   // Add material selection handler
   const handleMaterialSelect = async (material) => {
-    setSelectedMaterial(material);
-    setShowMaterialsModal(false);
+    if (!material.file.toLowerCase().endsWith('.docx')) {
+      setErrorMessage("Only DOCX files are supported for exam generation.");
+      setShowMaterialsModal(false);
+      return;
+    }
+
     setIsProcessingFile(true);
+    setShowMaterialsModal(false);
 
     try {
+      // Send the material ID directly instead of trying to parse the URL
       const token = localStorage.getItem('authToken');
-
-      // For PDF files, request text extraction from the backend
-      if (material.file.toLowerCase().endsWith('.pdf')) {
-        const response = await axios.get(
-          `http://localhost:8000/api/materials/extract-text/${material.id}/`,
-          {
-            headers: {
-              Authorization: `Token ${token}`,
-            },
-          }
-        );
-
-        if (response.data && response.data.text) {
-          setFormData(prev => ({
-            ...prev,
-            additionalInfo: prev.additionalInfo +
-              `\n\n--- Content extracted from "${material.name}" ---\n\n` +
-              (response.data.text.length > 3000 ?
-                response.data.text.substring(0, 3000) + "... (content truncated)" :
-                response.data.text)
-          }));
-        }
-      } else {
-        // For non-PDF files, fetch and process directly
-        const response = await axios.get(material.file, {
-          responseType: 'blob',
+      const response = await axios.post(
+        "http://localhost:8000/api/materials/extract-text-from-url/",
+        {
+          file_url: material.file,
+          material_id: material.id  // Add this line to send the ID directly
+        },
+        {
           headers: {
-            Authorization: `Token ${token}`,
-          },
-        });
+            'Authorization': `Token ${token}`
+          }
+        }
+      );
 
-        const blob = response.data;
-        const file = new File([blob], material.name, { type: blob.type });
-        const text = await readFileAsText(file);
+      if (response.data && response.data.text) {
+        // Add to uploadedFiles array
+        setUploadedFiles([{
+          name: material.name,
+          content: response.data.text,
+          id: Date.now(),
+          isFromClassroom: true,
+          materialId: material.id
+        }]);
 
-        setFormData(prev => ({
-          ...prev,
-          additionalInfo: prev.additionalInfo +
-            `\n\n--- Content from "${material.name}" ---\n\n` + text
-        }));
+        // Update the prompt reference with the file content
+        updatePromptWithFiles([{
+          name: material.name,
+          content: response.data.text,
+          id: Date.now()
+        }]);
+      } else {
+        throw new Error("Failed to extract text from the selected material");
       }
     } catch (error) {
-      console.error("Error fetching material:", error);
-      setErrorMessage(`Failed to fetch material: ${error.message}`);
+      console.error("Error processing classroom material:", error);
+      setErrorMessage(`Failed to process material: ${error.message || "Unknown error"}`);
     } finally {
       setIsProcessingFile(false);
     }
@@ -1009,6 +1006,25 @@ If any information is missing, note it clearly rather than inventing details.
                       className="hidden"
                       disabled={isProcessingFile || uploadedFiles.length > 0}
                     />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        // Only show materials modal if no file is already uploaded
+                        if (uploadedFiles.length === 0 && !isProcessingFile) {
+                          setShowMaterialsModal(true);
+                        }
+                      }}
+                      className={cn(
+                        "px-4 py-2 rounded-md text-sm font-medium",
+                        (isProcessingFile || uploadedFiles.length > 0) ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
+                        theme === "dark"
+                          ? "bg-zinc-800 hover:bg-zinc-700 text-white"
+                          : "bg-gray-200 hover:bg-gray-300 text-black"
+                      )}
+                      disabled={isProcessingFile || uploadedFiles.length > 0}
+                    >
+                      Select from Classroom
+                    </button>
                     {uploadedFiles.length > 0 && (
                       <span className={cn(
                         "text-sm",
@@ -1021,7 +1037,6 @@ If any information is missing, note it clearly rather than inventing details.
                 </div>
 
                 {/* Uploaded files section */}
-                {/* Uploaded files section */}
                 {uploadedFiles.length > 0 && (
                   <div className={cn(
                     "p-3 rounded-md",
@@ -1032,20 +1047,20 @@ If any information is missing, note it clearly rather than inventing details.
                       {uploadedFiles.map(file => (
                         <li key={file.id} className="flex items-center justify-between">
                           <div className="flex items-center">
-                            <svg 
-                              xmlns="http://www.w3.org/2000/svg" 
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
                               className={cn(
                                 "h-5 w-5 mr-2",
                                 theme === "dark" ? "stroke-white" : "stroke-black"
-                              )} 
-                              fill="none" 
+                              )}
+                              fill="none"
                               viewBox="0 0 24 24"
                             >
-                              <path 
-                                strokeLinecap="round" 
-                                strokeLinejoin="round" 
-                                strokeWidth={2} 
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" 
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                               />
                             </svg>
                             <span className={theme === "dark" ? "text-white" : "text-black"}>{file.name}</span>
@@ -1057,22 +1072,22 @@ If any information is missing, note it clearly rather than inventing details.
                               theme === "dark" ? "hover:bg-zinc-700" : "hover:bg-gray-200"
                             )}
                           >
-                          <svg 
-                            xmlns="http://www.w3.org/2000/svg" 
-                            className={cn(
-                              "h-5 w-5",
-                              theme === "dark" ? "stroke-white" : "stroke-black"
-                            )} 
-                            fill="none" 
-                            viewBox="0 0 24 24"
-                          >
-                            <path 
-                              strokeLinecap="round" 
-                              strokeLinejoin="round" 
-                              strokeWidth={2} 
-                              d="M6 18L18 6M6 6l12 12" 
-                            />
-                          </svg>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className={cn(
+                                "h-5 w-5",
+                                theme === "dark" ? "stroke-white" : "stroke-black"
+                              )}
+                              fill="none"
+                              viewBox="0 0 24 24"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                              />
+                            </svg>
                           </button>
                         </li>
                       ))}
@@ -1239,20 +1254,26 @@ If any information is missing, note it clearly rather than inventing details.
                 )}
 
             {showMaterialsModal && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className={cn(
+                "fixed inset-0 flex items-center justify-center z-50",
+                theme === "dark" ? "bg-black/50" : "bg-gray-500/50"
+              )}>
                 <div className={cn(
                   "p-6 rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-auto",
                   theme === "dark" ? "bg-zinc-900" : "bg-white"
                 )}>
                   <div className="flex justify-between items-center mb-4">
-                    <h2 className={cn("text-xl font-bold", theme === "dark" ? "text-white" : "text-black")}>
-                      Select Material
+                    <h2 className={cn(
+                      "text-xl font-bold",
+                      theme === "dark" ? "text-zinc-100" : "text-zinc-900"
+                    )}>
+                      Select DOCX Material
                     </h2>
                     <button
                       onClick={() => setShowMaterialsModal(false)}
                       className={cn(
-                        "p-2 rounded-full",
-                        theme === "dark" ? "hover:bg-zinc-800" : "hover:bg-gray-200"
+                        "p-2 rounded-full transition-colors",
+                        theme === "dark" ? "hover:bg-zinc-800 text-zinc-400 hover:text-zinc-100" : "hover:bg-gray-200 text-gray-600 hover:text-gray-900"
                       )}
                     >
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1261,45 +1282,72 @@ If any information is missing, note it clearly rather than inventing details.
                     </button>
                   </div>
 
+                  {/* Filter notice */}
+                  <div className={cn(
+                    "mb-4 p-3 rounded-md text-sm",
+                    theme === "dark" ? "bg-zinc-800/50 text-zinc-300 border border-zinc-700" : "bg-gray-100 text-gray-700 border border-gray-200"
+                  )}>
+                    <p>Only DOCX files are shown. Select one file to use as reference for your exam.</p>
+                  </div>
+
                   <div className={cn(
                     "border rounded-lg p-4 mb-4 overflow-auto max-h-[60vh]",
-                    theme === "dark" ? "bg-zinc-800 border-zinc-700" : "bg-white border-gray-300"
+                    theme === "dark" ? "bg-zinc-800/50 border-zinc-700" : "bg-white border-gray-200"
                   )}>
                     {userMaterials.length > 0 ? (
-                      <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-                        {userMaterials.map((material) => (
-                          <li key={material.id} className="py-3">
-                            <button
-                              onClick={() => handleMaterialSelect(material)}
-                              className={cn(
-                                "w-full text-left p-3 rounded-md hover:bg-opacity-10 flex items-center",
-                                theme === "dark"
-                                  ? "hover:bg-white text-white"
-                                  : "hover:bg-zinc-300 text-black"
-                              )}
-                            >
-                              <div className="flex-1">
-                                <p className="font-medium">{material.name}</p>
-                                <p className={cn("text-sm", theme === "dark" ? "text-gray-400" : "text-gray-600")}>
-                                  {new Date(material.created_at).toLocaleDateString()}
-                                </p>
-                              </div>
-                              <div className={cn(
-                                "px-2 py-1 rounded text-xs",
-                                material.file.endsWith('.pdf')
-                                  ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
-                                  : material.file.endsWith('.docx')
-                                    ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
-                                    : "bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200"
-                              )}>
-                                {material.file.split('.').pop().toUpperCase()}
-                              </div>
-                            </button>
-                          </li>
-                        ))}
-                      </ul>
+                      <>
+                        {/* Filter to only show DOCX files */}
+                        {userMaterials.filter(material => material.file.toLowerCase().endsWith('.docx')).length > 0 ? (
+                          <ul className={cn(
+                            "divide-y",
+                            theme === "dark" ? "divide-zinc-700" : "divide-gray-200"
+                          )}>
+                            {userMaterials
+                              .filter(material => material.file.toLowerCase().endsWith('.docx'))
+                              .map((material) => (
+                                <li key={material.id} className="py-3">
+                                  <button
+                                    onClick={() => handleMaterialSelect(material)}
+                                    className={cn(
+                                      "w-full text-left p-3 rounded-md transition-colors flex items-center",
+                                      theme === "dark"
+                                        ? "hover:bg-zinc-700/50 text-zinc-100"
+                                        : "hover:bg-gray-100 text-gray-900"
+                                    )}
+                                  >
+                                    <div className="flex-1">
+                                      <p className="font-medium">{material.name}</p>
+                                      <p className={cn(
+                                        "text-sm",
+                                        theme === "dark" ? "text-zinc-400" : "text-gray-500"
+                                      )}>
+                                        {new Date(material.created_at).toLocaleDateString()}
+                                      </p>
+                                    </div>
+                                    <div className={cn(
+                                      "px-2 py-1 rounded text-xs",
+                                      theme === "dark" ? "bg-zinc-700 text-zinc-300" : "bg-gray-200 text-gray-700"
+                                    )}>
+                                      DOCX
+                                    </div>
+                                  </button>
+                                </li>
+                              ))}
+                          </ul>
+                        ) : (
+                          <p className={cn(
+                            "text-center py-4",
+                            theme === "dark" ? "text-zinc-400" : "text-gray-500"
+                          )}>
+                            No DOCX materials found. Please upload DOCX files to your classrooms first.
+                          </p>
+                        )}
+                      </>
                     ) : (
-                      <p className={cn("text-center py-4", theme === "dark" ? "text-gray-400" : "text-gray-600")}>
+                      <p className={cn(
+                        "text-center py-4",
+                        theme === "dark" ? "text-zinc-400" : "text-gray-500"
+                      )}>
                         No materials found.
                       </p>
                     )}

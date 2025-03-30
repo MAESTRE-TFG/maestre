@@ -147,3 +147,82 @@ class DocumentViewSet(viewsets.ModelViewSet):
         
         except Exception as e:
             return Response({'error': str(e)}, status=500)
+
+
+    @action(detail=False, methods=['post'], url_path='extract-text-from-url')
+    def extract_text_from_url(self, request):
+        """Extract text from a DOCX file URL."""
+        file_url = request.data.get('file_url')
+        material_id = request.data.get('material_id')
+        
+        if not file_url and not material_id:
+            return Response({"error": "No file URL or material ID provided"}, 
+                           status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            # Get the document directly by ID if provided
+            if material_id:
+                document = Document.objects.get(id=material_id)
+            else:
+                # Try to extract document ID from URL
+                # This is a fallback method and might need adjustment
+                try:
+                    # Handle different URL formats
+                    if '/' in file_url:
+                        # Extract the last part of the URL path
+                        path_parts = file_url.split('/')
+                        filename = path_parts[-1]
+                        # Remove file extension if present
+                        if '.' in filename:
+                            document_id = filename.split('.')[0]
+                        else:
+                            document_id = filename
+                    else:
+                        document_id = file_url
+                        
+                    # Try to convert to integer if it's numeric
+                    try:
+                        document_id = int(document_id)
+                    except ValueError:
+                        pass
+                        
+                    document = Document.objects.get(id=document_id)
+                except Exception as e:
+                    return Response({"error": f"Could not extract document ID from URL: {str(e)}"}, 
+                                   status=status.HTTP_400_BAD_REQUEST)
+            
+            # Check if the user has access to this document
+            if document.classroom.creator != request.user:
+                return Response({"error": "You don't have permission to access this file"}, 
+                              status=status.HTTP_403_FORBIDDEN)
+            
+            # Check if it's a DOCX file
+            if not document.file.name.lower().endswith('.docx'):
+                return Response({"error": "Only DOCX files are supported"}, 
+                              status=status.HTTP_400_BAD_REQUEST)
+            
+            # Get the file path
+            file_path = document.file.path
+            
+            # Extract text from DOCX
+            doc = docx.Document(file_path)
+            full_text = []
+            
+            # Extract text from paragraphs
+            for para in doc.paragraphs:
+                if para.text:
+                    full_text.append(para.text)
+                
+            # Also extract text from tables
+            for table in doc.tables:
+                for row in table.rows:
+                    for cell in row.cells:
+                        if cell.text:
+                            full_text.append(cell.text)
+            
+            return Response({"text": "\n".join(full_text)})
+        
+        except Document.DoesNotExist:
+            return Response({"error": "Document not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
