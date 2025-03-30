@@ -1,11 +1,12 @@
 'use client'
+
 import { useEffect, useState } from 'react'
+import { getApiBaseUrl } from "@/lib/api";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 import { useParams } from 'next/navigation';
 const axios = require('axios');
-import { FileUploadDemo } from '@/components/file-upload-demo';
 import { MaterialsPage } from "@/components/materials-page";
 
 const ClassroomPage = () => {
@@ -37,7 +38,7 @@ const ClassroomPage = () => {
   useEffect(() => {
     const fetchClassroom = async () => {
       try {        
-        const response = await axios.get(`http://localhost:8000/api/classrooms/${params.id}`, {
+        const response = await axios.get(`${getApiBaseUrl()}/api/classrooms/${params.id}`, {
           headers: {
             Authorization: `Token ${localStorage.getItem("authToken")}`,
           },
@@ -58,7 +59,7 @@ const ClassroomPage = () => {
       
       try {
         // Use the standard list endpoint with a filter parameter
-        const response = await axios.get(`http://localhost:8000/api/students/`, {
+        const response = await axios.get(`${getApiBaseUrl()}/api/students/`, {
           params: {
             classroom_id: params.id  // Filter by classroom ID
           },
@@ -79,7 +80,7 @@ const ClassroomPage = () => {
 
   const handleDelete = async (student) => {
     try {
-      await axios.delete(`http://localhost:8000/api/students/${student.id}/`, {
+      await axios.delete(`${getApiBaseUrl()}/api/students/${student.id}/`, {
         headers: {
           Authorization: `Token ${localStorage.getItem("authToken")}`,
         }
@@ -95,7 +96,7 @@ const ClassroomPage = () => {
     setIsSubmitting(true);
     
     try {
-      await axios.put(`http://localhost:8000/api/students/${student.id}/`, {
+      await axios.put(`${getApiBaseUrl()}/api/students/${student.id}/`, {
         name: studentName,
         surname: studentSurname,
         classroom: params.id
@@ -130,7 +131,7 @@ const ClassroomPage = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post('http://localhost:8000/api/students/', {
+      const response = await axios.post(`${getApiBaseUrl()}/api/students/`, {
         name: studentName,
         surname: studentSurname,
         classroom_id: params.id

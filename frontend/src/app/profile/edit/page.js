@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect, useMemo, useCallback, use } from "react";
+import { getApiBaseUrl } from "@/lib/api";
+import { useState, useEffect, useMemo, useCallbacke } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
@@ -72,7 +73,7 @@ const ProfileEdit = () => {
     const getSchools = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/schools/?city=${formData.city}`,
+          `${getApiBaseUrl()}/api/schools/?city=${formData.city}`,
           {
             headers: {
               Authorization: `Token ${localStorage.getItem("authToken")}`,
@@ -94,7 +95,7 @@ const ProfileEdit = () => {
     const getSchoolById = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:8000/api/schools/${formData.school}/`,
+          `${getApiBaseUrl()}/api/schools/${formData.school}/`,
           {
             headers: {
               Authorization: `Token ${localStorage.getItem("authToken")}`,
@@ -124,7 +125,7 @@ const ProfileEdit = () => {
   const fetchSchools = useCallback(async (city) => {
     try {
       const response = await axios.get(
-        `http://localhost:8000/api/schools/?city=${city}`,
+        `${getApiBaseUrl()}/api/schools/?city=${city}`,
         {
           headers: {
             Authorization: `Token ${localStorage.getItem("authToken")}`,
@@ -160,7 +161,7 @@ const ProfileEdit = () => {
     }
     try {
       const response = await axios.put(
-        `http://localhost:8000/api/users/${user.id}/update/`,
+        `${getApiBaseUrl()}/api/users/${user.id}/update/`,
         updatePayload,
         {
           headers: {
@@ -197,7 +198,7 @@ const ProfileEdit = () => {
     if (usernameInput === user.username) {
       try {
         await axios.delete(
-          `http://localhost:8000/api/users/${user.id}/delete/`,
+          `${getApiBaseUrl()}/api/users/${user.id}/delete/`,
           {
             headers: {
               Authorization: `Token ${localStorage.getItem("authToken")}`,

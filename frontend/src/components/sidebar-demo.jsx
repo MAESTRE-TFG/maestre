@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { getApiBaseUrl } from "@/lib/api";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import {
   IconArrowLeft,
@@ -34,7 +35,7 @@ export function SidebarDemo({ ContentComponent }) {
   const handleSignout = async () => {
     console.log('Signing out...');
     try {
-      await axios.post('http://localhost:8000/api/users/signout/', {}, {
+      await axios.post(`${getApiBaseUrl()}/api/users/signout/`, {}, {
         headers: {
           'Authorization': `Token ${localStorage.getItem('authToken')}`
         }
@@ -197,7 +198,7 @@ export function SidebarDemo({ ContentComponent }) {
           </div>
         </SidebarBody>
       </Sidebar>
-      <div className="flex-1 flex justify-center items-start overflow-y-auto pt-8">
+      <div className="flex-1 flex justify-center items-start overflow-y-auto">
         <ContentComponent />
       </div>
       <Modal isOpen={isLogoutModalOpen} onClose={closeLogoutModal} title="Confirm Logout" style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect } from 'react';
+import { getApiBaseUrl } from "@/lib/api";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import axios from 'axios';
@@ -70,7 +71,7 @@ export function MaterialsPage({ classroomId }) {
       }
 
       const response = await axios.patch(
-        `http://localhost:8000/api/materials/${fileToEdit.id}/`,
+        `${getApiBaseUrl()}/api/materials/${fileToEdit.id}/`,
         { name: updatedFileName },
         {
           headers: {
@@ -100,7 +101,7 @@ export function MaterialsPage({ classroomId }) {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8000/api/materials/${fileToDelete.id}/`, {
+      await axios.delete(`${getApiBaseUrl()}i/materials/${fileToDelete.id}/`, {
         headers: {
           'Authorization': `Token ${localStorage.getItem("authToken")}`,
         }
@@ -137,7 +138,7 @@ export function MaterialsPage({ classroomId }) {
       };
 
       if (selectedTags.length > 0) {
-        const response = await axios.get('http://localhost:8000/api/tags/filtered_documents/', {
+        const response = await axios.get(`${getApiBaseUrl()}/api/tags/filtered_documents/`, {
           params: {
             tags: selectedTags,
             classroom_id: classroomId
@@ -151,7 +152,7 @@ export function MaterialsPage({ classroomId }) {
         });
         setMaterials(response.data);
       } else {
-        const response = await axios.get('http://localhost:8000/api/materials/', {
+        const response = await axios.get('${getApiBaseUrl()}/api/materials/', {
           params,
           headers: {
             Authorization: `Token ${localStorage.getItem('authToken')}`
@@ -166,7 +167,7 @@ export function MaterialsPage({ classroomId }) {
 
   const fetchTags = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/tags/user_tags/', {
+      const response = await axios.get('${getApiBaseUrl()}/api/tags/user_tags/', {
         headers: {
           Authorization: `Token ${localStorage.getItem('authToken')}`
         }
@@ -183,7 +184,7 @@ export function MaterialsPage({ classroomId }) {
     setError(null);
 
     try {
-      const response = await axios.post('http://localhost:8000/api/tags/', {
+      const response = await axios.post('${getApiBaseUrl()}/api/tags/', {
         name: newTagName,
         color: selectedColor
       }, {
@@ -236,7 +237,7 @@ export function MaterialsPage({ classroomId }) {
   const handleUpdateMaterialTags = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:8000/api/materials/${editingMaterial.id}/`,
+        `${getApiBaseUrl()}/api/materials/${editingMaterial.id}/`,
         {
           tag_ids: selectedMaterialTags  // Changed from tags to tag_ids to match serializer
         },
@@ -265,7 +266,7 @@ export function MaterialsPage({ classroomId }) {
 
   const handleDeleteTag = async (tagId) => {
     try {
-      await axios.delete(`http://localhost:8000/api/tags/${tagId}/`, {
+      await axios.delete(`${getApiBaseUrl()}/api/tags/${tagId}/`, {
         headers: {
           Authorization: `Token ${localStorage.getItem('authToken')}`
         }
@@ -654,7 +655,7 @@ export function MaterialsPage({ classroomId }) {
                                   e.stopPropagation();
                                   const fileUrl = material.file.startsWith('http')
                                     ? material.file
-                                    : `http://localhost:8000${material.file}`;
+                                    : `${getApiBaseUrl()}${material.file}`;
                                   window.open(fileUrl, '_blank');
                                 }}
                                 className="p-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"

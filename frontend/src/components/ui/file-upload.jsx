@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import React, { useRef, useState, useEffect } from "react";
+import { getApiBaseUrl } from "@/lib/api";
 import { motion } from "framer-motion";
 import { IconUpload } from "@tabler/icons-react";
 import { useDropzone } from "react-dropzone";
@@ -83,7 +84,7 @@ export const FileUpload = ({
         updatedFileName = `${nameWithoutExtension}.${originalExtension}`;
       }
 
-      const response = await axios.patch(`http://localhost:8000/api/materials/${fileToEdit.id}/`,
+      const response = await axios.patch(`${getApiBaseUrl()}/api/materials/${fileToEdit.id}/`,
         { name: updatedFileName },
         {
           headers: {
@@ -130,7 +131,7 @@ export const FileUpload = ({
         if (file.file && typeof file.file === 'string') {
           const fileUrl = file.file.startsWith('http')
             ? file.file
-            : `http://localhost:8000${file.file}`;
+            : `${getApiBaseUrl()}${file.file}`;
           const size = await getFileSize(fileUrl);
           if (size) {
             sizes[file.id] = size;
@@ -149,7 +150,7 @@ export const FileUpload = ({
   useEffect(() => {
     const fetchFiles = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/materials/', {
+        const response = await axios.get(`${getApiBaseUrl()}/api/materials/`, {
           params: { classroom_id: classroomId },
           headers: {
             'Authorization': `Token ${localStorage.getItem("authToken")}`,
@@ -175,7 +176,7 @@ export const FileUpload = ({
       formData.append('file', file);
       formData.append('classroom', classroomId);
 
-      await axios.post('http://localhost:8000/api/materials/', formData, {
+      await axios.post('${getApiBaseUrl()}/api/materials/', formData, {
         headers: {
           'Authorization': `Token ${localStorage.getItem("authToken")}`,
           'Content-Type': 'multipart/form-data',

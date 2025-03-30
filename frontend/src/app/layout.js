@@ -2,7 +2,7 @@
 
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { usePathname } from "next/navigation";
+import { getApiBaseUrl } from "@/lib/api";
 import { Alfa_Slab_One } from 'next/font/google';
 import { ThemeProvider } from "@/components/theme-provider";
 

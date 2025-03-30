@@ -1,9 +1,7 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { useTheme } from "@/components/theme-provider";
-
 import { AIToolsCards } from "@/components/ai-tools-cards";
 
 const ToolList = () => {
@@ -11,7 +9,6 @@ const ToolList = () => {
 
   return (
     <div className="min-h-screen pt-24 px-8">
-      <div className="relative my-8" style={{ height: "650px" }}></div>
 
       {/* Header Section */}
       <div className="w-full text-center mb-12">
@@ -24,9 +21,7 @@ const ToolList = () => {
       </div>
 
       {/* Tools Section */}
-      <div className="w-full max-w-7xl mx-auto">
-        <AIToolsCards />
-      </div>
+      <AIToolsCards />
 
       <div className="my-28"></div>
 
