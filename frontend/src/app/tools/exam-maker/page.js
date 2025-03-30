@@ -1027,15 +1027,28 @@ If any information is missing, note it clearly rather than inventing details.
                     "p-3 rounded-md",
                     theme === "dark" ? "bg-zinc-800" : "bg-gray-100"
                   )}>
-                    <h4 className="font-medium mb-2">Uploaded File:</h4>
+                    <h4 className={cn("font-medium mb-2", theme === "dark" ? "text-white" : "text-black")}>Uploaded File:</h4>
                     <ul className="space-y-2">
                       {uploadedFiles.map(file => (
                         <li key={file.id} className="flex items-center justify-between">
                           <div className="flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                            <svg 
+                              xmlns="http://www.w3.org/2000/svg" 
+                              className={cn(
+                                "h-5 w-5 mr-2",
+                                theme === "dark" ? "stroke-white" : "stroke-black"
+                              )} 
+                              fill="none" 
+                              viewBox="0 0 24 24"
+                            >
+                              <path 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round" 
+                                strokeWidth={2} 
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" 
+                              />
                             </svg>
-                            <span>{file.name}</span>
+                            <span className={theme === "dark" ? "text-white" : "text-black"}>{file.name}</span>
                           </div>
                           <button
                             onClick={() => removeUploadedFile(file.id)}
@@ -1044,9 +1057,22 @@ If any information is missing, note it clearly rather than inventing details.
                               theme === "dark" ? "hover:bg-zinc-700" : "hover:bg-gray-200"
                             )}
                           >
-                            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                            </svg>
+<svg 
+  xmlns="http://www.w3.org/2000/svg" 
+  className={cn(
+    "h-5 w-5",
+    theme === "dark" ? "stroke-white" : "stroke-black"
+  )} 
+  fill="none" 
+  viewBox="0 0 24 24"
+>
+  <path 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    strokeWidth={2} 
+    d="M6 18L18 6M6 6l12 12" 
+  />
+</svg>
                           </button>
                         </li>
                       ))}
