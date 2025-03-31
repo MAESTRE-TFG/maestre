@@ -104,7 +104,6 @@ const Home = () => {
       )}
 
       {/* Tools Carousel */}
-      <hr className="w-3/4 mx-auto" />
       <section className="py-16">
         <h2 className={`text-4xl font-bold text-center font-alfa-slab-one mb-8 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
           Explore our tools

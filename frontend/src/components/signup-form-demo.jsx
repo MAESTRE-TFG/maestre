@@ -48,6 +48,10 @@ export function SignupForm({ onSubmit }) {
           border-color: ${theme === "dark" ? "#888" : "#007bff"};
           box-shadow: 0 0 0 3px ${theme === "dark" ? "rgba(136, 136, 136, 0.5)" : "rgba(0, 123, 255, 0.25)"};
         }
+        select:hover {
+          background: ${theme === "dark" ? "#fff" : "#f9f9f9"};
+          color: ${theme === "dark" ? "#000" : "#000"};
+        }
         option {
           background: ${theme === "dark" ? "#333" : "#fff"};
           color: ${theme === "dark" ? "#fff" : "#000"};
@@ -57,25 +61,70 @@ export function SignupForm({ onSubmit }) {
         <div className="space-y-6 md:space-y-8">
           <LabelInputContainer>
             <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="firstname">📛 Name</Label>
-            <Input id="firstname" name="name" placeholder="Tyler" type="text" required value={formData.name} onChange={handleChange} />
+            <Input 
+              id="firstname" 
+              name="name" 
+              placeholder="Tyler" 
+              type="text" 
+              required 
+              value={formData.name} 
+              onChange={handleChange} 
+              className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
+            />
           </LabelInputContainer>
           <LabelInputContainer>
             <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="lastname">📝 Surname</Label>
-            <Input id="lastname" name="surname" placeholder="Durden" type="text" required value={formData.surname} onChange={handleChange} />
+            <Input 
+              id="lastname" 
+              name="surname" 
+              placeholder="Durden" 
+              type="text" 
+              required 
+              value={formData.surname} 
+              onChange={handleChange} 
+              className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
+            />
           </LabelInputContainer>
           <LabelInputContainer>
             <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="username">👤 Username</Label>
-            <Input id="username" name="username" placeholder="superprof01" type="text" required value={formData.username} onChange={handleChange} />
+            <Input 
+              id="username" 
+              name="username" 
+              placeholder="superprof01" 
+              type="text" 
+              required 
+              value={formData.username} 
+              onChange={handleChange} 
+              className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
+            />
           </LabelInputContainer>
         </div>
         <div className="space-y-6 md:space-y-8">
           <LabelInputContainer>
             <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="email">📧 Email</Label>
-            <Input id="email" name="email" placeholder="projectmayhem@fc.com" type="email" required value={formData.email} onChange={handleChange} />
+            <Input 
+              id="email" 
+              name="email" 
+              placeholder="projectmayhem@fc.com" 
+              type="email" 
+              required 
+              value={formData.email} 
+              onChange={handleChange} 
+              className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
+            />
           </LabelInputContainer>
           <LabelInputContainer>
             <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="password">🔒 Password</Label>
-            <Input id="password" name="password" placeholder="••••••••" type="password" required value={formData.password} onChange={handleChange} />
+            <Input 
+              id="password" 
+              name="password" 
+              placeholder="••••••••" 
+              type="password" 
+              required 
+              value={formData.password} 
+              onChange={handleChange} 
+              className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
+            />
           </LabelInputContainer>
         </div>
         <button

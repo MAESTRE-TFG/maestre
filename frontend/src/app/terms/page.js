@@ -86,57 +86,56 @@ export default function TermsPage() {
   // First useEffect for admin role check
   useEffect(() => {
     const checkUserRole = async () => {
+      const token = localStorage.getItem("authToken");
+      const user = localStorage.getItem("user");
+
+      if (!token || !user) {
+        console.log("No token or user found, setting admin to false");
+        setIsAdmin(false);
+        return;
+      }
+
       try {
-        const token = localStorage.getItem("token");
-        const user = localStorage.getItem('user');
-        if (!user) {
-          console.log("No user found, user not authenticated");
-          setIsAdmin(false);
+        const parsedUser = JSON.parse(user);
+        console.log("User data:", parsedUser);
+        if (parsedUser && parsedUser.is_staff === true) {
+          console.log("User is admin based on stored user data");
+          setIsAdmin(true);
+          setAdminUsername(parsedUser.username || parsedUser.email || "Admin User");
           return;
-        }        
-  
-        try {
-          const parsedUser = JSON.parse(user);
-          console.log("User data:", parsedUser);
-          if (parsedUser && parsedUser.is_staff === true) {
-            console.log("User is admin based on stored user data");
-            setIsAdmin(true);
-            setAdminUsername(parsedUser.username || parsedUser.email || "Admin User");
-            return;
-          }
-        } catch (parseErr) {
-          console.log("Could not parse user data:", parseErr);
         }
-        
-        // Fallback to API check
-        try {
-          const response = await axios.get(
-            `${getApiBaseUrl()}/api/terms/check_role/`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`,
-              },
-            }
-          );
-        
-          if (response.data && response.data.is_admin) {
-            console.log("User is admin based on API response");
-            setIsAdmin(true);
-            setAdminUsername(response.data.user_role === 'admin' ? "Admin User" : "User");
-          } else {
-            console.log("User is not admin based on API response");
-            setIsAdmin(false);
+      } catch (parseErr) {
+        console.log("Could not parse user data:", parseErr);
+      }
+
+      try {
+        const response = await axios.get(
+          `${getApiBaseUrl()}/api/users/check_role/`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           }
-        } catch (err) {
-          console.error("Error checking user role via API:", err);
+        );
+
+        if (response.data && response.data.is_admin) {
+          console.log("User is admin based on API response");
+          setIsAdmin(true);
+          setAdminUsername(response.data.user_role === "admin" ? "Admin User" : "User");
+        } else {
+          console.log("User is not admin based on API response");
           setIsAdmin(false);
         }
       } catch (err) {
-        console.error("Error in admin check process:", err);
+        if (err.response?.status === 401) {
+          console.error("Unauthorized: Token may be invalid or expired");
+          localStorage.removeItem("authToken"); // Clear invalid token
+        }
+        console.error("Error checking user role via API:", err);
         setIsAdmin(false);
       }
     };
-  
+
     if (typeof window !== "undefined") {
       checkUserRole();
     }
@@ -163,19 +162,19 @@ export default function TermsPage() {
   useEffect(() => {
     const fetchTerms = async () => {
       try {
-        const token = localStorage.getItem("token");
+        const token = localStorage.getItem("authToken");
 
         if (token) {
           try {
-            // Fix the API endpoint URL - it should match the router registration in urls.py
+            // Correct API endpoint
             const response = await axios.get(
-              `${getApiBaseUrl()}/api/terms/`,  // Changed from /api/terms/list/
+              `${getApiBaseUrl()}/api/terms/`, // Ensure this matches the backend configuration
               {
                 headers: { Authorization: `Bearer ${token}` },
                 timeout: 10000,
                 validateStatus: function (status) {
                   return status >= 200 && status < 500;
-                }
+                },
               }
             );
             if (response.data && response.data.length > 0) {
@@ -183,16 +182,22 @@ export default function TermsPage() {
               return;
             }
           } catch (authErr) {
-            console.log("Authenticated request failed:", authErr.response?.status || authErr.message);
+            console.error(
+              "Authenticated request failed:",
+              authErr.response?.status || authErr.message
+            );
             if (authErr.response?.status === 401) {
-              console.log("Authentication token may be expired");
+              console.warn("Authentication token may be expired. Clearing token.");
+              localStorage.removeItem("authToken"); // Clear invalid token
             }
           }
+        } else {
+          console.warn("No token found. Proceeding with public request.");
         }
 
         try {
           const publicResponse = await axios.get(
-            `${getApiBaseUrl()}/api/terms/list/`,
+            `${getApiBaseUrl()}/api/terms/`, // Adjusted to match the correct endpoint
             { timeout: 5000 }
           );
           if (publicResponse.data && publicResponse.data.length > 0) {
@@ -200,13 +205,13 @@ export default function TermsPage() {
             return;
           }
         } catch (publicErr) {
-          console.log("Public request also failed");
+          console.error("Public request failed:", publicErr.message);
           setNoTermsFound(true);
         }
 
         setNoTermsFound(true);
       } catch (err) {
-        console.error("Error fetching terms:", err);
+        console.error("Error fetching terms:", err.message);
         setNoTermsFound(true);
       } finally {
         setLoading(false);
@@ -285,7 +290,7 @@ export default function TermsPage() {
 
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("authToken");
       if (!token) {
         console.error("No token found, cannot save changes.");
         setLoading(false);
@@ -345,7 +350,7 @@ export default function TermsPage() {
   const handleDelete = async (id) => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("authToken");
       if (!token) {
         console.error("No token found, cannot delete term.");
         setLoading(false);
@@ -388,7 +393,6 @@ export default function TermsPage() {
   };
 
   const handleAddTerm = async () => {
-    // Modal error if fields are empty
     if (!newTermType || !newTermContent) {
       setModalError("Please complete all fields.");
       return;
@@ -396,7 +400,7 @@ export default function TermsPage() {
 
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("authToken");
       if (!token) {
         console.error("No token found, cannot add new term.");
         setLoading(false);
@@ -404,8 +408,7 @@ export default function TermsPage() {
       }
 
       const versionToUse = newTermVersion.trim() || "v1.0";
-    
-      // Get the title based on the term type
+
       let title = "";
       switch (newTermType) {
         case "terms":
@@ -422,14 +425,13 @@ export default function TermsPage() {
           break;
       }
 
-      // Update to match the serializer fields
       const response = await axios.post(
         `${getApiBaseUrl()}/api/terms/`,
         {
           content: newTermContent,
           version: versionToUse,
           tag: newTermType,
-          name: title // Add name field which is required by the serializer
+          name: title,
         },
         {
           headers: {
@@ -439,7 +441,6 @@ export default function TermsPage() {
         }
       );
 
-      // Create the icon based on the term type
       let icon = null;
       switch (newTermType) {
         case "terms":
@@ -475,21 +476,18 @@ export default function TermsPage() {
         return updated;
       });
 
-      // If we were in the "no terms" view, remove it
       setNoTermsFound(false);
-
-      // Close modal and reset
       setShowAddForm(false);
       setNewTermType("");
       setNewTermContent("");
       setNewTermVersion("");
       setLoading(false);
     } catch (err) {
-      console.error("Error adding term:", err.response?.data || err);
+      console.error("Error adding term:", err.response?.data || err.message || err);
       const errorMessage =
         err.response?.data?.detail ||
         err.response?.data?.tag?.[0] ||
-        "Error adding the term. Please try again.";
+        "An unexpected error occurred while adding the term. Please try again.";
       setModalError(errorMessage);
       setLoading(false);
     }
@@ -579,11 +577,18 @@ export default function TermsPage() {
             </p>
 
             {isAdmin && (
-              <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                <h3 className="text-lg font-semibold mb-4">Admin Panel</h3>
+              <div className={`mt-6 pt-6 border-t ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}`}>
+                <h3 className={`text-lg font-semibold mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+                  Admin Panel
+                </h3>
                 <button
                   onClick={() => setShowAddForm(true)}
-                  className="px-6 py-2 font-medium bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-xl flex items-center gap-2 mx-auto hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+                  className={`
+                    px-6 py-2 font-medium rounded-xl flex items-center gap-2 mx-auto transition-colors
+                    ${theme === 'dark' 
+                      ? 'bg-[#05AC9C] text-white hover:bg-[#048F83]' 
+                      : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}
+                  `}
                 >
                   <IconPlus className="h-5 w-5" />
                   Add New Term
@@ -594,17 +599,25 @@ export default function TermsPage() {
             {/* ------------- MODAL: ADD NEW TERM when there are none ------------- */}
             {showAddForm && (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-2xl w-full relative">
+                <div
+                  className={`
+                    p-6 rounded-lg shadow-lg max-w-2xl w-full relative
+                    ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-black'}
+                  `}
+                >
                   {/* Local modal error */}
                   {modalError && (
                     <div
                       className={`
-                        mb-4 text-center bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 p-4 rounded-md
+                        mb-4 text-center border p-4 rounded-md
+                        ${theme === 'dark' 
+                          ? 'bg-red-900/30 border-red-800 text-red-400' 
+                          : 'bg-red-50 border-red-200 text-red-600'}
                         transition-opacity duration-1000 ease-out
                         ${modalFadeOut ? "opacity-0" : "opacity-100"}
                       `}
                     >
-                      <p className="text-red-600 dark:text-red-400 font-semibold">{modalError}</p>
+                      <p className="font-semibold">{modalError}</p>
                     </div>
                   )}
 
@@ -615,7 +628,12 @@ export default function TermsPage() {
                     <select
                       value={newTermType}
                       onChange={(e) => setNewTermType(e.target.value)}
-                      className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md"
+                      className={`
+                        w-full p-2 border rounded-md
+                        ${theme === 'dark' 
+                          ? 'bg-gray-700 border-gray-600 text-white' 
+                          : 'bg-white border-gray-300 text-black'}
+                      `}
                     >
                       <option value="">Select a type</option>
                       <option value="terms">Terms of Use</option>
@@ -627,19 +645,50 @@ export default function TermsPage() {
 
                   <div className="mb-4">
                     <label className="block text-sm font-medium mb-1">Content</label>
-                    <textarea
-                      value={newTermContent}
-                      onChange={(e) => setNewTermContent(e.target.value)}
-                      className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md h-64"
-                      placeholder="Enter the HTML content of the term..."
-                    />
+                    <label
+                      htmlFor="file-upload"
+                      className={`
+                        flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer
+                        ${theme === 'dark' 
+                          ? 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600' 
+                          : 'bg-gray-50 border-gray-300 text-gray-500 hover:bg-gray-100'}
+                      `}
+                    >
+                      <input
+                        id="file-upload"
+                        type="file"
+                        accept=".md"
+                        onChange={(e) => {
+                          const file = e.target.files[0];
+                          if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (event) => {
+                              setNewTermContent(event.target.result);
+                            };
+                            reader.readAsText(file);
+                          }
+                        }}
+                        className="hidden"
+                      />
+                      <div className="text-center">
+                        <IconFileText className="h-8 w-8 mx-auto" />
+                        <p className="mt-2 text-sm font-medium">
+                          Drag and drop a .md file here, or click to select
+                        </p>
+                      </div>
+                    </label>
                   </div>
 
                   <div className="mb-4">
                     <label className="block text-sm font-medium mb-1">Version</label>
                     <input
                       type="text"
-                      className="w-full p-2 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 rounded-md"
+                      className={`
+                        w-full p-2 border rounded-md
+                        ${theme === 'dark' 
+                          ? 'bg-gray-700 border-gray-600 text-white' 
+                          : 'bg-white border-gray-300 text-black'}
+                      `}
                       placeholder='E.g. "v1.0"'
                       value={newTermVersion}
                       onChange={(e) => setNewTermVersion(e.target.value)}
@@ -649,14 +698,24 @@ export default function TermsPage() {
                   <div className="flex justify-end space-x-2">
                     <button
                       onClick={() => setShowAddForm(false)}
-                      className="px-6 py-2 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-medium rounded-xl transition-colors hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center gap-2"
+                      className={`
+                        px-6 py-2 font-medium rounded-xl flex items-center gap-2
+                        ${theme === 'dark' 
+                          ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
+                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}
+                      `}
                     >
                       <IconX className="h-5 w-5" />
                       Cancel
                     </button>
                     <button
                       onClick={handleAddTerm}
-                      className="px-6 py-2 bg-[#05AC9C] text-white font-medium rounded-xl transition-colors hover:bg-[#048F83] flex items-center gap-2"
+                      className={`
+                        px-6 py-2 font-medium rounded-xl flex items-center gap-2
+                        ${theme === 'dark' 
+                          ? 'bg-[#05AC9C] text-white hover:bg-[#048F83]' 
+                          : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}
+                      `}
                     >
                       <IconCheck className="h-5 w-5" />
                       Save
@@ -825,20 +884,33 @@ export default function TermsPage() {
           {/* Modal to view full document */}
           {activeTermId !== null && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col">
+              <div
+                className={`
+                  rounded-lg shadow-lg max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col
+                  ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-black'}
+                `}
+              >
                 {(() => {
                   const activeTerm = terms.find((term) => term.id === activeTermId);
                   if (!activeTerm) return null;
 
                   return (
                     <>
-                      <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                      <div
+                        className={`
+                          p-4 border-b flex justify-between items-center
+                          ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}
+                        `}
+                      >
                         <h3 className="text-lg font-semibold">
                           {activeTerm.title} - {activeTerm.version}
                         </h3>
                         <button
                           onClick={() => setActiveTermId(null)}
-                          className="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+                          className={`
+                            p-1 rounded-full
+                            ${theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-gray-200'}
+                          `}
                         >
                           <IconX size={20} />
                         </button>
@@ -855,29 +927,31 @@ export default function TermsPage() {
                         </div>
                       </div>
 
-                      <div className="p-4 border-t border-gray-200 dark:border-gray-700 flex justify-end">
+                      <div
+                        className={`
+                          p-4 border-t flex justify-end
+                          ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}
+                        `}
+                      >
                         <button
                           onClick={() => {
-                            // 1) Determine the PDF based on the term's "tag"
                             const pdfFile = getStaticPdfFilename(activeTerm.tag || "");
                             if (!pdfFile) {
-                              // In case there's no match
                               alert("No PDF exists for this type of term.");
                               return;
                             }
-
-                            // 2) Build the public URL (folder /public/pdfs/06_terms/)
                             const pdfUrl = `/pdfs/06_terms/${pdfFile}`;
-
-                            // 3) Create "invisible" link and force click to download
                             const link = document.createElement("a");
                             link.href = pdfUrl;
-                            link.download = pdfFile; // For the browser to download it directly
+                            link.download = pdfFile;
                             document.body.appendChild(link);
                             link.click();
                             document.body.removeChild(link);
                           }}
-                          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 flex items-center"
+                          className={`
+                            px-4 py-2 rounded-md flex items-center
+                            ${theme === 'dark' ? 'bg-blue-600 text-white hover:bg-blue-700' : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}
+                          `}
                         >
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -905,17 +979,25 @@ export default function TermsPage() {
 
           {showAddForm && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-              <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-2xl w-full relative">
+              <div
+                className={`
+                  p-6 rounded-lg shadow-lg max-w-2xl w-full relative
+                  ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-black'}
+                `}
+              >
                 {/* Error local del modal */}
                 {modalError && (
                   <div
                     className={`
-                      mb-4 text-center bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 p-4 rounded-md
+                      mb-4 text-center border p-4 rounded-md
+                      ${theme === 'dark' 
+                        ? 'bg-red-900/30 border-red-800 text-red-400' 
+                        : 'bg-red-50 border-red-200 text-red-600'}
                       transition-opacity duration-1000 ease-out
                       ${modalFadeOut ? "opacity-0" : "opacity-100"}
                     `}
                   >
-                    <p className="text-red-600 font-semibold">{modalError}</p>
+                    <p className="font-semibold">{modalError}</p>
                   </div>
                 )}
 
@@ -926,7 +1008,12 @@ export default function TermsPage() {
                   <select
                     value={newTermType}
                     onChange={(e) => setNewTermType(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-md"
+                    className={`
+                      w-full p-2 border rounded-md
+                      ${theme === 'dark' 
+                        ? 'bg-gray-700 border-gray-600 text-white' 
+                        : 'bg-white border-gray-300 text-black'}
+                    `}
                   >
                     <option value="">Select a term type</option>
                     {getAvailableTermTypes().map((type) => (
@@ -939,20 +1026,51 @@ export default function TermsPage() {
 
                 <div className="mb-4">
                   <label className="block text-sm font-medium mb-1">Content</label>
-                  <textarea
-                    value={newTermContent}
-                    onChange={(e) => setNewTermContent(e.target.value)}
-                    className="w-full p-2 border border-gray-300 rounded-md h-64"
-                    placeholder="Enter the content of the term in Markdown format..."
-                  />
+                  <label
+                    htmlFor="file-upload"
+                    className={`
+                      flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer
+                      ${theme === 'dark' 
+                        ? 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600' 
+                        : 'bg-gray-50 border-gray-300 text-gray-500 hover:bg-gray-100'}
+                    `}
+                  >
+                    <input
+                      id="file-upload"
+                      type="file"
+                      accept=".md"
+                      onChange={(e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onload = (event) => {
+                            setNewTermContent(event.target.result);
+                          };
+                          reader.readAsText(file);
+                        }
+                      }}
+                      className="hidden"
+                    />
+                    <div className="text-center">
+                      <IconFileText className="h-8 w-8 mx-auto" />
+                      <p className="mt-2 text-sm font-medium">
+                        Drag and drop a .md file here, or click to select
+                      </p>
+                    </div>
+                  </label>
                 </div>
 
                 <div className="mb-4">
                   <label className="block text-sm font-medium mb-1">Version</label>
                   <input
                     type="text"
-                    className="w-full p-2 border border-gray-300 rounded-md"
-                    placeholder='Ej: "v1.0"'
+                    className={`
+                      w-full p-2 border rounded-md
+                      ${theme === 'dark' 
+                        ? 'bg-gray-700 border-gray-600 text-white' 
+                        : 'bg-white border-gray-300 text-black'}
+                    `}
+                    placeholder='E.g. "v1.0"'
                     value={newTermVersion}
                     onChange={(e) => setNewTermVersion(e.target.value)}
                   />
@@ -961,14 +1079,24 @@ export default function TermsPage() {
                 <div className="flex justify-end space-x-2">
                   <button
                     onClick={() => setShowAddForm(false)}
-                    className="px-6 py-2 bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-medium rounded-xl transition-colors hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center gap-2"
+                    className={`
+                      px-6 py-2 font-medium rounded-xl flex items-center gap-2
+                      ${theme === 'dark' 
+                        ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
+                        : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}
+                    `}
                   >
                     <IconX className="h-5 w-5" />
                     Cancel
                   </button>
                   <button
                     onClick={handleAddTerm}
-                    className="px-6 py-2 bg-[#05AC9C] text-white font-medium rounded-xl transition-colors hover:bg-[#048F83] flex items-center gap-2"
+                    className={`
+                      px-6 py-2 font-medium rounded-xl flex items-center gap-2
+                      ${theme === 'dark' 
+                        ? 'bg-[#05AC9C] text-white hover:bg-[#048F83]' 
+                        : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}
+                    `}
                   >
                     <IconCheck className="h-5 w-5" />
                     Save
