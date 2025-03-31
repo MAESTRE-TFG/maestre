@@ -49,7 +49,6 @@ export default function TermsPage() {
 
   const [editMode, setEditMode] = useState(null);
   const [editContent, setEditContent] = useState("");
-  const [editVersion, setEditVersion] = useState("");
 
   const [showAddForm, setShowAddForm] = useState(false);
   const [newTermType, setNewTermType] = useState("");
@@ -71,6 +70,7 @@ export default function TermsPage() {
     }
   }, [error]);
 
+
   // -------------------- useEffect: Fade out for modal specific error --------------------
   useEffect(() => {
     if (modalError) {
@@ -83,6 +83,8 @@ export default function TermsPage() {
       };
     }
   }, [modalError]);
+
+
   // First useEffect for admin role check
   useEffect(() => {
     const checkUserRole = async () => {
@@ -97,9 +99,7 @@ export default function TermsPage() {
 
       try {
         const parsedUser = JSON.parse(user);
-        console.log("User data:", parsedUser);
-        if (parsedUser && parsedUser.is_staff === true) {
-          console.log("User is admin based on stored user data");
+        if (parsedUser && (parsedUser.is_staff === true || parsedUser.is_superuser === true)) {
           setIsAdmin(true);
           setAdminUsername(parsedUser.username || parsedUser.email || "Admin User");
           return;
@@ -129,7 +129,7 @@ export default function TermsPage() {
       } catch (err) {
         if (err.response?.status === 401) {
           console.error("Unauthorized: Token may be invalid or expired");
-          localStorage.removeItem("authToken"); // Clear invalid token
+          localStorage.removeItem("authToken");
         }
         console.error("Error checking user role via API:", err);
         setIsAdmin(false);
@@ -168,7 +168,7 @@ export default function TermsPage() {
           try {
             // Correct API endpoint
             const response = await axios.get(
-              `${getApiBaseUrl()}/api/terms/`, // Ensure this matches the backend configuration
+              `${getApiBaseUrl()}/api/terms/`,
               {
                 headers: { Authorization: `Bearer ${token}` },
                 timeout: 10000,
@@ -197,7 +197,7 @@ export default function TermsPage() {
 
         try {
           const publicResponse = await axios.get(
-            `${getApiBaseUrl()}/api/terms/`, // Adjusted to match the correct endpoint
+            `${getApiBaseUrl()}/api/terms/`,
             { timeout: 5000 }
           );
           if (publicResponse.data && publicResponse.data.length > 0) {
@@ -275,6 +275,12 @@ export default function TermsPage() {
     fetchTerms();
   }, []);
 
+    // -------------------- Skeleton --------------------
+    const TermSkeleton = () => (
+      <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100 animate-pulse" />
+    );
+  
+
   // -------------------- Handling term editing (uses global error) --------------------
   const handleEdit = (id, content, version) => {
     setEditMode(id);
@@ -283,65 +289,59 @@ export default function TermsPage() {
   };
 
   const handleSave = async (id) => {
-    if (!editContent.trim()) {
-      setError("Content cannot be empty. Please enter the term content.");
-      return;
-    }
-
     try {
       setLoading(true);
       const token = localStorage.getItem("authToken");
+      
       if (!token) {
-        console.error("No token found, cannot save changes.");
+        setError("Authentication required. Please log in to edit terms.");
         setLoading(false);
         return;
       }
 
-      const currentTerm = terms.find((term) => term.id === id);
-      let tag = "terms";
-      if (currentTerm) {
-        tag = currentTerm.tag;
-      }
-
-      // Update to match the serializer fields
-      const response = await axios.put(
+      // Update the term
+      await axios.patch(
         `${getApiBaseUrl()}/api/terms/${id}/`,
         {
           content: editContent,
           version: editVersion,
-          tag: tag,
-          name: currentTerm.title // Add name field which is required by the serializer
         },
         {
           headers: {
             Authorization: `Bearer ${token}`,
             "Content-Type": "application/json",
           },
-          timeout: 10000,
-          validateStatus: function (status) {
-            return status >= 200 && status < 500;
-          }
         }
       );
 
-      // Update the local state with the response data
-      setTerms((prev) =>
-        prev.map((term) =>
-          term.id === id
-            ? { 
-                ...term, 
-                content: editContent, 
-                version: editVersion
-              }
-            : term
-        )
-      );
+      // Update the local state
+      const updatedTerms = terms.map((term) => {
+        if (term.id === id) {
+          return {
+            ...term,
+            content: editContent,
+            version: editVersion,
+          };
+        }
+        return term;
+      });
 
+      setTerms(updatedTerms);
       setEditMode(null);
-      setLoading(false);
+      setEditContent("");
+      setEditVersion("");
+      
     } catch (err) {
-      console.error("Error updating term:", err.response?.data || err);
-      setError(err.response?.data?.detail || "Error updating the term. Please try again.");
+      console.error("Error updating term:", err);
+      
+      if (err.response?.status === 401) {
+        setError("Authentication error. Your session may have expired. Please log in again.");
+      } else if (err.response?.status === 403) {
+        setError("You don't have permission to edit this term.");
+      } else {
+        setError(err.response?.data?.detail || "Error updating the term. Please try again.");
+      }
+    } finally {
       setLoading(false);
     }
   };
@@ -349,30 +349,61 @@ export default function TermsPage() {
   // Delete term (uses global error)
   const handleDelete = async (id) => {
     try {
+      if (!confirm("Are you sure you want to delete this term?")) {
+        return;
+      }
       setLoading(true);
+      
+      // Get the token from localStorage
       const token = localStorage.getItem("authToken");
+      console.log("Token available:", token ? "Yes" : "No");
+      
       if (!token) {
-        console.error("No token found, cannot delete term.");
+        setError("Authentication required. Please log in to delete terms.");
         setLoading(false);
         return;
       }
 
-      await axios.delete(`${getApiBaseUrl()}/api/terms/${id}/`, {  // Changed from /api/terms/delete/${id}/
+      console.log(`Attempting to delete term with ID: ${id}`);
+      
+      // Make the delete request with proper authentication
+      const response = await axios({
+        method: 'DELETE',
+        url: `${getApiBaseUrl()}/api/terms/${id}/`,
         headers: {
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
         },
+        // Don't throw errors for non-2xx responses, handle them manually
+        validateStatus: function(status) {
+          return status < 500; // Only throw for server errors
+        }
       });
 
-      const updatedTerms = terms.filter((term) => term.id !== id);
-      setTerms(updatedTerms);
-
-      // If we delete everything and no terms remain, show the "no terms" view
-      if (updatedTerms.length === 0) {
-        setNoTermsFound(true);
+      console.log(`Delete response status: ${response.status}`);
+      
+      if (response.status >= 200 && response.status < 300) {
+        // Success - update the UI
+        const updatedTerms = terms.filter((term) => term.id !== id);
+        setTerms(updatedTerms);
+        
+        if (updatedTerms.length === 0) {
+          setNoTermsFound(true);
+        }
+      } else if (response.status === 401) {
+        // Authentication error
+        setError("Authentication error. Your session may have expired. Please log in again.");
+        localStorage.removeItem("authToken"); // Clear invalid token
+      } else if (response.status === 403) {
+        // Permission error
+        setError("You don't have permission to delete this term.");
+      } else {
+        // Other errors
+        setError(response.data?.detail || "Error deleting the term. Please try again.");
       }
     } catch (err) {
-      console.error("Error deleting term:", err.response?.data || err);
-      setError("Error deleting the term. Please try again.");
+      console.error("Error deleting term:", err);
+      setError("Network error. Please check your connection and try again.");
     } finally {
       setLoading(false);
     }
@@ -393,45 +424,44 @@ export default function TermsPage() {
   };
 
   const handleAddTerm = async () => {
-    if (!newTermType || !newTermContent) {
-      setModalError("Please complete all fields.");
-      return;
-    }
-
     try {
+      // Validate inputs
+      if (!newTermType) {
+        setModalError("Please select a term type");
+        return;
+      }
+      if (!newTermContent) {
+        setModalError("Please provide content for the term");
+        return;
+      }
+      if (!newTermVersion) {
+        setModalError("Please provide a version for the term");
+        return;
+      }
+
       setLoading(true);
+
+      // Get the term name based on the type
+      const termName = getAvailableTermTypes().find(
+        (type) => type.value === newTermType
+      )?.label || "Custom Term";
+
+      // Get token for authentication
       const token = localStorage.getItem("authToken");
       if (!token) {
-        console.error("No token found, cannot add new term.");
+        setModalError("Authentication required. Please log in to add terms.");
         setLoading(false);
         return;
       }
 
-      const versionToUse = newTermVersion.trim() || "v1.0";
-
-      let title = "";
-      switch (newTermType) {
-        case "terms":
-          title = "Terms of Use";
-          break;
-        case "cookies":
-          title = "Cookie Policy";
-          break;
-        case "privacy":
-          title = "Privacy Policy";
-          break;
-        case "license":
-          title = "Licenses";
-          break;
-      }
-
+      // Create the term
       const response = await axios.post(
         `${getApiBaseUrl()}/api/terms/`,
         {
-          content: newTermContent,
-          version: versionToUse,
+          name: termName,
           tag: newTermType,
-          name: title,
+          content: newTermContent,
+          version: newTermVersion,
         },
         {
           headers: {
@@ -441,78 +471,96 @@ export default function TermsPage() {
         }
       );
 
+      // Process the new term
+      const newTerm = response.data;
+      
+      // Create the icon based on the term type
       let icon = null;
       switch (newTermType) {
-        case "terms":
-          icon = <IconFileText className="h-6 w-6 text-green-600" />;
-          break;
         case "cookies":
           icon = <IconCookie className="h-6 w-6 text-amber-600" />;
           break;
-        case "privacy":
-          icon = <IconLock className="h-6 w-6 text-blue-600" />;
+        case "terms":
+          icon = <IconFileText className="h-6 w-6 text-green-600" />;
           break;
         case "license":
           icon = <IconFileText className="h-6 w-6 text-purple-600" />;
           break;
+        case "privacy":
+          icon = <IconLock className="h-6 w-6 text-blue-600" />;
+          break;
       }
 
-      const newTerm = {
-        id: response.data.id,
-        title,
-        content: newTermContent,
-        version: versionToUse,
-        icon,
-        tag: newTermType,
-      };
+      // Add the new term to the state
+      const updatedTerms = [
+        ...terms,
+        {
+          id: newTerm.id,
+          title: termName,
+          content: newTerm.content,
+          version: newTerm.version,
+          icon,
+          tag: newTerm.tag,
+        },
+      ];
 
-      setTerms((prev) => {
-        const updated = [...prev, newTerm];
-        updated.sort((a, b) => {
-          const orderA = POLICY_ORDER[a.tag] || 999;
-          const orderB = POLICY_ORDER[b.tag] || 999;
-          return orderA - orderB;
-        });
-        return updated;
+      // Sort terms by the predefined order
+      updatedTerms.sort((a, b) => {
+        const orderA = POLICY_ORDER[a.tag] || 999;
+        const orderB = POLICY_ORDER[b.tag] || 999;
+        return orderA - orderB;
       });
 
+      setTerms(updatedTerms);
       setNoTermsFound(false);
       setShowAddForm(false);
+      
+      // Reset form fields
       setNewTermType("");
       setNewTermContent("");
       setNewTermVersion("");
-      setLoading(false);
+      
     } catch (err) {
-      console.error("Error adding term:", err.response?.data || err.message || err);
-      const errorMessage =
-        err.response?.data?.detail ||
-        err.response?.data?.tag?.[0] ||
-        "An unexpected error occurred while adding the term. Please try again.";
-      setModalError(errorMessage);
+      console.error("Error adding term:", err);
+      
+      if (err.response?.status === 401) {
+        setModalError("Authentication error. Your session may have expired. Please log in again.");
+      } else if (err.response?.status === 403) {
+        setModalError("You don't have permission to add terms.");
+      } else if (err.response?.status === 400) {
+        // Handle validation errors from the backend
+        if (err.response.data.tag) {
+          setModalError(err.response.data.tag[0]);
+        } else {
+          setModalError(
+            err.response.data.detail || 
+            "Invalid data. Please check your inputs."
+          );
+        }
+      } else {
+        setModalError("Error adding the term. Please try again.");
+      }
+    } finally {
       setLoading(false);
     }
   };
 
-  // -------------------- Skeleton --------------------
-  const TermSkeleton = () => (
-    <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100 animate-pulse" />
-  );
 
-
-  function getStaticPdfFilename(tag) {
+  const getStaticPdfFilename = (tag) => {
     switch (tag) {
-      case "cookies":
-        return "1_cookies.pdf";
       case "terms":
-        return "2_terms.pdf";
+        return "terms_of_use.pdf";
+      case "cookies":
+        return "cookie_policy.pdf";
       case "privacy":
-        return "3_privacy.pdf";
+        return "privacy_policy.pdf";
       case "license":
-        return "4_license.pdf";
+        return "licenses.pdf";
       default:
-        return "";
+        return null;
     }
-  }
+  };
+
 
   // -------------------- Main Render --------------------
   return (

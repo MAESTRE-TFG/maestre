@@ -25,47 +25,87 @@ export function SidebarDemo({ ContentComponent }) {
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const openLogoutModal = () => setLogoutModalOpen(true);
   const closeLogoutModal = () => setLogoutModalOpen(false);
+  
+  // Improved user data handling
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    const checkUserData = () => {
+      try {
+        const storedUser = localStorage.getItem("user");
+        const token = localStorage.getItem("authToken");
+        
+        // Only set user if both user data and token exist
+        if (storedUser && token) {
+          setUser(JSON.parse(storedUser));
+        } else {
+          // Clear user state if either is missing
+          setUser(null);
+        }
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        setUser(null);
+      }
+    };
+    
+    // Check on initial load
+    checkUserData();
+    
+    // Add storage event listener to handle changes from other tabs
+    const handleStorageChange = (e) => {
+      if (e.key === "user" || e.key === "authToken") {
+        checkUserData();
+      }
+    };
+    
+    window.addEventListener("storage", handleStorageChange);
+    
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, []);
 
   const handleSignout = async () => {
     console.log('Signing out...');
     try {
-      await axios.post(`${getApiBaseUrl()}/api/users/signout/`, {}, {
-        headers: {
-          'Authorization': `Token ${localStorage.getItem('authToken')}`
+      const token = localStorage.getItem('authToken');
+      
+      if (token) {
+        try {
+          // Change the Authorization header format to match what your backend expects
+          await axios.post(`${getApiBaseUrl()}/api/users/signout/`, {}, {
+            headers: {
+              'Authorization': `Token ${token}`  // Changed from Bearer to Token
+            }
+          });
+          console.log('Successfully called signout API');
+        } catch (apiError) {
+          console.error('API error during signout:', apiError);
+          // Continue with local logout even if API call fails
         }
-      });
+      }
       
-      closeLogoutModal();
-      
+      // Always clear local storage and state
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
-      
       setUser(null);
+      closeLogoutModal();
       
+      // Use router.push in a safe way
       setTimeout(() => {
         router.push("/profile/signin");
       }, 100);
       
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        console.error('Invalid token:', error.response.data?.detail || 'No detail available');
-        
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('user');
-        setUser(null);
-        
-        setTimeout(() => {
-          router.push("/profile/signin");
-        }, 100);
-      } else {
-        console.error('Error Signing out:', error);
-      }
+      console.error('Error during signout process:', error);
+      
+      // Ensure we still clear data even if there's an error
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+      setUser(null);
+      closeLogoutModal();
+      
+      setTimeout(() => {
+        router.push("/profile/signin");
+      }, 100);
     }
   };
 

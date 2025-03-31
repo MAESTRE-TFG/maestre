@@ -1,7 +1,6 @@
 from rest_framework import filters, viewsets, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.decorators import action
 from .models import Terms
 from .serializers import TermsSerializer
 
@@ -18,25 +17,11 @@ class TermsViewSet(viewsets.ModelViewSet):
     search_fields = ['tag', 'name']
 
     def get_permissions(self):
-        if self.action in ['list', 'retrieve', 'check_admin_status']:
+        if self.action in ['list', 'retrieve']:
             permission_classes = [AllowAny]
         else:
             permission_classes = [IsAdmin]
         return [permission() for permission in permission_classes]
-
-    @action(detail=False, methods=['get'])
-    def check_admin_status(self, request):
-        is_admin = False
-        username = None
-
-        if request.user.is_authenticated:
-            is_admin = request.user.is_staff
-            username = request.user.username or request.user.email
-
-        return Response({
-            'is_admin': is_admin,
-            'username': username
-        })
 
     def get_queryset(self):
         queryset = super().get_queryset()
