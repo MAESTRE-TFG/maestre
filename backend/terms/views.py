@@ -33,10 +33,6 @@ class TermsViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
 
-    def perform_update(self, serializer):
-        # No need to override this method if it doesn't add functionality
-        serializer.save()
-
     def create(self, request, *args, **kwargs):
         # Handle the unique tag constraint at the API level
         tag = request.data.get('tag')

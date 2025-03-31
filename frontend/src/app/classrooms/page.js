@@ -67,7 +67,6 @@ const ClassroomsList = () => {
             >
               My Classes
             </h1>
-            <div className="h-12"></div>
             {classes.length > 0 && (
               <button
                 className={cn(
@@ -109,7 +108,6 @@ const ClassroomsList = () => {
         </>
       )}
       {/* End of Background Images */}
-      <div className="relative my-8" style={{ height: "250px" }}></div>
       <div className="relative xl:mx-auto xl:w-full xl:max-w-6xl">
         {classes.length === 0 ? (
           <div className="text-center">

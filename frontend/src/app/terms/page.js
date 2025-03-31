@@ -11,7 +11,6 @@ import {
   IconLock,
   IconRefresh,
   IconAlertCircle,
-  IconEdit,
   IconTrash,
   IconPlus,
   IconCheck,
@@ -34,7 +33,6 @@ export default function TermsPage() {
   const [loading, setLoading] = useState(true);
   const { theme } = useTheme();
 
-  // ----------- 1) Global error + fade (for editing, deleting, fetch, etc.) -----------
   const [error, setError] = useState(null);
   const [fadeOut, setFadeOut] = useState(false);
 
@@ -47,9 +45,6 @@ export default function TermsPage() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [adminUsername, setAdminUsername] = useState("");
 
-  const [editMode, setEditMode] = useState(null);
-  const [editContent, setEditContent] = useState("");
-
   const [showAddForm, setShowAddForm] = useState(false);
   const [newTermType, setNewTermType] = useState("");
   const [newTermContent, setNewTermContent] = useState("");
@@ -57,509 +52,283 @@ export default function TermsPage() {
 
   const [activeTermId, setActiveTermId] = useState(null);
 
-  // -------------------- useEffect: Fade out for global error --------------------
-  useEffect(() => {
-    if (error) {
-      setFadeOut(false);
-      const timerFade = setTimeout(() => setFadeOut(true), 3000);
-      const timerClear = setTimeout(() => setError(null), 4000);
-      return () => {
-        clearTimeout(timerFade);
-        clearTimeout(timerClear);
-      };
-    }
-  }, [error]);
 
+  // Add these function implementations right before your return statement
 
-  // -------------------- useEffect: Fade out for modal specific error --------------------
-  useEffect(() => {
-    if (modalError) {
-      setModalFadeOut(false); // Reset fade
-      const timerFade = setTimeout(() => setModalFadeOut(true), 3000);
-      const timerClear = setTimeout(() => setModalError(null), 4000);
-      return () => {
-        clearTimeout(timerFade);
-        clearTimeout(timerClear);
-      };
-    }
-  }, [modalError]);
-
-
-  // First useEffect for admin role check
-  useEffect(() => {
-    const checkUserRole = async () => {
-      const token = localStorage.getItem("authToken");
-      const user = localStorage.getItem("user");
-
-      if (!token || !user) {
-        console.log("No token or user found, setting admin to false");
-        setIsAdmin(false);
-        return;
-      }
-
-      try {
-        const parsedUser = JSON.parse(user);
-        if (parsedUser && (parsedUser.is_staff === true || parsedUser.is_superuser === true)) {
-          setIsAdmin(true);
-          setAdminUsername(parsedUser.username || parsedUser.email || "Admin User");
-          return;
-        }
-      } catch (parseErr) {
-        console.log("Could not parse user data:", parseErr);
-      }
-
-      try {
-        const response = await axios.get(
-          `${getApiBaseUrl()}/api/users/check_role/`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-
-        if (response.data && response.data.is_admin) {
-          console.log("User is admin based on API response");
-          setIsAdmin(true);
-          setAdminUsername(response.data.user_role === "admin" ? "Admin User" : "User");
-        } else {
-          console.log("User is not admin based on API response");
-          setIsAdmin(false);
-        }
-      } catch (err) {
-        if (err.response?.status === 401) {
-          console.error("Unauthorized: Token may be invalid or expired");
-          localStorage.removeItem("authToken");
-        }
-        console.error("Error checking user role via API:", err);
-        setIsAdmin(false);
-      }
-    };
-
-    if (typeof window !== "undefined") {
-      checkUserRole();
-    }
-  }, []);
-
-  // Add this useEffect right after the admin role check useEffect
-  useEffect(() => {
-    const openCookiesPolicy = () => {
-      const cookiesTerm = terms.find(term => term.tag === "cookies");
-      if (cookiesTerm) {
-        setActiveTermId(cookiesTerm.id);
-      }
-    };
-
-    if (typeof window !== 'undefined') {
-      const shouldOpenCookies = localStorage.getItem('open-cookies-policy');
-      if (shouldOpenCookies && terms.length > 0) {
-        openCookiesPolicy();
-        localStorage.removeItem('open-cookies-policy');
-      }
-    }
-  }, [terms]); // This will run whenever terms are loaded
-
-  useEffect(() => {
-    const fetchTerms = async () => {
-      try {
-        const token = localStorage.getItem("authToken");
-
-        if (token) {
-          try {
-            // Correct API endpoint
-            const response = await axios.get(
-              `${getApiBaseUrl()}/api/terms/`,
-              {
-                headers: { Authorization: `Bearer ${token}` },
-                timeout: 10000,
-                validateStatus: function (status) {
-                  return status >= 200 && status < 500;
-                },
-              }
-            );
-            if (response.data && response.data.length > 0) {
-              processTermsData(response.data);
-              return;
-            }
-          } catch (authErr) {
-            console.error(
-              "Authenticated request failed:",
-              authErr.response?.status || authErr.message
-            );
-            if (authErr.response?.status === 401) {
-              console.warn("Authentication token may be expired. Clearing token.");
-              localStorage.removeItem("authToken"); // Clear invalid token
-            }
-          }
-        } else {
-          console.warn("No token found. Proceeding with public request.");
-        }
-
-        try {
-          const publicResponse = await axios.get(
-            `${getApiBaseUrl()}/api/terms/`,
-            { timeout: 5000 }
-          );
-          if (publicResponse.data && publicResponse.data.length > 0) {
-            processTermsData(publicResponse.data);
-            return;
-          }
-        } catch (publicErr) {
-          console.error("Public request failed:", publicErr.message);
-          setNoTermsFound(true);
-        }
-
-        setNoTermsFound(true);
-      } catch (err) {
-        console.error("Error fetching terms:", err.message);
-        setNoTermsFound(true);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const processTermsData = (data) => {
-      const existingTerms = [];
-
-      const termsMap = {
-        terms: data.find((term) => term.tag === "terms"),
-        cookies: data.find((term) => term.tag === "cookies"),
-        privacy: data.find((term) => term.tag === "privacy"),
-        license: data.find((term) => term.tag === "license"),
-      };
-
-      Object.entries(termsMap).forEach(([tag, term]) => {
-        if (term) {
-          let title = "";
-          let icon = null;
-
-          switch (tag) {
-            case "cookies":
-              title = "Cookie Policy";
-              icon = <IconCookie className="h-6 w-6 text-amber-600" />;
-              break;
-            case "terms":
-              title = "Terms of Use";
-              icon = <IconFileText className="h-6 w-6 text-green-600" />;
-              break;
-            case "license":
-              title = "Licenses";
-              icon = <IconFileText className="h-6 w-6 text-purple-600" />;
-              break;
-            case "privacy":
-              title = "Privacy Policy";
-              icon = <IconLock className="h-6 w-6 text-blue-600" />;
-              break;
-          }
-
-          existingTerms.push({
-            id: term.id,
-            title,
-            content: term.content,
-            version: term.version,
-            icon,
-            tag,
-          });
-        }
-      });
-
-      existingTerms.sort((a, b) => {
-        const orderA = POLICY_ORDER[a.tag] || 999;
-        const orderB = POLICY_ORDER[b.tag] || 999;
-        return orderA - orderB;
-      });
-
-      setTerms(existingTerms);
-    };
-
-    fetchTerms();
-  }, []);
-
-    // -------------------- Skeleton --------------------
-    const TermSkeleton = () => (
-      <div className="flex flex-1 w-full h-full min-h-[6rem] rounded-xl bg-gradient-to-br from-neutral-200 dark:from-neutral-900 dark:to-neutral-800 to-neutral-100 animate-pulse" />
-    );
-  
-
-  // -------------------- Handling term editing (uses global error) --------------------
-  const handleEdit = (id, content, version) => {
-    setEditMode(id);
-    setEditContent(content);
-    setEditVersion(version);
-  };
-
-  const handleSave = async (id) => {
+// Function to fetch terms data
+useEffect(() => {
+  const fetchTerms = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("authToken");
+      const apiUrl = `${getApiBaseUrl()}/api/terms/`;
+      const response = await axios.get(apiUrl);
       
-      if (!token) {
-        setError("Authentication required. Please log in to edit terms.");
-        setLoading(false);
-        return;
-      }
-
-      // Update the term
-      await axios.patch(
-        `${getApiBaseUrl()}/api/terms/${id}/`,
-        {
-          content: editContent,
-          version: editVersion,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      // Update the local state
-      const updatedTerms = terms.map((term) => {
-        if (term.id === id) {
-          return {
-            ...term,
-            content: editContent,
-            version: editVersion,
-          };
-        }
-        return term;
-      });
-
-      setTerms(updatedTerms);
-      setEditMode(null);
-      setEditContent("");
-      setEditVersion("");
-      
-    } catch (err) {
-      console.error("Error updating term:", err);
-      
-      if (err.response?.status === 401) {
-        setError("Authentication error. Your session may have expired. Please log in again.");
-      } else if (err.response?.status === 403) {
-        setError("You don't have permission to edit this term.");
-      } else {
-        setError(err.response?.data?.detail || "Error updating the term. Please try again.");
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Delete term (uses global error)
-  const handleDelete = async (id) => {
-    try {
-      if (!confirm("Are you sure you want to delete this term?")) {
-        return;
-      }
-      setLoading(true);
-      
-      // Get the token from localStorage
-      const token = localStorage.getItem("authToken");
-      console.log("Token available:", token ? "Yes" : "No");
-      
-      if (!token) {
-        setError("Authentication required. Please log in to delete terms.");
-        setLoading(false);
-        return;
-      }
-
-      console.log(`Attempting to delete term with ID: ${id}`);
-      
-      // Make the delete request with proper authentication
-      const response = await axios({
-        method: 'DELETE',
-        url: `${getApiBaseUrl()}/api/terms/${id}/`,
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        // Don't throw errors for non-2xx responses, handle them manually
-        validateStatus: function(status) {
-          return status < 500; // Only throw for server errors
-        }
-      });
-
-      console.log(`Delete response status: ${response.status}`);
-      
-      if (response.status >= 200 && response.status < 300) {
-        // Success - update the UI
-        const updatedTerms = terms.filter((term) => term.id !== id);
-        setTerms(updatedTerms);
+      if (response.data && response.data.length > 0) {
+        // Map the data to include icons based on term tag
+        const mappedTerms = response.data.map(term => ({
+          ...term,
+          icon: getIconForTag(term.tag),
+          title: getTermTitle(term.tag)
+        }));
         
-        if (updatedTerms.length === 0) {
-          setNoTermsFound(true);
-        }
-      } else if (response.status === 401) {
-        // Authentication error
-        setError("Authentication error. Your session may have expired. Please log in again.");
-        localStorage.removeItem("authToken"); // Clear invalid token
-      } else if (response.status === 403) {
-        // Permission error
-        setError("You don't have permission to delete this term.");
+        // Sort by the predefined order
+        const sortedTerms = mappedTerms.sort((a, b) => {
+          return (POLICY_ORDER[a.tag] || 999) - (POLICY_ORDER[b.tag] || 999);
+        });
+        
+        setTerms(sortedTerms);
+        setNoTermsFound(false);
       } else {
-        // Other errors
-        setError(response.data?.detail || "Error deleting the term. Please try again.");
+        setNoTermsFound(true);
       }
-    } catch (err) {
-      console.error("Error deleting term:", err);
-      setError("Network error. Please check your connection and try again.");
+    } catch (error) {
+      console.error("Error fetching terms:", error);
+      setError("Failed to load terms. Please try again later.");
+      setNoTermsFound(true);
+      
+      // Fade out error after 5 seconds
+      setTimeout(() => {
+        setFadeOut(true);
+        setTimeout(() => {
+          setError(null);
+          setFadeOut(false);
+        }, 1000);
+      }, 5000);
     } finally {
       setLoading(false);
     }
   };
 
-  // -------------------- Handling adding new term (uses modal error) --------------------
-  const getAvailableTermTypes = () => {
-    const allTypes = [
-      { value: "terms", label: "Terms of Use" },
-      { value: "cookies", label: "Cookie Policy" },
-      { value: "privacy", label: "Privacy Policy" },
-      { value: "license", label: "Licenses" },
-    ];
-    const existingTypes = terms.map((term) => term.tag);
-
-    // Allow only one for each type that already exists
-    return allTypes.filter((type) => !existingTypes.includes(type.value));
-  };
-
-  const handleAddTerm = async () => {
+  // Check if user is admin
+  const checkAdminStatus = async () => {
+    const token = localStorage.getItem("authToken");
+    const user = localStorage.getItem("user");
     try {
-      // Validate inputs
-      if (!newTermType) {
-        setModalError("Please select a term type");
-        return;
-      }
-      if (!newTermContent) {
-        setModalError("Please provide content for the term");
-        return;
-      }
-      if (!newTermVersion) {
-        setModalError("Please provide a version for the term");
-        return;
-      }
-
-      setLoading(true);
-
-      // Get the term name based on the type
-      const termName = getAvailableTermTypes().find(
-        (type) => type.value === newTermType
-      )?.label || "Custom Term";
-
-      // Get token for authentication
-      const token = localStorage.getItem("authToken");
-      if (!token) {
-        setModalError("Authentication required. Please log in to add terms.");
-        setLoading(false);
-        return;
-      }
-
-      // Create the term
-      const response = await axios.post(
-        `${getApiBaseUrl()}/api/terms/`,
-        {
-          name: termName,
-          tag: newTermType,
-          content: newTermContent,
-          version: newTermVersion,
+      const response = await axios.get(`${getApiBaseUrl()}/api/users/check_role/`, {
+        headers: {
+          Authorization: `Token ${token}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      // Process the new term
-      const newTerm = response.data;
-      
-      // Create the icon based on the term type
-      let icon = null;
-      switch (newTermType) {
-        case "cookies":
-          icon = <IconCookie className="h-6 w-6 text-amber-600" />;
-          break;
-        case "terms":
-          icon = <IconFileText className="h-6 w-6 text-green-600" />;
-          break;
-        case "license":
-          icon = <IconFileText className="h-6 w-6 text-purple-600" />;
-          break;
-        case "privacy":
-          icon = <IconLock className="h-6 w-6 text-blue-600" />;
-          break;
-      }
-
-      // Add the new term to the state
-      const updatedTerms = [
-        ...terms,
-        {
-          id: newTerm.id,
-          title: termName,
-          content: newTerm.content,
-          version: newTerm.version,
-          icon,
-          tag: newTerm.tag,
-        },
-      ];
-
-      // Sort terms by the predefined order
-      updatedTerms.sort((a, b) => {
-        const orderA = POLICY_ORDER[a.tag] || 999;
-        const orderB = POLICY_ORDER[b.tag] || 999;
-        return orderA - orderB;
       });
-
-      setTerms(updatedTerms);
-      setNoTermsFound(false);
-      setShowAddForm(false);
-      
-      // Reset form fields
-      setNewTermType("");
-      setNewTermContent("");
-      setNewTermVersion("");
-      
-    } catch (err) {
-      console.error("Error adding term:", err);
-      
-      if (err.response?.status === 401) {
-        setModalError("Authentication error. Your session may have expired. Please log in again.");
-      } else if (err.response?.status === 403) {
-        setModalError("You don't have permission to add terms.");
-      } else if (err.response?.status === 400) {
-        // Handle validation errors from the backend
-        if (err.response.data.tag) {
-          setModalError(err.response.data.tag[0]);
-        } else {
-          setModalError(
-            err.response.data.detail || 
-            "Invalid data. Please check your inputs."
-          );
-        }
-      } else {
-        setModalError("Error adding the term. Please try again.");
+      if (response.data && (response.data.is_staff || response.data.is_superuser || response.data.is_admin)) {
+        setIsAdmin(true);
+        setAdminUsername(response.data.username);
       }
-    } finally {
-      setLoading(false);
+    } catch (error) {
+      console.error("Error checking admin status:", error);
     }
   };
+  
+  fetchTerms();
+  checkAdminStatus();
+}, []);
 
+// Get icon component based on term tag
+const getIconForTag = (tag) => {
+  switch (tag) {
+    case "cookies":
+      return <IconCookie className="h-4 w-4 text-neutral-500" />;
+    case "privacy":
+      return <IconLock className="h-4 w-4 text-neutral-500" />;
+    case "terms":
+      return <IconFileText className="h-4 w-4 text-neutral-500" />;
+    case "license":
+      return <IconFileText className="h-4 w-4 text-neutral-500" />;
+    default:
+      return <IconFileText className="h-4 w-4 text-neutral-500" />;
+  }
+};
 
-  const getStaticPdfFilename = (tag) => {
-    switch (tag) {
-      case "terms":
-        return "terms_of_use.pdf";
-      case "cookies":
-        return "cookie_policy.pdf";
-      case "privacy":
-        return "privacy_policy.pdf";
-      case "license":
-        return "licenses.pdf";
-      default:
-        return null;
+// Get human-readable title based on term tag
+const getTermTitle = (tag) => {
+  switch (tag) {
+    case "cookies":
+      return "Cookie Policy";
+    case "privacy":
+      return "Privacy Policy";
+    case "terms":
+      return "Terms of Use";
+    case "license":
+      return "Licenses";
+    default:
+      return "Document";
+  }
+};
+
+// Get available term types that haven't been created yet
+const getAvailableTermTypes = () => {
+  const existingTags = terms.map(term => term.tag);
+  const allTypes = [
+    { value: "cookies", label: "Cookie Policy" },
+    { value: "privacy", label: "Privacy Policy" },
+    { value: "terms", label: "Terms of Use" },
+    { value: "license", label: "Licenses" }
+  ];
+  
+  // If admin, show only types that don't exist yet
+  return allTypes.filter(type => !existingTags.includes(type.value));
+};
+
+// Get static PDF filename based on term tag
+const getStaticPdfFilename = (tag) => {
+  switch (tag) {
+    case "cookies":
+      return "cookie_policy.pdf";
+    case "privacy":
+      return "privacy_policy.pdf";
+    case "terms":
+      return "terms_of_use.pdf";
+    case "license":
+      return "licenses.pdf";
+    default:
+      return null;
+  }
+};
+
+// Handle delete button click
+// Add these state variables at the top with other state declarations
+const [showDeleteModal, setShowDeleteModal] = useState(false);
+const [termToDelete, setTermToDelete] = useState(null);
+
+// Replace the handleDelete function with this updated version
+const handleDelete = (id) => {
+  setTermToDelete(id);
+  setShowDeleteModal(true);
+};
+
+// Add this function to handle the actual deletion
+const confirmDelete = async () => {
+  if (!termToDelete) return;
+  
+  try {
+    const token = localStorage.getItem("authToken");
+    await axios.delete(`${getApiBaseUrl()}/api/terms/${termToDelete}/`, {
+      headers: {
+        Authorization: `Token ${token}`,
+      },
+      withCredentials: true
+    });
+    
+    // Update local state
+    setTerms(terms.filter(term => term.id !== termToDelete));
+    
+    // If no terms left, show no terms found
+    if (terms.length <= 1) {
+      setNoTermsFound(true);
     }
-  };
+    
+    // Close the modal
+    setShowDeleteModal(false);
+    setTermToDelete(null);
+  } catch (error) {
+    console.error("Error deleting term:", error);
+    setError("Failed to delete. Please try again later.");
+    
+    // Fade out error after 5 seconds
+    setTimeout(() => {
+      setFadeOut(true);
+      setTimeout(() => {
+        setError(null);
+        setFadeOut(false);
+      }, 1000);
+    }, 5000);
+  }
+};
+
+// Handle add term button click
+const handleAddTerm = async () => {
+  // Validate form
+  if (!newTermType) {
+    setModalError("Please select a term type");
+    handleModalErrorFade();
+    return;
+  }
+  
+  if (!newTermContent) {
+    setModalError("Please upload or enter content");
+    handleModalErrorFade();
+    return;
+  }
+  
+  if (!newTermVersion) {
+    setModalError("Please enter a version number");
+    handleModalErrorFade();
+    return;
+  }
+  
+  try {
+    const token = localStorage.getItem("authToken");
+    console.log("Submitting new term:", { 
+      tag: newTermType, 
+      content: newTermContent.substring(0, 50) + "...", 
+      version: newTermVersion 
+    });
+    
+    const response = await axios.post(
+      `${getApiBaseUrl()}/api/terms/`,
+      {
+        tag: newTermType,
+        content: newTermContent,
+        version: newTermVersion
+      },
+      {
+        headers: {
+          Authorization: `Token ${token}`,
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
+      }
+    );
+    
+    console.log("Term created successfully:", response.data);
+    
+    // Add the new term to local state
+    const newTerm = {
+      ...response.data,
+      icon: getIconForTag(response.data.tag),
+      title: getTermTitle(response.data.tag)
+    };
+    
+    setTerms([...terms, newTerm]);
+    setNoTermsFound(false);
+    
+    // Reset form and close modal
+    setNewTermType("");
+    setNewTermContent("");
+    setNewTermVersion("");
+    setShowAddForm(false);
+  } catch (error) {
+    console.error("Error adding term:", error);
+    console.error("Error response:", error.response?.data);
+    let errorMessage = "Failed to add term. Please try again later.";
+    
+    // Check for specific error messages from API
+    if (error.response && error.response.data) {
+      if (error.response.data.tag) {
+        errorMessage = error.response.data.tag[0];
+      } else if (error.response.data.content) {
+        errorMessage = error.response.data.content[0];
+      } else if (error.response.data.version) {
+        errorMessage = error.response.data.version[0];
+      } else if (typeof error.response.data === 'string') {
+        errorMessage = error.response.data;
+      }
+    }
+    
+    setModalError(errorMessage);
+    handleModalErrorFade();
+  }
+};
+
+// Handle modal error fade
+const handleModalErrorFade = () => {
+  setTimeout(() => {
+    setModalFadeOut(true);
+    setTimeout(() => {
+      setModalError(null);
+      setModalFadeOut(false);
+    }, 1000);
+  }, 5000);
+};
 
 
   // -------------------- Main Render --------------------
@@ -577,18 +346,6 @@ export default function TermsPage() {
         </p>
       </div>
 
-        {/* --------- GLOBAL ERROR (only for editing/deleting/fetch) --------- */}
-        {error && (
-          <div
-            className={`
-              mb-8 text-center bg-red-50 dark:bg-red-900/30 border border-red-200 dark:border-red-800 p-4 rounded-md 
-              transition-opacity duration-1000 ease-out 
-              ${fadeOut ? "opacity-0" : "opacity-100"}
-            `}
-          >
-            <p className="text-red-600 dark:text-red-400 font-semibold">{error}</p>
-          </div>
-        )}
 
         {loading ? (
           // -------- Loading skeleton --------
@@ -598,7 +355,6 @@ export default function TermsPage() {
               {[1, 2, 3, 4].map((item) => (
                 <BentoGridItem
                   key={item}
-                  header={<TermSkeleton />}
                   title="Loading..."
                   description="Please wait while we load the content."
                   icon={<IconRefresh className="h-4 w-4 text-neutral-500 animate-spin" />}
@@ -630,148 +386,15 @@ export default function TermsPage() {
                   Admin Panel
                 </h3>
                 <button
-                  onClick={() => setShowAddForm(true)}
-                  className={`
-                    px-6 py-2 font-medium rounded-xl flex items-center gap-2 mx-auto transition-colors
-                    ${theme === 'dark' 
-                      ? 'bg-[#05AC9C] text-white hover:bg-[#048F83]' 
-                      : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}
-                  `}
-                >
-                  <IconPlus className="h-5 w-5" />
-                  Add New Term
-                </button>
+                onClick={() => setShowAddForm(true)}
+                className="px-6 py-2 font-medium bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-xl flex items-center gap-2 mx-auto hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+              >
+                <IconPlus className="h-5 w-5" />
+                Add New Term
+              </button>
               </div>
             )}
 
-            {/* ------------- MODAL: ADD NEW TERM when there are none ------------- */}
-            {showAddForm && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <div
-                  className={`
-                    p-6 rounded-lg shadow-lg max-w-2xl w-full relative
-                    ${theme === 'dark' ? 'bg-gray-800 text-white' : 'bg-white text-black'}
-                  `}
-                >
-                  {/* Local modal error */}
-                  {modalError && (
-                    <div
-                      className={`
-                        mb-4 text-center border p-4 rounded-md
-                        ${theme === 'dark' 
-                          ? 'bg-red-900/30 border-red-800 text-red-400' 
-                          : 'bg-red-50 border-red-200 text-red-600'}
-                        transition-opacity duration-1000 ease-out
-                        ${modalFadeOut ? "opacity-0" : "opacity-100"}
-                      `}
-                    >
-                      <p className="font-semibold">{modalError}</p>
-                    </div>
-                  )}
-
-                  <h2 className="text-xl font-bold mb-4">Add New Term</h2>
-
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium mb-1">Term Type</label>
-                    <select
-                      value={newTermType}
-                      onChange={(e) => setNewTermType(e.target.value)}
-                      className={`
-                        w-full p-2 border rounded-md
-                        ${theme === 'dark' 
-                          ? 'bg-gray-700 border-gray-600 text-white' 
-                          : 'bg-white border-gray-300 text-black'}
-                      `}
-                    >
-                      <option value="">Select a type</option>
-                      <option value="terms">Terms of Use</option>
-                      <option value="cookies">Cookie Policy</option>
-                      <option value="privacy">Privacy Policy</option>
-                      <option value="license">Licenses</option>
-                    </select>
-                  </div>
-
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium mb-1">Content</label>
-                    <label
-                      htmlFor="file-upload"
-                      className={`
-                        flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer
-                        ${theme === 'dark' 
-                          ? 'bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600' 
-                          : 'bg-gray-50 border-gray-300 text-gray-500 hover:bg-gray-100'}
-                      `}
-                    >
-                      <input
-                        id="file-upload"
-                        type="file"
-                        accept=".md"
-                        onChange={(e) => {
-                          const file = e.target.files[0];
-                          if (file) {
-                            const reader = new FileReader();
-                            reader.onload = (event) => {
-                              setNewTermContent(event.target.result);
-                            };
-                            reader.readAsText(file);
-                          }
-                        }}
-                        className="hidden"
-                      />
-                      <div className="text-center">
-                        <IconFileText className="h-8 w-8 mx-auto" />
-                        <p className="mt-2 text-sm font-medium">
-                          Drag and drop a .md file here, or click to select
-                        </p>
-                      </div>
-                    </label>
-                  </div>
-
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium mb-1">Version</label>
-                    <input
-                      type="text"
-                      className={`
-                        w-full p-2 border rounded-md
-                        ${theme === 'dark' 
-                          ? 'bg-gray-700 border-gray-600 text-white' 
-                          : 'bg-white border-gray-300 text-black'}
-                      `}
-                      placeholder='E.g. "v1.0"'
-                      value={newTermVersion}
-                      onChange={(e) => setNewTermVersion(e.target.value)}
-                    />
-                  </div>
-
-                  <div className="flex justify-end space-x-2">
-                    <button
-                      onClick={() => setShowAddForm(false)}
-                      className={`
-                        px-6 py-2 font-medium rounded-xl flex items-center gap-2
-                        ${theme === 'dark' 
-                          ? 'bg-gray-700 text-gray-300 hover:bg-gray-600' 
-                          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}
-                      `}
-                    >
-                      <IconX className="h-5 w-5" />
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handleAddTerm}
-                      className={`
-                        px-6 py-2 font-medium rounded-xl flex items-center gap-2
-                        ${theme === 'dark' 
-                          ? 'bg-[#05AC9C] text-white hover:bg-[#048F83]' 
-                          : 'bg-blue-100 text-blue-700 hover:bg-blue-200'}
-                      `}
-                    >
-                      <IconCheck className="h-5 w-5" />
-                      Save
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
         </div>
       ) : (
         // -------- Terms exist (normal view) --------
@@ -824,31 +447,6 @@ export default function TermsPage() {
                     </div>
                   }
                   description={
-                    editMode === term.id ? (
-                      // -------- Edit mode (inline) --------
-                      <div className="space-y-4">
-                        <textarea
-                          value={editContent}
-                          onChange={(e) => setEditContent(e.target.value)}
-                          className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md h-64 text-sm font-mono"
-                          placeholder="Write content in Markdown format..."
-                        />
-                        <div className="flex justify-end space-x-2">
-                          <button
-                            onClick={() => setEditMode(null)}
-                            className="p-2 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300 rounded-full hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
-                          >
-                            <IconX size={16} />
-                          </button>
-                          <button
-                            onClick={() => handleSave(term.id)}
-                            className="p-2 bg-[#05AC9C] text-white rounded-full hover:bg-[#048F83] transition-colors"
-                          >
-                            <IconCheck size={16} />
-                          </button>
-                        </div>
-                      </div>
-                    ) : (
                       // -------- View mode --------
                       <div className="text-sm">
                         <div className="prose dark:prose-invert prose-sm">
@@ -871,14 +469,6 @@ export default function TermsPage() {
                           {isAdmin && (
                           <div className="flex space-x-2">
                           <button
-                          onClick={() =>
-                          handleEdit(term.id, term.content, term.version)
-                          }
-                          className="p-2 bg-[#05AC9C] text-white rounded-full hover:bg-[#048F83] transition-colors"
-                          >
-                          <IconEdit size={16} />
-                          </button>
-                          <button
                           onClick={() => handleDelete(term.id)}
                           className="p-2 bg-[#FF6B6B] text-white rounded-full hover:bg-[#FF5252] transition-colors"
                           >
@@ -888,7 +478,6 @@ export default function TermsPage() {
                           )}
                         </div>
                       </div>
-                    )
                   }
                   icon={term.icon}
                   className={
@@ -1086,7 +675,7 @@ export default function TermsPage() {
                     <input
                       id="file-upload"
                       type="file"
-                      accept=".md"
+                      accept=".md,.txt"
                       onChange={(e) => {
                         const file = e.target.files[0];
                         if (file) {
@@ -1102,10 +691,45 @@ export default function TermsPage() {
                     <div className="text-center">
                       <IconFileText className="h-8 w-8 mx-auto" />
                       <p className="mt-2 text-sm font-medium">
-                        Drag and drop a .md file here, or click to select
+                        Drag and drop a .md or .txt file here, or click to select
                       </p>
                     </div>
                   </label>
+                  
+                  {newTermContent && (
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium mb-1">Content Preview</label>
+                      <textarea
+                        value={newTermContent}
+                        onChange={(e) => setNewTermContent(e.target.value)}
+                        className={`
+                          w-full p-2 border rounded-md h-64 text-sm font-mono
+                          ${theme === 'dark' 
+                            ? 'bg-gray-700 border-gray-600 text-white' 
+                            : 'bg-white border-gray-300 text-black'}
+                        `}
+                        placeholder="Content will appear here after file upload, or you can type directly"
+                      />
+                    </div>
+                  )}
+                  
+                  {/* Add option to enter content manually if no file is uploaded */}
+                  {!newTermContent && (
+                    <div className="mt-4">
+                      <p className="text-sm text-center mb-2">Or enter content manually:</p>
+                      <textarea
+                        value={newTermContent}
+                        onChange={(e) => setNewTermContent(e.target.value)}
+                        className={`
+                          w-full p-2 border rounded-md h-64 text-sm font-mono
+                          ${theme === 'dark' 
+                            ? 'bg-gray-700 border-gray-600 text-white' 
+                            : 'bg-white border-gray-300 text-black'}
+                        `}
+                        placeholder="Enter markdown content here..."
+                      />
+                    </div>
+                  )}
                 </div>
 
                 <div className="mb-4">
@@ -1163,6 +787,51 @@ export default function TermsPage() {
           </div>
         </>
       )}
+
+        {showDeleteModal && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div className={`
+                p-6 rounded-lg shadow-lg max-w-md w-full
+                ${theme === 'dark' ? "bg-gray-800 text-white" : "bg-white text-black"}
+              `}>
+                <h3 className="text-xl font-bold mb-4">Confirm Deletion</h3>
+                <p className={`
+                  mb-6
+                  ${theme === 'dark' ? "text-gray-300" : "text-gray-600"}
+                `}>
+                  Are you sure you want to delete this document? This action cannot be undone.
+                </p>
+                <div className="flex justify-end space-x-3">
+                  <button
+                    onClick={() => {
+                      setShowDeleteModal(false);
+                      setTermToDelete(null);
+                    }}
+                    className={`
+                      px-4 py-2 rounded-md
+                      ${theme === 'dark' 
+                        ? "bg-gray-700 text-gray-300 hover:bg-gray-600" 
+                        : "bg-gray-100 text-gray-600 hover:bg-gray-200"}
+                    `}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={confirmDelete}
+                    className={`
+                      px-4 py-2 rounded-md
+                      ${theme === 'dark' 
+                        ? "bg-red-600 text-white hover:bg-red-700" 
+                        : "bg-red-500 text-white hover:bg-red-600"}
+                    `}
+                  >
+                    Delete
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
     </div>
     } />
   );

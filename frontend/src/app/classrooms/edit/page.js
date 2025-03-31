@@ -244,10 +244,7 @@ const ClassroomEdit = () => {
         </>
       )}
       {/* End of Background Images */}
-      <div className="relative z-10 my-12"></div>
-      <br></br>
       <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-full">
-        <div className="h-12"></div>
         <h1
           className={cn(
             "mt-6 text-center text-3xl font-extrabold text-zinc-100",
