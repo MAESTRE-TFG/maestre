@@ -189,9 +189,12 @@ export default function TermsPage() {
       { value: "license", label: "Licenses" },
     ];
 
-    // If admin, show only types that don't exist yet
+    // Show only types that don't exist yet
     return allTypes.filter((type) => !existingTags.includes(type.value));
   };
+
+  // Check if all term types have been created
+  const allTermsCreated = getAvailableTermTypes().length === 0;
 
   // Get static PDF filename based on term tag
   const getStaticPdfFilename = (tag) => {
@@ -395,7 +398,7 @@ export default function TermsPage() {
           </div>
 
           {/* Button to add term if you're Admin */}
-          {isAdmin && (
+          {isAdmin && !allTermsCreated && (
             <div className="mb-10 text-center">
               <button
                 onClick={() => setShowAddForm(true)}
@@ -404,6 +407,15 @@ export default function TermsPage() {
                 <IconPlus className="h-5 w-5" />
                 Add New Term
               </button>
+            </div>
+          )}
+
+          {/* Message when all terms are created */}
+          {isAdmin && allTermsCreated && (
+            <div className="mb-10 text-center">
+              <p className="text-gray-600 dark:text-gray-300">
+                All term types have already been created. You cannot add more terms.
+              </p>
             </div>
           )}
 
@@ -752,25 +764,6 @@ export default function TermsPage() {
                           </p>
                         </div>
                       </label>
-
-                      {newTermContent && (
-                        <div className="mt-4">
-                          <label className="block text-sm font-medium mb-1">
-                            Content Preview
-                          </label>
-                          <textarea
-                            value={newTermContent}
-                            onChange={(e) => setNewTermContent(e.target.value)}
-                            className={`
-                          w-full p-2 border rounded-md h-64 text-sm font-mono
-                          ${theme === "dark" 
-                            ? "bg-gray-700 border-gray-600 text-white" 
-                            : "bg-white border-gray-300 text-black"}
-                        `}
-                            placeholder="Content will appear here after file upload, or you can type directly"
-                          />
-                        </div>
-                      )}
                     </div>
 
                     <div className="mb-4">

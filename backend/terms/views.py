@@ -35,11 +35,6 @@ class TermsViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user)
 
     def create(self, request, *args, **kwargs):
-        # Debugging: Log request data and files
-        print("Request data:", request.data)
-        print("Request files:", request.FILES)
-
-        # Handle the unique tag constraint at the API level
         tag = request.data.get('tag')
         if tag and Terms.objects.filter(tag=tag).exists():
             return Response(
