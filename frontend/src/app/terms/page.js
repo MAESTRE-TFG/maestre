@@ -357,6 +357,17 @@ export default function TermsPage() {
     }, 5000);
   };
 
+  // Fetch and process content from the file URL
+  const fetchContent = async (url) => {
+    try {
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      console.error("Error fetching file content:", error);
+      return "";
+    }
+  };
+
   // -------------------- Main Render --------------------
   return (
     <SidebarDemo
@@ -382,6 +393,19 @@ export default function TermsPage() {
               and responsibilities.
             </p>
           </div>
+
+          {/* Button to add term if you're Admin */}
+          {isAdmin && (
+            <div className="mb-10 text-center">
+              <button
+                onClick={() => setShowAddForm(true)}
+                className="px-6 py-2 font-medium bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-xl flex items-center gap-2 mx-auto hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
+              >
+                <IconPlus className="h-5 w-5" />
+                Add New Term
+              </button>
+            </div>
+          )}
 
           {loading ? (
             // -------- Loading skeleton --------
@@ -423,46 +447,9 @@ export default function TermsPage() {
                 If you need to access this information, please log in or
                 contact our support team.
               </p>
-
-              {isAdmin && (
-                <div
-                  className={`mt-6 pt-6 border-t ${
-                    theme === "dark" ? "border-gray-700" : "border-gray-200"
-                  }`}
-                >
-                  <h3
-                    className={`text-lg font-semibold mb-4 ${
-                      theme === "dark" ? "text-white" : "text-black"
-                    }`}
-                  >
-                    Admin Panel
-                  </h3>
-                  <button
-                    onClick={() => setShowAddForm(true)}
-                    className="px-6 py-2 font-medium bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-xl flex items-center gap-2 mx-auto hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
-                  >
-                    <IconPlus className="h-5 w-5" />
-                    Add New Term
-                  </button>
-                </div>
-              )}
             </div>
           ) : (
-            // -------- Terms exist (normal view) --------
             <>
-              {/* Button to add term if you're Admin and there are available types */}
-              {isAdmin && (
-                <div className="mb-10 text-center">
-                  <button
-                    onClick={() => setShowAddForm(true)}
-                    className="px-6 py-2 font-medium bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-xl flex items-center gap-2 mx-auto hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
-                  >
-                    <IconPlus className="h-5 w-5" />
-                    Add New Term
-                  </button>
-                </div>
-              )}
-
               <BentoGrid className="max-w-6xl mx-auto">
                 {terms.map((term, i) => {
                   // Helper to truncate text
@@ -476,18 +463,26 @@ export default function TermsPage() {
                   };
 
                   const termTag = term.tag;
-                  let firstSentence = "";
+                  const [firstSentence, setFirstSentence] = useState("");
 
-                  // Truncation logic based on tag
-                  if (termTag === "terms" || termTag === "license") {
-                    const content = term.content.split("## 4. ")[1] || term.content;
-                    firstSentence = truncateByWords(content, 45);
-                  } else if (termTag === "cookies" || termTag === "privacy") {
-                    const content = term.content.split("## 4. ")[1] || term.content;
-                    firstSentence = truncateByWords(content, 30);
-                  } else {
-                    firstSentence = truncateByWords(term.content, 45);
-                  }
+                  useEffect(() => {
+                    const processContent = async () => {
+                      const content = await fetchContent(term.content);
+                      // Truncation logic based on tag
+                      let processedContent = content;
+                      if (termTag === "terms" || termTag === "license") {
+                        processedContent = content.split("## 4. ")[1] || content;
+                        setFirstSentence(truncateByWords(processedContent, 45));
+                      } else if (termTag === "cookies" || termTag === "privacy") {
+                        processedContent = content.split("## 4. ")[1] || content;
+                        setFirstSentence(truncateByWords(processedContent, 22));
+                      } else {
+                        setFirstSentence(truncateByWords(content, 45));
+                      }
+                    };
+
+                    processContent();
+                  }, [term.content, termTag]);
 
                   return (
                     <BentoGridItem
@@ -586,6 +581,16 @@ export default function TermsPage() {
                       );
                       if (!activeTerm) return null;
 
+                      const [content, setContent] = useState("");
+
+                      useEffect(() => {
+                        const fetchAndSetContent = async () => {
+                          const resolvedContent = await fetchContent(activeTerm.content);
+                          setContent(resolvedContent);
+                        };
+                        fetchAndSetContent();
+                      }, [activeTerm.content]);
+
                       return (
                         <>
                           <div
@@ -614,7 +619,7 @@ export default function TermsPage() {
                                 remarkPlugins={[remarkGfm]}
                                 rehypePlugins={[rehypeRaw]}
                               >
-                                {activeTerm.content}
+                                {content}
                               </ReactMarkdown>
                             </div>
                           </div>
