@@ -49,21 +49,26 @@ export default function TermsPage() {
   const [newTermType, setNewTermType] = useState("");
   const [newTermContent, setNewTermContent] = useState("");
   const [newTermVersion, setNewTermVersion] = useState("");
-  const [uploadedFileName, setUploadedFileName] = useState(""); // Add state to track uploaded file name
+  const [uploadedMdFileName, setUploadedMdFileName] = useState(""); // Track uploaded markdown file name
+  const [uploadedPdfFileName, setUploadedPdfFileName] = useState(""); // Track uploaded PDF file name
 
   const [activeTermId, setActiveTermId] = useState(null);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [termToDelete, setTermToDelete] = useState(null);
 
-  const handleFileUpload = (file) => {
+  const handleFileUpload = (file, type) => {
     if (file) {
-      setUploadedFileName(file.name); // Set the uploaded file name
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setNewTermContent(event.target.result);
-      };
-      reader.readAsText(file);
+      if (type === "md") {
+        setUploadedMdFileName(file.name); // Set the uploaded markdown file name
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          setNewTermContent(event.target.result);
+        };
+        reader.readAsText(file);
+      } else if (type === "pdf") {
+        setUploadedPdfFileName(file.name); // Set the uploaded PDF file name
+      }
     }
   };
 
@@ -268,8 +273,14 @@ export default function TermsPage() {
       return;
     }
 
-    if (!newTermContent) {
-      setModalError("Please upload or enter content");
+    if (!uploadedMdFileName) {
+      setModalError("Please upload a markdown (.md) file");
+      handleModalErrorFade();
+      return;
+    }
+
+    if (!uploadedPdfFileName) {
+      setModalError("Please upload a PDF file");
       handleModalErrorFade();
       return;
     }
@@ -289,9 +300,19 @@ export default function TermsPage() {
       formData.append("version", newTermVersion);
       formData.append("name", getTermTitle(newTermType));
 
-      // Convert content to a Blob for file upload with a fixed filename
+      // Convert content to a Blob for file upload
       const contentBlob = new Blob([newTermContent], { type: "text/markdown" });
       formData.append("content", contentBlob, `${newTermType}.md`);
+
+      // Retrieve and validate the PDF file
+      const pdfInput = document.getElementById("pdf-file-upload");
+      const pdfFile = pdfInput?.files[0];
+      if (!pdfFile || !(pdfFile instanceof Blob)) {
+        setModalError("Failed to retrieve a valid PDF file. Please try again.");
+        handleModalErrorFade();
+        return;
+      }
+      formData.append("pdf_content", pdfFile, `${newTermType}.pdf`);
 
       const response = await axios.post(
         `${getApiBaseUrl()}/api/terms/`,
@@ -319,7 +340,8 @@ export default function TermsPage() {
       setNewTermType("");
       setNewTermContent("");
       setNewTermVersion("");
-      setUploadedFileName(""); // Reset file name
+      setUploadedMdFileName(""); // Reset markdown file name
+      setUploadedPdfFileName(""); // Reset PDF file name
       setShowAddForm(false);
     } catch (error) {
       console.error("Error adding term:", error);
@@ -332,6 +354,8 @@ export default function TermsPage() {
           errorMessage = `Tag Error: ${error.response.data.tag[0]}`;
         } else if (error.response.data.content) {
           errorMessage = `Content Error: ${error.response.data.content[0]}`;
+        } else if (error.response.data.pdf_content) {
+          errorMessage = `PDF Content Error: ${error.response.data.pdf_content[0]}`;
         } else if (error.response.data.version) {
           errorMessage = `Version Error: ${error.response.data.version[0]}`;
         } else if (error.response.data.name) {
@@ -641,20 +665,15 @@ export default function TermsPage() {
                           >
                             <button
                               onClick={() => {
-                                const pdfFile = getStaticPdfFilename(
-                                  activeTerm.tag || ""
-                                );
-                                if (!pdfFile) {
-                                  alert("No PDF exists for this type of term.");
+                                const activeTerm = terms.find((term) => term.id === activeTermId);
+                                if (!activeTerm || !activeTerm.pdf_content) {
+                                  alert("No PDF exists for this document.");
                                   return;
                                 }
-                                const pdfUrl = `/pdfs/06_terms/${pdfFile}`;
-                                const link = document.createElement("a");
-                                link.href = pdfUrl;
-                                link.download = pdfFile;
-                                document.body.appendChild(link);
-                                link.click();
-                                document.body.removeChild(link);
+                                const newTab = window.open(activeTerm.pdf_content, "_blank");
+                                if (!newTab) {
+                                  alert("Failed to open the document in a new tab. Please check your browser settings.");
+                                }
                               }}
                               className={`
                             px-4 py-2 rounded-md flex items-center
@@ -675,7 +694,7 @@ export default function TermsPage() {
                                   d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
                                 />
                               </svg>
-                              Download document
+                              Open document
                             </button>
                           </div>
                         </>
@@ -736,10 +755,10 @@ export default function TermsPage() {
 
                     <div className="mb-4">
                       <label className="block text-sm font-medium mb-1">
-                        Content
+                        Markdown Content
                       </label>
                       <label
-                        htmlFor="file-upload"
+                        htmlFor="md-file-upload"
                         className={`
                       flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer
                       ${theme === "dark" 
@@ -748,10 +767,10 @@ export default function TermsPage() {
                     `}
                       >
                         <input
-                          id="file-upload"
+                          id="md-file-upload"
                           type="file"
                           accept=".md"
-                          onChange={(e) => handleFileUpload(e.target.files[0])}
+                          onChange={(e) => handleFileUpload(e.target.files[0], "md")}
                           className="hidden"
                         />
                         <div className="text-center">
@@ -761,9 +780,43 @@ export default function TermsPage() {
                           </p>
                         </div>
                       </label>
-                      {uploadedFileName && (
+                      {uploadedMdFileName && (
                         <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                          Uploaded file: <span className="font-medium">{uploadedFileName}</span>
+                          Uploaded file: <span className="font-medium">{uploadedMdFileName}</span>
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="mb-4">
+                      <label className="block text-sm font-medium mb-1">
+                        PDF Content
+                      </label>
+                      <label
+                        htmlFor="pdf-file-upload"
+                        className={`
+                      flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer
+                      ${theme === "dark" 
+                        ? "bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600" 
+                        : "bg-gray-50 border-gray-300 text-gray-500 hover:bg-gray-100"}
+                    `}
+                      >
+                        <input
+                          id="pdf-file-upload"
+                          type="file"
+                          accept=".pdf"
+                          onChange={(e) => handleFileUpload(e.target.files[0], "pdf")}
+                          className="hidden"
+                        />
+                        <div className="text-center">
+                          <IconFileText className="h-8 w-8 mx-auto" />
+                          <p className="mt-2 text-sm font-medium">
+                            Drag and drop a .pdf file here, or click to select
+                          </p>
+                        </div>
+                      </label>
+                      {uploadedPdfFileName && (
+                        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                          Uploaded file: <span className="font-medium">{uploadedPdfFileName}</span>
                         </p>
                       )}
                     </div>
@@ -790,7 +843,8 @@ export default function TermsPage() {
                       <button
                         onClick={() => {
                           setShowAddForm(false);
-                          setUploadedFileName(""); // Reset file name on cancel
+                          setUploadedMdFileName(""); // Reset markdown file name on cancel
+                          setUploadedPdfFileName(""); // Reset PDF file name on cancel
                         }}
                         className={`
                       px-6 py-2 font-medium rounded-xl flex items-center gap-2

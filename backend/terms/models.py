@@ -26,6 +26,14 @@ class Terms(models.Model):
             FileExtensionValidator(allowed_extensions=['md']),
         ]
     )
+    pdf_content = models.FileField(
+        upload_to='terms/',
+        validators=[
+            FileExtensionValidator(allowed_extensions=['pdf']),
+        ],
+        null=True,
+        blank=True
+    )
     version = models.CharField(max_length=20)
     tag = models.CharField(max_length=20, choices=TAG_CHOICES, default='terms')
     created_at = models.DateTimeField(auto_now_add=True)
@@ -41,12 +49,22 @@ class Terms(models.Model):
             if existing_terms.exists():
                 raise ValidationError(f'A "{self.tag}" document already exists.')
 
-        # Ensure the uploaded file is a valid markdown file
+        # Ensure the uploaded files are valid
+        if not self.content or not self.pdf_content:
+            raise ValidationError("Both a markdown (.md) file and a PDF file must be provided.")
+        
         if self.content:
             if not self.content.name.endswith('.md'):
                 raise ValidationError("The content file must be a markdown (.md) file.")
             if hasattr(self.content.file, 'content_type') and self.content.file.content_type != "text/markdown":
-                raise ValidationError("The uploaded file must have a valid markdown content type.")
+                raise ValidationError("The uploaded markdown file must have a valid markdown content type.")
+        
+        if self.pdf_content:
+            if not self.pdf_content.name.endswith('.pdf'):
+                raise ValidationError("The PDF content file must be a .pdf file.")
+            if hasattr(self.pdf_content.file, 'content_type') and self.pdf_content.file.content_type != "application/pdf":
+                raise ValidationError("The uploaded PDF file must have a valid PDF content type.")
+        
         super().clean()
 
     def save(self, *args, **kwargs):
@@ -54,10 +72,11 @@ class Terms(models.Model):
         super().save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
-        # Delete the file from filesystem when model is deleted
-        if self.content:
-            if os.path.isfile(self.content.path):
-                os.remove(self.content.path)
+        # Delete the files from filesystem when model is deleted
+        if self.content and os.path.isfile(self.content.path):
+            os.remove(self.content.path)
+        if self.pdf_content and os.path.isfile(self.pdf_content.path):
+            os.remove(self.pdf_content.path)
         super().delete(*args, **kwargs)
 
     class Meta:
