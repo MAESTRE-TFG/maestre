@@ -49,6 +49,7 @@ export default function TermsPage() {
   const [newTermType, setNewTermType] = useState("");
   const [newTermContent, setNewTermContent] = useState("");
   const [newTermVersion, setNewTermVersion] = useState("");
+  const [uploadedFileName, setUploadedFileName] = useState(""); // Add state to track uploaded file name
 
   const [activeTermId, setActiveTermId] = useState(null);
 
@@ -57,6 +58,7 @@ export default function TermsPage() {
 
   const handleFileUpload = (file) => {
     if (file) {
+      setUploadedFileName(file.name); // Set the uploaded file name
       const reader = new FileReader();
       reader.onload = (event) => {
         setNewTermContent(event.target.result);
@@ -287,15 +289,9 @@ export default function TermsPage() {
       formData.append("version", newTermVersion);
       formData.append("name", getTermTitle(newTermType));
 
-      // Convert content to a Blob for file upload
+      // Convert content to a Blob for file upload with a fixed filename
       const contentBlob = new Blob([newTermContent], { type: "text/markdown" });
       formData.append("content", contentBlob, `${newTermType}.md`);
-
-      // Debugging: Log FormData content
-      console.log("FormData being sent:");
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}:`, value);
-      }
 
       const response = await axios.post(
         `${getApiBaseUrl()}/api/terms/`,
@@ -323,6 +319,7 @@ export default function TermsPage() {
       setNewTermType("");
       setNewTermContent("");
       setNewTermVersion("");
+      setUploadedFileName(""); // Reset file name
       setShowAddForm(false);
     } catch (error) {
       console.error("Error adding term:", error);
@@ -398,7 +395,7 @@ export default function TermsPage() {
           </div>
 
           {/* Button to add term if you're Admin */}
-          {isAdmin && !allTermsCreated && (
+          {isAdmin && (!allTermsCreated || noTermsFound) && (
             <div className="mb-10 text-center">
               <button
                 onClick={() => setShowAddForm(true)}
@@ -764,6 +761,11 @@ export default function TermsPage() {
                           </p>
                         </div>
                       </label>
+                      {uploadedFileName && (
+                        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                          Uploaded file: <span className="font-medium">{uploadedFileName}</span>
+                        </p>
+                      )}
                     </div>
 
                     <div className="mb-4">
@@ -786,7 +788,10 @@ export default function TermsPage() {
 
                     <div className="flex justify-end space-x-2">
                       <button
-                        onClick={() => setShowAddForm(false)}
+                        onClick={() => {
+                          setShowAddForm(false);
+                          setUploadedFileName(""); // Reset file name on cancel
+                        }}
                         className={`
                       px-6 py-2 font-medium rounded-xl flex items-center gap-2
                       ${theme === "dark" 
