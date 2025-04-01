@@ -17,15 +17,20 @@ import Image from "next/image";
 import Link from "next/link";
 import { useOutsideClick } from "@/hooks/use-outside-click";
 import { useTheme } from "@/components/theme-provider"; // Add this import
+import { useRouter } from "next/navigation";
+import { useState as useModalState, useEffect as useModalEffect } from "react";
+import { Modal } from "@/components/ui/modal";
 
 export const CarouselContext = createContext({
   onCardClose: () => {},
   currentIndex: 0,
+  handleToolClick: (path) => {},
 });
 
 export const Carousel = ({
   items,
-  initialScroll = 0
+  initialScroll = 0,
+  onToolClick
 }) => {
   const carouselRef = React.useRef(null);
   const [canScrollLeft, setCanScrollLeft] = React.useState(false);
@@ -76,8 +81,85 @@ export const Carousel = ({
     return window && window.innerWidth < 768;
   };
 
+  const [showAuthModal, setShowAuthModal] = useModalState(false);
+  const [showProfileModal, setShowProfileModal] = useModalState(false);
+  const [isAuthenticated, setIsAuthenticated] = useModalState(false);
+  const [isProfileComplete, setIsProfileComplete] = useModalState(false);
+  const [selectedToolPath, setSelectedToolPath] = useModalState("");
+  const router = useRouter();
+
+  useModalEffect(() => {
+    checkAuthStatus();
+    
+    // Add event listener for storage changes
+    window.addEventListener('storage', checkAuthStatus);
+    
+    return () => {
+      window.removeEventListener('storage', checkAuthStatus);
+    };
+  }, []);
+
+  const checkAuthStatus = () => {
+    if (typeof window !== 'undefined') {
+      const token = localStorage.getItem('authToken');
+      const user = localStorage.getItem('user');
+      
+      if (!user || !token) {
+        setIsAuthenticated(false);
+        setIsProfileComplete(false);
+        return;
+      }
+      
+      try {
+        setIsAuthenticated(true);
+        const userData = JSON.parse(user);
+        
+        // Check if profile is complete
+        const isComplete = userData.region && 
+                          userData.city && 
+                          userData.school;
+        
+        setIsProfileComplete(isComplete);
+      } catch (error) {
+        console.error('Error parsing user data:', error);
+        setIsAuthenticated(false);
+        setIsProfileComplete(false);
+      }
+    }
+  };
+
+  const handleToolClick = (path) => {
+    setSelectedToolPath(path);
+    
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+    } else if (!isProfileComplete) {
+      setShowProfileModal(true);
+    } else {
+      router.push(path);
+    }
+  };
+
+  const closeAuthModal = () => {
+    setShowAuthModal(false);
+  };
+
+  const closeProfileModal = () => {
+    setShowProfileModal(false);
+  };
+
+  const handleSignUp = () => {
+    router.push('/profile/signup');
+    closeAuthModal();
+  };
+
+  const handleCompleteProfile = () => {
+    router.push('/profile/complete');
+    closeProfileModal();
+  };
+
   return (
-    <CarouselContext.Provider value={{ onCardClose: handleCardClose, currentIndex }}>
+    <CarouselContext.Provider value={{ onCardClose: handleCardClose, currentIndex, handleToolClick }}>
       <div className="relative w-full">
         <div 
           ref={carouselRef}
@@ -108,6 +190,68 @@ export const Carousel = ({
             <IconArrowNarrowRight className="h-8 w-8 text-gray-700" />
           </button>
         </div>
+        
+        {/* Authentication Modal */}
+        <Modal 
+          isOpen={showAuthModal} 
+          onClose={closeAuthModal} 
+          title="Authentication Required"
+          style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}
+        >
+          <div className="p-4">
+            <h2 className="text-lg font-bold mb-4">
+              Authentication Required
+            </h2>
+            <p className="mb-4">
+              You need to be logged in to access this tool. Please create an account to continue.
+            </p>
+            <div className="flex justify-end">
+              <button
+                onClick={closeAuthModal}
+                className="mr-2 px-4 py-2 bg-gray-300 rounded-md"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSignUp}
+                className="px-4 py-2 bg-blue-500 text-white rounded-md"
+              >
+                Create Account
+              </button>
+            </div>
+          </div>
+        </Modal>
+
+        {/* Profile Completion Modal */}
+        <Modal 
+          isOpen={showProfileModal} 
+          onClose={closeProfileModal} 
+          title="Complete Your Profile"
+          style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}
+        >
+          <div className="p-4">
+            <h2 className="text-lg font-bold mb-4">
+              Complete Your Profile
+            </h2>
+            <p className="mb-4">
+              Please complete your profile information before accessing this tool.
+            </p>
+            <div className="flex justify-end">
+              <button
+                onClick={closeProfileModal}
+                className="mr-2 px-4 py-2 bg-gray-300 rounded-md"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleCompleteProfile}
+                className="px-4 py-2 bg-blue-500 text-white rounded-md"
+              >
+                Complete Profile
+              </button>
+            </div>
+          </div>
+        </Modal>
       </div>
     </CarouselContext.Provider>
   );
@@ -120,8 +264,8 @@ export const Card = ({
 }) => {
   const [open, setOpen] = useState(false);
   const containerRef = useRef(null);
-  const { onCardClose, currentIndex } = useContext(CarouselContext);
-  const { theme } = useTheme(); // Add this line to access the theme
+  const { onCardClose, currentIndex, handleToolClick } = useContext(CarouselContext);
+  const { theme } = useTheme();
   
   useEffect(() => {
     function onKeyDown(event) {
@@ -149,6 +293,12 @@ export const Card = ({
   const handleClose = () => {
     setOpen(false);
     onCardClose(index);
+  };
+
+  const handleTryNowClick = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    handleToolClick(`/tools/${card.page}`);
   };
 
   return (
@@ -186,8 +336,8 @@ export const Card = ({
                 {card.title}
               </motion.p>
               <div className="py-10">{card.content}</div>
-              <Link
-                href={`/tools/${card.page}`}
+              <button
+                onClick={handleTryNowClick}
                 style={{ fontFamily: "Alfa Slab One"}}
                 className={cn(
                   "inline-flex items-center justify-items-center rounded-full transition-all",
@@ -198,7 +348,7 @@ export const Card = ({
                     : "bg-black text-white hover:bg-neutral-800"
                 )}>
                 Try Now!
-              </Link>
+              </button>
             </motion.div>
           </div>
         )}

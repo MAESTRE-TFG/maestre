@@ -7,6 +7,7 @@ from classrooms.models import Classroom
 from .models import Student
 from .serializers import StudentSerializer
 from users.models import CustomUser
+from django.core.exceptions import ValidationError
 
 
 class StudentModelTests(TestCase):
@@ -44,6 +45,23 @@ class StudentModelTests(TestCase):
     def test_student_classroom_relationship(self):
         self.assertEqual(self.classroom.student_set.count(), 1)
         self.assertEqual(self.classroom.student_set.first(), self.student)
+
+    def test_student_without_classroom(self):
+        student = Student(name='NoClassroomStudent', surname='NoClassroom')
+        with self.assertRaises(ValidationError):
+            student.full_clean()  # Validate the model instance before saving
+
+    def test_student_max_length_name(self):
+        long_name = 'A' * 31
+        student = Student(name=long_name, surname='ValidSurname', classroom=self.classroom)
+        with self.assertRaises(ValidationError):
+            student.full_clean()
+
+    def test_student_max_length_surname(self):
+        long_surname = 'B' * 31
+        student = Student(name='ValidName', surname=long_surname, classroom=self.classroom)
+        with self.assertRaises(ValidationError):
+            student.full_clean()
 
 
 class StudentSerializerTests(TestCase):
@@ -243,7 +261,6 @@ class StudentViewSetTests(APITestCase):
         self.assertEqual(response.data[0]['name'], 'AnotherStudent')
 
     def test_unauthorized_access(self):
-        """Test that unauthorized users cannot access the API"""
         # Remove authentication
         self.client.credentials()
 
@@ -262,4 +279,83 @@ class StudentViewSetTests(APITestCase):
             'classroom_id': self.classroom.id
         }
         response = self.client.post(self.list_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_create_student_with_invalid_data(self):
+        data = {
+            'name': '',  # Empty name
+            'surname': 'InvalidSurname',
+            'classroom_id': self.classroom.id
+        }
+        response = self.client.post(self.list_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('name', response.data)
+
+    def test_create_student_with_invalid_classroom(self):
+        data = {
+            'name': 'InvalidStudent',
+            'surname': 'InvalidSurname',
+            'classroom_id': 9999  # Non-existent classroom ID
+        }
+        response = self.client.post(self.list_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_update_student_with_invalid_data(self):
+        data = {
+            'name': '',  # Empty name
+            'surname': 'UpdatedSurname',
+            'classroom': self.classroom.id
+        }
+        response = self.client.put(self.detail_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('name', response.data)
+
+    def test_partial_update_student_with_invalid_data(self):
+        data = {
+            'name': ''  # Empty name
+        }
+        response = self.client.patch(self.detail_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('name', response.data)
+
+    def test_filter_students_with_invalid_classroom_id(self):
+        url = f"{self.list_url}?classroom_id=invalid"
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('error', response.data)
+        self.assertEqual(response.data['error'], 'classroom_id must be a valid integer')
+
+    def test_get_student_detail_nonexistent(self):
+        url = reverse('students-detail', kwargs={'pk': 9999})  # Non-existent student ID
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_delete_student_nonexistent(self):
+        url = reverse('students-detail', kwargs={'pk': 9999})  # Non-existent student ID
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_create_student_unauthenticated(self):
+        self.client.credentials()  # Remove authentication
+        data = {
+            'name': 'UnauthenticatedStudent',
+            'surname': 'UnauthenticatedSurname',
+            'classroom_id': self.classroom.id
+        }
+        response = self.client.post(self.list_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_update_student_unauthenticated(self):
+        self.client.credentials()  # Remove authentication
+        data = {
+            'name': 'UnauthenticatedUpdate',
+            'surname': 'UnauthenticatedSurname',
+            'classroom': self.classroom.id
+        }
+        response = self.client.put(self.detail_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_delete_student_unauthenticated(self):
+        self.client.credentials()  # Remove authentication
+        response = self.client.delete(self.detail_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
