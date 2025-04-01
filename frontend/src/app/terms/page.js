@@ -132,7 +132,14 @@ export default function TermsPage() {
           setAdminUsername(response.data.username);
         }
       } catch (error) {
-        console.error("Error checking admin status:", error);
+        if (error.response && error.response.status === 401) {
+          // User is not authenticated, clear admin state
+          console.warn("User is not authenticated. Admin features disabled.");
+          setIsAdmin(false);
+          setAdminUsername("");
+        } else {
+          console.error("Error checking admin status:", error);
+        }
       }
     };
 
@@ -494,7 +501,6 @@ export default function TermsPage() {
                         </div>
                       }
                       description={
-                        // -------- View mode --------
                         <div className="text-sm">
                           <div className="prose dark:prose-invert prose-sm">
                             <ReactMarkdown
@@ -504,7 +510,6 @@ export default function TermsPage() {
                               {firstSentence}
                             </ReactMarkdown>
                           </div>
-
                           <div className="mt-4 flex justify-between items-center">
                             <button
                               onClick={() => setActiveTermId(term.id)}
@@ -512,7 +517,6 @@ export default function TermsPage() {
                             >
                               View full document
                             </button>
-
                             {isAdmin && (
                               <div className="flex space-x-2">
                                 <button

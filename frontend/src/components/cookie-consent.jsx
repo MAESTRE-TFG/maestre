@@ -13,8 +13,11 @@ export function CookieConsent() {
     // Add a small delay to ensure client-side rendering is complete
     const timer = setTimeout(() => {
       if (typeof window !== 'undefined') {
-        console.log("Setting cookie consent modal to show");
-        setShowConsent(true);
+        const consent = localStorage.getItem('cookie-consent');
+        if (consent !== 'accepted') {
+          console.log("Setting cookie consent modal to show");
+          setShowConsent(true);
+        }
       }
     }, 500);
     
@@ -41,9 +44,6 @@ export function CookieConsent() {
   
   if (!showConsent) return null;
 
-  // Replace the Modal component with a direct implementation
-  // Replace the return statement with this theme-aware version
-  // Updated return statement with refined styling
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50">
       <div className="w-full max-w-md bg-white dark:bg-gray-900 p-8 rounded-xl shadow-lg text-center">
