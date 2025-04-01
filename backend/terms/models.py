@@ -37,9 +37,16 @@ class Terms(models.Model):
     def clean(self):
         if not self.pk:  # Only check on creation
             # Check if there's already a document with the same tag
-            existing_terms = Terms.objects.filter(tag=self.tag).exclude(pk=self.pk)
+            existing_terms = Terms.objects.filter(tag=self.tag)
             if existing_terms.exists():
                 raise ValidationError(f'A "{self.tag}" document already exists.')
+
+        # Ensure the uploaded file is a valid markdown file
+        if self.content:
+            if not self.content.name.endswith('.md'):
+                raise ValidationError("The content file must be a markdown (.md) file.")
+            if hasattr(self.content.file, 'content_type') and self.content.file.content_type != "text/markdown":
+                raise ValidationError("The uploaded file must have a valid markdown content type.")
         super().clean()
 
     def save(self, *args, **kwargs):

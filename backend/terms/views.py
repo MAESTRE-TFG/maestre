@@ -1,6 +1,7 @@
 from rest_framework import filters, viewsets, status
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
+from django.core.exceptions import ValidationError
 from .models import Terms
 from .serializers import TermsSerializer
 
@@ -34,6 +35,10 @@ class TermsViewSet(viewsets.ModelViewSet):
         serializer.save(author=self.request.user)
 
     def create(self, request, *args, **kwargs):
+        # Debugging: Log request data and files
+        print("Request data:", request.data)
+        print("Request files:", request.FILES)
+
         # Handle the unique tag constraint at the API level
         tag = request.data.get('tag')
         if tag and Terms.objects.filter(tag=tag).exists():
@@ -41,4 +46,9 @@ class TermsViewSet(viewsets.ModelViewSet):
                 {'tag': [f'A "{dict(Terms.TAG_CHOICES).get(tag, tag)}" document already exists.']},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        return super().create(request, *args, **kwargs)
+        try:
+            return super().create(request, *args, **kwargs)
+        except ValidationError as e:
+            return Response(e.message_dict, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)
