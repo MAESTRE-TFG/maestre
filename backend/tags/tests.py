@@ -96,6 +96,7 @@ class TagTests(TestCase):
 
     def test_filter_documents_nonexistent_classroom(self):
         response = self.client.get('/api/tags/filtered_documents/', {'tags': 'Test Tag', 'classroom_id': 999})
+
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 0)
 

@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
+import { getApiBaseUrl } from "@/lib/api";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -369,7 +370,7 @@ const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName) => {
       return false;
     }
     
-    const response = await axios.post('http://localhost:8000/api/materials/', formData, {
+    const response = await axios.post(`${getApiBaseUrl()}/api/materials/`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Authorization': `Token ${token}`
@@ -478,19 +479,18 @@ const questionTypes = [
 
 return (
   <div className={cn("min-h-screen")}>
-    <div className="relative my-8" style={{ height: "100px" }}></div>
     <div className="flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-4xl">
-        <h1 className={cn("text-3xl md:text-4xl font-bold mb-6 text-center", 
-          theme === "dark" ? "text-white" : "text-gray-900")} 
-          style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-          AI Exam Generator
+    <div className="w-full max-w-4xl">
+
+      {/* Header Section */}
+      <div className="w-full text-center mb-12">
+        <h1 className={`text-4xl font-bold font-alfa-slab-one mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+        AI Exam Generator
         </h1>
-        
-        <p className={cn("text-center mb-8", 
-          theme === "dark" ? "text-gray-300" : "text-gray-600")}>
+        <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
           Create customized exams for your students with our AI-powered tool
         </p>
+      </div>
 
         {errorMessage && (
           <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">

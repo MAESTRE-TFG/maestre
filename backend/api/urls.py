@@ -8,6 +8,7 @@ from classrooms.views import ClassroomViewSet
 from students.views import StudentViewSet
 from tags.views import TagViewSet
 from materials.views import DocumentViewSet
+from terms.views import TermsViewSet
 
 router = DefaultRouter()
 router.register(r'items', ItemViewSet)
@@ -17,6 +18,7 @@ router.register(r'students', StudentViewSet, basename='students')
 router.register(r'classrooms', ClassroomViewSet, basename='classroom')
 router.register(r'materials', DocumentViewSet, basename='materials')
 router.register(r'tags', TagViewSet, basename='tags')
+router.register(r'terms', TermsViewSet, basename='terms')
 
 urlpatterns = [
     path('', include(router.urls)),
@@ -33,6 +35,4 @@ urlpatterns = [
     path('classrooms/<int:pk>/update/', ClassroomViewSet.as_view({'put': 'update'})),
     path('classrooms/<int:pk>/delete/', ClassroomViewSet.as_view({'delete': 'destroy'})),
     path('students/by-classroom/', StudentViewSet.as_view({'get': 'by_classroom'})),
-
-
 ]

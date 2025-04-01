@@ -93,3 +93,13 @@ class UserViewSet(viewsets.ModelViewSet):
             return Response({"message": "Logged out successfully"}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+    @action(detail=False, methods=['get'], permission_classes=[IsAuthenticated])
+    def check_role(self, request):
+        user = request.user
+        is_admin = user.is_staff or user.is_superuser
+
+        return Response({
+            'user_role': 'admin' if is_admin else 'user',
+            'is_admin': is_admin
+        }, status=status.HTTP_200_OK)

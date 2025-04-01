@@ -1,14 +1,14 @@
 "use client";
 
-import { useRouter } from "next/navigation";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { useTheme } from "@/components/theme-provider";
 import { useState, useEffect } from "react";
 import { AIToolsCards } from "@/components/ai-tools-cards";
+import { useRouter } from 'next/navigation';
 
 const ToolList = () => {
   const { theme } = useTheme();
-  const router = useRouter();
+const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {

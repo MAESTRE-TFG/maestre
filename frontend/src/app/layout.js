@@ -2,9 +2,9 @@
 
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { usePathname } from "next/navigation";
 import { Alfa_Slab_One } from 'next/font/google';
 import { ThemeProvider } from "@/components/theme-provider";
+import { CookieConsent } from "@/components/cookie-consent";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -16,17 +16,15 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-
 const alfaSlabOne = Alfa_Slab_One({
   weight: '400',
   subsets: ['latin'],
   display: 'swap',
 });
 
-
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} ${alfaSlabOne.className}`}>
       <body>
         <ThemeProvider
           attribute="class"
@@ -35,6 +33,7 @@ export default function RootLayout({ children }) {
           disableTransitionOnChange
         >
           {children}
+          <CookieConsent />
         </ThemeProvider>
       </body>
     </html>

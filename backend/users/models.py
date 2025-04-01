@@ -6,8 +6,7 @@ from schools.models import School
 # Since we have a custom user model, we need a custom user manager
 # that inherits from BaseUserManager. This custom user manager will handle creating
 # users and superusers. This saves us a lot of work, and it can be seen that everything is much simpler
-# at http://localhost:8000/admin/
-
+# at the admin interface (e.g., http://yourdomain.com/admin/)
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username, password=None, **extra_fields):

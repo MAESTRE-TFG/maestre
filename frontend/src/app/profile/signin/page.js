@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { getApiBaseUrl } from "@/lib/api";
 import { SigninForm } from "@/components/signin-form-demo";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
@@ -20,7 +21,7 @@ export default function SignIn() {
 
   const handleSubmit = async (formData) => {
     try {
-      const response = await fetch("http://localhost:8000/api/users/signin/", {
+      const response = await fetch(`${getApiBaseUrl()}/api/users/signin/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

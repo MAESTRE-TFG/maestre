@@ -8,6 +8,7 @@ from .models import Student
 from .serializers import StudentSerializer
 from classrooms.models import Classroom
 
+
 class StudentViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         classroom_id = self.request.query_params.get('classroom_id')
@@ -23,16 +24,16 @@ class StudentViewSet(viewsets.ModelViewSet):
     def create(self, request, *args, **kwargs):
         classroom_id = request.data.get('classroom_id')
         if not classroom_id:
-             return Response(
-                {'error': 'classroom_id is required'}, 
+            return Response(
+                {'error': 'classroom_id is required'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
         classroom = get_object_or_404(Classroom, id=classroom_id)
-        
+
         data = request.data.copy()
         data['classroom'] = classroom.id
-        
+
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)

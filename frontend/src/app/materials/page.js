@@ -1,4 +1,6 @@
 "use client";
+
+import { getApiBaseUrl } from "@/lib/api";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
@@ -73,7 +75,7 @@ const MaterialsList = () => {
       }
 
       const response = await axios.patch(
-        `http://localhost:8000/api/materials/${fileToEdit.id}/`,
+        `${getApiBaseUrl()}/api/materials/${fileToEdit.id}/`,
         { name: updatedFileName },
         {
           headers: {
@@ -104,7 +106,7 @@ const MaterialsList = () => {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8000/api/materials/${fileToDelete.id}/`, {
+      await axios.delete(`${getApiBaseUrl()}/api/materials/${fileToDelete.id}/`, {
         headers: {
           'Authorization': `Token ${localStorage.getItem('authToken')}`,
         }
@@ -138,7 +140,7 @@ const MaterialsList = () => {
       if (selectedClassroom) {
         params.classroom_id = selectedClassroom.id;
       }
-      const response = await axios.get('http://localhost:8000/api/materials/', {
+      const response = await axios.get(`${getApiBaseUrl()}/api/materials/`, {
         params,
         headers: {
           Authorization: `Token ${localStorage.getItem('authToken')}`
@@ -171,7 +173,7 @@ const MaterialsList = () => {
   // Update fetchTags function
   const fetchTags = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/tags/user_tags/', {
+      const response = await axios.get(`${getApiBaseUrl()}/api/tags/user_tags/`, {
         headers: {
           Authorization: `Token ${localStorage.getItem('authToken')}`
         }
@@ -185,7 +187,7 @@ const MaterialsList = () => {
 
   const fetchClassrooms = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/classrooms/', {
+      const response = await axios.get(`${getApiBaseUrl()}/api/classrooms/`, {
         headers: {
           Authorization: `Token ${localStorage.getItem('authToken')}`
         }
@@ -204,7 +206,7 @@ const MaterialsList = () => {
     setError(null);
 
     try {
-      const response = await axios.post('http://localhost:8000/api/tags/', {
+      const response = await axios.post(`${getApiBaseUrl()}/api/tags/`, {
         name: newTagName,
         color: selectedColor
       }, {
@@ -252,7 +254,7 @@ const MaterialsList = () => {
   const handleUpdateMaterialTags = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:8000/api/materials/${editingMaterial.id}/`,
+        `${getApiBaseUrl()}/api/materials/${editingMaterial.id}/`,
         {
           tag_ids: selectedMaterialTags  // Changed from tags to tag_ids to match serializer
         },
@@ -281,7 +283,7 @@ const MaterialsList = () => {
 
   const handleDeleteTag = async (tagId) => {
     try {
-      await axios.delete(`http://localhost:8000/api/tags/${tagId}/`, {
+      await axios.delete(`${getApiBaseUrl()}/api/tags/${tagId}/`, {
         headers: {
           Authorization: `Token ${localStorage.getItem('authToken')}`
         }
@@ -754,7 +756,7 @@ const MaterialsList = () => {
                                 e.stopPropagation();
                                 const fileUrl = material.file.startsWith('http')
                                   ? material.file
-                                  : `http://localhost:8000${material.file}`;
+                                  : `${getApiBaseUrl()}${material.file}`;
                                 window.open(fileUrl, '_blank');
                               }}
                               className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
