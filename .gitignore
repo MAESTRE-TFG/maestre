@@ -6,3 +6,5 @@ package-lock.json
 setup.cfg
 .env
 .env.example
+.coverage
+htmlcov/

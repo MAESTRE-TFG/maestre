@@ -6,6 +6,7 @@ import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link'; // Add this import
 
 const MaterialsList = () => {
   const { theme } = useTheme();
@@ -337,13 +338,13 @@ const MaterialsList = () => {
         <img
           src="/static/bubbles black/5.svg"
           alt="Bubble"
-          className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
+          className="absolute top-100 left-10 w-1/2 opacity-50 z-0"
         />
       ) : (
         <img
           src="/static/bubbles white/5.svg"
           alt="Bubble"
-          className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
+          className="absolute top-100 left-10 w-1/2 opacity-50 z-0"
         />
       )}
 
@@ -803,7 +804,7 @@ const MaterialsList = () => {
                 </div>
               ) : (
                 <div className="text-center py-8 text-neutral-500 dark:text-neutral-400">
-                  No materials found. {selectedTags.length > 0 ? "Try removing some tag filters." : ""}
+                  No materials found. Add material to one of your <Link href="/classrooms" className="text-blue-500 hover:underline">classrooms</Link> and come back later ;)
                 </div>
               )}
             </div>

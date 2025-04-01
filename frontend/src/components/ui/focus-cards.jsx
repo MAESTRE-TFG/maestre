@@ -44,23 +44,26 @@ export function FocusCards({ cards, onCardClick }) {
   const [hovered, setHovered] = useState(null);
   
   return (
-    <div className="max-w-[1600px] mx-auto px-4">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 md:gap-8 lg:gap-12">
-        {cards.map((card, index) => (
-          <div
-            key={index}
-            className="w-full md:min-w-[350px] lg:min-w-[550px] cursor-pointer"
-            onClick={() => onCardClick(card.url)}
-          >
-            <Card
-              card={card}
-              index={index}
-              hovered={hovered}
-              setHovered={setHovered}
-            />
-          </div>
-        ))}
-      </div>
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-[95vw] mx-auto px-4">
+      {cards.map((card, index) => (
+        <div
+          key={index}
+          className="flex-shrink-0"
+          style={{
+            aspectRatio: "16 / 9", // Maintain aspect ratio
+            minWidth: "100%", // Full width for smaller screens
+            maxWidth: "450px", // Restrict width for larger screens
+          }}
+          onClick={() => onCardClick(card.url)}
+        >
+          <Card
+            card={card}
+            index={index}
+            hovered={hovered}
+            setHovered={setHovered}
+          />
+        </div>
+      ))}
     </div>
   );
 }
