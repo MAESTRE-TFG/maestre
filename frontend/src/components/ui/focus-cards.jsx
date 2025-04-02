@@ -12,7 +12,7 @@ export const Card = React.memo(({
   <div
     onMouseEnter={() => setHovered(index)}
     onMouseLeave={() => setHovered(null)}
-    className="rounded-lg relative bg-gray-100 dark:bg-neutral-900 overflow-hidden w-full aspect-[4/5] transition-all duration-300 ease-out"
+    className="rounded-lg relative bg-gray-100 dark:bg-neutral-900 overflow-hidden w-full h-full aspect-[4/5] transition-all duration-300 ease-out"
   >
     <Image
       src={card.src}
@@ -44,16 +44,11 @@ export function FocusCards({ cards, onCardClick }) {
   const [hovered, setHovered] = useState(null);
   
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-[95vw] mx-auto px-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 w-full">
       {cards.map((card, index) => (
         <div
           key={index}
-          className="flex-shrink-0"
-          style={{
-            aspectRatio: "16 / 9", // Maintain aspect ratio
-            minWidth: "100%", // Full width for smaller screens
-            maxWidth: "450px", // Restrict width for larger screens
-          }}
+          className="cursor-pointer w-full md:h-96 lg:h-120"
           onClick={() => onCardClick(card.url)}
         >
           <Card

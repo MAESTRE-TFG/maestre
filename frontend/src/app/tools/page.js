@@ -38,7 +38,6 @@ const router = useRouter();
 
   return (
 <div className="min-h-screen pt-24 px-4 sm:px-6 md:px-8">
-  <div className="relative my-8 hidden md:block h-[400px] md:h-[650px]"></div>
 
   {/* Header Section */}
   <div className="w-full text-center mb-8 md:mb-12">
@@ -51,7 +50,7 @@ const router = useRouter();
   </div>
 
   {/* Tools Section */}
-  <div className="w-full max-w-7xl mx-auto px-2 sm:px-4">
+  <div className="w-full">
     <AIToolsCards />
   </div>
 

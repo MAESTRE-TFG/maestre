@@ -51,23 +51,26 @@ export default function TermsPage() {
   const [newTermVersion, setNewTermVersion] = useState("");
   const [uploadedMdFileName, setUploadedMdFileName] = useState(""); // Track uploaded markdown file name
   const [uploadedPdfFileName, setUploadedPdfFileName] = useState(""); // Track uploaded PDF file name
+  const [pdfFile, setPdfFile] = useState(null); // Store the actual PDF file object
 
   const [activeTermId, setActiveTermId] = useState(null);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [termToDelete, setTermToDelete] = useState(null);
 
+
   const handleFileUpload = (file, type) => {
     if (file) {
       if (type === "md") {
-        setUploadedMdFileName(file.name); // Set the uploaded markdown file name
+        setUploadedMdFileName(file.name);
         const reader = new FileReader();
         reader.onload = (event) => {
           setNewTermContent(event.target.result);
         };
         reader.readAsText(file);
       } else if (type === "pdf") {
-        setUploadedPdfFileName(file.name); // Set the uploaded PDF file name
+        setUploadedPdfFileName(file.name);
+        setPdfFile(file);
       }
     }
   };
@@ -201,7 +204,7 @@ export default function TermsPage() {
   };
 
   // Check if all term types have been created
-  const allTermsCreated = getAvailableTermTypes().length === 0;
+  const allTermsCreated = terms.length > 0 && getAvailableTermTypes().length === 0;
 
   // Get static PDF filename based on term tag
   const getStaticPdfFilename = (tag) => {
@@ -264,7 +267,6 @@ export default function TermsPage() {
     }
   };
 
-  // Handle add term button click
   const handleAddTerm = async () => {
     // Validate form
     if (!newTermType) {
@@ -279,7 +281,7 @@ export default function TermsPage() {
       return;
     }
 
-    if (!uploadedPdfFileName) {
+    if (!uploadedPdfFileName || !pdfFile) {
       setModalError("Please upload a PDF file");
       handleModalErrorFade();
       return;
@@ -304,15 +306,14 @@ export default function TermsPage() {
       const contentBlob = new Blob([newTermContent], { type: "text/markdown" });
       formData.append("content", contentBlob, `${newTermType}.md`);
 
-      // Retrieve and validate the PDF file
-      const pdfInput = document.getElementById("pdf-file-upload");
-      const pdfFile = pdfInput?.files[0];
-      if (!pdfFile || !(pdfFile instanceof Blob)) {
-        setModalError("Failed to retrieve a valid PDF file. Please try again.");
+      // Add the PDF file directly from our stored state
+      if (pdfFile) {
+        formData.append("pdf_content", pdfFile, `${newTermType}.pdf`);
+      } else {
+        setModalError("PDF file is missing. Please upload again.");
         handleModalErrorFade();
         return;
       }
-      formData.append("pdf_content", pdfFile, `${newTermType}.pdf`);
 
       const response = await axios.post(
         `${getApiBaseUrl()}/api/terms/`,
@@ -342,6 +343,7 @@ export default function TermsPage() {
       setNewTermVersion("");
       setUploadedMdFileName(""); // Reset markdown file name
       setUploadedPdfFileName(""); // Reset PDF file name
+      setPdfFile(null); // Reset the PDF file object
       setShowAddForm(false);
     } catch (error) {
       console.error("Error adding term:", error);
@@ -381,7 +383,7 @@ export default function TermsPage() {
     }, 5000);
   };
 
-  // Fetch and process content from the file URL
+
   const fetchContent = async (url) => {
     try {
       const response = await axios.get(url);
@@ -391,6 +393,8 @@ export default function TermsPage() {
       return "";
     }
   };
+
+
 
   // -------------------- Main Render --------------------
   return (
@@ -703,102 +707,106 @@ export default function TermsPage() {
                   </div>
                 </div>
               )}
+            </>
+          )}
 
-              {showAddForm && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          {/* This form is now rendered regardless of the noTermsFound state,
+              and is controlled by the showAddForm state variable */}
+          {showAddForm && (
+            <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+              <div
+                className={`
+                p-6 rounded-lg shadow-lg max-w-2xl w-full relative
+                ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"}
+              `}
+              >
+                {/* Error local del modal */}
+                {modalError && (
                   <div
                     className={`
-                  p-6 rounded-lg shadow-lg max-w-2xl w-full relative
-                  ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"}
-                `}
+                    mb-4 text-center border p-4 rounded-md
+                    ${theme === "dark" 
+                      ? "bg-red-900/30 border-red-800 text-red-400" 
+                      : "bg-red-50 border-red-200 text-red-600"}
+                    transition-opacity duration-1000 ease-out
+                    ${modalFadeOut ? "opacity-0" : "opacity-100"}
+                  `}
                   >
-                    {/* Error local del modal */}
-                    {modalError && (
-                      <div
-                        className={`
-                      mb-4 text-center border p-4 rounded-md
-                      ${theme === "dark" 
-                        ? "bg-red-900/30 border-red-800 text-red-400" 
-                        : "bg-red-50 border-red-200 text-red-600"}
-                      transition-opacity duration-1000 ease-out
-                      ${modalFadeOut ? "opacity-0" : "opacity-100"}
-                    `}
-                      >
-                        <p className="font-semibold">{modalError}</p>
-                      </div>
-                    )}
+                    <p className="font-semibold">{modalError}</p>
+                  </div>
+                )}
 
-                    <h2 className="text-xl font-bold mb-4">Add New Term</h2>
+                <h2 className="text-xl font-bold mb-4">Add New Term</h2>
 
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium mb-1">
-                        Term Type
-                      </label>
-                      <select
-                        value={newTermType}
-                        onChange={(e) => setNewTermType(e.target.value)}
-                        className={`
-                      w-full p-2 border rounded-md
-                      ${theme === "dark" 
-                        ? "bg-gray-700 border-gray-600 text-white" 
-                        : "bg-white border-gray-300 text-black"}
-                    `}
-                      >
-                        <option value="">Select a term type</option>
-                        {getAvailableTermTypes().map((type) => (
-                          <option key={type.value} value={type.value}>
-                            {type.label}
-                          </option>
-                        ))}
-                      </select>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-1">
+                    Term Type
+                  </label>
+                  <select
+                    value={newTermType}
+                    onChange={(e) => setNewTermType(e.target.value)}
+                    className={`
+                    w-full p-2 border rounded-md
+                    ${theme === "dark" 
+                      ? "bg-gray-700 border-gray-600 text-white" 
+                      : "bg-white border-gray-300 text-black"}
+                  `}
+                  >
+                    <option value="">Select a term type</option>
+                    {getAvailableTermTypes().map((type) => (
+                      <option key={type.value} value={type.value}>
+                        {type.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-1">
+                    Markdown Content
+                  </label>
+                  <label
+                    htmlFor="md-file-upload"
+                    className={`
+                    flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer
+                    ${theme === "dark" 
+                      ? "bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600" 
+                      : "bg-gray-50 border-gray-300 text-gray-500 hover:bg-gray-100"}
+                  `}
+                  >
+                    <input
+                      id="md-file-upload"
+                      type="file"
+                      accept=".md"
+                      onChange={(e) => handleFileUpload(e.target.files[0], "md")}
+                      className="hidden"
+                    />
+                    <div className="text-center">
+                      <IconFileText className="h-8 w-8 mx-auto" />
+                      <p className="mt-2 text-sm font-medium">
+                        Drag and drop a .md file here, or click to select
+                      </p>
                     </div>
+                  </label>
+                  {uploadedMdFileName && (
+                    <p className="mt-2 text-sm text-blue-500 dark:text-blue-400">
+                      Uploaded file: <span className="font-medium">{uploadedMdFileName}</span>
+                    </p>
+                  )}
+                </div>
 
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium mb-1">
-                        Markdown Content
-                      </label>
-                      <label
-                        htmlFor="md-file-upload"
-                        className={`
-                      flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer
-                      ${theme === "dark" 
-                        ? "bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600" 
-                        : "bg-gray-50 border-gray-300 text-gray-500 hover:bg-gray-100"}
-                    `}
-                      >
-                        <input
-                          id="md-file-upload"
-                          type="file"
-                          accept=".md"
-                          onChange={(e) => handleFileUpload(e.target.files[0], "md")}
-                          className="hidden"
-                        />
-                        <div className="text-center">
-                          <IconFileText className="h-8 w-8 mx-auto" />
-                          <p className="mt-2 text-sm font-medium">
-                            Drag and drop a .md file here, or click to select
-                          </p>
-                        </div>
-                      </label>
-                      {uploadedMdFileName && (
-                        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                          Uploaded file: <span className="font-medium">{uploadedMdFileName}</span>
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium mb-1">
-                        PDF Content
-                      </label>
-                      <label
-                        htmlFor="pdf-file-upload"
-                        className={`
-                      flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer
-                      ${theme === "dark" 
-                        ? "bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600" 
-                        : "bg-gray-50 border-gray-300 text-gray-500 hover:bg-gray-100"}
-                    `}
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-1">
+                    PDF Content
+                  </label>
+                  <label
+                    htmlFor="pdf-file-upload"
+                    className={`
+                    flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer
+                    ${theme === "dark" 
+                      ? "bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600" 
+                      : "bg-gray-50 border-gray-300 text-gray-500 hover:bg-gray-100"}
+                  `}
                       >
                         <input
                           id="pdf-file-upload"
@@ -815,7 +823,7 @@ export default function TermsPage() {
                         </div>
                       </label>
                       {uploadedPdfFileName && (
-                        <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                        <p className="mt-2 text-sm text-blue-500 dark:text-blue-400">
                           Uploaded file: <span className="font-medium">{uploadedPdfFileName}</span>
                         </p>
                       )}
@@ -880,8 +888,6 @@ export default function TermsPage() {
                   them, please contact us.
                 </p>
               </div>
-            </>
-          )}
 
           {showDeleteModal && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
