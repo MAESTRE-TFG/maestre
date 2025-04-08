@@ -1,10 +1,11 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 import { useRouter } from "next/navigation";
+import Alert from "@/components/ui/Alert";
 
 const COMUNIDADES = [
   "Andalucía",
@@ -47,6 +48,7 @@ export function CreateSchoolForm({ onSubmit }) {
     stages: [],
     user: user || ""
   });
+  const [alert, setAlert] = useState(null);
 
   const handleChange = (e) => {
     const { name, value, options } = e.target;
@@ -69,9 +71,30 @@ export function CreateSchoolForm({ onSubmit }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formDataCopy = { ...formData };
+
+    // Validate name length
+    if (formDataCopy.name.length > 50) {
+      setAlert({ type: "warning", message: "Name cannot exceed 50 characters." });
+      return;
+    }
+
+    // Validate city is not null
+    if (!formDataCopy.city) {
+      setAlert({ type: "warning", message: "City is required." });
+      return;
+    }
+
     formDataCopy.stages = formDataCopy.stages.join(", ");
-    console.log(formDataCopy);
-    onSubmit(formDataCopy);
+    if (!formDataCopy.name || !formDataCopy.community || !formDataCopy.city) {
+      setAlert({ type: "warning", message: "All fields are required!" });
+      return;
+    }
+    try {
+      onSubmit(formDataCopy);
+      setAlert({ type: "success", message: "School created successfully!" });
+    } catch (error) {
+      setAlert({ type: "error", message: "Failed to create school. Please try again." });
+    }
   };
 
   const handleSelectStage = (etapa) => {
@@ -91,6 +114,13 @@ export function CreateSchoolForm({ onSubmit }) {
         theme === "dark" ? "bg-black" : "bg-white"
       )}
     >
+      {alert && (
+        <Alert
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert(null)}
+        />
+      )}
       <style jsx global>{`
         @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
       `}</style>

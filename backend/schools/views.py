@@ -21,6 +21,15 @@ class SchoolViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         data = request.data.copy()
+
+        # Validate name length
+        if len(data.get("name", "")) > 100:
+            return Response({"detail": "Name cannot exceed 100 characters."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Validate city is not null
+        if not data.get("city"):
+            return Response({"detail": "City is required."}, status=status.HTTP_400_BAD_REQUEST)
+
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)  # Ensure only valid fields are processed
         school = serializer.save()
@@ -38,6 +47,15 @@ class SchoolViewSet(viewsets.ModelViewSet):
         partial = kwargs.pop('partial', True)
         instance = self.get_object()
         data = request.data.copy()
+
+        # Validate name length
+        if len(data.get("name", "")) > 100:
+            return Response({"detail": "Name cannot exceed 100 characters."}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Validate city is not null
+        if not data.get("city"):
+            return Response({"detail": "City is required."}, status=status.HTTP_400_BAD_REQUEST)
+
         serializer = self.get_serializer(instance, data=data, partial=partial)
         serializer.is_valid(raise_exception=True)  # Ensure only valid fields are processed
         self.perform_update(serializer)
