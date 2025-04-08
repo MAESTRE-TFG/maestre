@@ -256,10 +256,10 @@ const ClassroomPage = () => {
     <div className="container mx-auto h-full">
       {alert && <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />}
       
-      <div className="fixed top-0 left-0 w-full z-10 bg-inherit backdrop-blur-md">
+      <div className="w-full z-10 bg-inherit backdrop-blur-md">
         <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-full">
           <div className="h-12"></div>
-          <div className="flex justify-center items-center sticky top-0 bg-inherit px-4 space-x-4 z-900">
+          <div className="flex justify-center items-center px-4 space-x-4 z-900">
             
             {classroom ? (
               <div className="flex flex-col items-center space-y-2">
@@ -311,7 +311,7 @@ const ClassroomPage = () => {
       </div>
 
       {/* Navigation tabs */}
-      <div className={cn("flex mb-8 border-b mt-28",
+      <div className={cn("flex mb-8 border-b mt-8",
         theme === "dark" ? "border-neutral-700" : "border-gray-200")}>
         <button
           className={cn("px-6 py-3 transition-colors",
