@@ -8,23 +8,23 @@ import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { Label } from "@/components/ui/label";
+import Alert from "@/components/ui/Alert";
 
 const ClassroomsList = () => {
   const router = useRouter();
   const { theme } = useTheme();
   const [classes, setClasses] = useState([]);
-  const [errorMessage, setErrorMessage] = useState(null);
   const [isClient, setIsClient] = useState(false);
+  const [alert, setAlert] = useState(null);
 
   useEffect(() => {
     setIsClient(true);
     const user = JSON.parse(localStorage.getItem('user'));
-    console.log(user.id)
     const fetchClasses = async () => {
       try {
         const response = await axios.get(`${getApiBaseUrl()}/api/classrooms/`, {
           params: {
-            creator: user.id 
+            creator: user.id,
           },
           headers: {
             Authorization: `Token ${localStorage.getItem("authToken")}`,
@@ -32,7 +32,7 @@ const ClassroomsList = () => {
         });
         setClasses(response.data);
       } catch (err) {
-        setErrorMessage("Failed to fetch classes");
+        setAlert({ type: "error", message: "Failed to fetch classes. Please try again later." });
       }
     };
     fetchClasses();
@@ -54,6 +54,13 @@ const ClassroomsList = () => {
 
   return (
     <div className="relative flex flex-col justify-center items-center py-8 sm:px-8 lg:px-8">
+      {alert && (
+        <Alert
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert(null)}
+        />
+      )}
       {/* Header Section */}
       <div className="w-full text-center mb-12 z-10">
         <br></br>
@@ -193,10 +200,24 @@ export default function Main() {
 }
 
 const BottomGradient = ({ isCreate }) => {
-  return (<>
-    <span className={cn("group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0", 
-      isCreate ? "bg-gradient-to-r from-transparent via-green-500 to-transparent" : "bg-gradient-to-r from-transparent via-cyan-500 to-transparent")} />
-    <span className={cn("group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10", 
-      isCreate ? "bg-gradient-to-r from-transparent via-green-500 to-transparent" : "bg-gradient-to-r from-transparent via-indigo-500 to-transparent")} />
-  </>);
+  return (
+    <>
+      <span
+        className={cn(
+          "group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0",
+          isCreate
+            ? "bg-gradient-to-r from-transparent via-green-500 to-transparent"
+            : "bg-gradient-to-r from-transparent via-cyan-500 to-transparent"
+        )}
+      />
+      <span
+        className={cn(
+          "group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10",
+          isCreate
+            ? "bg-gradient-to-r from-transparent via-green-500 to-transparent"
+            : "bg-gradient-to-r from-transparent via-indigo-500 to-transparent"
+        )}
+      />
+    </>
+  );
 };

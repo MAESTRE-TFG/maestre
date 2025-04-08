@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import axios from "axios";
 import { ClassroomEditForm } from "@/components/classroom-edit-form";
 import { Modal } from "@/components/ui/modal";
+import Alert from "@/components/ui/Alert";
 
 const ClassroomEdit = () => {
   const router = useRouter();
@@ -22,12 +23,42 @@ const ClassroomEdit = () => {
     academic_year: "",
     description: ""
   });
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [alert, setAlert] = useState(null); // State for managing alerts
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [nameInput, setNameInput] = useState("");
   const searchParams = useSearchParams();
   const [userSchool, setUserSchool] = useState(null);
   const [userStages, setUserStages] = useState(null);
+
+  const showAlert = (type, message) => {
+    setAlert({ type, message });
+    setTimeout(() => setAlert(null), 5000); // Auto-dismiss after 5 seconds
+  };
+
+  const validateFormData = () => {
+    if (formData.name.length > 30) {
+      showAlert("warning", "Name must not exceed 30 characters.");
+      return false;
+    }
+    if (formData.academic_course.length > 30) {
+      showAlert("warning", "Academic course must not exceed 30 characters.");
+      return false;
+    }
+    if (formData.description.length > 255) {
+      showAlert("warning", "Description must not exceed 255 characters.");
+      return false;
+    }
+    if (formData.description.length < 1) {
+      showAlert("warning", "Description must not be empty.");
+      return false;
+    }
+    const yearPattern = /^\d{4}-\d{4}$/;
+    if (formData.academic_year && !yearPattern.test(formData.academic_year)) {
+      showAlert("warning", "Academic Year must be in the format 'YYYY-YYYY'.");
+      return false;
+    }
+    return true;
+  };
 
   useEffect(() => {
     const user = localStorage.getItem('user');
@@ -44,7 +75,6 @@ const ClassroomEdit = () => {
     }
   }, [router]);
 
-
   useEffect(() => {
     const fetchStages = async () => {
       if (userSchool) {
@@ -58,16 +88,15 @@ const ClassroomEdit = () => {
             const data = await response.json();
             setUserStages(data.stages);
           } else {
-            setErrorMessage("Failed to fetch stages");
+            showAlert("error", "Failed to fetch stages");
           }
         } catch (err) {
-          setErrorMessage("Network error occurred");
+          showAlert("error", "Network error occurred");
         }
       }
     };
     fetchStages();
-  }, [userSchool, setErrorMessage]);
-
+  }, [userSchool]);
 
   const educationalStages = [
     {
@@ -125,8 +154,8 @@ const ClassroomEdit = () => {
             description: response.data.description || "",
           });
         })
-        .catch((error) => {
-          setErrorMessage("Failed to fetch classroom data");
+        .catch(() => {
+          showAlert("error", "Failed to fetch classroom data");
         });
     } else {
       router.push("/classrooms");
@@ -139,14 +168,11 @@ const ClassroomEdit = () => {
   }, []);
 
   const handleUpdate = useCallback(async () => {
+    if (!validateFormData()) return;
+
     try {
       if (!classroom) {
-        setErrorMessage("Classroom data is missing");
-        return;
-      }
-      const yearPattern = /^\d{4}-\d{4}$/;
-      if (formData.academic_year && !yearPattern.test(formData.academic_year)) {
-        setErrorMessage("Academic Year must be in the format 'YYYY-YYYY'.");
+        showAlert("error", "Classroom data is missing");
         return;
       }
       const response = await axios.put(
@@ -159,15 +185,16 @@ const ClassroomEdit = () => {
         }
       );
       setClassroom(response.data);
+      showAlert("success", "Classroom updated successfully");
       router.push("/classrooms");
     } catch (err) {
-      setErrorMessage("Failed to update classroom data");
+      showAlert("error", "Failed to update classroom data");
     }
   }, [formData, classroom?.id, router]);
 
   const handleDelete = useCallback(async () => {
     if (!classroom) {
-      setErrorMessage("Classroom data is missing");
+      showAlert("error", "Classroom data is missing");
       return;
     }
     if (nameInput === classroom.name) {
@@ -180,12 +207,13 @@ const ClassroomEdit = () => {
             },
           }
         );
+        showAlert("success", "Classroom deleted successfully");
         router.push("/classrooms");
       } catch (err) {
-        setErrorMessage("Delete failed");
+        showAlert("error", "Delete failed");
       }
     } else {
-      alert("Classroom name does not match. Deletion cancelled.");
+      showAlert("error", "Classroom name does not match. Deletion cancelled.");
     }
   }, [router, classroom?.id, nameInput]);
 
@@ -215,6 +243,7 @@ const ClassroomEdit = () => {
 
   return (
     <div className="relative flex flex-col justify-center items-center py-12 sm:px-8 lg:px-8 overflow-auto">
+      {alert && <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />}
       {/* Background Images */}
       {theme === "dark" ? (
         <>
@@ -243,7 +272,7 @@ const ClassroomEdit = () => {
           />
         </>
       )}
-      {/* End of Background Images */}
+
       <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-full">
         <h1
           className={cn(

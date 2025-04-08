@@ -4,14 +4,14 @@ import { useRouter } from "next/navigation";
 import { getApiBaseUrl } from "@/lib/api";
 import { CreateClassroomForm } from "@/components/classroom-create-form";
 import { useTheme } from "@/components/theme-provider";
-import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
+import Alert from "@/components/ui/Alert";
 
 export default function CreateClassroom() {
   const router = useRouter();
   const { theme } = useTheme();
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [alert, setAlert] = useState(null);
   const [userSchool, setUserSchool] = useState(null);
   const [userStages, setUserStages] = useState(null);
 
@@ -25,6 +25,7 @@ export default function CreateClassroom() {
     }
     const token = localStorage.getItem('authToken');
     if (!token) {
+      setAlert({ type: "error", message: "Authentication token missing. Redirecting to signup." });
       router.push('/profile/signup');
       return;
     }
@@ -43,15 +44,16 @@ export default function CreateClassroom() {
             const data = await response.json();
             setUserStages(data.stages);
           } else {
-            setErrorMessage("Failed to fetch stages");
+            setAlert({ type: "error", message: "Failed to fetch stages. Please try again later." });
           }
         } catch (err) {
-          setErrorMessage("Network error occurred");
+          setAlert({ type: "error", message: "Network error occurred while fetching stages." });
         }
       }
     };
     fetchStages();
   }, [userSchool]);
+
   const educationalStages = [
     {
       stage: "Infantil",
@@ -96,37 +98,41 @@ export default function CreateClassroom() {
       });
 
       if (response.ok) {
+        setAlert({ type: "success", message: "Classroom created successfully!" });
         router.push("/classrooms");
       } else {
         const data = await response.json();
-        setErrorMessage("Failed to create classroom");
+        if (data.error) {
+          setAlert({ type: "error", message: data.error });
+        } else {
+          setAlert({ type: "error", message: "Failed to create classroom. Please try again." });
+        }
       }
     } catch (err) {
-      setErrorMessage("Network error occurred");
+      setAlert({ type: "error", message: "Network error occurred while creating classroom." });
     }
   };
 
   return (
     <SidebarDemo ContentComponent={() => (
       <div className="relative flex flex-col justify-center items-center py-12 sm:px-8 lg:px-8 overflow-auto">
-        {/* Floating Div */}
-        <div className="fixed top-0 left-0 w-full z-20 bg-inherit">
-          <div className="relative z-20 sm:mx-auto sm:w-full sm:max-w-full">
-            <div className="h-12"></div>
-            <h1
-              className={cn(
-                "mt-6 text-center text-3xl font-extrabold text-zinc-100",
-                theme === "dark" ? "text-white" : "text-dark"
-              )}
-            >
-              Create a New Classroom
-            </h1>
-            <style jsx global>{`
-              @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
-            `}</style>
-          </div>
+        {alert && (
+          <Alert
+            type={alert.type}
+            message={alert.message}
+            onClose={() => setAlert(null)}
+          />
+        )}
+
+
+        {/* Header Section */}
+        <div className="w-full text-center mb-12 z-10">
+          <br></br>
+          <h1 className={`text-4xl font-bold font-alfa-slab-one mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+            Create a New Classroom
+          </h1>
         </div>
-        {/* End of Floating Div */}
+  
         {/* Background Images */}
         {theme === "dark" ? (
           <>
@@ -155,10 +161,9 @@ export default function CreateClassroom() {
             />
           </>
         )}
-        {/* End of Background Images */}
-        <div className="relative z-10 my-12" style={{ height: "300px" }}></div>
+
         <div className="relative z-10 xl:mx-auto xl:w-full xl:max-w-6xl">
-          <CreateClassroomForm onSubmit={handleSubmit} setErrorMessage={setErrorMessage} educationalStages={filteredEducationalStages} />
+          <CreateClassroomForm onSubmit={handleSubmit} educationalStages={filteredEducationalStages} />
         </div>
         <div className="my-12"></div>
       </div>
