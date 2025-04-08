@@ -43,9 +43,9 @@ class DocumentViewSet(viewsets.ModelViewSet):
                         status=status.HTTP_400_BAD_REQUEST
                     )
 
-                if classroom.documents.count() >= 5:
+                if classroom.documents.count() >= 10:
                     return Response(
-                        {"error": "This classroom already has the maximum number of files (5)."},
+                        {"error": "This classroom already has the maximum number of files (10)."},
                         status=status.HTTP_400_BAD_REQUEST
                     )
             except ObjectDoesNotExist:

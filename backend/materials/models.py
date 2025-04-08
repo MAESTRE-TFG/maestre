@@ -10,11 +10,11 @@ def validate_file_limit(classroom):
 
 
 class Document(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=30)
     file = models.FileField(
         upload_to='documents/',
         validators=[
-            FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx', 'png', 'jpg', 'pptx']),
+            FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx', 'png', 'jpg', 'pptx', 'txt', 'md', 'tex']),
         ]
     )
     classroom = models.ForeignKey(
