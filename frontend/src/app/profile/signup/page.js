@@ -6,11 +6,17 @@ import { SignupForm } from "@/components/signup-form-demo";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
+import Alert from "@/components/ui/Alert"; // Import the Alert component
 
 export default function SignUp() {
   const router = useRouter();
   const { theme } = useTheme();
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [alert, setAlert] = useState(null); // State for managing alerts
+
+  const showAlert = (type, message) => {
+    setAlert({ type, message });
+    setTimeout(() => setAlert(null), 5000); // Auto-dismiss after 5 seconds
+  };
 
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -20,6 +26,28 @@ export default function SignUp() {
   }, [router]);
 
   const handleSubmit = async (formData) => {
+    // Field length restrictions
+    if (formData.username && formData.username.length > 30) {
+      showAlert("warning", "Username cannot exceed 30 characters");
+      return;
+    }
+    if (formData.email && formData.email.length > 255) {
+      showAlert("warning", "Email cannot exceed 255 characters");
+      return;
+    }
+    if (formData.name && formData.name.length > 30) {
+      showAlert("warning", "First name cannot exceed 30 characters");
+      return;
+    }
+    if (formData.surname && formData.surname.length > 30) {
+      showAlert("warning", "Last name cannot exceed 30 characters");
+      return;
+    }
+    if (formData.school && typeof formData.school !== "string") {
+      showAlert("warning", "Invalid school selection");
+      return;
+    }
+
     try {
       const response = await fetch(`${getApiBaseUrl()}/api/users/signup/`, {
         method: "POST",
@@ -32,20 +60,22 @@ export default function SignUp() {
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem("authToken", data.token);
-        const user = JSON.stringify(data)
+        const user = JSON.stringify(data);
         localStorage.setItem("user", user);
         router.push("/");
+        showAlert("success", "Account created successfully");
       } else {
         const data = await response.json();
-        setErrorMessage(data.detail || "Registration failed");
+        showAlert("error", data.detail || "Registration failed");
       }
     } catch (err) {
-      setErrorMessage("Network error occurred");
+      showAlert("error", "Network error occurred");
     }
   };
 
   return (
     <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+      {alert && <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />}
       <div className="sm:mx-auto sm:w-full sm:max-w-2xl">
         <h1
           className={cn(
