@@ -124,7 +124,7 @@ export function SidebarDemo({ ContentComponent }) {
       icon: (
         <IconPlus
           className={cn(
-            "h-6 w-6 ml-2 flex-shrink-0", // Increased size and added margin-left
+            "h-8 w-8 ml-2 flex-shrink-0", // Increased size of icons
             theme == "dark" ? "text-neutral-200" : "text-neutral-700"
           )}
         />
@@ -136,7 +136,7 @@ export function SidebarDemo({ ContentComponent }) {
       icon: (
         <IconSchool
           className={cn(
-            "h-6 w-6 ml-2 flex-shrink-0", // Increased size and added margin-left
+            "h-8 w-8 ml-2 flex-shrink-0", // Increased size of icons
             theme == "dark" ? "text-neutral-200" : "text-neutral-700"
           )}
         />
@@ -148,7 +148,7 @@ export function SidebarDemo({ ContentComponent }) {
       icon: (
         <IconBooks
           className={cn(
-            "h-6 w-6 ml-2 flex-shrink-0", // Increased size and added margin-left
+            "h-8 w-8 ml-2 flex-shrink-0", // Increased size of icons
             theme == "dark" ? "text-neutral-200" : "text-neutral-700"
           )}
         />
@@ -160,7 +160,7 @@ export function SidebarDemo({ ContentComponent }) {
       icon: (
         <IconUser
           className={cn(
-            "h-6 w-6 ml-2 flex-shrink-0", // Increased size and added margin-left
+            "h-8 w-8 ml-2 flex-shrink-0", // Increased size of icons
             theme == "dark" ? "text-neutral-200" : "text-neutral-700"
           )}
         />
@@ -181,7 +181,18 @@ export function SidebarDemo({ ContentComponent }) {
       )}
     >
       <Sidebar open={open} setOpen={setOpen} className={cn(open ? "w-84 z-50" : "w-60 z-50")}>
-        <SidebarBody className={cn("justify-between gap-10", theme === "dark" ? "bg-neutral-800 z-50" : "bg-neutral-100 z-50")}>
+        <SidebarBody
+          className={cn(
+            "justify-between gap-10",
+            theme === "dark"
+              ? "bg-gradient-to-b from-neutral-800 via-neutral-800 to-[#a3b8d9] z-50" // Subtle gradient for dark theme
+              : "bg-gradient-to-b from-gray-100 via-gray-100 to-[#d4e4f4] z-50"      // Subtle gradient for light theme
+          )}
+          style={{
+            backgroundSize: "100% 200%", // Make the gradient start lower
+            backgroundPosition: "top 75%", // Adjust gradient position
+          }}
+        >
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             {open ? (
               <>
@@ -244,11 +255,11 @@ export function SidebarDemo({ ContentComponent }) {
       <Modal isOpen={isLogoutModalOpen} onClose={closeLogoutModal} title="Confirm Logout" style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}
       >
         <div className="p-4">
-          <h2 className="text-lg font-bold mb-4"
+          <h2 className="text-xl font-bold mb-4" // Increased text size
           >
             Confirm Logout
           </h2>
-          <p className="mb-4">
+          <p className="mb-4 text-lg"> {/* Increased text size */}
             Are you sure you want to log out? You will need to sign in again to access your account.
           </p>
           <div className="flex justify-end">
@@ -273,16 +284,24 @@ export function SidebarDemo({ ContentComponent }) {
 export const Logo = () => {
   const { theme } = useTheme();
   const router = useRouter();
+  const [open, setOpen] = useState(false); // Access sidebar state
+
   return (
     <div
-      className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-50 cursor-pointer"
+      className={cn(
+        "font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-50 cursor-pointer",
+        open ? "text-lg" : "text-sm" // Adjust text size based on sidebar state
+      )}
       onClick={() => router.push("/")} // Redirect to home page
     >
       <img
         src={theme === "dark" ? "/static/maestre_logo_2_dark.webp" : "/static/maestre_logo_2.webp"}
-        className="h-12 w-12 flex-shrink-0 rounded-full"
-        width={90}
-        height={90}
+        className={cn(
+          "flex-shrink-0 rounded-full",
+          open ? "h-16 w-16" : "h-12 w-12" // Adjust logo size based on sidebar state
+        )}
+        width={open ? 120 : 90}
+        height={open ? 120 : 90}
         alt="Maestre"
         style={{ objectFit: "contain" }}
       />
@@ -297,7 +316,14 @@ export const Logo = () => {
         <style jsx global>{
           `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');`
         }</style>
-        <h2 style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>MAESTRE</h2>
+        <h2
+          style={{
+            fontFamily: "'Alfa Slab One', sans-serif",
+            fontSize: open ? "2rem" : "1.25rem", // Adjust title size based on sidebar state
+          }}
+        >
+          MAESTRE
+        </h2>
       </motion.span>
     </div>
   );
