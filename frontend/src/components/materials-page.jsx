@@ -5,10 +5,11 @@ import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import axios from 'axios';
 import { FileUploadDemo } from '@/components/file-upload-demo';
+import Alert from '@/components/ui/Alert';
 
 export function MaterialsPage({ classroomId }) {
   const { theme } = useTheme();
-  const [error, setError] = useState(null);
+  const [alert, setAlert] = useState(null);
 
   const [materials, setMaterials] = useState([]);
   const [tags, setTags] = useState([]);
@@ -26,7 +27,7 @@ export function MaterialsPage({ classroomId }) {
   const [fileToEdit, setFileToEdit] = useState(null);
   const [newFileName, setNewFileName] = useState("");
 
-  const [refreshTrigger, setRefreshTrigger] = useState(0);  // Add a refreshTrigger state to force re-fetching
+  const [refreshTrigger, setRefreshTrigger] = useState(0);  // Force re-fetching
 
 
   const TAG_COLORS = [
@@ -43,10 +44,9 @@ export function MaterialsPage({ classroomId }) {
 
   const [selectedColor, setSelectedColor] = useState(TAG_COLORS[0].value);
 
-  // Add this state to track if we're creating a tag from the edit modal
+  // This state tracks if we're creating a tag from the edit modal
   const [creatingTagFromEdit, setCreatingTagFromEdit] = useState(false);
 
-  // Add these functions to handle editing material name
   const handleEdit = (material) => {
     setFileToEdit(material);
     setNewFileName(material.name);
@@ -55,7 +55,6 @@ export function MaterialsPage({ classroomId }) {
 
   const confirmEdit = async () => {
     try {
-      // Get the original file extension if it exists
       const originalName = fileToEdit.name;
       const hasExtension = originalName.includes('.');
       let updatedFileName = newFileName;
@@ -81,13 +80,12 @@ export function MaterialsPage({ classroomId }) {
         }
       );
 
-      // Update the material in the materials state
       setMaterials(prevMaterials =>
         prevMaterials.map(m => m.id === fileToEdit.id ? { ...m, name: updatedFileName } : m)
       );
+      setAlert({ type: 'success', message: 'Material name updated successfully!' });
     } catch (error) {
-      setError('Failed to update material name. Please try again.');
-      console.error('Error updating material name:', error);
+      setAlert({ type: 'error', message: 'Failed to update material name. Please try again.' });
     } finally {
       setShowEditModal(false);
       setFileToEdit(null);
@@ -109,11 +107,10 @@ export function MaterialsPage({ classroomId }) {
 
       // Remove the deleted material from the materials state
       setMaterials(prevMaterials => prevMaterials.filter(m => m.id !== fileToDelete.id));
-      // Refresh materials list
       refreshMaterials();
+      setAlert({ type: 'success', message: 'Material deleted successfully!' });
     } catch (error) {
-      setError('Failed to delete material. Please try again.');
-      console.error('Error deleting material:', error);
+      setAlert({ type: 'error', message: 'Failed to delete material. Please try again.' });
     } finally {
       setShowDeleteModal(false);
       setFileToDelete(null);
@@ -152,7 +149,7 @@ export function MaterialsPage({ classroomId }) {
         });
         setMaterials(response.data);
       } else {
-        const response = await axios.get('${getApiBaseUrl()}/api/materials/', {
+        const response = await axios.get(`${getApiBaseUrl()}/api/materials/`, {
           params,
           headers: {
             Authorization: `Token ${localStorage.getItem('authToken')}`
@@ -161,30 +158,29 @@ export function MaterialsPage({ classroomId }) {
         setMaterials(response.data);
       }
     } catch (error) {
-      console.error('Error fetching materials:', error);
+      setAlert({ type: 'error', message: 'Error fetching materials. Please try again.' });
     }
   };
 
   const fetchTags = async () => {
     try {
-      const response = await axios.get('${getApiBaseUrl()}/api/tags/user_tags/', {
+      const response = await axios.get(`${getApiBaseUrl()}/api/tags/user_tags/`, {
         headers: {
           Authorization: `Token ${localStorage.getItem('authToken')}`
         }
       });
       setTags(response.data);
     } catch (error) {
-      console.error('Error fetching tags:', error);
+      setAlert({ type: 'error', message: 'Error fetching tags. Please try again.' });
     }
   };
 
   const handleCreateTag = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError(null);
 
     try {
-      const response = await axios.post('${getApiBaseUrl()}/api/tags/', {
+      const response = await axios.post(`${getApiBaseUrl()}/api/tags/`, {
         name: newTagName,
         color: selectedColor
       }, {
@@ -208,11 +204,12 @@ export function MaterialsPage({ classroomId }) {
 
       setNewTagName('');
       setSelectedColor(TAG_COLORS[0].value);
+      setAlert({ type: 'success', message: 'Tag created successfully!' });
     } catch (error) {
       if (error.response?.data?.includes('15 tags')) {
-        setError('You have reached the maximum limit of 15 tags.');
+        setAlert({ type: 'error', message: 'You have reached the maximum limit of 15 tags.' });
       } else {
-        setError('Error creating tag. Please try again.');
+        setAlert({ type: 'error', message: 'Error creating tag. Please try again.' });
       }
     } finally {
       setIsSubmitting(false);
@@ -239,7 +236,7 @@ export function MaterialsPage({ classroomId }) {
       const response = await axios.patch(
         `${getApiBaseUrl()}/api/materials/${editingMaterial.id}/`,
         {
-          tag_ids: selectedMaterialTags  // Changed from tags to tag_ids to match serializer
+          tag_ids: selectedMaterialTags
         },
         {
           headers: {
@@ -259,8 +256,9 @@ export function MaterialsPage({ classroomId }) {
       );
 
       setShowEditTagsModal(false);
+      setAlert({ type: 'success', message: 'Tags updated successfully!' });
     } catch (error) {
-      console.error('Error updating material tags:', error);
+      setAlert({ type: 'error', message: 'Error updating tags. Please try again.' });
     }
   };
 
@@ -283,14 +281,21 @@ export function MaterialsPage({ classroomId }) {
         fetchTags(),
         fetchMaterials()
       ]);
+      setAlert({ type: 'success', message: 'Tag deleted successfully!' });
     } catch (error) {
-      console.error('Error deleting tag:', error);
+      setAlert({ type: 'error', message: 'Error deleting tag. Please try again.' });
     }
   };
 
   return (
     <div className="space-y-6">
-
+      {alert && (
+        <Alert
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert(null)}
+        />
+      )}
       {/* Tags Filter Section */}
       <div className="flex flex-wrap gap-2 items-center mb-6">
         <div className="flex items-center gap-2">
@@ -314,7 +319,7 @@ export function MaterialsPage({ classroomId }) {
             </svg>
           </button>
         </div>
-        {tags.map(tag => (
+        {Array.isArray(tags) && tags.map(tag => ( // Add defensive check to ensure tags is an array
           <div key={tag.id} className="flex items-center">
             {deleteMode ? (
               <>
@@ -609,7 +614,7 @@ export function MaterialsPage({ classroomId }) {
                   materials.length >= 4 && "lg:grid-cols-4",
                   materials.length >= 5 && "lg:grid-cols-5"
                 )}>
-                  {materials.map((material) => (
+                  {Array.isArray(materials) && materials.map((material) => ( // Add defensive check to ensure materials is an array
                     <div
                       key={material.id}
                       className={cn(

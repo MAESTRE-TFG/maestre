@@ -53,42 +53,34 @@ const ClassroomsList = () => {
   if (!isClient) return null;
 
   return (
-    <div className="relative flex flex-col justify-center items-center py-8 sm:px-8 lg:px-8 overflow-auto">
-      {/* Floating Div */}
-      <div className="fixed top-0 left-0 w-full z-10 bg-inherit backdrop-blur-md">
-        <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-full">
-          <div className="h-12"></div>
-          <div className="flex justify-center items-center sticky top-0 bg-inherit px-4 space-x-4">
-            <h1
-              className={cn(
-                "text-3xl font-extrabold text-zinc-100",
-                theme === "dark" ? "text-white" : "text-dark"
-              )}
-            >
-              My Classes
-            </h1>
-            {classes.length > 0 && (
-              <button
-                className={cn(
-                  "px-4 py-2 rounded-md text-lg font-medium border border-green-500",
-                  theme === "dark"
-                    ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-                    : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]"
-                )}
-                onClick={() => router.push("/classrooms/new")}
-                style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-              >
-                Create Classroom +
-                <BottomGradient isCreate={true} />
-              </button>
+    <div className="relative flex flex-col justify-center items-center py-8 sm:px-8 lg:px-8">
+      {/* Header Section */}
+      <div className="w-full text-center mb-12 z-10">
+        <br></br>
+        <h1 className={`text-4xl font-bold font-alfa-slab-one mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+          My Classrooms
+        </h1>
+        {classes.length > 0 && (
+          <button
+            className={cn(
+              "px-4 py-2 rounded-md text-lg font-medium border border-green-500",
+              theme === "dark"
+                ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+                : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]"
             )}
-            <style jsx global>{`
-              @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
-            `}</style>
-          </div>
-        </div>
+            onClick={() => router.push("/classrooms/new")}
+            style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+          >
+            Create Classroom +
+            <BottomGradient isCreate={true} />
+          </button>
+        )}
+        <style jsx global>{`
+          @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
+        `}</style>
       </div>
-      {/* End of Floating Div */}
+
+  
       {/* Background Images */}
       {theme === "dark" ? (
         <>

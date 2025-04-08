@@ -65,13 +65,19 @@ class DocumentViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         except Exception as e:
             return Response(
-                {'error': str(e)},
+                {'error': f"Failed to update tags: {str(e)}"},  # Added detailed error message
                 status=status.HTTP_400_BAD_REQUEST
             )
 
     def get_all_user_materials(self, request):
-        materials = Document.objects.filter(
-            classroom__creator=request.user
-        ).select_related('classroom').prefetch_related('tags')
-        serializer = DocumentSerializer(materials, many=True)
-        return Response(serializer.data)
+        try:
+            materials = Document.objects.filter(
+                classroom__creator=request.user
+            ).select_related('classroom').prefetch_related('tags')
+            serializer = DocumentSerializer(materials, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response(
+                {'error': f"Failed to fetch user materials: {str(e)}"},  # Added detailed error message
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

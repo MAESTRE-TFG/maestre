@@ -318,19 +318,16 @@ const MaterialsList = () => {
 
   return (
     <div className="relative flex flex-col justify-center items-center py-8 sm:px-8 lg:px-8 overflow-auto">
-      {/* Floating Title */}
-      <div className="fixed top-0 left-0 w-full z-10 bg-inherit backdrop-blur-md">
-        <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-full">
-          <div className="h-12"></div>
-          <div className="flex justify-center items-center sticky top-0 bg-inherit px-4">
-            <h1 className={cn(
-              "text-3xl font-extrabold",
-              theme === "dark" ? "text-white" : "text-dark"
-            )}>
-              My Materials
-            </h1>
-          </div>
-        </div>
+
+      {/* Header Section */}
+      <div className="w-full text-center mb-12">
+        <br></br>
+        <h1 className={`text-4xl font-bold font-alfa-slab-one mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+          My Materials
+        </h1>
+        <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+          See all your uploaded materials at a glace.
+        </p>
       </div>
 
       {/* Background Images */}
@@ -347,8 +344,6 @@ const MaterialsList = () => {
           className="absolute top-100 left-10 w-1/2 opacity-50 z-0"
         />
       )}
-
-      <div className="relative my-8" style={{ height: "250px" }}></div>
 
       {/* Main Content */}
       {/* <div className="relative xl:mx-auto xl:w-full xl:max-w-6xl"> */}
