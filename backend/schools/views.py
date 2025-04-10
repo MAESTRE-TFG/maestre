@@ -23,9 +23,8 @@ class SchoolViewSet(viewsets.ModelViewSet):
         data = request.data.copy()
 
         # Validate name length
-        if len(data.get("name", "")) > 100:
-            return Response({"detail": "Name cannot exceed 100 characters."}, status=status.HTTP_400_BAD_REQUEST)
-
+        if len(data.get("name", "")) > 50:
+            return Response({"detail": "Name cannot exceed 50 characters."}, status=status.HTTP_400_BAD_REQUEST)
         # Validate city is not null
         if not data.get("city"):
             return Response({"detail": "City is required."}, status=status.HTTP_400_BAD_REQUEST)
