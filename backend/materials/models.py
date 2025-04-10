@@ -1,12 +1,12 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
+from django.conf import settings
 import os
 
-
 def validate_file_limit(classroom):
-    if classroom.documents.count() >= 5:
-        raise ValidationError('A classroom cannot have more than 5 files.')
+    if classroom.documents.count() >= settings.MAX_FILES_PER_CLASSROOM:
+        raise ValidationError(f'A classroom cannot have more than {settings.MAX_FILES_PER_CLASSROOM} files.')
 
 
 class Document(models.Model):

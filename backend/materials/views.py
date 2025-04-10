@@ -14,6 +14,7 @@ import tempfile
 import os
 from .models import Document
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
@@ -51,9 +52,9 @@ class DocumentViewSet(viewsets.ModelViewSet):
                         status=status.HTTP_400_BAD_REQUEST
                     )
 
-                if classroom.documents.count() >= 10:
+                if classroom.documents.count() >= settings.MAX_FILES_PER_CLASSROOM:
                     return Response(
-                        {"error": "This classroom already has the maximum number of files (10)."},
+                        {"error": f"This classroom already has the maximum number of files ({settings.MAX_FILES_PER_CLASSROOM})."},
                         status=status.HTTP_400_BAD_REQUEST
                     )
             except ObjectDoesNotExist:
