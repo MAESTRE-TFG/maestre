@@ -20,7 +20,7 @@ class Classroom(models.Model):
     def clean(self):
         if not self.academic_year:
             raise ValidationError({'academic_year': 'Academic year cannot be empty.'})
-        if not RegexValidator(regex=r'^\d{4}-\d{4}$')(self.academic_year):
+        if not re.match(r'^\d{4}-\d{4}$', self.academic_year):
             raise ValidationError({'academic_year': 'Academic year must be in the format YYYY-YYYY.'})
 
     @property
