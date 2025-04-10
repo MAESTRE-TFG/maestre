@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'classrooms',
     'tags',
     'materials',
+    'terms',
 ]
 
 MEDIA_URL = '/media/'

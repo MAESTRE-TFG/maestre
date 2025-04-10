@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import { getApiBaseUrl } from "@/lib/api";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
 import {
   IconArrowLeft,
@@ -24,47 +25,87 @@ export function SidebarDemo({ ContentComponent }) {
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const openLogoutModal = () => setLogoutModalOpen(true);
   const closeLogoutModal = () => setLogoutModalOpen(false);
+  
+  // Improved user data handling
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
-    }
+    const checkUserData = () => {
+      try {
+        const storedUser = localStorage.getItem("user");
+        const token = localStorage.getItem("authToken");
+        
+        // Only set user if both user data and token exist
+        if (storedUser && token) {
+          setUser(JSON.parse(storedUser));
+        } else {
+          // Clear user state if either is missing
+          setUser(null);
+        }
+      } catch (error) {
+        console.error("Error parsing user data:", error);
+        setUser(null);
+      }
+    };
+    
+    // Check on initial load
+    checkUserData();
+    
+    // Add storage event listener to handle changes from other tabs
+    const handleStorageChange = (e) => {
+      if (e.key === "user" || e.key === "authToken") {
+        checkUserData();
+      }
+    };
+    
+    window.addEventListener("storage", handleStorageChange);
+    
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
   }, []);
 
   const handleSignout = async () => {
     console.log('Signing out...');
     try {
-      await axios.post('http://localhost:8000/api/users/signout/', {}, {
-        headers: {
-          'Authorization': `Token ${localStorage.getItem('authToken')}`
+      const token = localStorage.getItem('authToken');
+      
+      if (token) {
+        try {
+          // Change the Authorization header format to match what your backend expects
+          await axios.post(`${getApiBaseUrl()}/api/users/signout/`, {}, {
+            headers: {
+              'Authorization': `Token ${token}`  // Changed from Bearer to Token
+            }
+          });
+          console.log('Successfully called signout API');
+        } catch (apiError) {
+          console.error('API error during signout:', apiError);
+          // Continue with local logout even if API call fails
         }
-      });
+      }
       
-      closeLogoutModal();
-      
+      // Always clear local storage and state
       localStorage.removeItem('authToken');
       localStorage.removeItem('user');
-      
       setUser(null);
+      closeLogoutModal();
       
+      // Use router.push in a safe way
       setTimeout(() => {
         router.push("/profile/signin");
       }, 100);
       
     } catch (error) {
-      if (error.response && error.response.status === 401) {
-        console.error('Invalid token:', error.response.data?.detail || 'No detail available');
-        
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('user');
-        setUser(null);
-        
-        setTimeout(() => {
-          router.push("/profile/signin");
-        }, 100);
-      } else {
-        console.error('Error Signing out:', error);
-      }
+      console.error('Error during signout process:', error);
+      
+      // Ensure we still clear data even if there's an error
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('user');
+      setUser(null);
+      closeLogoutModal();
+      
+      setTimeout(() => {
+        router.push("/profile/signin");
+      }, 100);
     }
   };
 
@@ -83,7 +124,7 @@ export function SidebarDemo({ ContentComponent }) {
       icon: (
         <IconPlus
           className={cn(
-            "h-5 w-5 flex-shrink-0",
+            "h-6 w-6 ml-2 flex-shrink-0", // Increased size and added margin-left
             theme == "dark" ? "text-neutral-200" : "text-neutral-700"
           )}
         />
@@ -95,7 +136,7 @@ export function SidebarDemo({ ContentComponent }) {
       icon: (
         <IconSchool
           className={cn(
-            "h-5 w-5 flex-shrink-0",
+            "h-6 w-6 ml-2 flex-shrink-0", // Increased size and added margin-left
             theme == "dark" ? "text-neutral-200" : "text-neutral-700"
           )}
         />
@@ -107,7 +148,7 @@ export function SidebarDemo({ ContentComponent }) {
       icon: (
         <IconBooks
           className={cn(
-            "h-5 w-5 flex-shrink-0",
+            "h-6 w-6 ml-2 flex-shrink-0", // Increased size and added margin-left
             theme == "dark" ? "text-neutral-200" : "text-neutral-700"
           )}
         />
@@ -119,7 +160,7 @@ export function SidebarDemo({ ContentComponent }) {
       icon: (
         <IconUser
           className={cn(
-            "h-5 w-5 flex-shrink-0",
+            "h-6 w-6 ml-2 flex-shrink-0", // Increased size and added margin-left
             theme == "dark" ? "text-neutral-200" : "text-neutral-700"
           )}
         />
@@ -185,7 +226,7 @@ export function SidebarDemo({ ContentComponent }) {
                   icon: (
                     <IconArrowLeft
                       className={cn(
-                        "h-5 w-5 flex-shrink-0",
+                        "h-6 w-6 ml-2 flex-shrink-0", // Increased size and added margin-left
                         theme == "dark" ? "text-neutral-200" : "text-neutral-700"
                       )}
                     />
@@ -197,7 +238,7 @@ export function SidebarDemo({ ContentComponent }) {
           </div>
         </SidebarBody>
       </Sidebar>
-      <div className="flex-1 flex justify-center items-center overflow-y-auto">
+      <div className="flex-1 flex justify-center items-start overflow-y-auto">
         <ContentComponent />
       </div>
       <Modal isOpen={isLogoutModalOpen} onClose={closeLogoutModal} title="Confirm Logout" style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}

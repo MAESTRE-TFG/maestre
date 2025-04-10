@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { getApiBaseUrl } from "@/lib/api";
 import { CreateSchoolForm } from "@/components/school-create-form";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
@@ -38,7 +39,7 @@ export default function CreateSchool() {
   const handleSubmit = async (formData) => {
     try {
       const token = localStorage.getItem("authToken");
-      const response = await fetch("http://localhost:8000/api/schools/", {
+      const response = await fetch(`${getApiBaseUrl()}/api/schools/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

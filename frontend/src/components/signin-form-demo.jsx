@@ -37,11 +37,21 @@ export function SigninForm({ onSubmit }) {
             required 
             value={formData.emailOrUsername} 
             onChange={handleChange} 
+            className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
           />
         </LabelInputContainer>
         <LabelInputContainer className="mb-8">
           <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="password">🔒 Password</Label>
-          <Input id="password" name="password" placeholder="••••••••" type="password" required value={formData.password} onChange={handleChange} />
+          <Input 
+            id="password" 
+            name="password" 
+            placeholder="••••••••" 
+            type="password" 
+            required 
+            value={formData.password} 
+            onChange={handleChange} 
+            className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
+          />
         </LabelInputContainer>
 
         <button

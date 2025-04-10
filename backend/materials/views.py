@@ -6,7 +6,6 @@ from classrooms.models import Classroom
 from .models import Document
 from .serializers import DocumentSerializer
 import pdfplumber
-# Add this import for DOCX processing
 import docx
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
@@ -14,6 +13,7 @@ from rest_framework.response import Response
 import tempfile
 import os
 from .models import Document
+from django.core.exceptions import ObjectDoesNotExist
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
@@ -33,18 +33,32 @@ class DocumentViewSet(viewsets.ModelViewSet):
         if tag_names:
             # Split the comma-separated tag names
             tag_names_list = tag_names.split(',')
-            # Filter documents that have any of these tags
-            queryset = queryset.filter(tags__name__in=tag_names_list).distinct()
+            # Filter documents that have ALL the specified tags
+            for tag_name in tag_names_list:
+                queryset = queryset.filter(tags__name=tag_name)
 
         return queryset
 
     def create(self, request, *args, **kwargs):
         classroom_id = request.data.get('classroom')
         if classroom_id:
-            classroom = Classroom.objects.get(id=classroom_id)
-            if classroom.documents.count() >= 5:
+            try:
+                classroom = Classroom.objects.get(id=classroom_id)
+
+                if classroom.creator != request.user:
+                    return Response(
+                        {"error": "You don't have permission to add documents to this classroom."},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+
+                if classroom.documents.count() >= 5:
+                    return Response(
+                        {"error": "This classroom already has the maximum number of files (5)."},
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+            except ObjectDoesNotExist:
                 return Response(
-                    {"error": "This classroom already has the maximum number of files (5)."},
+                    {"error": "Classroom does not exist."},
                     status=status.HTTP_400_BAD_REQUEST
                 )
         return super().create(request, *args, **kwargs)

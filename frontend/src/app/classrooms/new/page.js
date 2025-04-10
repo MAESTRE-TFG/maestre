@@ -1,13 +1,12 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { getApiBaseUrl } from "@/lib/api";
 import { CreateClassroomForm } from "@/components/classroom-create-form";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
-import { ErrorContext } from "@/context/ErrorContext";
 
 export default function CreateClassroom() {
   const router = useRouter();
@@ -35,7 +34,7 @@ export default function CreateClassroom() {
     const fetchStages = async () => {
       if (userSchool) {
         try {
-          const response = await fetch(`http://localhost:8000/api/schools/${userSchool}/`, {
+          const response = await fetch(`${getApiBaseUrl()}/api/schools/${userSchool}/`, {
             headers: {
               "Authorization": `Token ${localStorage.getItem('authToken')}`,
             },
@@ -87,7 +86,7 @@ export default function CreateClassroom() {
   const handleSubmit = async (formData) => {
     try {
       const token = localStorage.getItem("authToken");
-      const response = await fetch("http://localhost:8000/api/classrooms/", {
+      const response = await fetch(`${getApiBaseUrl()}/api/classrooms/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -47,8 +47,6 @@ const Home = () => {
 
   return (
     <div className={`min-h-screen w-full ${theme === 'dark' ? 'bg-neutral-900 text-white' : 'bg-white text-black'}`}>
-      <div className="relative my-8 hidden md:block" style={isAuthenticated ? {height: "2450px"} : { height: "2800px" }}></div>
-      <div className="block md:hidden relative my-8" style={isAuthenticated ? {height: "2050px"} : { height: "2550px" }}></div>
       {/* Hero Section */}
       <section className="hidden md:flex flex-col items-center justify-center text-center relative z-10">
         <div className="h-screen">
@@ -106,7 +104,6 @@ const Home = () => {
       )}
 
       {/* Tools Carousel */}
-      <hr className="w-3/4 mx-auto" />
       <section className="py-16">
         <h2 className={`text-4xl font-bold text-center font-alfa-slab-one mb-8 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
           Explore our tools
@@ -164,14 +161,14 @@ const Home = () => {
             <h3 className="text-lg font-bold mb-4">Useful Links</h3>
             <ul>
               <li><a href="https://github.com/MAESTRE-TFG/maestre" target="_blank" rel="noopener noreferrer">GitHub Repository</a></li>
-              <li><a href="/docs">Documentation</a></li>
-              <li><a href="/privacy">Privacy Policy</a></li>
+              <li><a href="/terms">Documentation</a></li>
+              <li><a href="/terms">Privacy Policy</a></li>
               <li><a href="/terms">Terms of Service</a></li>
             </ul>
           </div>
           <div>
             <h3 className="text-lg font-bold mb-4">Contact</h3>
-            <p>Email: contact@maestre.com</p>
+            <p>Email: <a href={"mailto:antmacfer1@alum.us.es"}>antmacfer1@alum.us.es</a> </p>
             <p>Location: Sevilla, Spain</p>
           </div>
         </div>

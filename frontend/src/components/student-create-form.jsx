@@ -1,10 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
-import { useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 
 export function StudentCreateForm({ onSubmit }) {

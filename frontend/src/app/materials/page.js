@@ -1,9 +1,12 @@
 "use client";
+
+import { getApiBaseUrl } from "@/lib/api";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
+import Link from 'next/link'; // Add this import
 
 const MaterialsList = () => {
   const { theme } = useTheme();
@@ -72,7 +75,7 @@ const MaterialsList = () => {
       }
 
       const response = await axios.patch(
-        `http://localhost:8000/api/materials/${fileToEdit.id}/`,
+        `${getApiBaseUrl()}/api/materials/${fileToEdit.id}/`,
         { name: updatedFileName },
         {
           headers: {
@@ -103,7 +106,7 @@ const MaterialsList = () => {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`http://localhost:8000/api/materials/${fileToDelete.id}/`, {
+      await axios.delete(`${getApiBaseUrl()}/api/materials/${fileToDelete.id}/`, {
         headers: {
           'Authorization': `Token ${localStorage.getItem('authToken')}`,
         }
@@ -137,7 +140,7 @@ const MaterialsList = () => {
       if (selectedClassroom) {
         params.classroom_id = selectedClassroom.id;
       }
-      const response = await axios.get('http://localhost:8000/api/materials/', {
+      const response = await axios.get(`${getApiBaseUrl()}/api/materials/`, {
         params,
         headers: {
           Authorization: `Token ${localStorage.getItem('authToken')}`
@@ -170,7 +173,7 @@ const MaterialsList = () => {
   // Update fetchTags function
   const fetchTags = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/tags/user_tags/', {
+      const response = await axios.get(`${getApiBaseUrl()}/api/tags/user_tags/`, {
         headers: {
           Authorization: `Token ${localStorage.getItem('authToken')}`
         }
@@ -184,7 +187,7 @@ const MaterialsList = () => {
 
   const fetchClassrooms = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/classrooms/', {
+      const response = await axios.get(`${getApiBaseUrl()}/api/classrooms/`, {
         headers: {
           Authorization: `Token ${localStorage.getItem('authToken')}`
         }
@@ -203,7 +206,7 @@ const MaterialsList = () => {
     setError(null);
 
     try {
-      const response = await axios.post('http://localhost:8000/api/tags/', {
+      const response = await axios.post(`${getApiBaseUrl()}/api/tags/`, {
         name: newTagName,
         color: selectedColor
       }, {
@@ -251,7 +254,7 @@ const MaterialsList = () => {
   const handleUpdateMaterialTags = async () => {
     try {
       const response = await axios.patch(
-        `http://localhost:8000/api/materials/${editingMaterial.id}/`,
+        `${getApiBaseUrl()}/api/materials/${editingMaterial.id}/`,
         {
           tag_ids: selectedMaterialTags  // Changed from tags to tag_ids to match serializer
         },
@@ -280,7 +283,7 @@ const MaterialsList = () => {
 
   const handleDeleteTag = async (tagId) => {
     try {
-      await axios.delete(`http://localhost:8000/api/tags/${tagId}/`, {
+      await axios.delete(`${getApiBaseUrl()}/api/tags/${tagId}/`, {
         headers: {
           Authorization: `Token ${localStorage.getItem('authToken')}`
         }
@@ -335,13 +338,13 @@ const MaterialsList = () => {
         <img
           src="/static/bubbles black/5.svg"
           alt="Bubble"
-          className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
+          className="absolute top-100 left-10 w-1/2 opacity-50 z-0"
         />
       ) : (
         <img
           src="/static/bubbles white/5.svg"
           alt="Bubble"
-          className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
+          className="absolute top-100 left-10 w-1/2 opacity-50 z-0"
         />
       )}
 
@@ -753,7 +756,7 @@ const MaterialsList = () => {
                                 e.stopPropagation();
                                 const fileUrl = material.file.startsWith('http')
                                   ? material.file
-                                  : `http://localhost:8000${material.file}`;
+                                  : `${getApiBaseUrl()}${material.file}`;
                                 window.open(fileUrl, '_blank');
                               }}
                               className="p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
@@ -801,7 +804,7 @@ const MaterialsList = () => {
                 </div>
               ) : (
                 <div className="text-center py-8 text-neutral-500 dark:text-neutral-400">
-                  No materials found. {selectedTags.length > 0 ? "Try removing some tag filters." : ""}
+                  No materials found. Add material to one of your <Link href="/classrooms" className="text-blue-500 hover:underline">classrooms</Link> and come back later ;)
                 </div>
               )}
             </div>

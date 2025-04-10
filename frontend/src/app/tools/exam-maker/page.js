@@ -1,5 +1,6 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
+import { getApiBaseUrl } from "@/lib/api";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -380,10 +381,14 @@ If any information is missing, note it clearly rather than inventing details.
   }, [formData, parseFormDataToNaturalLanguage, uploadedFiles]);
   
   useEffect(() => {
-    const user = localStorage.getItem('user');
-    if (!user) {
+    // Only run this effect on the client side
+    if (typeof window === 'undefined') return;
+    
+    const userStr = localStorage.getItem('user');
+    if (!userStr) {
       localStorage.removeItem('authToken');
     }
+    
     const token = localStorage.getItem('authToken');
     if (!token) {
       router.push('/profile/signup');
@@ -393,7 +398,7 @@ If any information is missing, note it clearly rather than inventing details.
     // Fetch user's classrooms
     const fetchClassrooms = async () => {
       try {
-        const parsedUser = JSON.parse(user);
+        const parsedUser = JSON.parse(userStr);
         const response = await axios.get("http://localhost:8000/api/classrooms/", {
           params: {
             creator: parsedUser.id
@@ -412,7 +417,7 @@ If any information is missing, note it clearly rather than inventing details.
     };
 
     fetchClassrooms();
-  }, [router]);
+  }, [router]); // Only depend on router
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -564,7 +569,7 @@ If any information is missing, note it clearly rather than inventing details.
       orientation: 'portrait',
       unit: 'mm',
       format: 'a4'
-    });
+  });
     
     // Add a title to the PDF
     doc.setFontSize(18);

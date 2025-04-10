@@ -17,6 +17,9 @@ export function SignupForm({ onSubmit }) {
     city: null,
     school: null,
   });
+  const [acceptedTerms, setAcceptedTerms] = React.useState(false);
+  const [error, setError] = React.useState(null);
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -25,9 +28,18 @@ export function SignupForm({ onSubmit }) {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleTermsChange = (e) => {
+    setAcceptedTerms(e.target.checked);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    onSubmit(formData);
+    try {
+      setError(null); // Clear any previous errors
+      await onSubmit(formData);
+    } catch (err) {
+      setError("An error occurred while signing up. Please try again.");
+    }
   };
   
   return (
@@ -48,6 +60,10 @@ export function SignupForm({ onSubmit }) {
           border-color: ${theme === "dark" ? "#888" : "#007bff"};
           box-shadow: 0 0 0 3px ${theme === "dark" ? "rgba(136, 136, 136, 0.5)" : "rgba(0, 123, 255, 0.25)"};
         }
+        select:hover {
+          background: ${theme === "dark" ? "#fff" : "#f9f9f9"};
+          color: ${theme === "dark" ? "#000" : "#000"};
+        }
         option {
           background: ${theme === "dark" ? "#333" : "#fff"};
           color: ${theme === "dark" ? "#fff" : "#000"};
@@ -56,34 +72,98 @@ export function SignupForm({ onSubmit }) {
       <form className="my-10 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12" onSubmit={handleSubmit} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
         <div className="space-y-6 md:space-y-8">
           <LabelInputContainer>
-            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="firstname">📛 Name</Label>
-            <Input id="firstname" name="name" placeholder="Tyler" type="text" required value={formData.name} onChange={handleChange} />
+            <Label htmlFor="firstname">📛 Name</Label>
+            <Input 
+              id="firstname" 
+              name="name" 
+              placeholder="Tyler" 
+              type="text" 
+              required 
+              value={formData.name} 
+              onChange={handleChange} 
+              className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
+            />
           </LabelInputContainer>
           <LabelInputContainer>
-            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="lastname">📝 Surname</Label>
-            <Input id="lastname" name="surname" placeholder="Durden" type="text" required value={formData.surname} onChange={handleChange} />
+            <Label htmlFor="lastname">📝 Surname</Label>
+            <Input 
+              id="lastname" 
+              name="surname" 
+              placeholder="Durden" 
+              type="text" 
+              required 
+              value={formData.surname} 
+              onChange={handleChange} 
+              className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
+            />
           </LabelInputContainer>
           <LabelInputContainer>
-            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="username">👤 Username</Label>
-            <Input id="username" name="username" placeholder="superprof01" type="text" required value={formData.username} onChange={handleChange} />
+            <Label htmlFor="username">👤 Username</Label>
+            <Input 
+              id="username" 
+              name="username" 
+              placeholder="superprof01" 
+              type="text" 
+              required 
+              value={formData.username} 
+              onChange={handleChange} 
+              className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
+            />
           </LabelInputContainer>
         </div>
         <div className="space-y-6 md:space-y-8">
           <LabelInputContainer>
-            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="email">📧 Email</Label>
-            <Input id="email" name="email" placeholder="projectmayhem@fc.com" type="email" required value={formData.email} onChange={handleChange} />
+            <Label htmlFor="email">📧 Email</Label>
+            <Input 
+              id="email" 
+              name="email" 
+              placeholder="projectmayhem@fc.com" 
+              type="email" 
+              required 
+              value={formData.email} 
+              onChange={handleChange} 
+              className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
+            />
           </LabelInputContainer>
           <LabelInputContainer>
-            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="password">🔒 Password</Label>
-            <Input id="password" name="password" placeholder="••••••••" type="password" required value={formData.password} onChange={handleChange} />
+            <Label htmlFor="password">🔒 Password</Label>
+            <Input 
+              id="password" 
+              name="password" 
+              placeholder="••••••••" 
+              type="password" 
+              required 
+              value={formData.password} 
+              onChange={handleChange} 
+              className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
+            />
           </LabelInputContainer>
+          <div className="col-span-2 flex items-center space-x-2">
+            <input
+              type="checkbox"
+              id="terms"
+              checked={acceptedTerms}
+              onChange={handleTermsChange}
+              required
+              className="h-4 w-4"
+            />
+            <label htmlFor="terms" className={cn(theme === "dark" ? "text-white" : "text-black")}>
+              I accept the <a href="/terms" target="_blank" rel="noopener noreferrer" className="underline">Terms of Use</a> and <a href="/privacy" target="_blank" rel="noopener noreferrer" className="underline">Privacy Policy</a>.
+            </label>
+          </div>
         </div>
+        {error && (
+          <div className="col-span-2 text-red-500 text-center">
+            {error}
+          </div>
+        )}
         <button
           className={cn("relative group/btn block w-full rounded-md h-12 font-medium border border-transparent col-span-2", 
             theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
             : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-green-300"
           )}
-          type="submit">
+          type="submit"
+          disabled={!acceptedTerms}>
           Sign up &rarr;
           <BottomGradient />
         </button>

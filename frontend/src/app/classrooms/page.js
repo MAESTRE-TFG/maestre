@@ -1,7 +1,8 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useEffect, useCallback } from "react";
+import { getApiBaseUrl } from "@/lib/api";
+import { useState, useEffect } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
@@ -21,7 +22,7 @@ const ClassroomsList = () => {
     console.log(user.id)
     const fetchClasses = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/classrooms/", {
+        const response = await axios.get(`${getApiBaseUrl()}/api/classrooms/`, {
           params: {
             creator: user.id 
           },
@@ -66,7 +67,6 @@ const ClassroomsList = () => {
             >
               My Classes
             </h1>
-            <div className="h-12"></div>
             {classes.length > 0 && (
               <button
                 className={cn(
@@ -108,7 +108,6 @@ const ClassroomsList = () => {
         </>
       )}
       {/* End of Background Images */}
-      <div className="relative my-8" style={{ height: "250px" }}></div>
       <div className="relative xl:mx-auto xl:w-full xl:max-w-6xl">
         {classes.length === 0 ? (
           <div className="text-center">

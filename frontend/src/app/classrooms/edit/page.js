@@ -1,14 +1,14 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect, useMemo, useCallback, useContext } from "react";
+import { getApiBaseUrl } from "@/lib/api";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { ClassroomEditForm } from "@/components/classroom-edit-form";
 import { Modal } from "@/components/ui/modal";
-import { ErrorContext } from "@/context/ErrorContext";
 
 const ClassroomEdit = () => {
   const router = useRouter();
@@ -49,7 +49,7 @@ const ClassroomEdit = () => {
     const fetchStages = async () => {
       if (userSchool) {
         try {
-          const response = await fetch(`http://localhost:8000/api/schools/${userSchool}/`, {
+          const response = await fetch(`${getApiBaseUrl()}/api/schools/${userSchool}/`, {
             headers: {
               "Authorization": `Token ${localStorage.getItem('authToken')}`,
             },
@@ -111,7 +111,7 @@ const ClassroomEdit = () => {
     const classroomId = searchParams.get("id");
     if (classroomId) {
       axios
-        .get(`http://localhost:8000/api/classrooms/${classroomId}/`, {
+        .get(`${getApiBaseUrl()}/api/classrooms/${classroomId}/`, {
           headers: {
             Authorization: `Token ${localStorage.getItem("authToken")}`,
           },
@@ -150,7 +150,7 @@ const ClassroomEdit = () => {
         return;
       }
       const response = await axios.put(
-        `http://localhost:8000/api/classrooms/${classroom.id}/update/`,
+        `${getApiBaseUrl()}/api/classrooms/${classroom.id}/update/`,
         formData,
         {
           headers: {
@@ -173,7 +173,7 @@ const ClassroomEdit = () => {
     if (nameInput === classroom.name) {
       try {
         await axios.delete(
-          `http://localhost:8000/api/classrooms/${classroom.id}/delete/`,
+          `${getApiBaseUrl()}/api/classrooms/${classroom.id}/delete/`,
           {
             headers: {
               Authorization: `Token ${localStorage.getItem("authToken")}`,
@@ -244,10 +244,7 @@ const ClassroomEdit = () => {
         </>
       )}
       {/* End of Background Images */}
-      <div className="relative z-10 my-12"></div>
-      <br></br>
       <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-full">
-        <div className="h-12"></div>
         <h1
           className={cn(
             "mt-6 text-center text-3xl font-extrabold text-zinc-100",

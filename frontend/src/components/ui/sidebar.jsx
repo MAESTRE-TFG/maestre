@@ -82,18 +82,40 @@ export const MobileSidebar = ({ className, children, ...props }) => {
     <>
       <div
         className={cn(
-          "h-10 px-4 py-4 flex flex-row md:hidden  items-center justify-between w-full",
+          "h-20 px-4 py-6 flex flex-row md:hidden items-center justify-between w-full",
           theme == "dark" ? "bg-neutral-800" : "bg-neutral-100"
         )}
         {...props}
       >
         <div className="flex justify-start z-20 w-full">
-          <IconMenu2
-            className={cn(
-              theme == "dark" ? "text-neutral-200" : "text-neutral-800"
-            )}
+          <button 
             onClick={() => setOpen(!open)}
-          />
+            className={cn(
+              "p-3 rounded-full transition-all duration-300 hover:bg-opacity-20 mt-2",
+              theme === "dark" ? "hover:bg-white text-neutral-200" : "hover:bg-neutral-300 text-neutral-800"
+            )}
+          >
+            {open ? (
+              <IconX className="w-7 h-7 transition-transform duration-300 ease-in-out" />
+            ) : (
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="28" 
+                height="28" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+                className="transition-transform duration-300 ease-in-out"
+              >
+                <line x1="4" y1="6" x2="20" y2="6" />
+                <line x1="4" y1="12" x2="20" y2="12" />
+                <line x1="4" y1="18" x2="14" y2="18" />
+              </svg>
+            )}
+          </button>
         </div>
         <AnimatePresence>
           {open && (
