@@ -5,8 +5,9 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 import { useRouter } from "next/navigation";
+import Alert from "@/components/ui/Alert";
 
-export const CreateClassroomForm = ({ onSubmit, setErrorMessage, educationalStages }) => {
+export const CreateClassroomForm = ({ onSubmit, educationalStages }) => {
   const { theme } = useTheme();
   const router = useRouter();
   const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ export const CreateClassroomForm = ({ onSubmit, setErrorMessage, educationalStag
     description: "",
     academic_year: "",
   });
+  const [alert, setAlert] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -23,23 +25,52 @@ export const CreateClassroomForm = ({ onSubmit, setErrorMessage, educationalStag
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const yearPattern = /^\d{4}-\d{4}$/;
-    if (!yearPattern.test(formData.academic_year)) {
-      const errorMsg = "Academic Year must be in the format 'YYYY-YYYY'.";
-      setErrorMessage(errorMsg);
+
+    // Validate name
+    if (!formData.name.trim()) {
+      setAlert({ type: "warning", message: "Name is required and cannot be empty." });
       return;
     }
+    if (formData.name.length > 30) {
+      setAlert({ type: "warning", message: "Name cannot exceed 30 characters." });
+      return;
+    }
+
+    // Validate description
+    if (!formData.description.trim()) {
+      setAlert({ type: "warning", message: "Description is required and cannot be empty." });
+      return;
+    }
+    if (formData.description.length > 255) {
+      setAlert({ type: "warning", message: "Description cannot exceed 255 characters." });
+      return;
+    }
+
+    // Validate academic year
+    const yearPattern = /^\d{4}-\d{4}$/;
+    if (!yearPattern.test(formData.academic_year)) {
+      setAlert({ type: "warning", message: "Academic Year must be in the format 'YYYY-YYYY'." });
+      return;
+    }
+
     try {
       await onSubmit(formData);
-      setErrorMessage(null);
+      setAlert({ type: "success", message: "Classroom created successfully!" });
     } catch (err) {
       const errorMsg = err.message || "An error occurred while submitting the form.";
-      setErrorMessage(errorMsg);
+      setAlert({ type: "error", message: errorMsg });
     }
   };
 
   return (
     <div className={cn("max-w-6xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white")}>
+      {alert && (
+        <Alert
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert(null)}
+        />
+      )}
       <style jsx global>{
         `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
         select {

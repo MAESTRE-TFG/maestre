@@ -8,23 +8,23 @@ import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { Label } from "@/components/ui/label";
+import Alert from "@/components/ui/Alert";
 
 const ClassroomsList = () => {
   const router = useRouter();
   const { theme } = useTheme();
   const [classes, setClasses] = useState([]);
-  const [errorMessage, setErrorMessage] = useState(null);
   const [isClient, setIsClient] = useState(false);
+  const [alert, setAlert] = useState(null);
 
   useEffect(() => {
     setIsClient(true);
     const user = JSON.parse(localStorage.getItem('user'));
-    console.log(user.id)
     const fetchClasses = async () => {
       try {
         const response = await axios.get(`${getApiBaseUrl()}/api/classrooms/`, {
           params: {
-            creator: user.id 
+            creator: user.id,
           },
           headers: {
             Authorization: `Token ${localStorage.getItem("authToken")}`,
@@ -32,7 +32,7 @@ const ClassroomsList = () => {
         });
         setClasses(response.data);
       } catch (err) {
-        setErrorMessage("Failed to fetch classes");
+        setAlert({ type: "error", message: "Failed to fetch classes. Please try again later." });
       }
     };
     fetchClasses();
@@ -53,42 +53,41 @@ const ClassroomsList = () => {
   if (!isClient) return null;
 
   return (
-    <div className="relative flex flex-col justify-center items-center py-8 sm:px-8 lg:px-8 overflow-auto">
-      {/* Floating Div */}
-      <div className="fixed top-0 left-0 w-full z-10 bg-inherit backdrop-blur-md">
-        <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-full">
-          <div className="h-12"></div>
-          <div className="flex justify-center items-center sticky top-0 bg-inherit px-4 space-x-4">
-            <h1
-              className={cn(
-                "text-3xl font-extrabold text-zinc-100",
-                theme === "dark" ? "text-white" : "text-dark"
-              )}
-            >
-              My Classes
-            </h1>
-            {classes.length > 0 && (
-              <button
-                className={cn(
-                  "px-4 py-2 rounded-md text-lg font-medium border border-green-500",
-                  theme === "dark"
-                    ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-                    : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]"
-                )}
-                onClick={() => router.push("/classrooms/new")}
-                style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-              >
-                Create Classroom +
-                <BottomGradient isCreate={true} />
-              </button>
+    <div className="relative flex flex-col justify-center items-center py-8 sm:px-8 lg:px-8">
+      {alert && (
+        <Alert
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert(null)}
+        />
+      )}
+      {/* Header Section */}
+      <div className="w-full text-center mb-12 z-10">
+        <br></br>
+        <h1 className={`text-4xl font-bold font-alfa-slab-one mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+          My Classrooms
+        </h1>
+        {classes.length > 0 && (
+          <button
+            className={cn(
+              "px-4 py-2 rounded-md text-lg font-medium border border-green-500",
+              theme === "dark"
+                ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+                : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]"
             )}
-            <style jsx global>{`
-              @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
-            `}</style>
-          </div>
-        </div>
+            onClick={() => router.push("/classrooms/new")}
+            style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+          >
+            Create Classroom +
+            <BottomGradient isCreate={true} />
+          </button>
+        )}
+        <style jsx global>{`
+          @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
+        `}</style>
       </div>
-      {/* End of Floating Div */}
+
+  
       {/* Background Images */}
       {theme === "dark" ? (
         <>
@@ -201,10 +200,24 @@ export default function Main() {
 }
 
 const BottomGradient = ({ isCreate }) => {
-  return (<>
-    <span className={cn("group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0", 
-      isCreate ? "bg-gradient-to-r from-transparent via-green-500 to-transparent" : "bg-gradient-to-r from-transparent via-cyan-500 to-transparent")} />
-    <span className={cn("group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10", 
-      isCreate ? "bg-gradient-to-r from-transparent via-green-500 to-transparent" : "bg-gradient-to-r from-transparent via-indigo-500 to-transparent")} />
-  </>);
+  return (
+    <>
+      <span
+        className={cn(
+          "group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0",
+          isCreate
+            ? "bg-gradient-to-r from-transparent via-green-500 to-transparent"
+            : "bg-gradient-to-r from-transparent via-cyan-500 to-transparent"
+        )}
+      />
+      <span
+        className={cn(
+          "group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10",
+          isCreate
+            ? "bg-gradient-to-r from-transparent via-green-500 to-transparent"
+            : "bg-gradient-to-r from-transparent via-indigo-500 to-transparent"
+        )}
+      />
+    </>
+  );
 };

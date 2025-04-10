@@ -26,7 +26,7 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, max_length=255)
     username = models.CharField(max_length=30, unique=True)
     first_name = models.CharField(max_length=30, blank=True)
     last_name = models.CharField(max_length=30, blank=True)
@@ -40,10 +40,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
-    name = models.CharField(max_length=100)
-    surname = models.CharField(max_length=100)
-    region = models.CharField(max_length=100, null=True, blank=True, default=None)
-    city = models.CharField(max_length=100, null=True, blank=True, default=None)
+    name = models.CharField(max_length=30)
+    surname = models.CharField(max_length=30)
+    region = models.CharField(max_length=50, null=True, blank=True, default=None)
+    city = models.CharField(max_length=50, null=True, blank=True, default=None)
 
     groups = models.ManyToManyField(
         'auth.Group',

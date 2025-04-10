@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect, useRef, useCallback } from "react";
-import { getApiBaseUrl } from "@/lib/api";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -10,13 +9,14 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import React from "react";
 import jsPDF from "jspdf";
+import Alert from "@/components/ui/Alert"; // Import the Alert component
 
 const ExamMaker = () => {
   const { theme } = useTheme();
   const router = useRouter();
   const [classrooms, setClassrooms] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [alerts, setAlerts] = useState([]); // State to manage alerts
   const [formData, setFormData] = useState({
     subject: "",
     numQuestions: 5,
@@ -71,7 +71,7 @@ const ExamMaker = () => {
 
           setUserMaterials(userMaterials);
         } catch (err) {
-          console.error("Error fetching materials:", err);
+          addAlert("error", "Failed to fetch materials. Please try again later.");
         }
       };
 
@@ -84,7 +84,7 @@ const ExamMaker = () => {
   // Add material selection handler
   const handleMaterialSelect = async (material) => {
     if (!material.file.toLowerCase().endsWith('.docx')) {
-      setErrorMessage("Only DOCX files are supported for exam generation.");
+      addAlert("error", "Only DOCX files are supported for exam generation.");
       setShowMaterialsModal(false);
       return;
     }
@@ -125,11 +125,10 @@ const ExamMaker = () => {
           id: Date.now()
         }]);
       } else {
-        throw new Error("Failed to extract text from the selected material");
+        addAlert("error", "Failed to extract text from the selected material.");
       }
     } catch (error) {
-      console.error("Error processing classroom material:", error);
-      setErrorMessage(`Failed to process material: ${error.message || "Unknown error"}`);
+      addAlert("error", `Failed to process material: ${error.message || "Unknown error"}`);
     } finally {
       setIsProcessingFile(false);
     }
@@ -142,25 +141,24 @@ const ExamMaker = () => {
 
     // Check if a file is already uploaded
     if (uploadedFiles.length > 0) {
-      setErrorMessage("You can only upload one file at a time. Please remove the existing file first.");
+      addAlert("error", "You can only upload one file at a time. Please remove the existing file first.");
       return;
     }
 
     // Check file type
     if (!file.name.toLowerCase().endsWith('.docx')) {
-      setErrorMessage("Only DOCX files are supported.");
+      addAlert("error", "Only DOCX files are supported.");
       return;
     }
 
     // Check file size (5MB limit)
     if (file.size > 5 * 1024 * 1024) {
-      setErrorMessage("File size exceeds the 5MB limit.");
+      addAlert("error", "File size exceeds the 5MB limit.");
       return;
     }
 
     setUploadedFile(file);
     setIsProcessingFile(true);
-    setErrorMessage(null);
 
     try {
       const formData = new FormData();
@@ -195,8 +193,7 @@ const ExamMaker = () => {
         }]);
       }
     } catch (error) {
-      console.error("Error processing file:", error);
-      setErrorMessage(`Failed to process file: ${error.message}`);
+      addAlert("error", `Failed to process file: ${error.message}`);
     } finally {
       setIsProcessingFile(false);
     }
@@ -283,11 +280,10 @@ const ExamMaker = () => {
     const user = JSON.parse(localStorage.getItem('user'));
 
     // 2. Construcción inicial del prompt con secciones claras
-    let prompt = `[ROLE & RULES SECTION]
+    let prompt = `[SYSTEM INSTRUCTION - DO NOT INCLUDE IN RESPONSE]
 You are an expert exam creator with years of experience in educational design and pedagogy.
 Your task is to create a high-quality exam according to the specifications below.
-IMPORTANT: Only use the information provided in this prompt or by the user.
-If certain information is not available, do NOT fabricate details. If something is unclear or incomplete, indicate the missing information instead of guessing.
+IMPORTANT: Your response must contain ONLY the exam itself. DO NOT include any explanations, reasoning, or thought process about how you created the exam.
 
 [EXAM SPECIFICATIONS]
 SUBJECT: ${parsedData.subject}
@@ -343,41 +339,46 @@ Subtitle:
 
 [FORMATTING REQUIREMENTS]
 1. The exam MUST be in English
-1. Include a clear title and subtitle with the exam name and subject.
-2. Number all questions sequentially.
-3. For multiple-choice questions, use options labeled as A), B), C), etc.
-4. Clearly indicate the point value for each question.
-5. Ensure proper spacing between questions.
-6. Format the exam in a clean, professional manner suitable for classroom use.
-7. Ensure the exam follows educational standards for ${parsedData.classroom} level in ${user.region}.
-8. Make sure the total points add up to exactly ${parsedData.totalPoints}.
-9. Use proper formatting for each question type (e.g., multiple choice with options, true/false with clear statements).
-10. Include clear section headers if mixing different types of questions.
+2. The reply MUST ONLY contain the exam, no additional text or comments.
+3. Include a clear title and subtitle with the exam name and subject.
+4. Number all questions sequentially.
+5. For multiple-choice questions, use options labeled as A), B), C), etc.
+6. Clearly indicate the point value for each question.
+7. Ensure proper spacing between questions.
+8. Format the exam in a clean, professional manner suitable for classroom use.
+9. Ensure the exam follows educational standards for ${parsedData.classroom} level in ${user.region}.
+10. Make sure the total points add up to exactly ${parsedData.totalPoints}.
+11. Use proper formatting for each question type (e.g., multiple choice with options, true/false with clear statements).
+12. Include clear section headers if mixing different types of questions.
+13. DO NOT include any reasoning, planning, or thought process in your response.
+14. DO NOT explain how you created the exam or what considerations you made.
+15. ONLY output the final exam content, starting directly with the title.
 `;
 
     // 8. Añadir un checklist de verificación para que el modelo valide su salida
     prompt += `
-[CHECKLIST]
-1) Did you include exactly ${parsedData.numQuestions} questions?
-2) Do the total points add up to exactly ${parsedData.totalPoints}?
-3) Are there any details that are not supported by the references?
-4) Did you follow all formatting requirements strictly?
+[CHECKLIST - DO NOT INCLUDE IN RESPONSE]
+1) Did you include only the exam and nothing else?
+2) Did you include exactly ${parsedData.numQuestions} questions?
+3) Do the total points add up to exactly ${parsedData.totalPoints}?
+4) Are there any details that are not supported by the references?
+5) Did you follow all formatting requirements strictly?
+6) Did you remove ALL reasoning and explanations from your response?
 
 If any check fails, revise your answer before finalizing.
 `;
 
     // *** Instrucción final para generar el examen ***
     prompt += `
-[FINAL INSTRUCTION]
+[FINAL INSTRUCTION - DO NOT INCLUDE IN RESPONSE]
 Now, produce a complete exam following all the specifications and requirements above.
 If any information is missing, note it clearly rather than inventing details.
+CRITICAL: Your response must begin with the exam title and contain ONLY the exam content. DO NOT include any explanations, reasoning, or thought process.
 `;
 
     // Actualizamos la referencia con el prompt final
     promptRef.current = prompt;
 
-    // Log para depurar
-    console.log("Updated comprehensive prompt:", promptRef.current);
   }, [formData, parseFormDataToNaturalLanguage, uploadedFiles]);
   
   useEffect(() => {
@@ -410,9 +411,8 @@ If any information is missing, note it clearly rather than inventing details.
         setClassrooms(response.data);
         setLoading(false);
       } catch (err) {
-        setErrorMessage("Failed to fetch classrooms");
         setLoading(false);
-        console.error("Error fetching classrooms:", err);
+        addAlert("error", "Failed to fetch classrooms. Please try again later.");
       }
     };
 
@@ -564,31 +564,60 @@ If any information is missing, note it clearly rather than inventing details.
 
   // Add this function to create a PDF version of the exam
   // Improve the PDF generation function to better handle HTML content
-  const createPDFVersion = (examText) => {
+  const createPDFVersion = async (examText) => {
     const doc = new jsPDF({
       orientation: 'portrait',
       unit: 'mm',
       format: 'a4'
-  });
-    
+    });
+
     // Add a title to the PDF
     doc.setFontSize(18);
     doc.text(`${formData.subject} Exam`, 105, 20, { align: 'center' });
-    
-    // Format the content for PDF
-    const formattedHTML = formatExamText(examText);
-    
-    // Use fromHTML with better styling
-    doc.fromHTML(formattedHTML, 15, 30, {
-      width: 180,
-      elementHandlers: {
-        '#ignore': function(element, renderer) {
-          return true;
-        }
+
+    // Create a temporary DOM element to render the HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = formatExamText(examText);
+
+    // Convert HTML to plain text for basic formatting
+    const plainText = tempDiv.textContent || tempDiv.innerText || '';
+
+    // Set font size for content
+    doc.setFontSize(12);
+
+    // Calculate available height on first page (accounting for title)
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margins = {
+      top: 40, // Start below the title
+      bottom: 20,
+      left: 15,
+      right: 15
+    };
+
+    const availableWidth = pageWidth - margins.left - margins.right;
+    let yPosition = margins.top;
+
+    // Split text into lines that fit on the page width
+    const textLines = doc.splitTextToSize(plainText, availableWidth);
+
+    // Calculate line height
+    const lineHeight = 7; // Approximate height in mm for font size 12
+
+    // Add lines to pages
+    for (let i = 0; i < textLines.length; i++) {
+      // Check if we need a new page
+      if (yPosition + lineHeight > pageHeight - margins.bottom) {
+        doc.addPage();
+        yPosition = margins.top - 20; // Reset position on new page, higher up since no title
       }
-    });
-    
-    // Add footer
+
+      // Add the line
+      doc.text(textLines[i], margins.left, yPosition);
+      yPosition += lineHeight;
+    }
+
+    // Add footer to all pages
     const totalPages = doc.internal.getNumberOfPages();
     for (let i = 1; i <= totalPages; i++) {
       doc.setPage(i);
@@ -596,19 +625,19 @@ If any information is missing, note it clearly rather than inventing details.
       doc.setTextColor(100);
       doc.text(
         `Generated with Maestre AI Exam Generator - Page ${i} of ${totalPages}`,
-        105, 
-        doc.internal.pageSize.height - 10, 
+        105,
+        pageHeight - 10,
         { align: 'center' }
       );
     }
-    
+
     return doc;
   };
 
   // Enhance the uploadPDFToClassroom function to handle errors better
   const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName) => {
     if (!classroomId) {
-      alert('Please select a classroom before saving the PDF.');
+      addAlert("warning", "Please select a classroom before saving the PDF.");
       return false;
     }
     
@@ -620,7 +649,7 @@ If any information is missing, note it clearly rather than inventing details.
     try {
       const token = localStorage.getItem('authToken');
       if (!token) {
-        alert('You must be logged in to save materials.');
+        addAlert("error", "You must be logged in to save materials.");
         return false;
       }
       
@@ -631,28 +660,42 @@ If any information is missing, note it clearly rather than inventing details.
         }
       });
       
-      console.log('PDF uploaded successfully:', response.data);
       return true;
     } catch (error) {
-      console.error('Error uploading PDF:', error);
+
+      if (error.response) {
+        if (error.response.status === 400) {
+          const errorMsg = error.response.data && error.response.data.error
+        ? error.response.data.error
+        : "Failed to upload file. Maximum limit reached.";
+          addAlert("error", errorMsg);
+        } else if (error.response.status === 401) {
+          addAlert("error", "Authentication error. Please log in again.");
+        } else {
+          addAlert("error", `Error: ${error.response.status} - ${error.response.statusText}`);
+        }
+      } else if (error.request) {
+        addAlert("error", "Network error. Please check your connection and try again.");
+      } else {
+        addAlert("error", "An error occurred while uploading the PDF. Please try again.");
+      }
       
       if (error.response) {
         if (error.response.status === 400) {
           const errorMsg = error.response.data && error.response.data.error
-            ? error.response.data.error
-            : "Failed to upload file. Maximum limit reached.";
-          alert(errorMsg);
+        ? error.response.data.error
+        : "Failed to upload file. Maximum limit reached.";
+          addAlert("error", errorMsg);
         } else if (error.response.status === 401) {
-          alert("Authentication error. Please log in again.");
+          addAlert("error", "Authentication error. Please log in again.");
         } else {
-          alert(`Error: ${error.response.status} - ${error.response.statusText}`);
+          addAlert("error", `Error: ${error.response.status} - ${error.response.statusText}`);
         }
       } else if (error.request) {
-        alert("Network error. Please check your connection and try again.");
+        addAlert("error", "Network error. Please check your connection and try again.");
       } else {
-        alert("An error occurred while uploading the PDF. Please try again.");
+        addAlert("error", "An error occurred while uploading the PDF. Please try again.");
       }
-      
       return false;
     }
   };
@@ -661,10 +704,8 @@ If any information is missing, note it clearly rather than inventing details.
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsGenerating(true);
-    setErrorMessage(null);
     
     try {
-      console.log("Generating exam with prompt:", promptRef.current);
       
       // Call to local Ollama instance using the single comprehensive prompt
       const response = await axios.post("http://localhost:11434/api/generate", {
@@ -679,13 +720,12 @@ If any information is missing, note it clearly rather than inventing details.
         // Store the exam content
         setExamResult(response.data.response);
         setShowModal(true);
-        console.log("Exam generated successfully");
+        addAlert("success", "Exam generated successfully");
       } else {
-        throw new Error("Invalid response from Ollama");
+        addAlert("error", "Invalid response from Ollama");
       }
     } catch (err) {
-      setErrorMessage("Failed to generate exam: " + (err.message || "Unknown error"));
-      console.error("Error generating exam:", err);
+      addAlert("error", "Failed to generate exam: " + (err.message || "Unknown error"));
     } finally {
       setIsGenerating(false);
     }
@@ -701,9 +741,24 @@ If any information is missing, note it clearly rather than inventing details.
     { value: "mixed", label: "Mixed (Various Types)" }
   ];
 
+  const addAlert = (type, message) => {
+    setAlerts((prev) => [...prev, { id: Date.now(), type, message }]);
+  };
+
+  const removeAlert = (id) => {
+    setAlerts((prev) => prev.filter((alert) => alert.id !== id));
+  };
+
   return (
     <div className={cn("min-h-screen")}>
-      <div className="relative my-8" style={{ height: "100px" }}></div>
+      {alerts.map((alert) => (
+        <Alert
+          key={alert.id}
+          type={alert.type}
+          message={alert.message}
+          onClose={() => removeAlert(alert.id)}
+        />
+      ))}
       <div className="flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
         <div className="w-full max-w-4xl">
           <h1 className={cn("text-3xl md:text-4xl font-bold mb-6 text-center", 
@@ -732,12 +787,6 @@ If any information is missing, note it clearly rather than inventing details.
               </div>
             </div>
           </div>
-
-          {errorMessage && (
-            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-              {errorMessage}
-            </div>
-          )}
 
           <div className={cn("max-w-4xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", 
             theme === "dark" ? "bg-black" : "bg-white")}>
@@ -1160,7 +1209,7 @@ If any information is missing, note it clearly rather than inventing details.
                               <button
                               onClick={() => {
                               navigator.clipboard.writeText(examResult);
-                              alert("Exam copied to clipboard!");
+                                addAlert("success", "Exam copied to clipboard!");
                             }}
                             className={cn(
                               "relative group/btn px-4 py-2 rounded-md", 
@@ -1201,58 +1250,56 @@ If any information is missing, note it clearly rather than inventing details.
                           <BottomGradient />
                         </button>
                         <button
-                          onClick={async (event) => {
-                            try {
-                              // Show loading state
-                              const saveButton = event.currentTarget;
-                              const originalText = saveButton.innerText;
-                              saveButton.innerText = "Saving...";
-                              saveButton.disabled = true;
-                              
-                              // Generate the PDF
-                              const pdfDoc = createPDFVersion(examResult);
-                              const pdfBlob = pdfDoc.output('blob');
-                              const fileName = `${formData.examName}.pdf`;
-                              
-                              // Save the PDF locally
-                              pdfDoc.save(fileName);
-                              
-                              // Upload the PDF to the classroom
-                              const uploadSuccess = await uploadPDFToClassroom(pdfBlob, formData.classroom, fileName);
-                              
-                              // Show success message if upload was successful
-                              if (uploadSuccess) {
-                                alert(`PDF saved successfully to ${classrooms.find(c => c.id.toString() === formData.classroom.toString())?.name || 'selected classroom'}.`);
-                                // Hide the button after successful upload
-                                saveButton.style.display = 'none';
-                              } else {
-                                // Only restore button state if upload failed
-                                saveButton.innerText = originalText;
-                                saveButton.disabled = false;
-                              }
-                            } catch (err) {
-                              console.error("Error saving PDF:", err);
-                              alert("There was an error creating or saving the PDF. Please try again.");
-                            } finally {
-                              // Restore button state
-                              const saveButton = event.currentTarget;
-                              if (saveButton) {
-                                saveButton.innerText = "Save as PDF";
-                                saveButton.disabled = false;
-                              }
-                            }
-                          }}
-                          className={cn(
-                            "relative group/btn px-4 py-2 rounded-md", 
-                            theme === "dark" 
-                              ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
-                              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-yellow-300"
-                          )}
-                          style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-                        >
-                          Save as PDF
-                          <BottomGradient />
-                        </button>
+  onClick={async (event) => {
+    const saveButton = event.currentTarget;
+    const originalText = saveButton.innerText;
+
+    try {
+      // Show loading state
+      saveButton.innerText = "Saving...";
+      saveButton.disabled = true;
+
+      // Generate the PDF
+      const pdfDoc = await createPDFVersion(examResult); // Await the async function
+      const pdfBlob = pdfDoc.output("blob");
+      const fileName = `${formData.examName || "Exam"}.pdf`;
+
+      // Save the PDF locally
+      pdfDoc.save(fileName);
+
+      // Upload the PDF to the classroom
+      const uploadSuccess = await uploadPDFToClassroom(pdfBlob, formData.classroom, fileName);
+
+      if (uploadSuccess) {
+        addAlert(
+          "success",
+          `PDF saved successfully to ${
+            classrooms.find((c) => c.id.toString() === formData.classroom.toString())?.name || "selected classroom"
+          }.`
+        );
+      } else {
+        addAlert("error", "Failed to upload the PDF to the classroom.");
+      }
+    } catch (err) {
+      addAlert("error", `There was an error creating or saving the PDF: ${err.message || "Unknown error"}`);
+    } finally {
+      // Restore button state
+      saveButton.innerText = originalText;
+      saveButton.disabled = false;
+    }
+  }}
+  className={cn(
+    "relative group/btn px-4 py-2 rounded-md",
+    theme === "dark"
+      ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+      : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-yellow-300"
+  )}
+  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+>
+  Save as PDF
+  <BottomGradient />
+</button>
+
                       </div>
                     </div>
                   </div>

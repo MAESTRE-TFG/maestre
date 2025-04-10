@@ -10,6 +10,7 @@ import axios from "axios";
 import { ProfileEditForm } from "@/components/profile-edit-form";
 import { Label } from "@/components/ui/label";
 import { Modal } from "@/components/ui/modal";
+import Alert from "@/components/ui/Alert"; // Import the Alert component
 
 const ProfileEdit = () => {
   const router = useRouter();
@@ -29,7 +30,7 @@ const ProfileEdit = () => {
     confirmPassword: "",
     oldPassword: "",
   });
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [alert, setAlert] = useState(null); // State for managing alerts
   const [isProfileCompleted, setIsProfileCompleted] = useState(null);
   const [schools, setSchools] = useState([]);
   const [city, setCity] = useState("");
@@ -37,6 +38,11 @@ const ProfileEdit = () => {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [usernameInput, setUsernameInput] = useState("");
   const searchParams = useSearchParams();
+
+  const showAlert = (type, message) => {
+    setAlert({ type, message });
+    setTimeout(() => setAlert(null), 5000); // Auto-dismiss after 5 seconds
+  };
 
   useEffect(() => {
     if (searchParams.get("editMode") === "true") {
@@ -50,9 +56,9 @@ const ProfileEdit = () => {
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
       setUser(parsedUser);
-      parsedUser.region && parsedUser.city && parsedUser.school ? 
-        setIsProfileCompleted(true) : 
-        setIsProfileCompleted(false);
+      parsedUser.region && parsedUser.city && parsedUser.school
+        ? setIsProfileCompleted(true)
+        : setIsProfileCompleted(false);
       setCity(parsedUser.city);
       setFormData((prevData) => ({
         ...prevData,
@@ -82,7 +88,7 @@ const ProfileEdit = () => {
         );
         setSchools(response.data);
       } catch (err) {
-        setErrorMessage("Failed to fetch schools");
+        showAlert("error", "Failed to fetch schools");
       }
     };
 
@@ -104,7 +110,7 @@ const ProfileEdit = () => {
         );
         setSchool(response.data);
       } catch (err) {
-        setErrorMessage("Failed to fetch school");
+        showAlert("error", "Failed to fetch school");
       }
     };
 
@@ -115,31 +121,55 @@ const ProfileEdit = () => {
 
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
-    // ¡ATENTION! If the modified field is "city", update the 'city' state
+
+    // Field length restrictions
+    if (name === "username" && value.length > 30) {
+      showAlert("warning", "Username cannot exceed 30 characters");
+      return;
+    }
+    if (name === "email" && value.length > 255) {
+      showAlert("warning", "Email cannot exceed 255 characters");
+      return;
+    }
+    if (name === "name" && value.length > 30) {
+      showAlert("warning", "First name cannot exceed 30 characters");
+      return;
+    }
+    if (name === "surname" && value.length > 30) {
+      showAlert("warning", "Last name cannot exceed 30 characters");
+      return;
+    }
+
+    if (name === "password") {
+      if (value.length < 8) {
+        showAlert("warning", "Password must be at least 8 characters long");
+        return;
+      }
+      if (!/[A-Z]/.test(value)) {
+        showAlert("warning", "Password must contain at least one uppercase letter");
+        return;
+      }
+      if (!/[a-z]/.test(value)) {
+        showAlert("warning", "Password must contain at least one lowercase letter");
+        return;
+      }
+      if (!/[0-9]/.test(value)) {
+        showAlert("warning", "Password must contain at least one number");
+        return;
+      }
+      if (!/[!@#$%^&*]/.test(value)) {
+        showAlert("warning", "Password must contain at least one special character (!@#$%^&*)");
+        return;
+      }
+    }
+
     if (name === "city") {
       setCity(value);
     }
     setFormData((prevData) => ({ ...prevData, [name]: value || "" }));
   }, []);
 
-  const fetchSchools = useCallback(async (city) => {
-    try {
-      const response = await axios.get(
-        `${getApiBaseUrl()}/api/schools/?city=${city}`,
-        {
-          headers: {
-            Authorization: `Token ${localStorage.getItem("authToken")}`,
-          },
-        }
-      );
-      setSchools(response.data);
-    } catch (err) {
-      setErrorMessage("Failed to fetch schools");
-    }
-  }, []);
-
   const handleUpdate = useCallback(async () => {
-    // Create a payload without password fields
     const updatePayload = {
       username: formData.username,
       email: formData.email,
@@ -149,16 +179,16 @@ const ProfileEdit = () => {
       city: formData.city,
       school: formData.school,
     };
-    
-    // Only add password-related fields if user is updating password
+
     if (formData.password && formData.oldPassword) {
       if (formData.password !== formData.confirmPassword) {
-        setErrorMessage("Passwords do not match");
+        showAlert("error", "Passwords do not match");
         return;
       }
       updatePayload.password = formData.password;
       updatePayload.oldPassword = formData.oldPassword;
     }
+
     try {
       const response = await axios.put(
         `${getApiBaseUrl()}/api/users/${user.id}/update/`,
@@ -169,31 +199,31 @@ const ProfileEdit = () => {
           },
         }
       );
-    
-      // Store user data without password fields
+
       const userToStore = {
         ...response.data,
         password: undefined,
         oldPassword: undefined,
-        confirmPassword: undefined
+        confirmPassword: undefined,
       };
-      
+
       localStorage.setItem("user", JSON.stringify(userToStore));
       setUser(userToStore);
-      
-      // Reset password fields
-      setFormData(prev => ({
+
+      setFormData((prev) => ({
         ...prev,
         password: "",
         confirmPassword: "",
-        oldPassword: ""
+        oldPassword: "",
       }));
-      
+
       setEditMode(false);
+      showAlert("success", "Profile updated successfully");
     } catch (err) {
-      setErrorMessage(err.response?.data?.message || "Update failed");
+      showAlert("error", err.response?.data?.message || "Update failed");
     }
   }, [formData, user?.id]);
+
   const handleDelete = useCallback(async () => {
     if (usernameInput === user.username) {
       try {
@@ -208,11 +238,12 @@ const ProfileEdit = () => {
         localStorage.removeItem("authToken");
         localStorage.removeItem("user");
         router.push("/profile/signin");
+        showAlert("success", "Account deleted successfully");
       } catch (err) {
-        setErrorMessage("Delete failed");
+        showAlert("error", "Delete failed");
       }
     } else {
-      alert("Username does not match. Account deletion cancelled.");
+      showAlert("error", "Username does not match. Account deletion cancelled.");
     }
   }, [router, user?.id, user?.username, usernameInput]);
 
@@ -234,17 +265,16 @@ const ProfileEdit = () => {
         handleCancel={() => setEditMode(false)}
         schools={schools}
         isProfileComplete={isProfileCompleted}
-        fetchSchools={fetchSchools}
       />
     ),
-    [formData, handleChange, handleUpdate, schools, isProfileCompleted, fetchSchools]
+    [formData, handleChange, handleUpdate, schools, isProfileCompleted]
   );
 
   if (!isClient) return null;
 
   return (
     <div className="relative flex flex-col justify-center items-center py-12 sm:px-8 lg:px-8 overflow-auto">
-
+      {alert && <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />}
       {/* Header Section */}
       <div className="w-full text-center mb-12">
         <h1 className={`text-4xl font-bold font-alfa-slab-one mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>

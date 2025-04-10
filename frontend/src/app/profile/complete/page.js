@@ -8,6 +8,7 @@ import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { CompleteProfileForm } from "@/components/complete-profile-form";
+import Alert from "@/components/ui/Alert";
 
 const ProfileEdit = () => {
   const router = useRouter();
@@ -24,9 +25,14 @@ const ProfileEdit = () => {
     city: "",
     school: ""
   });
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [alert, setAlert] = useState(null); // State for managing alerts
   const [schools, setSchools] = useState([]);
   const [city, setCity] = useState("");
+
+  const showAlert = (type, message) => {
+    setAlert({ type, message });
+    setTimeout(() => setAlert(null), 5000); // Auto-dismiss after 5 seconds
+  };
 
   useEffect(() => {
     setIsClient(true);
@@ -54,7 +60,6 @@ const ProfileEdit = () => {
         surname: parsedFormData.surname || "Default Surname",
       }));
       setCity(parsedFormData.city);
-      console.log("Parsed form data:", parsedFormData);
     }
   }, [router]);
 
@@ -62,6 +67,14 @@ const ProfileEdit = () => {
     const { name, value } = e.target;
     if (name === "city") {
       setCity(value);
+    }
+    if (name === "username" && value.length > 30) {
+      showAlert("error", "Username cannot exceed 30 characters.");
+      return;
+    }
+    if (name === "email" && value.length > 255) {
+      showAlert("error", "Email cannot exceed 255 characters.");
+      return;
     }
     const updatedFormData = { ...formData, [name]: value };
     setFormData(updatedFormData);
@@ -78,8 +91,7 @@ const ProfileEdit = () => {
       });
       setSchools(response.data);
     } catch (err) {
-      console.error("Error fetching schools:", err);
-      setErrorMessage("Error fetching schools. Please try again later.");
+      showAlert("error", "Error fetching schools. Please try again later.");
     }
   }, [city]);
 
@@ -90,11 +102,20 @@ const ProfileEdit = () => {
   const handleComplete = useCallback(async () => {
     try {
       if (!formData.username || !formData.email || !formData.name || !formData.surname || !formData.region || !formData.city || !formData.school) {
-        setErrorMessage("All fields are required.");
+        showAlert("error", "All fields are required.");
         return;
       }
 
-      console.log("Submitting form data:", formData);
+      if (formData.username.length > 30) {
+        showAlert("error", "Username cannot exceed 30 characters.");
+        return;
+      }
+
+      if (formData.email.length > 255) {
+        showAlert("error", "Email cannot exceed 255 characters.");
+        return;
+      }
+
       const response = await axios.put(
         `${getApiBaseUrl()}/api/users/${user.id}/update/`,
         formData,
@@ -104,13 +125,13 @@ const ProfileEdit = () => {
           },
         }
       );
-      console.log("Response data:", response.data);
       localStorage.setItem("user", JSON.stringify(response.data));
       localStorage.removeItem("formData");
       setUser(response.data);
       setEditMode(false);
+      showAlert("success", "Profile updated successfully.");
     } catch (err) {
-      setErrorMessage(`Update failed: ${err.response ? JSON.stringify(err.response.data) : err.message}`);
+      showAlert("error", `Update failed: ${err.response ? JSON.stringify(err.response.data) : err.message}`);
     }
   }, [formData, user?.id]);
 
@@ -142,6 +163,7 @@ const ProfileEdit = () => {
 
   return (
     <div className="flex flex-col justify-center items-center py-12 sm:px-8 lg:px-8 overflow-auto">
+      {alert && <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />}
       <div className="my-12"></div>
       <div className="sm:mx-auto sm:w-full sm:max-w-full"></div>
       <div className="sm:mx-auto sm:w-full sm:max-w-md rounded-md md:rounded-2xl">
@@ -168,7 +190,6 @@ const ProfileEdit = () => {
     </div>
   );
 }
-
 
 export default function Main() {
   return <SidebarDemo ContentComponent={ProfileEdit} />;

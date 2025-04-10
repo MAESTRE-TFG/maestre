@@ -14,6 +14,7 @@ import tempfile
 import os
 from .models import Document
 from django.core.exceptions import ObjectDoesNotExist
+from django.conf import settings
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
@@ -51,9 +52,9 @@ class DocumentViewSet(viewsets.ModelViewSet):
                         status=status.HTTP_400_BAD_REQUEST
                     )
 
-                if classroom.documents.count() >= 5:
+                if classroom.documents.count() >= settings.MAX_FILES_PER_CLASSROOM:
                     return Response(
-                        {"error": "This classroom already has the maximum number of files (5)."},
+                        {"error": f"This classroom already has the maximum number of files ({settings.MAX_FILES_PER_CLASSROOM})."},
                         status=status.HTTP_400_BAD_REQUEST
                     )
             except ObjectDoesNotExist:
@@ -73,17 +74,23 @@ class DocumentViewSet(viewsets.ModelViewSet):
             return Response(serializer.data)
         except Exception as e:
             return Response(
-                {'error': str(e)},
+                {'error': f"Failed to update tags: {str(e)}"},  # Added detailed error message
                 status=status.HTTP_400_BAD_REQUEST
             )
 
     @action(detail=False, methods=['get'], url_path='user_materials')
     def get_all_user_materials(self, request):
-        materials = Document.objects.filter(
-            classroom__creator=request.user
-        ).select_related('classroom').prefetch_related('tags')
-        serializer = self.get_serializer(materials, many=True)
-        return Response(serializer.data)
+        try:
+            materials = Document.objects.filter(
+                classroom__creator=request.user
+            ).select_related('classroom').prefetch_related('tags')
+            serializer = DocumentSerializer(materials, many=True)
+            return Response(serializer.data)
+        except Exception as e:
+            return Response(
+                {'error': f"Failed to fetch user materials: {str(e)}"},  # Added detailed error message
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
     
     @action(detail=False, methods=['post'], url_path='extract-text')
     def extract_text_from_uploaded_file(self, request):
@@ -240,3 +247,4 @@ class DocumentViewSet(viewsets.ModelViewSet):
             return Response({"error": "Document not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+

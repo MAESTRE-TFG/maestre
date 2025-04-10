@@ -160,3 +160,5 @@ REST_FRAMEWORK = {
 # This configuration allows Django to use our custom user model
 # instead of the default user model that comes with Django
 AUTH_USER_MODEL = 'users.CustomUser'
+
+MAX_FILES_PER_CLASSROOM = 10

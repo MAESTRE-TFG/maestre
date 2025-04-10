@@ -5,10 +5,11 @@ import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import axios from 'axios';
 import { FileUploadDemo } from '@/components/file-upload-demo';
+import Alert from '@/components/ui/Alert';
 
 export function MaterialsPage({ classroomId }) {
   const { theme } = useTheme();
-  const [error, setError] = useState(null);
+  const [alert, setAlert] = useState(null);
 
   const [materials, setMaterials] = useState([]);
   const [tags, setTags] = useState([]);
@@ -26,8 +27,10 @@ export function MaterialsPage({ classroomId }) {
   const [fileToEdit, setFileToEdit] = useState(null);
   const [newFileName, setNewFileName] = useState("");
 
-  const [refreshTrigger, setRefreshTrigger] = useState(0);  // Add a refreshTrigger state to force re-fetching
+  const [refreshTrigger, setRefreshTrigger] = useState(0);  // Force re-fetching
 
+  const [selectedMaterials, setSelectedMaterials] = useState([]);
+  const [showDeleteSelectedModal, setShowDeleteSelectedModal] = useState(false);
 
   const TAG_COLORS = [
     { name: 'Purple', value: '#A350C4' },
@@ -43,10 +46,12 @@ export function MaterialsPage({ classroomId }) {
 
   const [selectedColor, setSelectedColor] = useState(TAG_COLORS[0].value);
 
-  // Add this state to track if we're creating a tag from the edit modal
+  // This state tracks if we're creating a tag from the edit modal
   const [creatingTagFromEdit, setCreatingTagFromEdit] = useState(false);
 
-  // Add these functions to handle editing material name
+  const NAME_LIMIT = 30; // Add this constant for the name limit
+  const [nameWarning, setNameWarning] = useState(null); // Add state for name warning
+
   const handleEdit = (material) => {
     setFileToEdit(material);
     setNewFileName(material.name);
@@ -55,7 +60,6 @@ export function MaterialsPage({ classroomId }) {
 
   const confirmEdit = async () => {
     try {
-      // Get the original file extension if it exists
       const originalName = fileToEdit.name;
       const hasExtension = originalName.includes('.');
       let updatedFileName = newFileName;
@@ -81,13 +85,12 @@ export function MaterialsPage({ classroomId }) {
         }
       );
 
-      // Update the material in the materials state
       setMaterials(prevMaterials =>
         prevMaterials.map(m => m.id === fileToEdit.id ? { ...m, name: updatedFileName } : m)
       );
+      setAlert({ type: 'success', message: 'Material name updated successfully!' });
     } catch (error) {
-      setError('Failed to update material name. Please try again.');
-      console.error('Error updating material name:', error);
+      setAlert({ type: 'error', message: 'Failed to update material name. Please try again.' });
     } finally {
       setShowEditModal(false);
       setFileToEdit(null);
@@ -101,7 +104,7 @@ export function MaterialsPage({ classroomId }) {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`${getApiBaseUrl()}i/materials/${fileToDelete.id}/`, {
+      await axios.delete(`${getApiBaseUrl()}/api/materials/${fileToDelete.id}/`, { // Fix the URL
         headers: {
           'Authorization': `Token ${localStorage.getItem("authToken")}`,
         }
@@ -109,11 +112,9 @@ export function MaterialsPage({ classroomId }) {
 
       // Remove the deleted material from the materials state
       setMaterials(prevMaterials => prevMaterials.filter(m => m.id !== fileToDelete.id));
-      // Refresh materials list
-      refreshMaterials();
+      setAlert({ type: 'success', message: 'Material deleted successfully!' });
     } catch (error) {
-      setError('Failed to delete material. Please try again.');
-      console.error('Error deleting material:', error);
+      setAlert({ type: 'error', message: 'Failed to delete material. Please try again.' });
     } finally {
       setShowDeleteModal(false);
       setFileToDelete(null);
@@ -121,12 +122,10 @@ export function MaterialsPage({ classroomId }) {
   };
 
   const refreshMaterials = () => {
-    console.log("Refreshing materials...");
     setRefreshTrigger(prev => prev + 1);
   };
 
   useEffect(() => {
-    console.log("Effect triggered, refreshTrigger:", refreshTrigger);
     fetchMaterials();
     fetchTags();
   }, [classroomId, selectedTags, refreshTrigger]);
@@ -152,7 +151,7 @@ export function MaterialsPage({ classroomId }) {
         });
         setMaterials(response.data);
       } else {
-        const response = await axios.get('${getApiBaseUrl()}/api/materials/', {
+        const response = await axios.get(`${getApiBaseUrl()}/api/materials/`, {
           params,
           headers: {
             Authorization: `Token ${localStorage.getItem('authToken')}`
@@ -161,30 +160,29 @@ export function MaterialsPage({ classroomId }) {
         setMaterials(response.data);
       }
     } catch (error) {
-      console.error('Error fetching materials:', error);
+      setAlert({ type: 'error', message: 'Error fetching materials. Please try again.' });
     }
   };
 
   const fetchTags = async () => {
     try {
-      const response = await axios.get('${getApiBaseUrl()}/api/tags/user_tags/', {
+      const response = await axios.get(`${getApiBaseUrl()}/api/tags/user_tags/`, {
         headers: {
           Authorization: `Token ${localStorage.getItem('authToken')}`
         }
       });
       setTags(response.data);
     } catch (error) {
-      console.error('Error fetching tags:', error);
+      setAlert({ type: 'error', message: 'Error fetching tags. Please try again.' });
     }
   };
 
   const handleCreateTag = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError(null);
 
     try {
-      const response = await axios.post('${getApiBaseUrl()}/api/tags/', {
+      const response = await axios.post(`${getApiBaseUrl()}/api/tags/`, {
         name: newTagName,
         color: selectedColor
       }, {
@@ -208,11 +206,12 @@ export function MaterialsPage({ classroomId }) {
 
       setNewTagName('');
       setSelectedColor(TAG_COLORS[0].value);
+      setAlert({ type: 'success', message: 'Tag created successfully!' });
     } catch (error) {
       if (error.response?.data?.includes('15 tags')) {
-        setError('You have reached the maximum limit of 15 tags.');
+        setAlert({ type: 'error', message: 'You have reached the maximum limit of 15 tags.' });
       } else {
-        setError('Error creating tag. Please try again.');
+        setAlert({ type: 'error', message: 'Error creating tag. Please try again.' });
       }
     } finally {
       setIsSubmitting(false);
@@ -239,7 +238,7 @@ export function MaterialsPage({ classroomId }) {
       const response = await axios.patch(
         `${getApiBaseUrl()}/api/materials/${editingMaterial.id}/`,
         {
-          tag_ids: selectedMaterialTags  // Changed from tags to tag_ids to match serializer
+          tag_ids: selectedMaterialTags
         },
         {
           headers: {
@@ -259,8 +258,9 @@ export function MaterialsPage({ classroomId }) {
       );
 
       setShowEditTagsModal(false);
+      setAlert({ type: 'success', message: 'Tags updated successfully!' });
     } catch (error) {
-      console.error('Error updating material tags:', error);
+      setAlert({ type: 'error', message: 'Error updating tags. Please try again.' });
     }
   };
 
@@ -283,14 +283,65 @@ export function MaterialsPage({ classroomId }) {
         fetchTags(),
         fetchMaterials()
       ]);
+      setAlert({ type: 'success', message: 'Tag deleted successfully!' });
     } catch (error) {
-      console.error('Error deleting tag:', error);
+      setAlert({ type: 'error', message: 'Error deleting tag. Please try again.' });
+    }
+  };
+
+  const toggleMaterialSelection = (materialId) => {
+    setSelectedMaterials((prevSelected) =>
+      prevSelected.includes(materialId)
+        ? prevSelected.filter((id) => id !== materialId)
+        : [...prevSelected, materialId]
+    );
+  };
+
+  const confirmDeleteSelected = () => {
+    setShowDeleteSelectedModal(true);
+  };
+
+  const handleDeleteSelected = async () => {
+    try {
+      await Promise.all(
+        selectedMaterials.map((materialId) =>
+          axios.delete(`${getApiBaseUrl()}/api/materials/${materialId}/`, {
+            headers: {
+              Authorization: `Token ${localStorage.getItem("authToken")}`,
+            },
+          })
+        )
+      );
+      setMaterials((prevMaterials) =>
+        prevMaterials.filter((material) => !selectedMaterials.includes(material.id))
+      );
+      setAlert({ type: 'success', message: 'Selected materials deleted successfully!' });
+      setSelectedMaterials([]);
+    } catch (error) {
+      setAlert({ type: 'error', message: 'Error deleting selected materials. Please try again.' });
+    } finally {
+      setShowDeleteSelectedModal(false);
+    }
+  };
+
+  const handleFileNameChange = (value) => {
+    setNewFileName(value);
+    if (value.length > NAME_LIMIT) {
+      setAlert({ type: 'warning', message: `Name exceeds the limit of ${NAME_LIMIT} characters.` });
+    } else {
+      setAlert(null); // Clear the alert if the name is within the limit
     }
   };
 
   return (
     <div className="space-y-6">
-
+      {alert && (
+        <Alert
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert(null)}
+        />
+      )}
       {/* Tags Filter Section */}
       <div className="flex flex-wrap gap-2 items-center mb-6">
         <div className="flex items-center gap-2">
@@ -314,7 +365,7 @@ export function MaterialsPage({ classroomId }) {
             </svg>
           </button>
         </div>
-        {tags.map(tag => (
+        {Array.isArray(tags) && tags.map(tag => ( // Add defensive check to ensure tags is an array
           <div key={tag.id} className="flex items-center">
             {deleteMode ? (
               <>
@@ -575,10 +626,13 @@ export function MaterialsPage({ classroomId }) {
             <input
               type="text"
               value={newFileName}
-              onChange={(e) => setNewFileName(e.target.value)}
-              className="w-full p-2 mb-6 border rounded dark:bg-neutral-800 dark:border-neutral-700 dark:text-white"
+              onChange={(e) => handleFileNameChange(e.target.value)}
+              className="w-full p-2 mb-2 border rounded dark:bg-neutral-800 dark:border-neutral-700 dark:text-white"
               onClick={(e) => e.stopPropagation()}
             />
+            {nameWarning && (
+              <p className="text-sm text-red-500 mb-4">{nameWarning}</p>
+            )}
             <div className="flex justify-end space-x-2">
               <button
                 onClick={() => setShowEditModal(false)}
@@ -598,42 +652,70 @@ export function MaterialsPage({ classroomId }) {
       )}
       {/* Materials List - Dynamic Grid Layout */}
             <div className="w-full mt-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className={cn("text-2xl font-bold", theme === "dark" ? "text-white" : "text-gray-800")}>
+                  Materials
+                </h2>
+                {selectedMaterials.length > 0 && (
+                  <div className="ml-4">
+                    <button
+                      onClick={confirmDeleteSelected}
+                      className={cn("px-3 py-1 rounded-md text-sm font-medium", theme === "dark" ? "bg-red-600 hover:bg-red-700 text-white" : "bg-red-500 hover:bg-red-700 text-white")}
+                    >
+                      Delete Selected ({selectedMaterials.length})
+                    </button>
+                  </div>
+                )}
+              </div>
               {materials.length > 0 ? (
                 <div className={cn(
                   "grid gap-4 max-w-7xl mx-auto",
-                  // On small screens: always 1 column
-                  "grid-cols-1",
-                  // On large screens (min-width: 1024px): dynamic columns based on material count
-                  materials.length >= 2 && "lg:grid-cols-2",
-                  materials.length >= 3 && "lg:grid-cols-3",
-                  materials.length >= 4 && "lg:grid-cols-4",
-                  materials.length >= 5 && "lg:grid-cols-5"
+                  "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
                 )}>
-                  {materials.map((material) => (
+                  {Array.isArray(materials) && materials.map((material) => ( // Add defensive check to ensure materials is an array
                     <div
                       key={material.id}
                       className={cn(
                         "relative overflow-hidden z-40 bg-white dark:bg-neutral-900 flex flex-col items-start justify-between p-4 rounded-md",
                         "shadow-sm hover:shadow-md transition-shadow duration-200",
-                        theme === "dark" ? "border border-neutral-800" : "border border-gray-200"
+                        theme === "dark" ? "border border-neutral-800" : "border border-gray-200",
+                        "min-h-[12rem]"
                       )}
                     >
                       <div className="w-full">
                         <div className="flex justify-between w-full items-start mb-3">
-                          <p className="text-base font-medium text-neutral-700 dark:text-neutral-300 truncate max-w-[80%]">
-                            {material.name}
-                          </p>
-                          <div className="flex items-center gap-1">
+                          <div className="flex items-center space-x-2 mb-2">
+                            <input
+                              type="checkbox"
+                              checked={selectedMaterials.includes(material.id)}
+                              onChange={() => toggleMaterialSelection(material.id)}
+                              className="form-checkbox"
+                            />
+                            <p
+                              className="text-base font-medium text-neutral-700 dark:text-neutral-300 cursor-pointer underline"
+                              onClick={() => {
+                                const fileUrl = material.file.startsWith('http')
+                                  ? material.file
+                                  : `${getApiBaseUrl()}${material.file}`;
+                                window.open(fileUrl, '_blank');
+                              }}
+                            >
+                              {material.name}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-1 mt-2">
+                          <div className="flex items-center gap-2">
                             <button
                               onClick={() => {
                                 setEditingMaterial(material);
                                 setSelectedMaterialTags(material.tags?.map(tag => tag.id) || []);
                                 setShowEditTagsModal(true);
                               }}
-                              className="p-1.5 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors"
+                              className="p-2 rounded-lg bg-yellow-100 dark:bg-yellow-900 hover:bg-yellow-200 dark:hover:bg-yellow-800 transition-colors"
                               title="Manage Tags"
                             >
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-yellow-500 dark:text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-600 dark:text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" />
                               </svg>
                             </button>
@@ -642,10 +724,10 @@ export function MaterialsPage({ classroomId }) {
                                 e.stopPropagation();
                                 handleEdit(material);
                               }}
-                              className="p-1.5 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900 transition-colors"
+                              className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
                               title="Edit Name"
                             >
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                               </svg>
                             </button>
@@ -658,10 +740,10 @@ export function MaterialsPage({ classroomId }) {
                                     : `${getApiBaseUrl()}${material.file}`;
                                   window.open(fileUrl, '_blank');
                                 }}
-                                className="p-1.5 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+                                className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
                                 title="Download File"
                               >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-neutral-600 dark:text-neutral-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600 dark:text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                                 </svg>
                               </button>
@@ -671,16 +753,15 @@ export function MaterialsPage({ classroomId }) {
                                 e.stopPropagation();
                                 handleDelete(material);
                               }}
-                              className="p-1.5 rounded-lg hover:bg-red-100 dark:hover:bg-red-900 transition-colors"
+                              className="p-2 rounded-lg bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 transition-colors"
                               title="Delete Material"
                             >
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-red-600 dark:text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-600 dark:text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                               </svg>
                             </button>
                           </div>
                         </div>
-                        
                         {material.classroom?.name && (
                           <p className="px-1.5 py-0.5 rounded-md bg-gray-100 dark:bg-neutral-800 text-xs inline-block mb-2">
                             {material.classroom.name}
@@ -708,8 +789,44 @@ export function MaterialsPage({ classroomId }) {
                 </div>
               )}
             </div>
+      {/* Delete Selected Confirmation Modal */}
+      {showDeleteSelectedModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className={cn(
+            "p-6 rounded-lg w-[32rem]",
+            theme === "dark" ? "bg-neutral-800" : "bg-white"
+          )}>
+            <h3 className={cn(
+              "text-xl font-bold mb-4",
+              theme === "dark" ? "text-white" : "text-gray-800"
+            )}>
+              Confirm Deletion
+            </h3>
+            <p className="mb-6 text-neutral-600 dark:text-neutral-300">
+              Are you sure you want to delete the selected materials?
+            </p>
+            <div className="flex justify-end space-x-2">
+              <button
+                onClick={() => setShowDeleteSelectedModal(false)}
+                className="font-bold py-2 px-4 rounded bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white hover:bg-gray-400 dark:hover:bg-gray-700"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteSelected}
+                className="font-bold py-2 px-4 rounded bg-red-500 dark:bg-red-600 text-white hover:bg-red-600 dark:hover:bg-red-700"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* File Upload Section */}
-      <FileUploadDemo classroomId={classroomId} onUploadComplete={refreshMaterials} />
+      <FileUploadDemo classroomId={classroomId} onUploadComplete={() => {
+        refreshMaterials();
+        setAlert({ type: 'success', message: 'Material uploaded successfully!' });
+      }} />
 
     </div>
   );
