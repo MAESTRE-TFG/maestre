@@ -91,7 +91,7 @@ export function SidebarDemo({ ContentComponent }) {
       
       // Use router.push in a safe way
       setTimeout(() => {
-        router.push("/profile/signin");
+        router.push("/");
       }, 100);
       
     } catch (error) {
@@ -104,7 +104,7 @@ export function SidebarDemo({ ContentComponent }) {
       closeLogoutModal();
       
       setTimeout(() => {
-        router.push("/profile/signin");
+        router.push("/");
       }, 100);
     }
   };
@@ -295,7 +295,7 @@ export const Logo = () => {
       onClick={() => router.push("/")} // Redirect to home page
     >
       <img
-        src={theme === "dark" ? "/static/maestre_logo_2_dark.webp" : "/static/maestre_logo_2.webp"}
+        src={theme === "dark" ? "/static/logos/maestre_logo_black.webp" : "/static/logos/maestre_logo_blue_transparent.webp"}
         className={cn(
           "flex-shrink-0 rounded-full",
           open ? "h-16 w-16" : "h-12 w-12" // Adjust logo size based on sidebar state
@@ -338,7 +338,7 @@ export const LogoIcon = () => {
       onClick={() => router.push("/")} // Redirect to home page
     >
       <img
-        src={theme === "dark" ? "/static/maestre_logo_2_dark.webp" : "/static/maestre_logo_2.webp"}
+        src={theme === "dark" ? "/static/logos/maestre_logo_black.webp" : "/static/logos/maestre_logo_blue_transparent.webp"}
         className="h-12 w-12 flex-shrink-0 rounded-full"
         width={90}
         height={90}

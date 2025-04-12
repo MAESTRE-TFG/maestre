@@ -55,30 +55,6 @@ export default function SignIn() {
       showAlert("warning", "Password must contain at least one special character");
       return;
     }
-    if (formData.username && formData.username.length > 30) {
-      showAlert("warning", "Username cannot exceed 30 characters");
-      return;
-    }
-    if (formData.first_name && formData.first_name.length > 30) {
-      showAlert("warning", "First name cannot exceed 30 characters");
-      return;
-    }
-    if (formData.last_name && formData.last_name.length > 30) {
-      showAlert("warning", "Last name cannot exceed 30 characters");
-      return;
-    }
-    if (!formData.is_active) {
-      showAlert("warning", "Your account is inactive. Please contact support.");
-      return;
-    }
-    if (formData.is_superuser) {
-      showAlert("warning", "Superuser login is restricted.");
-      return;
-    }
-    if (!formData.school) {
-      showAlert("warning", "School information is required.");
-      return;
-    }
 
     try {
       const response = await fetch(`${getApiBaseUrl()}/api/users/signin/`, {
@@ -126,7 +102,7 @@ export default function SignIn() {
         `}</style>
       </div>
         <img 
-          src={theme === "dark" ? "/static/maestre_logo_circle_black.png" : "/static/maestre_logo_circle.png"} 
+          src={theme === "dark" ? "/static/logos/maestre_logo_black.webp" : "/static/logos/maestre_logo_blue_transparent.webp"} 
           alt="MAESTRE Logo" 
           className="mx-auto mt-4 w-32 h-32"
         />
