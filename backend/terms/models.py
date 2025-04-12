@@ -52,19 +52,20 @@ class Terms(models.Model):
         # Ensure the uploaded files are valid
         if not self.content or not self.pdf_content:
             raise ValidationError("Both a markdown (.md) file and a PDF file must be provided.")
-        
+
         if self.content:
             if not self.content.name.endswith('.md'):
                 raise ValidationError("The content file must be a markdown (.md) file.")
             if hasattr(self.content.file, 'content_type') and self.content.file.content_type != "text/markdown":
                 raise ValidationError("The uploaded markdown file must have a valid markdown content type.")
-        
+
         if self.pdf_content:
             if not self.pdf_content.name.endswith('.pdf'):
                 raise ValidationError("The PDF content file must be a .pdf file.")
-            if hasattr(self.pdf_content.file, 'content_type') and self.pdf_content.file.content_type != "application/pdf":
+            if (hasattr(self.pdf_content.file, 'content_type') and
+               self.pdf_content.file.content_type != "application/pdf"):
                 raise ValidationError("The uploaded PDF file must have a valid PDF content type.")
-        
+
         super().clean()
 
     def save(self, *args, **kwargs):

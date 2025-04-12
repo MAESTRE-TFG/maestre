@@ -1,4 +1,3 @@
-# Update the imports to use CustomUser instead of User
 from django.test import TestCase
 from django.urls import reverse
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -13,10 +12,8 @@ from schools.models import School
 class TermsModelTests(TestCase):
 
     def setUp(self):
-        # Create a school for the CustomUser
         self.school = School.objects.create(name='Test School')
 
-        # Create admin user using CustomUser
         self.admin_user = CustomUser.objects.create_user(
             username='admin',
             email='admin@example.com',
@@ -308,7 +305,7 @@ class TermsAPITests(APITestCase):
         if os.path.exists(terms_media_dir):
             # Remove all files and the directory itself
             shutil.rmtree(terms_media_dir)
-            
+
         # Verify the directory is gone
-        self.assertFalse(os.path.exists(terms_media_dir), 
+        self.assertFalse(os.path.exists(terms_media_dir),
                          f"Terms directory still exists at {terms_media_dir}")

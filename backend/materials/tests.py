@@ -136,7 +136,7 @@ class DocumentTests(APITestCase):
         self.assertEqual(document.tags.count(), 2)
 
     def test_unauthorized_access(self):
-        document = Document.objects.create(
+        Document.objects.create(
             name='Test Document',
             file=self.test_file,
             classroom=self.classroom
@@ -148,7 +148,7 @@ class DocumentTests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_get_all_user_materials(self):
-        document = Document.objects.create(
+        Document.objects.create(
             name='User Document',
             file=self.test_file,
             classroom=self.classroom
@@ -531,7 +531,6 @@ class DocumentTests(APITestCase):
                     except (FileNotFoundError, PermissionError) as e:
                         print(f"Could not delete temporary file {filename}: {e}")
 
-
 # ------------------------------------ Test serializers ----------------------------------
 
     def test_valid_serializer(self):
@@ -557,7 +556,7 @@ class DocumentTests(APITestCase):
         invalid_data['tag_ids'] = ['invalid', 123]  # Invalid tag IDs
         serializer = DocumentSerializer(data=invalid_data)
         self.assertFalse(serializer.is_valid())
-        self.assertIn('tag_ids', serializer.errors)  # Ensure the error is related to tag_ids
+        self.assertIn('tag_ids', serializer.errors)
 
     def test_create_document_with_tags(self):
         serializer = DocumentSerializer(data=self.valid_data)

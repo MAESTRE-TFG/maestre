@@ -4,6 +4,7 @@ from tags.serializers import TagSerializer
 from rest_framework.exceptions import ValidationError
 from tags.models import Tag
 
+
 class DocumentSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True, read_only=True)
     tag_ids = serializers.ListField(write_only=True, required=False)

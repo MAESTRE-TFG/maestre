@@ -42,7 +42,8 @@ class TagTests(TestCase):
 
     def test_filter_documents_by_tags(self):
         self.document.tags.add(self.tag)
-        response = self.client.get('/api/tags/filtered_documents/', {'tags': 'Test Tag', 'classroom_id': self.classroom.id})
+        response = self.client.get('/api/tags/filtered_documents/',
+                                   {'tags': 'Test Tag', 'classroom_id': self.classroom.id})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
 
@@ -56,9 +57,7 @@ class TagTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(Tag.objects.get(id=self.tag.id).color, "#00FF00")
 
-        
-
-    # Negative Test Cases
+    # ------------ Negative Test Cases ------------
     def test_create_duplicate_tag(self):
         response = self.client.post('/api/tags/', {"name": "Test Tag"}, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -68,7 +67,8 @@ class TagTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_filter_documents_invalid_tag(self):
-        response = self.client.get('/api/tags/filtered_documents/', {'tags': 'Invalid Tag', 'classroom_id': self.classroom.id})
+        response = self.client.get('/api/tags/filtered_documents/',
+                                   {'tags': 'Invalid Tag', 'classroom_id': self.classroom.id})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 0)
 
@@ -112,9 +112,8 @@ class TagTests(TestCase):
         response = self.client.post('/api/tags/', {"name": long_name, "color": "#FF5733"}, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
-
     def test_user_tags_unauthenticated(self):
-        self.client.force_authenticate(user=None)  # Unauthenticate the client
+        self.client.force_authenticate(user=None)
         response = self.client.get('/api/tags/user_tags/')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertIn('Authentication credentials were not provided.', str(response.data))
@@ -131,7 +130,8 @@ class TagTests(TestCase):
         self.assertIn('Tags are required', str(response.data))
 
     def test_filtered_documents_empty_result(self):
-        response = self.client.get('/api/tags/filtered_documents/', {'tags': 'Nonexistent Tag', 'classroom_id': self.classroom.id})
+        response = self.client.get('/api/tags/filtered_documents/',
+                                   {'tags': 'Nonexistent Tag', 'classroom_id': self.classroom.id})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 0)
 
@@ -140,13 +140,12 @@ class TagTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertIn('Invalid hexadecimal color code', str(response.data))
         self.assertIn('This field may not be blank.', str(response.data))
-        
 
     def test_destroy_tag_unauthenticated(self):
-        self.client.force_authenticate(user=None)  # Unauthenticate the client
+        self.client.force_authenticate(user=None)
         response = self.client.delete(f'/api/tags/{self.tag.id}/')
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        self.assertIn('Authentication credentials were not provided.', str(response.data))  # Adjusted assertion
+        self.assertIn('Authentication credentials were not provided.', str(response.data))
 
     def test_destroy_nonexistent_tag(self):
         response = self.client.delete('/api/tags/999/')
@@ -175,12 +174,13 @@ class TagTests(TestCase):
         self.assertIn('classroom_id must be a valid integer.', str(response.data))  # Updated assertion
 
     def test_filtered_documents_no_results(self):
-        response = self.client.get('/api/tags/filtered_documents/', {'tags': 'Nonexistent Tag', 'classroom_id': self.classroom.id})
+        response = self.client.get('/api/tags/filtered_documents/',
+                                   {'tags': 'Nonexistent Tag', 'classroom_id': self.classroom.id})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 0)
 
     def test_user_tags_no_tags(self):
-        Tag.objects.all().delete()  # Remove all tags
+        Tag.objects.all().delete()
         response = self.client.get('/api/tags/user_tags/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 0)

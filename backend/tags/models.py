@@ -26,7 +26,7 @@ class Tag(models.Model):
 
     def clean(self):
         validate_user_tags_limit(self.creator)
-        
+
         # Validate color as a valid hexadecimal color code
         if self.color and not re.match(r'^#[0-9A-Fa-f]{6}$', self.color):
             raise ValidationError({'color': 'Invalid hexadecimal color code.'})
