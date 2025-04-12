@@ -124,7 +124,7 @@ export function SidebarDemo({ ContentComponent }) {
       icon: (
         <IconPlus
           className={cn(
-            "h-8 w-8 ml-2 flex-shrink-0", // Increased size of icons
+            "h-6 w-6 ml-2 flex-shrink-0", // Reduced size from h-8 w-8
             theme == "dark" ? "text-neutral-200" : "text-neutral-700"
           )}
         />
@@ -136,7 +136,7 @@ export function SidebarDemo({ ContentComponent }) {
       icon: (
         <IconSchool
           className={cn(
-            "h-8 w-8 ml-2 flex-shrink-0", // Increased size of icons
+            "h-6 w-6 ml-2 flex-shrink-0", // Reduced size from h-8 w-8
             theme == "dark" ? "text-neutral-200" : "text-neutral-700"
           )}
         />
@@ -148,7 +148,7 @@ export function SidebarDemo({ ContentComponent }) {
       icon: (
         <IconBooks
           className={cn(
-            "h-8 w-8 ml-2 flex-shrink-0", // Increased size of icons
+            "h-6 w-6 ml-2 flex-shrink-0", // Reduced size from h-8 w-8
             theme == "dark" ? "text-neutral-200" : "text-neutral-700"
           )}
         />
@@ -160,7 +160,7 @@ export function SidebarDemo({ ContentComponent }) {
       icon: (
         <IconUser
           className={cn(
-            "h-8 w-8 ml-2 flex-shrink-0", // Increased size of icons
+            "h-6 w-6 ml-2 flex-shrink-0", // Reduced size from h-8 w-8
             theme == "dark" ? "text-neutral-200" : "text-neutral-700"
           )}
         />
