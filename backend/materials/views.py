@@ -49,7 +49,7 @@ class DocumentViewSet(viewsets.ModelViewSet):
                 if classroom.creator != request.user:
                     return Response(
                         {"error": "You don't have permission to add documents to this classroom."},
-                        status=status.HTTP_400_BAD_REQUEST
+                        status=status.HTTP_403_FORBIDDEN
                     )
 
                 if classroom.documents.count() >= settings.MAX_FILES_PER_CLASSROOM:
