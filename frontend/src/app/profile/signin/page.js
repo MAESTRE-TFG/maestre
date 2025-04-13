@@ -102,7 +102,7 @@ export default function SignIn() {
         `}</style>
       </div>
         <img 
-          src={theme === "dark" ? "/static/logos/maestre_logo_black.webp" : "/static/logos/maestre_logo_blue_transparent.webp"} 
+          src={theme === "dark" ? "/static/logos/maestre_logo_white_transparent.webp" : "/static/logos/maestre_logo_blue_transparent.webp"} 
           alt="MAESTRE Logo" 
           className="mx-auto mt-4 w-32 h-32"
         />

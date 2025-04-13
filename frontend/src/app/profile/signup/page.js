@@ -91,7 +91,7 @@ export default function SignUp() {
         </h1>
       </div>
         <img 
-          src={theme === "dark" ? "/static/logos/maestre_logo_black.webp" : "/static/logos/maestre_logo_blue_transparent.wepb"} 
+          src={theme === "dark" ? "/static/logos/maestre_logo_white_transparent.webp" : "/static/logos/maestre_logo_blue_transparent.wepb"} 
           alt="MAESTRE Logo" 
           className="mx-auto mt-4 w-32 h-32"
         />

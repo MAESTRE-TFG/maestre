@@ -9,6 +9,7 @@ import {
   IconSchool,
   IconBooks,
   IconX,
+  IconHome,
 } from "@tabler/icons-react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -118,6 +119,18 @@ export function SidebarDemo({ ContentComponent }) {
   };
 
   const links = [
+    {
+      label: "Home",
+      href: "/",
+      icon: (
+        <IconHome
+          className={cn(
+            "h-6 w-6 ml-2 flex-shrink-0",
+            theme == "dark" ? "text-neutral-200" : "text-neutral-700"
+          )}
+        />
+      ),
+    },
     {
       label: "Create",
       href: "/tools",
@@ -295,10 +308,10 @@ export const Logo = () => {
       onClick={() => router.push("/")} // Redirect to home page
     >
       <img
-        src={theme === "dark" ? "/static/logos/maestre_logo_black.webp" : "/static/logos/maestre_logo_blue_transparent.webp"}
+        src={theme === "dark" ? "/static/logos/maestre_logo_white_transparent.webp" : "/static/logos/maestre_logo_blue_transparent.webp"}
         className={cn(
           "flex-shrink-0 rounded-full",
-          open ? "h-16 w-16" : "h-12 w-12" // Adjust logo size based on sidebar state
+          open ? "h-18 w-18" : "h-14 w-14"
         )}
         width={open ? 120 : 90}
         height={open ? 120 : 90}
@@ -310,7 +323,7 @@ export const Logo = () => {
         animate={{ opacity: 1 }}
         className={cn(
           "font-medium whitespace-pre",
-          theme == "dark" ? "text-white" : "text-black"
+          theme == 'dark' ? 'text-white' : 'rgb(25,65,166)'
         )}
       >
         <style jsx global>{
@@ -319,7 +332,8 @@ export const Logo = () => {
         <h2
           style={{
             fontFamily: "'Alfa Slab One', sans-serif",
-            fontSize: open ? "2rem" : "1.25rem", // Adjust title size based on sidebar state
+            fontSize: open ? "2rem" : "1.25rem",
+            color: theme === 'dark' ? 'text-white' : 'rgb(25,65,166)',
           }}
         >
           MAESTRE
@@ -338,7 +352,7 @@ export const LogoIcon = () => {
       onClick={() => router.push("/")} // Redirect to home page
     >
       <img
-        src={theme === "dark" ? "/static/logos/maestre_logo_black.webp" : "/static/logos/maestre_logo_blue_transparent.webp"}
+        src={theme === "dark" ? "/static/logos/maestre_logo_white_transparent.webp" : "/static/logos/maestre_logo_blue_transparent.webp"}
         className="h-12 w-12 flex-shrink-0 rounded-full"
         width={90}
         height={90}
