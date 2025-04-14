@@ -267,7 +267,7 @@ export function SidebarDemo({ ContentComponent }) {
       </div>
       <Modal isOpen={isLogoutModalOpen} onClose={closeLogoutModal} title="Confirm Logout" style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}
       >
-        <div className="p-4">
+        <div title=" " className="p-4">
           <h2 className="text-xl font-bold mb-4" // Increased text size
           >
             Confirm Logout

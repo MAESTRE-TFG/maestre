@@ -148,7 +148,7 @@ export function SignupForm({ onSubmit }) {
               className="h-4 w-4"
             />
             <label htmlFor="terms" className={cn(theme === "dark" ? "text-white" : "text-black")}>
-              I accept the <a href="/terms" target="_blank" rel="noopener noreferrer" className="underline">Terms of Use</a> and <a href="/privacy" target="_blank" rel="noopener noreferrer" className="underline">Privacy Policy</a>.
+              I accept the <a href="/terms" target="_blank" rel="noopener noreferrer" className="underline">Terms of Use</a> and <a href="/terms" target="_blank" rel="noopener noreferrer" className="underline">Privacy Policy</a>.
             </label>
           </div>
         </div>

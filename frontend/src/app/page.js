@@ -16,6 +16,7 @@ const Home = () => {
   const [videoPlaying, setVideoPlaying] = useState(false);
   const videoRef = useRef(null);
   const featuresRef = useRef(null);
+  const demoSectionRef = useRef(null); // Add a ref for the demo section
 
   useEffect(() => {
     const user = localStorage.getItem('user');
@@ -66,6 +67,10 @@ const Home = () => {
 
   const scrollToFeatures = () => {
     featuresRef.current?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const scrollToDemoSection = () => {
+    demoSectionRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const teamMembers = [
@@ -220,14 +225,10 @@ const Home = () => {
       
       {/* Scroll Icon */}
       <div className="absolute bottom-16 w-full flex justify-center z-20">
-        <motion.div 
+        <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          onClick={() => {
-            if (featuresRef && featuresRef.current) {
-              featuresRef.current.scrollIntoView({ behavior: 'smooth' });
-            }
-          }}
+          onClick={scrollToDemoSection} // Updated to scroll to the demo section
           className="cursor-pointer hover:scale-110 transition-transform"
         >
           <IconArrowDown className="h-8 w-8 text-white" />
@@ -339,7 +340,7 @@ const Home = () => {
     </section>
 
     {/* Demo Video */}
-    <section className={`py-32 ${bgColor} overflow-hidden relative`}>
+    <section ref={demoSectionRef} className={`py-32 ${bgColor} overflow-hidden relative`}>
       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/5"></div>
       
       <div className="container mx-auto px-4 relative z-10">
@@ -371,57 +372,13 @@ const Home = () => {
               className="w-full h-full object-cover"
               poster="/static/video-poster.jpg"
               controls
-              muted // Add this attribute to allow autoplay
+              muted
             >
               <source src="/static/demo_1.mp4" type="video/mp4" />
               Your browser does not support the video tag.
             </video>
-            
-            {!videoPlaying && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <button 
-                  onClick={() => {
-                    if (videoRef.current) {
-                      videoRef.current.play();
-                      setVideoPlaying(true);
-                    }
-                  }}
-                  className="w-20 h-20 bg-white/30 rounded-full flex items-center justify-center backdrop-blur-sm transition-transform hover:scale-110"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 text-white" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clipRule="evenodd" />
-                  </svg>
-                </button>
-              </div>
-            )}
-          </div>
-          
-          <div className={`py-8 px-6 ${theme === 'dark' ? 'bg-neutral-800' : 'bg-gray-50'}`}>
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className={`text-xl font-medium ${textColor}`}>Maestre Demo</h3>
-                <p className={`${subtleTextColor}`}>See how teachers use Maestre to enhance their classroom</p>
-              </div>
-              <button className={`flex items-center ${accentColor} hover:underline`}>
-                Learn more
-                <IconChevronRight className="ml-1 w-5 h-5" />
-              </button>
-            </div>
           </div>
         </motion.div>
-      </div>
-      
-      {/* Wave divider */}
-      <div className="absolute bottom-0 left-0 right-0">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 1440 120"
-          fill={theme === "dark" ? "rgb(23, 23, 23)" : "rgb(248, 250, 252)"}
-          preserveAspectRatio="none"
-          className="block w-full h-[120px]"
-        >
-          <path d="M0,32L80,48C160,64,320,96,480,96C640,96,800,64,960,48C1120,32,1280,32,1360,32L1440,32L1440,120L1360,120C1280,120,1120,120,960,120C800,120,640,120,480,120C320,120,160,120,80,120L0,120Z"></path>
-        </svg>
       </div>
     </section>
 
@@ -477,7 +434,7 @@ const Home = () => {
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <button
-                  onClick={() => router.push('/profile/signin')}
+                  onClick={() => router.push('/profile/signup')}
                   className={cn(
                     "px-8 py-4 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center",
                     theme === "dark" 
@@ -486,7 +443,7 @@ const Home = () => {
                     "shadow-lg hover:shadow-xl"
                   )}
                 >
-                  Sign in as a Teacher
+                  Sign up as a Teacher
                   <IconChevronRight className="ml-2 w-5 h-5" />
                 </button>
                 <button

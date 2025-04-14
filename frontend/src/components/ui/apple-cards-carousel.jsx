@@ -257,7 +257,7 @@ export const Carousel = ({
           onClose={closeProfileModal}
           className="p-0 overflow-hidden"
         >
-          <div className={cn(
+          <div title=" " className={cn(
             "rounded-lg overflow-hidden",
             theme === "dark" ? "bg-neutral-800" : "bg-white"
           )}>

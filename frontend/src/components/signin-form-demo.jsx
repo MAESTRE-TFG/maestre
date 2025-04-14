@@ -8,13 +8,13 @@ import { useTheme } from "@/components/theme-provider";
 export function SigninForm({ onSubmit }) {
   const { theme } = useTheme();
   const [formData, setFormData] = React.useState({
-    emailOrUsername: "",  // Changed from email to emailOrUsername
+    emailOrUsername: "",
     password: ""
   });
-  
+
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       [name]: value
     }));
@@ -24,59 +24,93 @@ export function SigninForm({ onSubmit }) {
     e.preventDefault();
     onSubmit(formData);
   };
+
   return (
-    <div className={cn("max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white")}>
-      <form className="my-8" onSubmit={handleSubmit} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-        <LabelInputContainer className="mb-4">
-          <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="emailOrUsername">👤 Email or Username</Label>
-          <Input 
-            id="emailOrUsername" 
-            name="emailOrUsername" 
-            placeholder="email@example.com or username" 
+    <div
+      className={cn(
+        "max-w-md w-full mx-auto rounded-none md:rounded-xl p-4 md:p-6 shadow-input",
+        theme === "dark" ? "bg-black" : "bg-white"
+      )}
+    >
+      <form
+        className="my-4"
+        onSubmit={handleSubmit}
+        style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+      >
+        <LabelInputContainer className="mb-6">
+          <Label
+            style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+            htmlFor="emailOrUsername"
+          >
+            👤 Email or Username
+          </Label>
+          <Input
+            id="emailOrUsername"
+            name="emailOrUsername"
+            placeholder="email@example.com or username"
             type="text"
-            required 
-            value={formData.emailOrUsername} 
-            onChange={handleChange} 
-            className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
+            required
+            value={formData.emailOrUsername}
+            onChange={handleChange}
+            className={cn(
+              theme === "dark"
+                ? "hover:bg-white hover:text-black"
+                : "hover:bg-gray-100"
+            )}
           />
         </LabelInputContainer>
-        <LabelInputContainer className="mb-8">
-          <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="password">🔒 Password</Label>
-          <Input 
-            id="password" 
-            name="password" 
-            placeholder="••••••••" 
-            type="password" 
-            required 
-            value={formData.password} 
-            onChange={handleChange} 
-            className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
+        <LabelInputContainer className="mb-6">
+          <Label
+            style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+            htmlFor="password"
+          >
+            🔒 Password
+          </Label>
+          <Input
+            id="password"
+            name="password"
+            placeholder="••••••••"
+            type="password"
+            required
+            value={formData.password}
+            onChange={handleChange}
+            className={cn(
+              theme === "dark"
+                ? "hover:bg-white hover:text-black"
+                : "hover:bg-gray-100"
+            )}
           />
         </LabelInputContainer>
 
         <button
-          className={cn("relative group/btn block w-full rounded-md h-10 font-medium border border-transparent", 
-            theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
-            : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
+          className={cn(
+            "relative group/btn block w-full rounded-md h-10 font-medium border border-transparent",
+            theme === "dark"
+              ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
           )}
-          type="submit">
+          type="submit"
+        >
           Sign in &rarr;
           <BottomGradient />
         </button>
 
-        <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-8 h-[1px] w-full" />
+        <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-4 h-[1px] w-full" /> {/* Reduced vertical margin */}
 
-        <div className="text-center mt-4">
+        <div className="text-center mt-2"> {/* Reduced top margin */}
           <p className={cn(theme === "dark" ? "text-white" : "text-black")}>
-            Don't have an account? 
+            Don't have an account?
           </p>
           <button
-            className={cn("relative group/btn mt-2 block w-full rounded-md h-10 font-medium border border-transparent", 
-              theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
-              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-green-300"
+            className={cn(
+              "relative group/btn mt-2 block w-full rounded-md h-10 font-medium border border-transparent",
+              theme === "dark"
+                ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
+                : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-green-300"
             )}
             style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-            onClick={() => window.location.href = "/profile/signup"}>
+            onClick={() => (window.location.href = "/profile/signup")}
+          >
             Sign up
             <BottomGradient />
           </button>
