@@ -10,13 +10,15 @@ import {
   IconArrowNarrowLeft,
   IconArrowNarrowRight,
   IconX,
+  IconUserCircle,
+  IconLock,
 } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useOutsideClick } from "@/hooks/use-outside-click";
-import { useTheme } from "@/components/theme-provider"; // Add this import
+import { useTheme } from "@/components/theme-provider";
 import { useRouter } from "next/navigation";
 import { useState as useModalState, useEffect as useModalEffect } from "react";
 import { Modal } from "@/components/ui/modal";
@@ -87,6 +89,7 @@ export const Carousel = ({
   const [isProfileComplete, setIsProfileComplete] = useModalState(false);
   const [selectedToolPath, setSelectedToolPath] = useModalState("");
   const router = useRouter();
+  const { theme } = useTheme();
 
   useModalEffect(() => {
     checkAuthStatus();
@@ -176,6 +179,20 @@ export const Carousel = ({
             ))}
           </div>
         </div>
+
+        {/* Middle-right scroll button - styled like the existing button */}
+        {canScrollRight && (
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="hidden md:flex absolute right-4 top-1/2 transform -translate-y-1/2 z-30 h-14 w-14 rounded-full bg-gray-100/90 hover:bg-gray-200/90 items-center justify-center transition-all"
+            onClick={scrollRight}
+          >
+            <IconArrowNarrowRight className="h-8 w-8 text-gray-700" />
+          </motion.button>
+        )}
+
         <div className="flex justify-center gap-4 mt-2">
           <button
             className="h-14 w-14 rounded-full bg-gray-100/90 hover:bg-gray-200/90 flex items-center justify-center disabled:opacity-50 transition-all"
@@ -191,64 +208,107 @@ export const Carousel = ({
           </button>
         </div>
         
-        {/* Authentication Modal */}
-        <Modal 
-          isOpen={showAuthModal} 
-          onClose={closeAuthModal} 
-          title="Authentication Required"
-          style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}
-        >
-          <div className="p-4">
-            <h2 className="text-lg font-bold mb-4">
-              Authentication Required
-            </h2>
-            <p className="mb-4">
-              You need to be logged in to access this tool. Please create an account to continue.
-            </p>
-            <div className="flex justify-end">
-              <button
-                onClick={closeAuthModal}
-                className="mr-2 px-4 py-2 bg-gray-300 rounded-md"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleSignUp}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md"
-              >
-                Create Account
-              </button>
+        {/* Improved Authentication Modal */}
+        <Modal isOpen={showAuthModal} onClose={closeAuthModal}>
+          <div title=" ">
+            <div className={cn("p-6", theme === "dark" ? "bg-blue-700" : "bg-blue-600")}>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-white/20 rounded-full">
+                  <IconLock className="h-6 w-6 text-white" />
+                </div>
+                <h2 className="text-xl font-bold text-white" style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+                  Authentication Required
+                </h2>
+              </div>
+            </div>
+            <div className="p-6">
+              <p className={cn("mb-6 text-base", theme === "dark" ? "text-gray-300" : "text-gray-600")}>
+                You need to be logged in to access this tool. Create an account to unlock all features.
+              </p>
+              <div className="flex items-center justify-end gap-3">
+                <button
+                  onClick={closeAuthModal}
+                  className={cn(
+                    "px-4 py-2 rounded-md transition-colors",
+                    theme === "dark" ? "text-white hover:bg-neutral-700" : "text-gray-700 hover:bg-gray-100"
+                  )}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleSignUp}
+                  className={cn(
+                    "px-6 py-2 rounded-md font-medium transition-all",
+                    "flex items-center gap-2",
+                    theme === "dark" ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-500 hover:bg-blue-600 text-white"
+                  )}
+                >
+                  <IconUserCircle className="h-5 w-5" />
+                  Create Account
+                </button>
+              </div>
             </div>
           </div>
         </Modal>
 
-        {/* Profile Completion Modal */}
+        {/* Improved Profile Completion Modal */}
         <Modal 
           isOpen={showProfileModal} 
-          onClose={closeProfileModal} 
-          title="Complete Your Profile"
-          style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}
+          onClose={closeProfileModal}
+          className="p-0 overflow-hidden"
         >
-          <div className="p-4">
-            <h2 className="text-lg font-bold mb-4">
-              Complete Your Profile
-            </h2>
-            <p className="mb-4">
-              Please complete your profile information before accessing this tool.
-            </p>
-            <div className="flex justify-end">
-              <button
-                onClick={closeProfileModal}
-                className="mr-2 px-4 py-2 bg-gray-300 rounded-md"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleCompleteProfile}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md"
-              >
-                Complete Profile
-              </button>
+          <div className={cn(
+            "rounded-lg overflow-hidden",
+            theme === "dark" ? "bg-neutral-800" : "bg-white"
+          )}>
+            <div className={cn(
+              "p-6",
+              theme === "dark" ? "bg-purple-700" : "bg-purple-600"
+            )}>
+              <div className="flex items-center gap-3">
+                <div className="p-2 bg-white/20 rounded-full">
+                  <IconUserCircle className="h-6 w-6 text-white" />
+                </div>
+                <h2 className="text-xl font-bold text-white" style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+                  Complete Your Profile
+                </h2>
+              </div>
+            </div>
+            
+            <div className="p-6">
+              <p className={cn(
+                "mb-6 text-base",
+                theme === "dark" ? "text-gray-300" : "text-gray-600"
+              )}>
+                We need a few more details before you can access this tool. Your profile information helps us personalize your experience.
+              </p>
+              
+              <div className="flex items-center justify-end gap-3">
+                <button
+                  onClick={closeProfileModal}
+                  className={cn(
+                    "px-4 py-2 rounded-md transition-colors",
+                    theme === "dark" 
+                      ? "text-white hover:bg-neutral-700" 
+                      : "text-gray-700 hover:bg-gray-100"
+                  )}
+                >
+                  Cancel
+                </button>
+                <button
+                  onClick={handleCompleteProfile}
+                  className={cn(
+                    "px-6 py-2 rounded-md font-medium transition-all",
+                    "flex items-center gap-2",
+                    theme === "dark"
+                      ? "bg-purple-600 hover:bg-purple-700 text-white"
+                      : "bg-purple-500 hover:bg-purple-600 text-white"
+                  )}
+                >
+                  <IconUserCircle className="h-5 w-5" />
+                  Complete Profile
+                </button>
+              </div>
             </div>
           </div>
         </Modal>
@@ -312,37 +372,40 @@ export const Card = ({
               exit={{ opacity: 0 }}
               className="bg-black/80 backdrop-blur-lg h-full w-full fixed inset-0" />
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ type: "spring", damping: 20, stiffness: 300 }}
               ref={containerRef}
               layoutId={layout ? `card-${card.title}` : undefined}
-              className="max-w-5xl mx-auto bg-white dark:bg-neutral-900 h-fit z-[10000] my-10 p-4 md:p-10 rounded-3xl font-sans relative">
-              <div className="flex justify-end gap-4">
+              className="max-w-4xl mx-auto bg-white dark:bg-neutral-900 h-fit z-[10000] my-10 p-4 md:p-8 rounded-2xl font-sans relative shadow-2xl">
+              {/* Close button positioned better */}
+              <div className="absolute top-4 right-4">
                 <button
-                  className="h-8 w-8 bg-black dark:bg-white rounded-full flex items-center justify-center"
+                  className="h-8 w-8 bg-black dark:bg-white rounded-full flex items-center justify-center transition-transform hover:scale-110"
                   onClick={handleClose}>
-                  <IconX className="h-6 w-6 text-neutral-100 dark:text-neutral-900" />
+                  <IconX className="h-5 w-5 text-neutral-100 dark:text-neutral-900" />
                 </button>
               </div>
+              
               <motion.p
                 layoutId={layout ? `category-${card.title}` : undefined}
-                className="text-base font-medium text-black dark:text-white">
+                className="text-base font-medium text-black dark:text-white mt-6">
                 {card.category}
               </motion.p>
               <motion.p
                 layoutId={layout ? `title-${card.title}` : undefined}
-                className="text-2xl md:text-5xl font-semibold text-neutral-700 mt-4 dark:text-white z-500">
+                className="text-2xl md:text-4xl font-semibold text-neutral-700 mt-2 dark:text-white z-500">
                 {card.title}
               </motion.p>
-              <div className="py-10">{card.content}</div>
+              <div className="py-8">{card.content}</div>
               <button
                 onClick={handleTryNowClick}
                 style={{ fontFamily: "Alfa Slab One"}}
                 className={cn(
                   "inline-flex items-center justify-items-center rounded-full transition-all",
                   "font-medium text-sm py-2 px-6",
-                  "border border-transparent,",
+                  "border border-transparent",
                   theme === "dark" 
                     ? "bg-white text-black hover:bg-neutral-200" 
                     : "bg-black text-white hover:bg-neutral-800"

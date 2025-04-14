@@ -1,8 +1,8 @@
 "use client";
 import { useTheme } from "@/components/theme-provider";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
-import styles from './not-found.module.css';
 
 export default function NotFound() {
   const { theme } = useTheme();
@@ -10,30 +10,24 @@ export default function NotFound() {
 
   return (
     <div className={`min-h-screen flex flex-col items-center justify-center ${theme === 'dark' ? 'bg-neutral-900' : 'bg-white'}`}>
-      <div className={styles.bo}>
-        <div className={styles.face}>
-          <div className={styles.earL}></div>
-          <div className={styles.earR}></div>
-          <div className={styles.eyeL}></div>
-          <div className={styles.eyeR}></div>
-          <div className={styles.hairs}></div>
-          <div className={styles.nose}></div>
-          <div className={styles.mouth}></div>
-          <div className={styles.snow}>
-            <div className={styles['mountain-cap-1']}></div>
-            <div className={styles['mountain-cap-2']}></div>
-            <div className={styles['mountain-cap-3']}></div>
-            <div className={styles['mountain-cap-4']}></div>
-          </div>
+        <div className="relative w-80 h-80 mb-8">
+          <Image
+            src="/static/maestrito/maestrito_sad_transparent.webp"
+            alt="Maestrito Sad"
+            layout="fill"
+            objectFit="contain"
+          />
         </div>
-      </div>
-      
+
+        {/* 404 Title */}
       <h1 className={`text-8xl font-bold mb-4 font-alfa-slab-one ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
         404
       </h1>
-      <p className={`text-xl mb-8 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-        Oops! Looks like you've wandered into uncharted territory.
-      </p>
+
+        <span className={`text-xl mb-8 text-center px-4 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+          Oops! Looks like you've wandered into uncharted territory.
+        </span>
+
       <button
         onClick={() => router.push('/')}
         className={cn(
@@ -53,10 +47,20 @@ export default function NotFound() {
 }
 
 const BottomGradient = () => {
-  return (<>
-    <span className={cn("group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0", 
-      "bg-gradient-to-r from-transparent via-green-500 to-transparent")} />
-    <span className={cn("group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10", 
-      "bg-gradient-to-r from-transparent via-green-500 to-transparent")} />
-  </>);
+  return (
+    <>
+      <span
+        className={cn(
+          "group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0",
+          "bg-gradient-to-r from-transparent via-green-500 to-transparent"
+        )}
+      />
+      <span
+        className={cn(
+          "group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10",
+          "bg-gradient-to-r from-transparent via-green-500 to-transparent"
+        )}
+      />
+    </>
+  );
 };

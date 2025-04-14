@@ -155,32 +155,38 @@ const Home = () => {
       >
         <div className="space-y-6 max-w-5xl mx-auto px-4 sm:px-6 pt-12">
           
-          {/* Logo and title */}
           <motion.div 
-            className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-[-200px]"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 1, ease: "easeOut" }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-6 mt-[-200px]"
+          initial={{ scale: 0.8, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 1, ease: "easeOut" }}
           >
-            <div className="w-40 sm:w-44 md:w-52 relative">
-              <Image
-                src="/static/maestrito/maestrito_jump_transparent.webp"
-                alt="Maestre Logo"
-                width={0}
-                height={0}
-                sizes="100vw"
-                className="w-full h-auto"
-              />
-            </div>
-      
-            <h1 
-              className="text-4xl sm:text-6xl md:text-8xl font-bold text-white font-alfa-slab-one tracking-widest text-center sm:text-left"
-              style={{WebkitTextStroke: '4px rgb(25,65,166)'}}
+          <div>
+            <Image
+            src="/static/maestrito/maestrito_jump_transparent.webp"
+            alt="Maestre Logo"
+            width={250}
+            height={250}
+            sizes="100vw"
+            className="w-full h-auto"
+            />
+          </div>
+        
+            <h1
+              className={cn(
+                "text-4xl sm:text-6xl md:text-8xl font-bold font-alfa-slab-one tracking-widest text-center sm:text-left",
+                "text-white drop-shadow-[0_0.05em_0_rgba(25,65,166,1)]",
+                "transform-gpu rotate-1 transition-transform",
+                "relative before:content-['MAESTRE'] before:absolute before:left-0 before:top-0",
+                "before:text-transparent before:webkit-text-stroke-[6px] before:webkit-text-stroke-color-[rgba(25,65,166,0.7)]",
+                "before:z-[-1] before:translate-x-1 before:translate-y-1"
+              )}
             >
               MAESTRE
             </h1>
           </motion.div>
-              
+            
+          <br></br>
           <br></br>
           <br></br>
 
@@ -213,7 +219,7 @@ const Home = () => {
       </motion.div>
       
       {/* Scroll Icon */}
-      <div className="absolute bottom-10 w-full flex justify-center z-20">
+      <div className="absolute bottom-16 w-full flex justify-center z-20">
         <motion.div 
           animate={{ y: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
@@ -700,7 +706,13 @@ const Home = () => {
               height={48}
               className="rounded-xl"
             />
-            <h3 className={`text-2xl font-bold ml-3 ${theme === 'dark' ? 'text-white' : 'rgb(25,65,166)'} font-alfa-slab-one`}>
+            <h3
+              className={`text-2xl font-bold ml-3`}
+              style={{
+                fontFamily: "'Alfa Slab One', sans-serif",
+                color: theme === 'dark' ? 'text-white' : 'rgb(25,65,166)',
+              }}
+            >
               MAESTRE
             </h3>
           </div>
@@ -730,33 +742,32 @@ const Home = () => {
           <div className="text-center sm:text-left lg:col-span-1">
             <h4 className={`text-sm font-semibold uppercase tracking-wider mb-5 ${textColor}`}>About</h4>
             <ul className="space-y-3">
-              <li><a href="/about" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Our Mission</a></li>
-              <li><a href="/team" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Our Team</a></li>
-              <li><a href="/careers" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Careers</a></li>
-              <li><a href="/press" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Press Kit</a></li>
+              <li><a href="/about" target="_blank" rel="noopener noreferrer" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Our Mission</a></li>
+              <li><a href="/team" target="_blank" rel="noopener noreferrer" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Our Team</a></li>
+              <li><a href="/careers" target="_blank" rel="noopener noreferrer" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Careers</a></li>
+              <li><a href="/press" target="_blank" rel="noopener noreferrer" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Press Kit</a></li>
             </ul>
           </div>
-          
+
           <div className="text-center sm:text-left lg:col-span-1">
             <h4 className={`text-sm font-semibold uppercase tracking-wider mb-5 ${textColor}`}>Legal</h4>
             <ul className="space-y-3">
-              <li><a href="/terms" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Terms of Service</a></li>
-              <li><a href="/privacy" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Privacy Policy</a></li>
-              <li><a href="/cookies" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Cookie Policy</a></li>
-              <li><a href="/security" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Security</a></li>
+              <li><a href="/terms" target="_blank" rel="noopener noreferrer" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Terms of Service</a></li>
+              <li><a href="/privacy" target="_blank" rel="noopener noreferrer" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Privacy Policy</a></li>
+              <li><a href="/cookies" target="_blank" rel="noopener noreferrer" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Cookie Policy</a></li>
+              <li><a href="/security" target="_blank" rel="noopener noreferrer" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Security</a></li>
             </ul>
           </div>
-          
+
           <div className="text-center sm:text-left lg:col-span-1">
             <h4 className={`text-sm font-semibold uppercase tracking-wider mb-5 ${textColor}`}>Products</h4>
             <ul className="space-y-3">
-              <li><a href="/tools/lesson-creator" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Lesson Creator</a></li>
-              <li><a href="/tools/assessment" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Assessment Builder</a></li>
-              <li><a href="/tools/curriculum" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Curriculum Planner</a></li>
-              <li><a href="/pricing" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Pricing</a></li>
+              <li><a href="/tools/lesson-creator" target="_blank" rel="noopener noreferrer" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Lesson Creator</a></li>
+              <li><a href="/tools/assessment" target="_blank" rel="noopener noreferrer" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Assessment Builder</a></li>
+              <li><a href="/tools/curriculum" target="_blank" rel="noopener noreferrer" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Curriculum Planner</a></li>
+              <li><a href="/pricing" target="_blank" rel="noopener noreferrer" className={`${subtleTextColor} ${hoverColor} transition-colors duration-300 text-sm`}>Pricing</a></li>
             </ul>
           </div>
-          
         </div>
         
         {/* Bottom Bar */}
