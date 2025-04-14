@@ -192,8 +192,6 @@ const Home = () => {
           </motion.div>
             
           <br></br>
-          <br></br>
-          <br></br>
 
           {/* Button */}
           <motion.div
@@ -224,7 +222,7 @@ const Home = () => {
       </motion.div>
       
       {/* Scroll Icon */}
-      <div className="absolute bottom-16 w-full flex justify-center z-20">
+      {/* <div className="absolute bottom-16 w-full flex justify-center z-20">
         <motion.div
           animate={{ y: [0, 10, 0] }}
           transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
@@ -233,7 +231,7 @@ const Home = () => {
         >
           <IconArrowDown className="h-8 w-8 text-white" />
         </motion.div>
-      </div>
+      </div> */}
       
       {/* Wave Divider */}
       <div className="absolute bottom-0 left-0 right-0">

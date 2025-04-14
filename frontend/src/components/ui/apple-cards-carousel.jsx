@@ -16,7 +16,6 @@ import {
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";
-import Link from "next/link";
 import { useOutsideClick } from "@/hooks/use-outside-click";
 import { useTheme } from "@/components/theme-provider";
 import { useRouter } from "next/navigation";
@@ -210,7 +209,7 @@ export const Carousel = ({
         
         {/* Improved Authentication Modal */}
         <Modal isOpen={showAuthModal} onClose={closeAuthModal}>
-          <div title=" ">
+          <div title="  ">
             <div className={cn("p-6", theme === "dark" ? "bg-blue-700" : "bg-blue-600")}>
               <div className="flex items-center gap-3">
                 <div className="p-2 bg-white/20 rounded-full">
@@ -365,7 +364,7 @@ export const Card = ({
     <>
       <AnimatePresence>
         {open && (
-          <div className="fixed inset-0 h-screen z-[9999] overflow-auto">
+          <div className="fixed inset-0 h-screen z-[9999] overflow-auto flex items-center">
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -378,33 +377,32 @@ export const Card = ({
               transition={{ type: "spring", damping: 20, stiffness: 300 }}
               ref={containerRef}
               layoutId={layout ? `card-${card.title}` : undefined}
-              className="max-w-4xl mx-auto bg-white dark:bg-neutral-900 h-fit z-[10000] my-10 p-4 md:p-8 rounded-2xl font-sans relative shadow-2xl">
-              {/* Close button positioned better */}
-              <div className="absolute top-4 right-4">
+              className="max-w-2xl mx-auto bg-white dark:bg-neutral-900 h-fit z-[10000] my-auto p-4 md:p-6 rounded-xl font-sans relative shadow-xl">
+              <div className="absolute top-3 right-3">
                 <button
-                  className="h-8 w-8 bg-black dark:bg-white rounded-full flex items-center justify-center transition-transform hover:scale-110"
+                  className="h-7 w-7 bg-black dark:bg-white rounded-full flex items-center justify-center transition-transform hover:scale-110"
                   onClick={handleClose}>
-                  <IconX className="h-5 w-5 text-neutral-100 dark:text-neutral-900" />
+                  <IconX className="h-4 w-4 text-neutral-100 dark:text-neutral-900" />
                 </button>
               </div>
               
               <motion.p
                 layoutId={layout ? `category-${card.title}` : undefined}
-                className="text-base font-medium text-black dark:text-white mt-6">
+                className="text-sm font-medium text-black dark:text-white mt-4">
                 {card.category}
               </motion.p>
               <motion.p
                 layoutId={layout ? `title-${card.title}` : undefined}
-                className="text-2xl md:text-4xl font-semibold text-neutral-700 mt-2 dark:text-white z-500">
+                className="text-xl md:text-2xl font-semibold text-neutral-700 mt-1 dark:text-white z-500">
                 {card.title}
               </motion.p>
-              <div className="py-8">{card.content}</div>
+              <div className="py-6">{card.content}</div>
               <button
                 onClick={handleTryNowClick}
                 style={{ fontFamily: "Alfa Slab One"}}
                 className={cn(
                   "inline-flex items-center justify-items-center rounded-full transition-all",
-                  "font-medium text-sm py-2 px-6",
+                  "font-medium text-xs py-2 px-5",
                   "border border-transparent",
                   theme === "dark" 
                     ? "bg-white text-black hover:bg-neutral-200" 

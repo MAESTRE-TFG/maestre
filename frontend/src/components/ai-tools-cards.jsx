@@ -117,7 +117,7 @@ export function AIToolsCards() {
       <Modal 
         isOpen={showAuthModal} 
         onClose={closeAuthModal} 
-        title="Authentication Required"
+        title="  "
         style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}
       >
         <div className="p-4">
