@@ -434,7 +434,7 @@ const Home = () => {
                 <button
                   onClick={() => router.push('/profile/signup')}
                   className={cn(
-                    "px-8 py-4 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center",
+                    "btn btn-lg btn-contrast px-8 py-4 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center",
                     theme === "dark" 
                       ? "bg-white text-black hover:bg-gray-200" 
                       : "bg-black text-white hover:bg-gray-800",

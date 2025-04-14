@@ -81,36 +81,75 @@ h1, h2, h3, h4, h5, h6 {
   .font-alfa-slab-one {
     font-family: 'Alfa Slab One', cursive;
   }
+  
+  /* Generalized button styles */
+  .btn {
+    @apply flex items-center justify-center font-medium transition-all duration-300 shadow-lg hover:shadow-xl;
+  }
+  
+  /* Button sizes */
+  .btn-sm {
+    @apply px-4 py-2 text-sm rounded-full;
+  }
+  
+  .btn-md {
+    @apply px-6 py-3 text-base rounded-full;
+  }
+  
+  .btn-lg {
+    @apply px-8 py-4 text-lg rounded-full;
+  }
+  
+  /* Button colors - Light theme */
+  .btn-primary {
+    @apply bg-blue-600 text-white hover:bg-blue-700;
+  }
+  
+  .btn-secondary {
+    @apply bg-gray-200 text-gray-800 hover:bg-gray-300;
+  }
+  
+  .btn-accent {
+    @apply bg-purple-600 text-white hover:bg-purple-700;
+  }
+  
+  .btn-success {
+    @apply bg-green-600 text-white hover:bg-green-700;
+  }
+  
+  .btn-danger {
+    @apply bg-red-600 text-white hover:bg-red-700;
+  }
+  
+  .btn-contrast {
+    @apply bg-black text-white hover:bg-gray-800;
+  }
+  
+  /* Button colors - Dark theme */
+  .dark .btn-primary {
+    @apply bg-blue-500 text-white hover:bg-blue-600;
+  }
+  
+  .dark .btn-secondary {
+    @apply bg-gray-700 text-white hover:bg-gray-600;
+  }
+  
+  .dark .btn-accent {
+    @apply bg-purple-500 text-white hover:bg-purple-600;
+  }
+  
+  .dark .btn-success {
+    @apply bg-green-500 text-white hover:bg-green-600;
+  }
+  
+  .dark .btn-danger {
+    @apply bg-red-500 text-white hover:bg-red-600;
+  }
+  
+  .dark .btn-contrast {
+    @apply bg-white text-black hover:bg-gray-200;
+  }
 }
-
-.mac-card {
-  width: 190px;
-  height: 254px;
-  margin: 0 auto;
-  background-color: #011522;
-  border-radius: 8px;
-  z-index: 1;
- }
- 
- .mac-tools {
-  display: flex;
-  align-items: center;
-  padding: 9px;
- }
- 
- .mac-circle {
-  padding: 0 4px;
- }
- 
- .mac-box {
-  display: inline-block;
-  align-items: center;
-  width: 10px;
-  height: 10px;
-  padding: 1px;
-  border-radius: 50%;
- }
-
 
 /* From Uiverse.io by alexruix */ 
 .group {

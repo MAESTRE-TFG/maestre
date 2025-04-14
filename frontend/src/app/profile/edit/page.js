@@ -10,7 +10,7 @@ import axios from "axios";
 import { ProfileEditForm } from "@/components/profile-edit-form";
 import { Label } from "@/components/ui/label";
 import { Modal } from "@/components/ui/modal";
-import Alert from "@/components/ui/Alert"; // Import the Alert component
+import Alert from "@/components/ui/Alert";
 
 const ProfileEdit = () => {
   const router = useRouter();
@@ -273,238 +273,305 @@ const ProfileEdit = () => {
   if (!isClient) return null;
 
   return (
-    <div className="relative flex flex-col justify-center items-center py-12 sm:px-8 lg:px-8 overflow-auto">
-      {alert && <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />}
-      {/* Header Section */}
-      <div className="w-full text-center mb-12">
-        <h1 className={`text-4xl font-bold font-alfa-slab-one mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-        Hello{" "}
-          <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-            {user ? user.name : ""}
-          </span>{" "}
-        !
-        </h1>
-        <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-          See and edit your profile and data.
-        </p>
-      </div>
-
-      {/* Background Images */}
-      {theme === "dark" ? (
-        <>
+    <div className={cn(
+      "min-h-screen pt-24 px-4 sm:px-6 md:px-8 relative",
+      "bg-gradient-to-br from-blue-500/10 to-purple-500/5"
+    )}>
+      {/* Background gradient */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/5 pointer-events-none"></div>
+      
+      {/* Content container with max width for wider screens */}
+      <div className="relative mx-auto max-w-7xl w-full">
+        {/* Floating alert */}
+        {alert && (
+          <div className="fixed top-4 right-4 z-50 max-w-md">
+            <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />
+          </div>
+        )}
+      
+      <div className="relative w-full flex-1 flex flex-col items-center py-12">
+        {/* Header Section with Logo */}
+        <div className="w-full max-w-4xl flex items-center mb-8 justify-center md:justify-start space-x-6">
           <img
-            src="/static/bubbles black/1.svg"
-            alt="Bubble"
-            className="absolute top-0 left-0 w-1/5 opacity-50 z-0"
+            src={theme === "dark" ? "/static/logos/maestre_logo_white_transparent.webp" : "/static/logos/maestre_logo_blue_transparent.webp"}
+            alt="MAESTRE Logo"
+            className="w-20 h-20 drop-shadow-lg"
           />
-          <img
-            src="/static/bubbles black/3.svg"
-            alt="Bubble"
-            className="absolute bottom-0 right-12 opacity-50 z-0"
-          />
-        </>
-      ) : (
-        <>
-          <img
-            src="/static/bubbles white/1.svg"
-            alt="Bubble"
-            className="absolute top-0 left-0 w-1/5 opacity-50 z-0"
-          />
-          <img
-            src="/static/bubbles white/3.svg"
-            alt="Bubble"
-            className="absolute bottom-0 right-12 opacity-50 z-0"
-          />
-        </>
-      )}
-      {/* End of Background Images */}
-      <div className="relative xl:mx-auto xl:w-full xl:max-w-[90rem]">
-        {editMode ? (
-          memoizedForm
-        ) : (
-          <div className={cn("w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white", "min-w-[300px]")}>
-            <style jsx global>{
-              `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
-              select {
-                appearance: none;
-                background: ${theme === "dark" ? "#333" : "#fff"};
-                color: ${theme === "dark" ? "#fff" : "#000"};
-                border: 1px solid ${theme === "dark" ? "#555" : "#ccc"};
-                padding: 0.5rem;
-                border-radius: 0.375rem;
-                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-              }
-              select:focus {
-                outline: none;
-                border-color: ${theme === "dark" ? "#888" : "#007bff"};
-                box-shadow: 0 0 0 3px ${theme === "dark" ? "rgba(136, 136, 136, 0.5)" : "rgba(0, 123, 255, 0.25)"};
-              }
-              option {
-                background: ${theme === "dark" ? "#333" : "#fff"};
-                color: ${theme === "dark" ? "#fff" : "#000"};
-              }`
-            }</style>
-            <div className="my-1">
-            <div className="flex flex-col md:flex-row gap-6 mb-8">
-              <div className="flex-1 md:w-1/2 border border-gray-300 rounded-md p-4">
-                <LabelInputContainer className="mb-4">
-                  <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}>👤 Username</Label>
-                  <p
-                    className={cn(theme === "dark" ? "text-white" : "text-black")}
-                  >
-                    {user?.username}
-                  </p>
-                </LabelInputContainer>
-                <LabelInputContainer className="mb-4">
-                  <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}>📧 Email Address</Label>
-                  <p
-                    className={cn(theme === "dark" ? "text-white" : "text-black")}
-                  >
-                    {user?.email}
-                  </p>
-                </LabelInputContainer>
-                <LabelInputContainer className="mb-4">
-                  <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}>📛 Name</Label>
-                  <p
-                    className={cn(theme === "dark" ? "text-white" : "text-black")}
-                  >
-                    {user?.name}
-                  </p>
-                </LabelInputContainer>
-                <LabelInputContainer className="mb-4">
-                  <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}>📝 Surname</Label>
-                  <p
-                    className={cn(theme === "dark" ? "text-white" : "text-black")}
-                  >
-                    {user?.surname}
-                  </p>
-                </LabelInputContainer>
-              </div>
-              {user.region && user.city && user.school && (
-                <div className="flex-1 border border-gray-300 rounded-md p-4">
-                <LabelInputContainer className="mb-10">
-                  <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}>🌍 Region</Label>
-                  <p
-                    className={cn(theme === "dark" ? "text-white" : "text-black")}
-                  >
-                    {user?.region}
-                  </p>
-                </LabelInputContainer>
-                <LabelInputContainer className="mb-10">
-                  <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}>🏙️ City</Label>
-                  <p
-                    className={cn(theme === "dark" ? "text-white" : "text-black")}
-                  >
-                    {user?.city}
-                  </p>
-                </LabelInputContainer>
-                <LabelInputContainer className="mb-4">
-                  <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}>🏫 School</Label>
-                  <p
-                    className={cn(theme === "dark" ? "text-white" : "text-black")}
-                  >
-                    {school?.name}
-                  </p>
-                </LabelInputContainer>
-              </div>
-              )}
-            </div>
-            </div>
-            <br/>
-            <button
-              onClick={() => setEditMode(true)}
-              className={cn(
-                "relative group/btn block w-full rounded-md h-10 font-medium border border-transparent mb-4",
-                theme === "dark"
-                  ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-                  : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
-              )}
-              type="submit"
-              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-            >
-              Edit &rarr;
-              <BottomGradient />
-            </button>
-            {isProfileCompleted === false && (
-              <button
-                onClick={() => router.push('/profile/complete')}
-                className={cn(
-                  "relative group/btn block w-full rounded-md h-10 font-medium border border-transparent",
-                  theme === "dark"
-                    ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900"
-                    : "text-black bg-gradient-to-br from-white to-neutral-100 border border-green-300"
+          <div className="text-center md:text-left">
+            <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+              Hello{" "}
+              <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+                {user ? user.name : ""}
+              </span>{" "}
+              !
+            </h1>
+            <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+              See and edit your profile and data
+            </p>
+          </div>
+        </div>
+  
+        <div className="w-full max-w-4xl">
+          {editMode ? (
+            memoizedForm
+          ) : (
+            <div className={cn(
+              "bg-opacity-30 backdrop-filter backdrop-blur-lg",
+              "rounded-xl shadow-xl p-8",
+              "w-full",
+              theme === "dark"
+                ? "bg-gray-800 border border-gray-700"
+                : "bg-white border border-gray-100"
+            )}>
+              <style jsx global>{`
+                @import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
+                select {
+                  appearance: none;
+                  background: ${theme === "dark" ? "#333" : "#fff"};
+                  color: ${theme === "dark" ? "#fff" : "#000"};
+                  border: 1px solid ${theme === "dark" ? "#555" : "#ccc"};
+                  padding: 0.5rem;
+                  border-radius: 0.375rem;
+                  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+                }
+                select:focus {
+                  outline: none;
+                  border-color: ${theme === "dark" ? "#888" : "#007bff"};
+                  box-shadow: 0 0 0 3px ${theme === "dark" ? "rgba(136, 136, 136, 0.5)" : "rgba(0, 123, 255, 0.25)"};
+                }
+                option {
+                  background: ${theme === "dark" ? "#333" : "#fff"};
+                  color: ${theme === "dark" ? "#fff" : "#000"};
+                }`}
+              </style>
+  
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Personal Information */}
+                <div className={cn(
+                  "rounded-lg p-6",
+                  theme === "dark" ? "bg-gray-900 bg-opacity-50" : "bg-white bg-opacity-80"
+                )}>
+                  <h3 className={`text-xl font-bold mb-6 ${theme === "dark" ? "text-white" : "text-gray-800"}`}
+                    style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+                    Personal Information
+                  </h3>
+                  
+                  <LabelInputContainer className="mb-4">
+                    <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
+                      <span className="mr-2">👤</span>
+                      <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Username</span>
+                    </Label>
+                    <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
+                      {user?.username}
+                    </p>
+                  </LabelInputContainer>
+                  
+                  <LabelInputContainer className="mb-4">
+                    <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
+                      <span className="mr-2">📧</span>
+                      <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Email Address</span>
+                    </Label>
+                    <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
+                      {user?.email}
+                    </p>
+                  </LabelInputContainer>
+                  
+                  <LabelInputContainer className="mb-4">
+                    <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
+                      <span className="mr-2">📛</span>
+                      <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Name</span>
+                    </Label>
+                    <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
+                      {user?.name}
+                    </p>
+                  </LabelInputContainer>
+                  
+                  <LabelInputContainer className="mb-4">
+                    <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
+                      <span className="mr-2">📝</span>
+                      <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Surname</span>
+                    </Label>
+                    <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
+                      {user?.surname}
+                    </p>
+                  </LabelInputContainer>
+                </div>
+  
+                {/* School Information */}
+                {user.region && user.city && user.school && (
+                  <div className={cn(
+                    "rounded-lg p-6",
+                    theme === "dark" ? "bg-gray-900 bg-opacity-50" : "bg-white bg-opacity-80"
+                  )}>
+                    <h3 className={`text-xl font-bold mb-6 ${theme === "dark" ? "text-white" : "text-gray-800"}`}
+                      style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+                      School Information
+                    </h3>
+                    
+                    <LabelInputContainer className="mb-4">
+                      <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
+                        <span className="mr-2">🌍</span>
+                        <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Region</span>
+                      </Label>
+                      <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
+                        {user?.region}
+                      </p>
+                    </LabelInputContainer>
+                    
+                    <LabelInputContainer className="mb-4">
+                      <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
+                        <span className="mr-2">🏙️</span>
+                        <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>City</span>
+                      </Label>
+                      <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
+                        {user?.city}
+                      </p>
+                    </LabelInputContainer>
+                    
+                    <LabelInputContainer className="mb-4">
+                      <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
+                        <span className="mr-2">🏫</span>
+                        <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>School</span>
+                      </Label>
+                      <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
+                        {school?.name}
+                      </p>
+                    </LabelInputContainer>
+                  </div>
                 )}
-                type="button"
-                style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-              >
-                Complete Profile &rarr;
-                <BottomGradient />
-              </button>
-            )}
-            <button
-              onClick={openDeleteModal}
-              className={cn(
-                "relative group/btn block w-full mx-auto rounded-md h-10 font-medium border border-transparent mt-4",
-                theme === "dark"
-                  ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-                  : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-red-300"
-              )}
-              type="submit"
+              </div>
+  
+              {/* Action Buttons */}
+              <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button
+                  onClick={() => setEditMode(true)}
+                  className={cn(
+                    "relative group/btn flex items-center justify-center rounded-md h-12 font-medium",
+                    "transition-all duration-300 overflow-hidden",
+                    theme === "dark"
+                      ? "bg-gradient-to-r from-blue-600 to-indigo-700 text-white hover:shadow-lg hover:shadow-blue-500/30"
+                      : "bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:shadow-lg hover:shadow-blue-500/30"
+                  )}
+                  type="submit"
+                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                >
+                  <span className="relative z-10 flex items-center">
+                    <span className="mr-2">Edit Profile</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+                    </svg>
+                  </span>
+                  <BottomGradient />
+                </button>
+                
+                {isProfileCompleted === false && (
+                  <button
+                    onClick={() => router.push('/profile/complete')}
+                    className={cn(
+                      "relative group/btn flex items-center justify-center rounded-md h-12 font-medium",
+                      "transition-all duration-300 overflow-hidden",
+                      theme === "dark"
+                        ? "bg-gradient-to-r from-green-600 to-emerald-700 text-white hover:shadow-lg hover:shadow-green-500/30"
+                        : "bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:shadow-lg hover:shadow-green-500/30"
+                    )}
+                    type="button"
+                    style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                  >
+                    <span className="relative z-10 flex items-center">
+                      <span className="mr-2">Complete Profile</span>
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    </span>
+                    <BottomGradient />
+                  </button>
+                )}
+                
+                {/* Delete Account Button */}
+                <button
+                  onClick={openDeleteModal}
+                  className={cn(
+                    "relative group/btn flex items-center justify-center rounded-md h-12 font-medium",
+                    "transition-all duration-300 overflow-hidden",
+                    "col-span-1 md:col-span-2 mt-2",
+                    theme === "dark"
+                      ? "bg-gradient-to-r from-red-600 to-orange-700 text-white hover:shadow-lg hover:shadow-red-500/30"
+                      : "bg-gradient-to-r from-red-500 to-orange-600 text-white hover:shadow-lg hover:shadow-red-500/30"
+                  )}
+                  type="button"
+                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                >
+                  <span className="relative z-10 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                    Delete Account
+                  </span>
+                  <BottomGradient isCancel />
+                </button>
+              </div>
+            </div>
+          )}
+        </div>
+        
+        {/* Delete Account Modal */}
+        <Modal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} title="Delete Account">
+          <div className={cn(
+            "p-6 rounded-lg",
+            theme === "dark" ? "bg-gray-800" : "bg-white"
+          )}>
+            <h2 className={`text-xl font-bold mb-4 ${theme === "dark" ? "text-white" : "text-gray-800"}`}
               style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             >
               Delete Account
-              <BottomGradient isCancel />
-            </button>
+            </h2>
+            <p className={`mb-4 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+              ¿Estás seguro de que deseas eliminar tu cuenta de MAESTRE? Esto eliminará también todos tus cursos y material subido a la plataforma. Esta acción NO se puede deshacer.
+            </p>
+            <p className={`mb-4 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+              Para borrar tu cuenta, escribe antes tu nombre de usuario ({user.username}):
+            </p>
+            <input
+              type="text"
+              value={usernameInput}
+              onChange={(e) => setUsernameInput(e.target.value)}
+              className={cn(
+                "w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 mb-6",
+                theme === "dark"
+                  ? "bg-gray-700 border-gray-600 text-white focus:ring-red-500"
+                  : "bg-white border-gray-300 text-black focus:ring-red-500"
+              )}
+              placeholder="Enter your username"
+            />
+            <div className="flex justify-end space-x-4">
+              <button
+                onClick={closeDeleteModal}
+                className={cn(
+                  "px-6 py-2 rounded-lg font-medium",
+                  theme === "dark"
+                    ? "bg-gray-700 text-white hover:bg-gray-600"
+                    : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                )}
+                style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className="px-6 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700"
+                style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+              >
+                Delete
+              </button>
+            </div>
           </div>
-        )}
-        <br />
+        </Modal>
       </div>
-      <Modal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} title="Delete Account">
-        <div className="p-4">
-          <h2 className="text-lg font-bold mb-4"
-            style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}
-          >
-            Delete Account</h2>
-          <p className="mb-4">
-            ¿Estás seguro de que deseas eliminar tu cuenta de MAESTRE? Esto eliminará también todos tus cursos y material subido a la plataforma. Esta acción NO se puede deshacer.
-          </p>
-          <p className="mb-4">
-            Para borrar tu cuenta, escribe antes tu nombre de usuario ({user.username}):
-          </p>
-          <input
-            type="text"
-            value={usernameInput}
-            onChange={(e) => setUsernameInput(e.target.value)}
-            className={cn(
-              "relative group/btn block w-full mx-auto rounded-md h-10 font-medium border border-orange-500 mt-4",
-              theme === "dark"
-                ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-                : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]"
-            )}
-          />
-          <br></br>
-          <div className="flex justify-end">
-            <button
-              onClick={closeDeleteModal}
-              className="mr-2 px-4 py-2 bg-gray-300 rounded-md"
-              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleDelete}
-              className="px-4 py-2 bg-red-500 text-white rounded-md"
-              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-      </Modal>
-      <div className="my-12"></div>
+    </div>
     </div>
   );
-}
+};
+
 
 const LabelInputContainer = ({ children, className }) => {
   return (
@@ -514,23 +581,24 @@ const LabelInputContainer = ({ children, className }) => {
   );
 };
 
+
 const BottomGradient = ({ isCancel }) => {
   return (
     <>
       <span
         className={cn(
-          "group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0",
+          "absolute inset-0 w-full h-full transition-all group-hover/btn:opacity-90",
           isCancel
-            ? "bg-gradient-to-r from-transparent via-orange-500 to-transparent"
-            : "bg-gradient-to-r from-transparent via-cyan-500 to-transparent"
+            ? "opacity-0 bg-gradient-to-r from-red-600/20 via-orange-600/20 to-red-600/20 blur-xl"
+            : "opacity-0 bg-gradient-to-r from-blue-600/20 via-indigo-600/20 to-blue-600/20 blur-xl"
         )}
       />
       <span
         className={cn(
-          "group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10",
+          "absolute bottom-0 left-0 right-0 h-0.5 w-full group-hover/btn:opacity-100 transition-all duration-500 opacity-0",
           isCancel
             ? "bg-gradient-to-r from-transparent via-orange-500 to-transparent"
-            : "bg-gradient-to-r from-transparent via-indigo-500 to-transparent"
+            : "bg-gradient-to-r from-transparent via-cyan-500 to-transparent"
         )}
       />
     </>
