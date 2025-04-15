@@ -110,31 +110,20 @@ export function CompleteProfileForm({ formData, handleChange, handleComplete, ha
         <div className="flex flex-col">
           <button
             onClick={handleCreateSchool}
-            className={cn("relative group/btn block w-full rounded-md h-10 font-medium border border-transparent mb-8", 
-              theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
-              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-green-300"
-            )}
+            className="btn btn-md btn-secondary relative"
             type="button">
               Create one
             <BottomGradient />
           </button>
           <button
             onClick={() => router.push("/profile/edit")}
-            className={cn("relative group/btn block w-full rounded-md h-10 font-medium border border-transparent", 
-              theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
-              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
-            )}
+            className="btn btn-md btn-primary relative"
             type="submit">
             Complete &rarr;
             <BottomGradient />
           </button>
           <button
-            className={cn(
-              "relative group/btn block w-full mx-auto rounded-md h-10 font-medium border border-transparent mt-4",
-              theme === "dark"
-                ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-                : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-red-300"
-            )}
+            className="btn btn-md btn-danger relative"
             type="button"
             onClick={handleCancelClick}>
              &larr; Cancel
