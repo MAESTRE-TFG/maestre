@@ -11,6 +11,15 @@ import { ProfileEditForm } from "@/components/profile-edit-form";
 import { Label } from "@/components/ui/label";
 import { Modal } from "@/components/ui/modal";
 import Alert from "@/components/ui/Alert";
+import {
+  IconUser,
+  IconMail,
+  IconIdBadge,
+  IconEdit,
+  IconBuilding,
+  IconMapPin,
+  IconSchool,
+} from "@tabler/icons-react"; // Import necessary icons
 
 const ProfileEdit = () => {
   const router = useRouter();
@@ -354,7 +363,7 @@ const ProfileEdit = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <LabelInputContainer className="mb-4">
                         <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                          <span className="mr-2">👤</span>
+                          <IconUser className="mr-2 h-5 w-5" />
                           <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Username</span>
                         </Label>
                         <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
@@ -364,7 +373,7 @@ const ProfileEdit = () => {
                       
                       <LabelInputContainer className="mb-4">
                         <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                          <span className="mr-2">📧</span>
+                          <IconMail className="mr-2 h-5 w-5" />
                           <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Email Address</span>
                         </Label>
                         <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
@@ -374,7 +383,7 @@ const ProfileEdit = () => {
                       
                       <LabelInputContainer className="mb-4">
                         <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                          <span className="mr-2">📛</span>
+                          <IconIdBadge className="mr-2 h-5 w-5" />
                           <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Name</span>
                         </Label>
                         <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
@@ -384,7 +393,7 @@ const ProfileEdit = () => {
                       
                       <LabelInputContainer className="mb-4">
                         <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                          <span className="mr-2">📝</span>
+                          <IconEdit className="mr-2 h-5 w-5" />
                           <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Surname</span>
                         </Label>
                         <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
@@ -407,17 +416,7 @@ const ProfileEdit = () => {
                       
                       <LabelInputContainer className="mb-4">
                         <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                          <span className="mr-2">🌍</span>
-                          <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Region</span>
-                        </Label>
-                        <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
-                          {user?.region}
-                        </p>
-                      </LabelInputContainer>
-                      
-                      <LabelInputContainer className="mb-4">
-                        <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                          <span className="mr-2">🏙️</span>
+                          <IconMapPin className="mr-2 h-5 w-5" />
                           <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>City</span>
                         </Label>
                         <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
@@ -427,7 +426,7 @@ const ProfileEdit = () => {
                       
                       <LabelInputContainer className="mb-4">
                         <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                          <span className="mr-2">🏫</span>
+                          <IconSchool className="mr-2 h-5 w-5" />
                           <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>School</span>
                         </Label>
                         <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
@@ -440,16 +439,13 @@ const ProfileEdit = () => {
   
                 {/* Action Buttons - using the new btn class */}
                 <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                  {/* Edit Profile Button */}
                   <button
                     onClick={() => setEditMode(true)}
                     className={cn(
-                      "btn",
-                      "flex items-center justify-center rounded-md h-12 font-medium",
-                      theme === "dark"
-                        ? "bg-gradient-to-r from-blue-600 to-indigo-700 text-white hover:shadow-lg hover:shadow-blue-500/30"
-                        : "bg-gradient-to-r from-blue-500 to-indigo-600 text-white hover:shadow-lg hover:shadow-blue-500/30"
+                      "btn btn-md btn-primary",
+                      theme === "dark" ? "dark:btn-primary" : ""
                     )}
-                    type="submit"
                     style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
                   >
                     <span className="flex items-center">
@@ -460,17 +456,14 @@ const ProfileEdit = () => {
                     </span>
                   </button>
                   
+                  {/* Complete Profile Button */}
                   {isProfileCompleted === false && (
                     <button
                       onClick={() => router.push('/profile/complete')}
                       className={cn(
-                        "btn",
-                        "flex items-center justify-center rounded-md h-12 font-medium",
-                        theme === "dark"
-                          ? "bg-gradient-to-r from-green-600 to-emerald-700 text-white hover:shadow-lg hover:shadow-green-500/30"
-                          : "bg-gradient-to-r from-green-500 to-emerald-600 text-white hover:shadow-lg hover:shadow-green-500/30"
+                        "btn btn-md btn-success",
+                        theme === "dark" ? "dark:btn-success" : ""
                       )}
-                      type="button"
                       style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
                     >
                       <span className="flex items-center">
@@ -486,14 +479,9 @@ const ProfileEdit = () => {
                   <button
                     onClick={openDeleteModal}
                     className={cn(
-                      "btn",
-                      "flex items-center justify-center rounded-md h-12 font-medium",
-                      "col-span-1 md:col-span-2 mt-2",
-                      theme === "dark"
-                        ? "bg-gradient-to-r from-red-600 to-orange-700 text-white hover:shadow-lg hover:shadow-red-500/30"
-                        : "bg-gradient-to-r from-red-500 to-orange-600 text-white hover:shadow-lg hover:shadow-red-500/30"
+                      "btn btn-md btn-danger",
+                      theme === "dark" ? "dark:btn-danger" : ""
                     )}
-                    type="button"
                     style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
                   >
                     <span className="flex items-center">
@@ -538,24 +526,23 @@ const ProfileEdit = () => {
                 placeholder="Enter your username"
               />
               <div className="flex justify-end space-x-4">
+                {/* Cancel Button in Delete Modal */}
                 <button
                   onClick={closeDeleteModal}
                   className={cn(
-                    "btn",
-                    "px-6 py-2 rounded-lg font-medium",
-                    theme === "dark"
-                      ? "bg-gray-700 text-white hover:bg-gray-600"
-                      : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                    "btn btn-md btn-secondary",
+                    theme === "dark" ? "dark:btn-secondary" : ""
                   )}
                   style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
                 >
                   Cancel
                 </button>
+                {/* Confirm Delete Button in Delete Modal */}
                 <button
                   onClick={handleDelete}
                   className={cn(
-                    "btn",
-                    "px-6 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700"
+                    "btn btn-md btn-danger",
+                    theme === "dark" ? "dark:btn-danger" : ""
                   )}
                   style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
                 >

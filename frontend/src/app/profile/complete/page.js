@@ -9,6 +9,15 @@ import { cn } from "@/lib/utils";
 import axios from "axios";
 import { CompleteProfileForm } from "@/components/complete-profile-form";
 import Alert from "@/components/ui/Alert";
+import {
+  IconUser,
+  IconMail,
+  IconIdBadge,
+  IconEdit,
+  IconWorld,
+  IconMapPin,
+  IconSchool,
+} from "@tabler/icons-react"; // Import necessary icons
 
 const ProfileEdit = () => {
   const router = useRouter();

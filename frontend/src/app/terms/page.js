@@ -6,6 +6,7 @@ import { BentoGrid, BentoGridItem } from "@/components/ui/bento-grid";
 import { useTheme } from "@/components/theme-provider";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import Alert from "@/components/ui/Alert";
+import { cn } from "@/lib/utils";
 import {
   IconFileText,
   IconCookie,
@@ -380,39 +381,42 @@ export default function TermsPage() {
       <SidebarDemo
         ContentComponent={() => (
           <div className="container mx-auto py-16 px-4 sm:px-6 lg:px-8 max-w-7xl">
-            {/* Header Section */}
-            <div className="w-full text-center mb-12">
-              <h1
-                className={`text-4xl font-bold font-alfa-slab-one mb-4 ${
-                  theme === "dark" ? "text-white" : "text-black"
-                }`}
-              >
-                MAESTRE - Legal Information
-              </h1>
-              <p
-                className={`text-xl ${
-                  theme === "dark" ? "text-gray-300" : "text-gray-700"
-                }`}
-              >
-                Welcome to our legal information section. Here you'll find all the
-                necessary documents and policies that govern the use of our
-                platform. Please review them carefully to understand your rights
-                and responsibilities.
-              </p>
-            </div>
 
-            {/* Button to add term if you're Admin */}
-            {isAdmin && (!allTermsCreated || noTermsFound) && (
-              <div className="mb-10 text-center">
-                <button
-                  onClick={() => setShowAddForm(true)}
-                  className="px-6 py-2 font-medium bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-xl flex items-center gap-2 mx-auto hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
-                >
-                  <IconPlus className="h-5 w-5" />
-                  Add New Term
-                </button>
-              </div>
-            )}
+                  <div className="w-full text-center mb-12">
+                    <h1
+                    className={`text-4xl font-bold font-alfa-slab-one mb-4 ${
+                      theme === "dark" ? "text-white" : "text-black"
+                    }`}
+                    >
+                    MAESTRE - Legal Information
+                    </h1>
+                    <p
+                    className={`text-xl ${
+                      theme === "dark" ? "text-gray-300" : "text-gray-700"
+                    }`}
+                    >
+                    Welcome to our legal information section. Here you'll find all the
+                    necessary documents and policies that govern the use of our
+                    platform. Please review them carefully to understand your rights
+                    and responsibilities.
+                    </p>
+                  </div>
+
+                  {/* Button to add term if you're Admin */}
+                  {isAdmin && (!allTermsCreated || noTermsFound) && (
+                    <div className="mb-10 flex justify-center">
+                    <button
+                      onClick={() => setShowAddForm(true)}
+                      className={cn(
+                      "btn btn-md btn-primary",
+                      theme === "dark" ? "dark:btn-primary" : ""
+                      )}
+                    >
+                      <IconPlus className="h-5 w-5" />
+                      Add New Term
+                    </button>
+                    </div>
+                  )}
 
             {/* Message when all terms are created */}
             {isAdmin && allTermsCreated && (
@@ -818,24 +822,20 @@ export default function TermsPage() {
                             setUploadedMdFileName(""); // Reset markdown file name on cancel
                             setUploadedPdfFileName(""); // Reset PDF file name on cancel
                           }}
-                          className={`
-                        px-6 py-2 font-medium rounded-xl flex items-center gap-2
-                        ${theme === "dark" 
-                          ? "bg-gray-700 text-gray-300 hover:bg-gray-600" 
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"}
-                      `}
+                          className={cn(
+                            "btn btn-md btn-secondary",
+                            theme === "dark" ? "dark:btn-secondary" : ""
+                          )}
                         >
                           <IconX className="h-5 w-5" />
                           Cancel
                         </button>
                         <button
                           onClick={handleAddTerm}
-                          className={`
-                        px-6 py-2 font-medium rounded-xl flex items-center gap-2
-                        ${theme === "dark" 
-                          ? "bg-[#05AC9C] text-white hover:bg-[#048F83]" 
-                          : "bg-blue-100 text-blue-700 hover:bg-blue-200"}
-                      `}
+                          className={cn(
+                            "btn btn-md btn-success",
+                            theme === "dark" ? "dark:btn-success" : ""
+                          )}
                         >
                           <IconCheck className="h-5 w-5" />
                           Save

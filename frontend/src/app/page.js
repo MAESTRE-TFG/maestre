@@ -1,22 +1,36 @@
 "use client";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, lazy, Suspense } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { useTheme } from "@/components/theme-provider";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { IconBrandGithub, IconMail, IconArrowDown, IconChevronRight, IconSparkles, IconSchool, IconBooks } from "@tabler/icons-react";
-import { CardCarrousell } from "@/components/card-carrousell";
 import { cn } from "@/lib/utils";
+import dynamic from "next/dynamic";
 import Image from "next/image";
+
+const CardCarrousell = dynamic(() => import("@/components/card-carrousell").then(mod => ({ default: mod.CardCarrousell })), {
+  loading: () => <div className="h-96 flex items-center justify-center">Loading tools...</div>,
+  ssr: false
+});
+
+
+const PlaceholderSection = () => (
+  <div className="w-full h-64 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-xl animate-pulse">
+    Loading content...
+  </div>
+);
 
 const Home = () => {
   const { theme } = useTheme();
   const router = useRouter();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [videoPlaying, setVideoPlaying] = useState(false);
+  const [isVideoVisible, setIsVideoVisible] = useState(false);
   const videoRef = useRef(null);
   const featuresRef = useRef(null);
-  const demoSectionRef = useRef(null); // Add a ref for the demo section
+  const demoSectionRef = useRef(null);
+  const videoObserverRef = useRef(null);
 
   useEffect(() => {
     const user = localStorage.getItem('user');
@@ -31,39 +45,44 @@ const Home = () => {
   }, []);
 
   useEffect(() => {
-    // Intersection Observer for video autoplay when in view
-    const observer = new IntersectionObserver(
+    videoObserverRef.current = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && videoRef.current) {
-          // Try to play the video, but handle potential autoplay restrictions
-          videoRef.current.play()
-            .then(() => {
-              setVideoPlaying(true);
-            })
-            .catch(error => {
-              // Handle autoplay restriction error gracefully
-              console.log("Autoplay prevented by browser policy:", error);
-              // Keep the play button visible for user interaction
-              setVideoPlaying(false);
-            });
-        } else if (videoRef.current) {
-          videoRef.current.pause();
-          setVideoPlaying(false);
-        }
+        const [entry] = entries;
+        setIsVideoVisible(entry.isIntersecting);
       },
-      { threshold: 0.5 }
+      { threshold: 0.5, rootMargin: "100px" }
     );
 
     if (videoRef.current) {
-      observer.observe(videoRef.current);
+      videoObserverRef.current.observe(videoRef.current);
     }
 
     return () => {
-      if (videoRef.current) {
-        observer.unobserve(videoRef.current);
+      if (videoObserverRef.current && videoRef.current) {
+        videoObserverRef.current.unobserve(videoRef.current);
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (isVideoVisible && videoRef.current) {
+      const playPromise = videoRef.current.play();
+      
+      if (playPromise !== undefined) {
+        playPromise
+          .then(() => {
+            setVideoPlaying(true);
+          })
+          .catch(error => {
+            console.log("Autoplay prevented:", error);
+            setVideoPlaying(false);
+          });
+      }
+    } else if (videoRef.current) {
+      videoRef.current.pause();
+      setVideoPlaying(false);
+    }
+  }, [isVideoVisible]);
 
   const scrollToFeatures = () => {
     featuresRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -116,12 +135,10 @@ const Home = () => {
   const accentColor = theme === 'dark' ? 'text-blue-400' : 'text-blue-600';
   const sectionBgColor = theme === 'dark' ? 'bg-neutral-900' : 'bg-gray-50';
   const highlightColor = theme === 'dark' ? 'bg-blue-900/20' : 'bg-blue-100/50';
-  // Add these missing variable definitions near the other theme-related variables
   const subtleBgColor = theme === 'dark' ? 'bg-neutral-800' : 'bg-gray-100';
   const borderColor = theme === 'dark' ? 'border-neutral-700' : 'border-gray-200';
   const hoverColor = theme === 'dark' ? 'hover:text-white' : 'hover:text-black';
 
-  // Animation variants
   const fadeIn = {
     hidden: { opacity: 0, y: 20 },
     visible: { opacity: 1, y: 0, transition: { duration: 0.8 } }
@@ -139,6 +156,7 @@ const Home = () => {
 
   return (
     <div className={`min-h-screen w-full ${bgColor} ${textColor}`}>
+
     {/* Hero Section */}
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden py-16">
       {/* Background layer */}
@@ -149,6 +167,8 @@ const Home = () => {
         layout="fill"
         objectFit="cover"
         className="absolute w-full h-full"
+        priority // Mark as priority since it's above the fold
+        quality={80} // Slightly reduced quality to improve load time
       />
     
       {/* Main content */}
@@ -174,6 +194,7 @@ const Home = () => {
             height={250}
             sizes="100vw"
             className="w-full h-auto"
+            priority
             />
           </div>
         
@@ -221,18 +242,6 @@ const Home = () => {
         </div>
       </motion.div>
       
-      {/* Scroll Icon */}
-      {/* <div className="absolute bottom-16 w-full flex justify-center z-20">
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ repeat: Infinity, duration: 2, ease: "easeInOut" }}
-          onClick={scrollToDemoSection} // Updated to scroll to the demo section
-          className="cursor-pointer hover:scale-110 transition-transform"
-        >
-          <IconArrowDown className="h-8 w-8 text-white" />
-        </motion.div>
-      </div> */}
-      
       {/* Wave Divider */}
       <div className="absolute bottom-0 left-0 right-0">
         <svg
@@ -273,7 +282,7 @@ const Home = () => {
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 1440 120"
-          fill={theme === "dark" ? "rgb(23, 23, 23)" : "rgb(248, 250, 252)"} // Updated dark color
+          fill={theme === "dark" ? "rgb(23, 23, 23)" : "rgb(248, 250, 252)"}
           preserveAspectRatio="none"
           className="block w-full h-[120px]"
         >
@@ -283,7 +292,7 @@ const Home = () => {
     </section>
 
     {/* Feature Showcase */}
-    <section className={`py-24 ${sectionBgColor} relative`}>
+    <section ref={featuresRef} className={`py-24 ${sectionBgColor} relative`}>
       <div className="container mx-auto px-4">
         <motion.div
           initial="hidden"
@@ -337,7 +346,7 @@ const Home = () => {
       </div>
     </section>
 
-    {/* Demo Video */}
+    {/* Demo Video - Load video only when it's nearly in viewport */}
     <section ref={demoSectionRef} className={`py-32 ${bgColor} overflow-hidden relative`}>
       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/5"></div>
       
@@ -371,6 +380,8 @@ const Home = () => {
               poster="/static/video-poster.jpg"
               controls
               muted
+              preload="none" // Don't preload video data
+              loading="lazy"
             >
               <source src="/static/demo_1.mp4" type="video/mp4" />
               Your browser does not support the video tag.
@@ -380,7 +391,7 @@ const Home = () => {
       </div>
     </section>
 
-    {/* Tools Showcase */}
+    {/* Tools Showcase - Dynamically loaded */}
     <section className={`py-32 ${sectionBgColor} relative`}>
       
       <div className="container mx-auto px-4 relative z-10">
@@ -406,16 +417,18 @@ const Home = () => {
           transition={{ duration: 0.8 }}
           className="max-w-7xl mx-auto"
         >
-          <CardCarrousell />
+          <Suspense fallback={<PlaceholderSection />}>
+            <CardCarrousell />
+          </Suspense>
         </motion.div>
       </div>
 
     </section>
 
-    {/* CTA Section */}
+    {/* CTA Section - Conditionally rendered */}
     {!isAuthenticated && (
       <section className={`py-32 ${bgColor} relative overflow-hidden`}>
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10"></div> {/* Enhanced gradient */}
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10"></div>
         
         <div className="container mx-auto px-4 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
@@ -446,7 +459,7 @@ const Home = () => {
                 </button>
                 <button
                   onClick={() => router.push('/tools')}
-                  className="px-8 py-4 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center border border-current hover:bg-gray-100/10"
+                  className="btn btn-md btn-secondary font-medium transition-all duration-300 flex items-center justify-center border border-current hover:bg-gray-100/10"
                 >
                   Learn more
                 </button>
@@ -466,19 +479,19 @@ const Home = () => {
                   layout="fill"
                   objectFit="contain"
                   className="rounded-xl"
+                  loading="lazy"
                 />
               </div>
             </motion.div>
           </div>
         </div>
-
       </section>
     )}
 
     {/* Team Section */}
     <section className={`py-32 ${sectionBgColor} relative`}>
       
-      <div className="container mx-auto px-4 relative z-10">
+      <div className="container mx-auto px-4 relative">
         <motion.div
           initial="hidden"
           whileInView="visible"
@@ -515,6 +528,7 @@ const Home = () => {
                     layout="fill"
                     objectFit="cover"
                     className="rounded-full"
+                    loading="lazy"
                   />
                 </div>
                 <div>
@@ -553,8 +567,8 @@ const Home = () => {
           >
             <defs>
               <linearGradient id="waveGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="rgba(59, 130, 246, 0.1)" /> {/* from-blue-500/10 */}
-                <stop offset="100%" stopColor="rgba(168, 85, 247, 0.05)" /> {/* to-purple-500/5 */}
+                <stop offset="0%" stopColor="rgba(59, 130, 246, 0.1)" />
+                <stop offset="100%" stopColor="rgba(168, 85, 247, 0.05)" />
               </linearGradient>
             </defs>
             <path 
@@ -588,6 +602,7 @@ const Home = () => {
                     layout="fill"
                     objectFit="cover"
                     className="rounded-full"
+                    loading="lazy"
                   />
                 </div>
               </div>

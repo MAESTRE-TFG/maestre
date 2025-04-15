@@ -6,6 +6,12 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 import { useRouter } from "next/navigation";
 import Alert from "@/components/ui/Alert";
+import {
+  IconBuilding,
+  IconWorld,
+  IconMapPin,
+  IconCalendarEvent,
+} from "@tabler/icons-react"; // Import necessary icons
 
 const COMUNIDADES = [
   "Andalucía",
@@ -129,8 +135,12 @@ export function CreateSchoolForm({ onSubmit }) {
         onSubmit={handleSubmit}
         style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
       >
+        {/* Name Field */}
         <LabelInputContainer className="mb-8">
-          <Label htmlFor="name">🏫 Name</Label>
+          <Label htmlFor="name">
+            <IconBuilding className="mr-2 h-5 w-5" />
+            Name
+          </Label>
           <Input
             id="name"
             name="name"
@@ -141,8 +151,13 @@ export function CreateSchoolForm({ onSubmit }) {
             onChange={handleChange}
           />
         </LabelInputContainer>
+
+        {/* Region Field */}
         <LabelInputContainer className="mb-8">
-          <Label htmlFor="community">🌍 Region</Label>
+          <Label htmlFor="community">
+            <IconWorld className="mr-2 h-5 w-5" />
+            Region
+          </Label>
           <select
             id="community"
             name="community"
@@ -161,8 +176,13 @@ export function CreateSchoolForm({ onSubmit }) {
             ))}
           </select>
         </LabelInputContainer>
+
+        {/* City Field */}
         <LabelInputContainer className="mb-8">
-          <Label htmlFor="city">🏙️ City</Label>
+          <Label htmlFor="city">
+            <IconMapPin className="mr-2 h-5 w-5" />
+            City
+          </Label>
           <Input
             id="city"
             name="city"
@@ -173,8 +193,13 @@ export function CreateSchoolForm({ onSubmit }) {
             onChange={handleChange}
           />
         </LabelInputContainer>
+
+        {/* Stages Field */}
         <LabelInputContainer className="mb-8">
-          <Label>📆 Stages</Label>
+          <Label>
+            <IconCalendarEvent className="mr-2 h-5 w-5" />
+            Stages
+          </Label>
           <div className="flex flex-wrap gap-2">
             {ETAPAS.map((etapa) => (
               <button
@@ -198,29 +223,27 @@ export function CreateSchoolForm({ onSubmit }) {
           </div>
         </LabelInputContainer>
 
+        {/* Submit Button */}
         <button
           className={cn(
-            "relative group/btn block w-full rounded-md h-10 font-medium border border-transparent",
-            theme === "dark"
-              ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
+            "btn btn-md btn-primary w-full", // Use the new btn styles
+            theme === "dark" ? "dark:btn-primary" : ""
           )}
           type="submit"
         >
           Create school &rarr;
-          <BottomGradient />
         </button>
+
+        {/* Cancel Button */}
         <button
           className={cn(
-            "relative group/btn block w-full mx-auto rounded-md h-10 font-medium border border-transparent mt-4",
-            theme === "dark"
-              ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-red-300"
+            "btn btn-md btn-secondary w-full mt-4", // Use the new btn styles
+            theme === "dark" ? "dark:btn-secondary" : ""
           )}
           type="button"
-          onClick={() => router.back()}>
+          onClick={() => router.back()}
+        >
           &larr; Cancel
-          <BottomGradient isCancel />
         </button>
 
       </form>

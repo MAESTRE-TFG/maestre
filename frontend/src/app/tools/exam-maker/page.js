@@ -275,12 +275,19 @@ const ExamMaker = () => {
 
   // Update the prompt whenever relevant form data changes
   useEffect(() => {
-    // 1. Parse form data to natural language
-    const parsedData = parseFormDataToNaturalLanguage(formData);
-    const user = JSON.parse(localStorage.getItem('user'));
+  const userStr = localStorage.getItem('user');
+  const user = userStr ? JSON.parse(userStr) : null;
 
-    // 2. Construcción inicial del prompt con secciones claras
-    let prompt = `[SYSTEM INSTRUCTION - DO NOT INCLUDE IN RESPONSE]
+  if (!user) {
+    console.warn("User is not authenticated. Skipping prompt generation.");
+    return;
+  }
+
+  // 1. Parse form data to natural language
+  const parsedData = parseFormDataToNaturalLanguage(formData);
+
+  // 2. Construct the prompt
+  let prompt = `[SYSTEM INSTRUCTION - DO NOT INCLUDE IN RESPONSE]
 You are an expert exam creator with years of experience in educational design and pedagogy.
 Your task is to create a high-quality exam according to the specifications below.
 IMPORTANT: Your response must contain ONLY the exam itself. DO NOT include any explanations, reasoning, or thought process about how you created the exam.
@@ -292,33 +299,33 @@ NUMBER OF QUESTIONS: MUST HAVE EXACTLY ${parsedData.numQuestions} QUESTIONS
 QUESTION TYPE: ${parsedData.questionType}
 TOTAL POINTS: ${parsedData.totalPoints}
 EDUCATION LEVEL: ${parsedData.classroom}
-REGION: ${user.region}`;
+REGION: ${user.region || "Unknown"}`; // Use a fallback value for region
 
-    // 3. Incluir información sobre el estilo de puntaje si no es "igual"
-    if (formData.scoringStyle !== "equal") {
-      prompt += `\nSCORING STYLE: Custom distribution as follows: ${parsedData.customScoringDetails}`;
-    }
+  // 3. Include scoring style if not "equal"
+  if (formData.scoringStyle !== "equal") {
+    prompt += `\nSCORING STYLE: Custom distribution as follows: ${parsedData.customScoringDetails}`;
+  }
 
-    // 4. Agregar instrucciones adicionales proporcionadas por el usuario
-    if (parsedData.additionalInfo) {
-      prompt += `
+  // 4. Add additional instructions
+  if (parsedData.additionalInfo) {
+    prompt += `
 
 [ADDITIONAL INSTRUCTIONS]
 ${parsedData.additionalInfo}`;
-    }
+  }
 
-    // 5. Agregar materiales de referencia (si existen)
-    prompt += `
+  // 5. Add reference materials
+  prompt += `
 
 [REFERENCE MATERIALS]
-Please use the following reference materials as guidelines for how could the questions and its contents could be in your exam:
+Please use the following reference materials as guidelines for how the questions and their contents could be in your exam:
 ${fileContentsRef.current
-        ? fileContentsRef.current
-        : "No reference materials provided."
-      }`;
+    ? fileContentsRef.current
+    : "No reference materials provided."
+}`;
 
-    // 6. Incluir ejemplo de plantilla (few-shot) para guiar al modelo
-    prompt += `
+  // 6. Add example template
+  prompt += `
 
 [EXAMPLE TEMPLATE] (FOR REFERENCE ONLY)
 Title: Sample Exam - Subject
@@ -334,8 +341,8 @@ Subtitle:
    True or False: ...
 `;
 
-    // 7. Reforzar requerimientos de formato
-    prompt += `
+  // 7. Add formatting requirements
+  prompt += `
 
 [FORMATTING REQUIREMENTS]
 1. The exam MUST be in English
@@ -346,7 +353,7 @@ Subtitle:
 6. Clearly indicate the point value for each question.
 7. Ensure proper spacing between questions.
 8. Format the exam in a clean, professional manner suitable for classroom use.
-9. Ensure the exam follows educational standards for ${parsedData.classroom} level in ${user.region}.
+9. Ensure the exam follows educational standards for ${parsedData.classroom} level in ${user.region || "Unknown"}.
 10. Make sure the total points add up to exactly ${parsedData.totalPoints}.
 11. Use proper formatting for each question type (e.g., multiple choice with options, true/false with clear statements).
 12. Include clear section headers if mixing different types of questions.
@@ -355,8 +362,8 @@ Subtitle:
 15. ONLY output the final exam content, starting directly with the title.
 `;
 
-    // 8. Añadir un checklist de verificación para que el modelo valide su salida
-    prompt += `
+  // 8. Add checklist
+  prompt += `
 [CHECKLIST - DO NOT INCLUDE IN RESPONSE]
 1) Did you include only the exam and nothing else?
 2) Did you include exactly ${parsedData.numQuestions} questions?
@@ -368,56 +375,60 @@ Subtitle:
 If any check fails, revise your answer before finalizing.
 `;
 
-    // *** Instrucción final para generar el examen ***
-    prompt += `
+  // 9. Final instruction
+  prompt += `
 [FINAL INSTRUCTION - DO NOT INCLUDE IN RESPONSE]
 Now, produce a complete exam following all the specifications and requirements above.
 If any information is missing, note it clearly rather than inventing details.
 CRITICAL: Your response must begin with the exam title and contain ONLY the exam content. DO NOT include any explanations, reasoning, or thought process.
 `;
 
-    // Actualizamos la referencia con el prompt final
-    promptRef.current = prompt;
-
-  }, [formData, parseFormDataToNaturalLanguage, uploadedFiles]);
+  // Update the prompt reference
+  promptRef.current = prompt;
+}, [formData, parseFormDataToNaturalLanguage, uploadedFiles]);
   
   useEffect(() => {
-    // Only run this effect on the client side
-    if (typeof window === 'undefined') return;
-    
-    const userStr = localStorage.getItem('user');
-    if (!userStr) {
-      localStorage.removeItem('authToken');
-    }
-    
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-      router.push('/profile/signup');
-      return;
-    }
+  // Only run this effect on the client side
+  if (typeof window === 'undefined') return;
 
-    // Fetch user's classrooms
-    const fetchClassrooms = async () => {
-      try {
-        const parsedUser = JSON.parse(userStr);
-        const response = await axios.get("http://localhost:8000/api/classrooms/", {
-          params: {
-            creator: parsedUser.id
-          },
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        });
-        setClassrooms(response.data);
-        setLoading(false);
-      } catch (err) {
-        setLoading(false);
-        addAlert("error", "Failed to fetch classrooms. Please try again later.");
-      }
-    };
+  const userStr = localStorage.getItem('user');
+  const token = localStorage.getItem('authToken');
 
-    fetchClassrooms();
-  }, [router]); // Only depend on router
+  if (!token || !userStr) {
+    // Redirect to /tools if the user is not authenticated
+    router.push('/tools');
+    return;
+  }
+
+  const user = JSON.parse(userStr);
+
+  if (!user.profileComplete) {
+    // Redirect to /tools if the user's profile is not complete
+    router.push('/tools');
+    return;
+  }
+
+  // Fetch user's classrooms
+  const fetchClassrooms = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/api/classrooms/", {
+        params: {
+          creator: user.id,
+        },
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
+      setClassrooms(response.data);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      addAlert("error", "Failed to fetch classrooms. Please try again later.");
+    }
+  };
+
+  fetchClassrooms();
+}, [router]); // Only depend on router
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -1191,7 +1202,7 @@ CRITICAL: Your response must begin with the exam title and contain ONLY the exam
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                               <line x1="18" y1="6" x2="6" y2="18"></line>
-                              <line x1="6" y1="6" x2="18" y2="18"></line>
+                              <line x1="6" y1="6" x2="18 18"></line>
                               </svg>
                             </button>
                             

@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { cn } from "@/lib/utils";
+import { Modal } from "@/components/ui/modal";
+import { IconLock, IconUserCircle } from "@tabler/icons-react";
 
 const CardContent = ({ children }) => {
   const { theme } = useTheme();
@@ -21,24 +23,46 @@ const ToolList = () => {
   const { theme } = useTheme();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isProfileComplete, setIsProfileComplete] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showProfileModal, setShowProfileModal] = useState(false);
   const baseImgFolder = '/static/tools/';
 
   useEffect(() => {
-    // Check if user is authenticated when the component mounts
     const checkAuth = () => {
       const token = localStorage.getItem('authToken');
-      const user = localStorage.getItem('user');
-      
-      // If no token or user data, redirect to login
-      if (!token || !user) {
-        console.log("No authentication detected");
+      const user = JSON.parse(localStorage.getItem('user'));
+
+      if (token && user) {
+        setIsAuthenticated(true);
+        setIsProfileComplete(user?.profileComplete || false);
+      } else {
+        setIsAuthenticated(false);
       }
-      
+
       setIsLoading(false);
     };
-    
+
     checkAuth();
   }, [router]);
+
+  const handleTryNowClick = (toolPage) => {
+    console.log(isAuthenticated, isProfileComplete);
+    if (!isAuthenticated) {
+      setShowAuthModal(true);
+    } else if (!isProfileComplete) {
+      setShowProfileModal(true);
+    } else if (isAuthenticated && isProfileComplete) {
+      router.push(`/tools/${toolPage}`);
+    }
+  };
+
+  const closeAuthModal = () => setShowAuthModal(false);
+  const closeProfileModal = () => setShowProfileModal(false);
+  const handleSignUp = () => router.push('/profile/signup');
+  const handleSignIn = () => router.push('/profile/signin');
+  const handleCompleteProfile = () => router.push('/profile/edit');
 
   const data = [
     {
@@ -108,20 +132,22 @@ const ToolList = () => {
   ];
 
   if (isLoading) {
-    return <div className="min-h-screen flex items-center justify-center">
-      <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-        Loading...
-      </p>
-    </div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
+          Loading...
+        </p>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen pt-24 px-4 sm:px-6 md:px-8 relative">
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/5 pointer-events-none"></div>
-      
-      <div className="relative">
+    <div className="min-h-screen w-screen bg-gradient-to-br from-blue-500/10 to-purple-500/5">
 
+      <div className="my-16 sm:my-28"></div>
+
+
+      <div className="relative">
         {/* Header Section */}
         <div className="w-full text-center mb-8 md:mb-12">
           <h1 className={`text-3xl sm:text-4xl font-bold font-alfa-slab-one mb-3 sm:mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
@@ -133,42 +159,44 @@ const ToolList = () => {
         </div>
 
           {/* Quick Access Section */}
-          <div className="w-full max-w-7xl mx-auto mb-12">
-          <h2 className={`text-xl font-bold mb-4 flex items-center ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-            Quick Access <span className="text-yellow-500 ml-1">★</span>
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            {data.map((tool, index) => (
-              <div 
-                key={`quick-${index}`}
-                onClick={() => router.push(`/tools/${tool.page}`)}
-                className={cn(
-                  "rounded-lg p-4 cursor-pointer transition-all duration-300",
-                  "flex items-center gap-3 w-full",
-                  "hover:shadow-md hover:-translate-y-1 hover:scale-102",
-                  theme === 'dark' 
-                    ? 'bg-neutral-800/80 hover:bg-neutral-700/80 border border-neutral-700' 
-                    : 'bg-white/80 hover:bg-gray-50/90 border border-gray-200'
-                )}
-              >
-                <div className="relative w-14 h-14 rounded-full overflow-hidden flex-shrink-0">
-                  <Image
-                    src={baseImgFolder+"i_"+tool.src}
-                    alt={tool.title}
-                    fill
-                    className="object-cover"
-                  />
-                </div>
-                <span className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                  {tool.title}
-                </span>
+          { isAuthenticated && isProfileComplete && (
+            <div className="w-full max-w-7xl mx-auto mb-12">
+              <h2 className={`text-xl font-bold mb-4 flex items-center ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+                Quick Access <span className="text-yellow-500 ml-1">★</span>
+              </h2>
+              <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
+                {data.map((tool, index) => (
+                  <div 
+                    key={`quick-${index}`}
+                    onClick={() => router.push(`/tools/${tool.page}`)}
+                    className={cn(
+                      "rounded-lg p-4 cursor-pointer transition-all duration-300",
+                      "flex items-center gap-3 w-full",
+                      "hover:shadow-md hover:-translate-y-1 hover:scale-102",
+                      theme === 'dark' 
+                        ? 'bg-neutral-800/80 hover:bg-neutral-700/80 border border-neutral-700' 
+                        : 'bg-white/80 hover:bg-gray-50/90 border border-gray-200'
+                    )}
+                  >
+                    <div className="relative w-14 h-14 rounded-full overflow-hidden flex-shrink-0">
+                      <Image
+                        src={baseImgFolder+"i_"+tool.src}
+                        alt={tool.title}
+                        fill
+                        className="object-cover"
+                      />
+                    </div>
+                    <span className={`text-sm font-medium ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+                      {tool.title}
+                    </span>
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-        </div>
+            </div>
+          )}
 
 
-        {/* Tools Section - Made images larger */}
+        {/* Tools Section */}
         <div className="w-full max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {data.map((tool, index) => (
@@ -181,7 +209,7 @@ const ToolList = () => {
                   "rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300",
                   theme === 'dark' ? 'bg-neutral-800 border border-neutral-700' : 'bg-white border border-gray-200'
                 )}
-                onClick={() => router.push(`/tools/${tool.page}`)}
+                onClick={() => handleTryNowClick(tool.page)}
               >
                 <div className="relative h-72 w-full">
                   <Image
@@ -205,12 +233,11 @@ const ToolList = () => {
                 <div className="mb-4">
                   {tool.content}
                 </div>
-                <button 
+                <button
+                  onClick={() => handleTryNowClick(tool.page)}
                   className={cn(
-                    "mt-2 px-4 py-2 rounded-lg font-medium transition-colors",
-                    theme === 'dark' 
-                      ? "bg-blue-600 hover:bg-blue-700 text-white" 
-                      : "bg-blue-500 hover:bg-blue-600 text-white"
+                    "btn btn-md btn-primary mt-2",
+                    theme === "dark" ? "dark:btn-primary" : ""
                   )}
                 >
                   Try Now
@@ -222,7 +249,103 @@ const ToolList = () => {
         </div>
       </div>
 
+      {/* Authentication Modal */}
+      <Modal isOpen={showAuthModal} onClose={closeAuthModal}>
+        <div title="  ">
+          <div className={cn("p-6", theme === "dark" ? "bg-[#4777da]" : "bg-[#4777da]")}>
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-white/20 rounded-full">
+                <IconLock className="h-6 w-6 text-white" />
+              </div>
+              <h2 className="text-xl font-bold text-white" style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+                Authentication Required
+              </h2>
+            </div>
+          </div>
+          <div className="p-6">
+            <p className={cn("mb-6 text-base", theme === "dark" ? "text-gray-300" : "text-gray-600")}>
+              You need to be logged in to access this tool. Create an account to unlock all features.
+            </p>
+            <div className="flex items-center justify-end gap-3">
+              <button
+                onClick={closeAuthModal}
+                className={cn(
+                  "btn btn-md btn-secondary",
+                  theme === "dark" ? "dark:btn-secondary" : ""
+                )}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSignUp}
+                className={cn(
+                  "btn btn-md btn-primary",
+                  theme === "dark" ? "dark:btn-primary" : ""
+                )}
+              >
+                <IconUserCircle className="h-5 w-5" />
+                Create Account
+              </button>
+              <button
+                onClick={handleSignIn}
+                className={cn(
+                  "btn btn-md btn-contrast",
+                  theme === "dark" ? "dark:btn-contrast" : ""
+                )}
+              >
+                <IconUserCircle className="h-5 w-5" />
+                Sing In
+              </button>
+            </div>
+          </div>
+        </div>
+      </Modal>
+
+      {/* Profile Completion Modal */}
+      <Modal isOpen={showProfileModal} onClose={closeProfileModal}>
+        <div title="  ">
+          <div className={cn("p-6", theme === "dark" ? "bg-purple-600" : "bg-purple-500")}>
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-white/20 rounded-full">
+                <IconUserCircle className="h-6 w-6 text-white" />
+              </div>
+              <h2 className="text-xl font-bold text-white" style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+                Complete Your Profile
+              </h2>
+            </div>
+          </div>
+          <div className="p-6">
+            <p className={cn("mb-6 text-base", theme === "dark" ? "text-gray-300" : "text-gray-600")}>
+              We need a few more details before you can access this tool. Your profile information helps us personalize your experience.
+            </p>
+            <div className="flex items-center justify-end gap-3">
+              <button
+                onClick={closeProfileModal}
+                className={cn(
+                  "btn btn-md btn-secundary",
+                  theme === "dark" ? "text-white hover:bg-neutral-700" : "text-gray-700 hover:bg-gray-100"
+                )}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleCompleteProfile}
+                className={cn(
+                  "btn btn-md btn-purple",
+                  "flex items-center gap-2",
+                  theme === "dark" ? "bg-purple-600 hover:bg-purple-700 text-white" : "bg-purple-500 hover:bg-purple-600 text-white"
+                )}
+              >
+                <IconUserCircle className="h-5 w-5" />
+                Complete Profile
+              </button>
+            </div>
+          </div>
+        </div>
+      </Modal>
+
       <div className="my-16 sm:my-28"></div>
+
     </div>
   );
 };

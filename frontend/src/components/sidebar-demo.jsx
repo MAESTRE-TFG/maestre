@@ -190,7 +190,7 @@ export function SidebarDemo({ ContentComponent }) {
         "h-screen overflow-y-auto",
         theme === "dark"
           ? "bg-neutral-800 border-neutral-700"
-          : "bg-gray-100 border-neutral-200"
+          : "bg-gray-200 border-neutral-300"
       )}
     >
       <Sidebar open={open} setOpen={setOpen} className={cn(open ? "w-84 z-50" : "w-60 z-50")}>
@@ -198,24 +198,24 @@ export function SidebarDemo({ ContentComponent }) {
           className={cn(
             "justify-between gap-10",
             theme === "dark"
-              ? "bg-gradient-to-b from-neutral-800 via-neutral-800 to-[#a3b8d9] z-50" // Subtle gradient for dark theme
-              : "bg-gradient-to-b from-gray-100 via-gray-100 to-[#d4e4f4] z-50"      // Subtle gradient for light theme
+              ? "bg-gradient-to-b from-neutral-800 via-neutral-800 to-[#b0c4de] z-50" // Adjusted gradient for less saturation
+              : "bg-gradient-to-b from-gray-200 via-gray-200 to-[#e0eaf4] z-50" // Adjusted gradient for less saturation
           )}
           style={{
-            backgroundSize: "100% 200%", // Make the gradient start lower
-            backgroundPosition: "top 75%", // Adjust gradient position
+            backgroundSize: "100% 200%",
+            backgroundPosition: "top 75%",
           }}
         >
           <div className="flex flex-col flex-1 overflow-y-auto overflow-x-hidden">
             {open ? (
               <>
-                <div className="flex justify-end p-2 md:hidden"> {/* Add md:hidden to hide on larger screens */}
+                <div className="flex justify-end p-2 md:hidden">
                   <IconX
                     className={cn(
                       "h-6 w-6 cursor-pointer",
                       theme == "dark" ? "text-neutral-200" : "text-neutral-700"
                     )}
-                    onClick={() => setOpen(false)} // Ensure this onClick event is present
+                    onClick={() => setOpen(false)}
                   />
                 </div>
                 <Logo />
@@ -231,17 +231,17 @@ export function SidebarDemo({ ContentComponent }) {
           </div>
           <div className="flex flex-col gap-2 z-50">
             <SidebarLink
-                link={{
-                  label: "Theme",
-                  href: "#",
-                  icon: (
-                    <ThemeSwitch
-                      checked={theme === "dark"}
-                      onChange={() => setTheme(theme === "dark" ? "light" : "dark")}
-                    />
-                  )
-                }}
-              />
+              link={{
+                label: "Theme",
+                href: "#",
+                icon: (
+                  <ThemeSwitch
+                    checked={theme === "dark"}
+                    onChange={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  />
+                ),
+              }}
+            />
             {user && (
               <SidebarLink
                 link={{
@@ -250,7 +250,7 @@ export function SidebarDemo({ ContentComponent }) {
                   icon: (
                     <IconArrowLeft
                       className={cn(
-                        "h-6 w-6 ml-2 flex-shrink-0", // Increased size and added margin-left
+                        "h-6 w-6 ml-2 flex-shrink-0",
                         theme == "dark" ? "text-neutral-200" : "text-neutral-700"
                       )}
                     />
@@ -265,29 +265,49 @@ export function SidebarDemo({ ContentComponent }) {
       <div className="flex-1 flex justify-center items-start overflow-y-auto">
         <ContentComponent />
       </div>
-      <Modal isOpen={isLogoutModalOpen} onClose={closeLogoutModal} title="Confirm Logout" style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}
-      >
-        <div title=" " className="p-4">
-          <h2 className="text-xl font-bold mb-4" // Increased text size
-          >
-            Confirm Logout
-          </h2>
-          <p className="mb-4 text-lg"> {/* Increased text size */}
-            Are you sure you want to log out? You will need to sign in again to access your account.
-          </p>
-          <div className="flex justify-end">
-            <button
-              onClick={closeLogoutModal}
-              className="mr-2 px-4 py-2 bg-gray-300 rounded-md"
+      <Modal isOpen={isLogoutModalOpen} onClose={closeLogoutModal}>
+        <div title=" ">
+          <div className={cn("p-6", theme === "dark" ? "bg-[#f08060]" : "bg-[#f08060]")}> {/* Adjusted for less saturation */}
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-white/20 rounded-full">
+                <IconArrowLeft className="h-6 w-6 text-white" />
+              </div>
+              <h2
+                className="text-xl font-bold text-white"
+              >
+                Confirm Logout
+              </h2>
+            </div>
+          </div>
+          <div className="p-6">
+            <p
+              className={cn(
+                "mb-6 text-base",
+                theme === "dark" ? "text-gray-300" : "text-gray-600"
+              )}
             >
-              Cancel
-            </button>
-            <button
-              onClick={handleSignout} // Llama a la función de cierre de sesión
-              className="px-4 py-2 bg-red-500 text-white rounded-md"
-            >
-              Logout
-            </button>
+              Are you sure you want to log out? You will need to sign in again to access your account.
+            </p>
+            <div className="flex items-center justify-end gap-3">
+              <button
+                onClick={closeLogoutModal}
+                className={cn(
+                  "btn btn-md btn-secondary",
+                  theme === "dark" ? "dark:btn-secondary" : ""
+                )}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSignout}
+                className={cn(
+                  "btn btn-md btn-danger",
+                  theme === "dark" ? "dark:btn-danger" : ""
+                )}
+              >
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </Modal>

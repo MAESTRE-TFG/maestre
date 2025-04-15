@@ -102,23 +102,23 @@ h1, h2, h3, h4, h5, h6 {
   
   /* Button colors - Light theme */
   .btn-primary {
-    @apply bg-blue-600 text-white hover:bg-blue-700;
+    @apply bg-[#4777da] text-white hover:bg-[#3a63b3];
   }
   
   .btn-secondary {
-    @apply bg-gray-200 text-gray-800 hover:bg-gray-300;
+    @apply bg-transparent text-gray-800 hover:bg-gray-100;
   }
-  
+
   .btn-accent {
-    @apply bg-purple-600 text-white hover:bg-purple-700;
+    @apply bg-[#6f2c91] text-white hover:bg-[#5a2380];
   }
   
   .btn-success {
-    @apply bg-green-600 text-white hover:bg-green-700;
+    @apply bg-[#118e6c] text-white hover:bg-[#43a047];
   }
   
   .btn-danger {
-    @apply bg-red-600 text-white hover:bg-red-700;
+    @apply bg-[#fa5c2b] text-white hover:bg-[#e53935];
   }
   
   .btn-contrast {

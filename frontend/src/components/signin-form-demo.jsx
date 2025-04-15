@@ -4,6 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
+import { IconUser, IconLock, IconEye, IconEyeOff } from "@tabler/icons-react"; // Import necessary icons
 
 export function SigninForm({ onSubmit }) {
   const { theme } = useTheme();
@@ -11,6 +12,7 @@ export function SigninForm({ onSubmit }) {
     emailOrUsername: "",
     password: ""
   });
+  const [showPassword, setShowPassword] = React.useState(false); // State to toggle password visibility
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,6 +27,10 @@ export function SigninForm({ onSubmit }) {
     onSubmit(formData);
   };
 
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
+  };
+
   return (
     <div
       className={cn(
@@ -35,14 +41,13 @@ export function SigninForm({ onSubmit }) {
       <form
         className="my-4"
         onSubmit={handleSubmit}
-        style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
       >
         <LabelInputContainer className="mb-6">
           <Label
             style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             htmlFor="emailOrUsername"
           >
-            👤 Email or Username
+            <IconUser className="inline-block mr-2" /> Email or Username
           </Label>
           <Input
             id="emailOrUsername"
@@ -59,18 +64,18 @@ export function SigninForm({ onSubmit }) {
             )}
           />
         </LabelInputContainer>
-        <LabelInputContainer className="mb-6">
+        <LabelInputContainer className="mb-6 relative">
           <Label
             style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             htmlFor="password"
           >
-            🔒 Password
+            <IconLock className="inline-block mr-2" /> Password
           </Label>
           <Input
             id="password"
             name="password"
             placeholder="••••••••"
-            type="password"
+            type={showPassword ? "text" : "password"} // Toggle input type
             required
             value={formData.password}
             onChange={handleChange}
@@ -80,39 +85,43 @@ export function SigninForm({ onSubmit }) {
                 : "hover:bg-gray-100"
             )}
           />
+          <button
+            type="button"
+            onClick={togglePasswordVisibility}
+            className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
+          >
+            {showPassword ? (
+              <IconEyeOff className="h-5 w-5" />
+            ) : (
+              <IconEye className="h-5 w-5" />
+            )}
+          </button>
         </LabelInputContainer>
 
         <button
           className={cn(
-            "relative group/btn block w-full rounded-md h-10 font-medium border border-transparent",
-            theme === "dark"
-              ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
+            "btn btn-md btn-primary w-full",
+            theme === "dark" ? "dark:btn-primary" : ""
           )}
           type="submit"
         >
           Sign in &rarr;
-          <BottomGradient />
         </button>
 
-        <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-4 h-[1px] w-full" /> {/* Reduced vertical margin */}
+        <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-4 h-[1px] w-full" />
 
-        <div className="text-center mt-2"> {/* Reduced top margin */}
+        <div className="text-center mt-2">
           <p className={cn(theme === "dark" ? "text-white" : "text-black")}>
             Don't have an account?
           </p>
           <button
             className={cn(
-              "relative group/btn mt-2 block w-full rounded-md h-10 font-medium border border-transparent",
-              theme === "dark"
-                ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-                : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-green-300"
+              "btn btn-md btn-success w-full mt-2",
+              theme === "dark" ? "dark:btn-success" : ""
             )}
-            style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             onClick={() => (window.location.href = "/profile/signup")}
           >
             Sign up
-            <BottomGradient />
           </button>
         </div>
       </form>

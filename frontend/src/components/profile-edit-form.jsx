@@ -5,6 +5,16 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 import { useRouter } from "next/navigation";
+import {
+  IconUser,
+  IconMail,
+  IconIdBadge,
+  IconEdit,
+  IconLock,
+  IconMapPin,
+  IconSchool,
+  IconWorld,
+} from "@tabler/icons-react"; // Import necessary icons
 
 const COMUNIDADES = [
   "Andalucía",
@@ -57,43 +67,73 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
       <form className="my-1" onSubmit={(e) => { e.preventDefault(); handleUpdate(); }}>
       <div className="flex flex-col md:flex-row gap-6 mb-8">
         <div className="flex-1 md:w-1/2 border border-gray-300 rounded-md p-4">
+          {/* Personal Information Section */}
           <LabelInputContainer className="mb-4">
-            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }} htmlFor="username">👤 Username</Label>
+            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }} htmlFor="username">
+              <IconUser className="mr-2 h-5 w-5" />
+              Username
+            </Label>
             <Input id="username" name="username" placeholder="Username" type="text" required value={formData.username || ""} onChange={handleChange} />
           </LabelInputContainer>
+
           <LabelInputContainer className="mb-4">
-            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }} htmlFor="email">📧 Email Address</Label>
+            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }} htmlFor="email">
+              <IconMail className="mr-2 h-5 w-5" />
+              Email Address
+            </Label>
             <Input id="email" name="email" placeholder="Email" type="email" required value={formData.email || ""} onChange={handleChange} />
           </LabelInputContainer>
+
           <LabelInputContainer className="mb-4">
-            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="name">📛 Name</Label>
+            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="name">
+              <IconIdBadge className="mr-2 h-5 w-5" />
+              Name
+            </Label>
             <Input id="name" name="name" placeholder="Name" type="text" required value={formData.name || ""} onChange={handleChange} />
           </LabelInputContainer>
+
           <LabelInputContainer className="mb-4">
-            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="surname">📝 Surname</Label>
+            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="surname">
+              <IconEdit className="mr-2 h-5 w-5" />
+              Surname
+            </Label>
             <Input id="surname" name="surname" placeholder="Surname" type="text" required value={formData.surname || ""} onChange={handleChange} />
           </LabelInputContainer>
           <br />
+          {/* Password Section */}
           <LabelInputContainer className="flex-1">
-              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="oldPassword">🔒 Confirm Old Password</Label>
-              <Input id="oldPassword" name="oldPassword" placeholder="Old Password" type="password" value={formData.oldPassword || ""} onChange={handleChange} />
+            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="oldPassword">
+              <IconLock className="mr-2 h-5 w-5" />
+              Confirm Old Password
+            </Label>
+            <Input id="oldPassword" name="oldPassword" placeholder="Old Password" type="password" value={formData.oldPassword || ""} onChange={handleChange} />
           </LabelInputContainer>
           <br />
           <div className="flex flex-col md:flex-row gap-6 mb-4">
             <LabelInputContainer className="flex-1">
-              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="password">🔒 New Password</Label>
+              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="password">
+                <IconLock className="mr-2 h-5 w-5" />
+                New Password
+              </Label>
               <Input id="password" name="password" placeholder="New Password" type="password" value={formData.password || ""} onChange={handleChange} />
             </LabelInputContainer>
             <LabelInputContainer className="flex-1">
-              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="confirmPassword">🔒 Confirm Password</Label>
+              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="confirmPassword">
+                <IconLock className="mr-2 h-5 w-5" />
+                Confirm Password
+              </Label>
               <Input id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" type="password" value={formData.confirmPassword || ""} onChange={handleChange} />
             </LabelInputContainer>
           </div>
         </div>
         {isProfileComplete && (
           <div className="flex-1 md:w-1/2 border border-gray-300 rounded-md p-4">
+            {/* Location Section */}
             <LabelInputContainer className="mb-4">
-              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="region">🌍 Region</Label>
+              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="region">
+                <IconWorld className="mr-2 h-5 w-5" />
+                Region
+              </Label>
               <select
                 id="region"
                 name="region"
@@ -113,12 +153,20 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                 ))}
               </select>
             </LabelInputContainer>
+
             <LabelInputContainer className="mb-4">
-              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="city">🏙️ City</Label>
+              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="city">
+                <IconMapPin className="mr-2 h-5 w-5" />
+                City
+              </Label>
               <Input id="city" name="city" placeholder="Sevilla" type="text" required value={formData.city || ""} onChange={handleChange} disabled={!isProfileComplete} />
             </LabelInputContainer>
+
             <LabelInputContainer className="mb-5">
-              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="school">🏫 School</Label>
+              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="school">
+                <IconSchool className="mr-2 h-5 w-5" />
+                School
+              </Label>
               <select
                 id="school"
                 name="school"
@@ -141,44 +189,43 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
             <p style={{ fontFamily: "'Alfa Slab One', sans-serif" }} className={cn("text-sm mb-2", theme === "dark" ? "text-white" : "text-black")}>
               ¿Can't find your school?
             </p>
+            {/* Button to create a new school */}
             <button
               onClick={() => router.push("/schools/new")}
-              className={cn("relative group/btn block w-full rounded-md h-10 font-medium border border-transparent", 
-                theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
-                : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
+              className={cn(
+                "btn btn-md btn-primary w-full", // Use the new btn styles
+                theme === "dark" ? "dark:btn-primary" : ""
               )}
-              type="submit"
+              type="button"
               style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             >
               Create one &rarr;
-            <BottomGradient />
-          </button>
+            </button>
           </div>
         )}
       </div>
+        {/* Update Profile Button */}
         <button
-          className={cn("relative group/btn block w-full rounded-md h-10 font-medium border border-transparent", 
-            theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
-            : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
+          className={cn(
+            "btn btn-md btn-success w-full", // Use the new btn styles
+            theme === "dark" ? "dark:btn-success" : ""
           )}
           type="submit"
           style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
         >
           Update &rarr;
-          <BottomGradient />
         </button>
+        {/* Cancel Button */}
         <button
           className={cn(
-            "relative group/btn block w-full mx-auto rounded-md h-10 font-medium border border-transparent mt-4",
-            theme === "dark"
-              ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-red-300"
+            "btn btn-md btn-secondary w-full mt-4", // Use the new btn styles
+            theme === "dark" ? "dark:btn-secondary" : ""
           )}
           type="button"
           style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-          onClick={handleCancel}>
-           &larr; Cancel
-          <BottomGradient isCancel />
+          onClick={handleCancel}
+        >
+          &larr; Cancel
         </button>
       </form>
     </div>

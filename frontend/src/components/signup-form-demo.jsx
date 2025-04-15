@@ -4,6 +4,14 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
+import {
+  IconUser,
+  IconMail,
+  IconLock,
+  IconIdBadge,
+  IconEye,
+  IconEyeOff,
+} from "@tabler/icons-react";
 
 export function SignupForm({ onSubmit }) {
   const { theme } = useTheme();
@@ -19,6 +27,7 @@ export function SignupForm({ onSubmit }) {
   });
   const [acceptedTerms, setAcceptedTerms] = React.useState(false);
   const [error, setError] = React.useState(null);
+  const [showPassword, setShowPassword] = React.useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,6 +39,10 @@ export function SignupForm({ onSubmit }) {
 
   const handleTermsChange = (e) => {
     setAcceptedTerms(e.target.checked);
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword((prev) => !prev);
   };
 
   const handleSubmit = async (e) => {
@@ -96,7 +109,9 @@ export function SignupForm({ onSubmit }) {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <LabelInputContainer>
-              <Label htmlFor="firstname">📛 Name</Label>
+              <Label htmlFor="firstname">
+                <IconIdBadge className="inline-block mr-2" /> Name
+              </Label>
               <Input 
                 id="firstname" 
                 name="name" 
@@ -110,7 +125,9 @@ export function SignupForm({ onSubmit }) {
             </LabelInputContainer>
             
             <LabelInputContainer>
-              <Label htmlFor="lastname">📝 Surname</Label>
+              <Label htmlFor="lastname">
+                <IconIdBadge className="inline-block mr-2" /> Surname
+              </Label>
               <Input 
                 id="lastname" 
                 name="surname" 
@@ -136,7 +153,9 @@ export function SignupForm({ onSubmit }) {
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <LabelInputContainer>
-              <Label htmlFor="username">👤 Username</Label>
+              <Label htmlFor="username">
+                <IconUser className="inline-block mr-2" /> Username
+              </Label>
               <Input 
                 id="username" 
                 name="username" 
@@ -150,7 +169,9 @@ export function SignupForm({ onSubmit }) {
             </LabelInputContainer>
             
             <LabelInputContainer>
-              <Label htmlFor="email">📧 Email</Label>
+              <Label htmlFor="email">
+                <IconMail className="inline-block mr-2" /> Email
+              </Label>
               <Input 
                 id="email" 
                 name="email" 
@@ -163,18 +184,31 @@ export function SignupForm({ onSubmit }) {
               />
             </LabelInputContainer>
             
-            <LabelInputContainer className="md:col-span-2">
-              <Label htmlFor="password">🔒 Password</Label>
+            <LabelInputContainer className="md:col-span-2 relative">
+              <Label htmlFor="password">
+                <IconLock className="inline-block mr-2" /> Password
+              </Label>
               <Input 
                 id="password" 
                 name="password" 
                 placeholder="••••••••" 
-                type="password" 
+                type={showPassword ? "text" : "password"}
                 required 
                 value={formData.password} 
                 onChange={handleChange} 
                 className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
               />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
+              >
+                {showPassword ? (
+                  <IconEyeOff className="h-5 w-5" />
+                ) : (
+                  <IconEye className="h-5 w-5" />
+                )}
+              </button>
             </LabelInputContainer>
           </div>
         </fieldset>
@@ -204,14 +238,11 @@ export function SignupForm({ onSubmit }) {
         {/* Submit Button */}
         <button
           className={cn(
-            "relative group/btn block w-full rounded-md h-12 font-medium border border-transparent", 
-            theme === "dark" 
-              ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-green-300"
+            "btn btn-md btn-primary w-full",
+            theme === "dark" ? "dark:btn-primary" : ""
           )}
           type="submit"
           disabled={!acceptedTerms}
-          style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
         >
           Sign up &rarr;
           <BottomGradient />
@@ -219,18 +250,18 @@ export function SignupForm({ onSubmit }) {
                   
         {/* Sign In Option */}
         <div className="text-center mt-4">
-          <p style={{ fontFamily: "'Alfa Slab One', sans-serif" }} className={cn(theme === "dark" ? "text-white" : "text-black")}>
+          <p
+            style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+            className={cn(theme === "dark" ? "text-white" : "text-black")}
+          >
             Already have an account?
           </p>
           <button
             className={cn(
-              "relative group/btn mt-2 block w-full rounded-md h-12 font-medium border border-transparent", 
-              theme === "dark" 
-                ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
-                : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
+              "btn btn-md btn-secondary w-full mt-2",
+              theme === "dark" ? "dark:btn-secondary" : ""
             )}
-            style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-            onClick={() => window.location.href = "/profile/signin"}
+            onClick={() => (window.location.href = "/profile/signin")}
           >
             Sign in
             <BottomGradient />

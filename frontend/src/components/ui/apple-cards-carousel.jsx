@@ -155,6 +155,12 @@ export const Carousel = ({
     closeAuthModal();
   };
 
+  const handleSignIn = () => {
+    router.push('/profile/signin');
+    closeAuthModal();
+  };
+
+
   const handleCompleteProfile = () => {
     router.push('/profile/complete');
     closeProfileModal();
@@ -207,110 +213,100 @@ export const Carousel = ({
           </button>
         </div>
         
-        {/* Improved Authentication Modal */}
-        <Modal isOpen={showAuthModal} onClose={closeAuthModal}>
-          <div title="  ">
-            <div className={cn("p-6", theme === "dark" ? "bg-blue-700" : "bg-blue-600")}>
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-white/20 rounded-full">
-                  <IconLock className="h-6 w-6 text-white" />
-                </div>
-                <h2 className="text-xl font-bold text-white" style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-                  Authentication Required
-                </h2>
+              {/* Authentication Modal */}
+      <Modal isOpen={showAuthModal} onClose={closeAuthModal}>
+        <div title="  ">
+          <div className={cn("p-6", theme === "dark" ? "bg-[#4777da]" : "bg-[#4777da]")}>
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-white/20 rounded-full">
+                <IconLock className="h-6 w-6 text-white" />
               </div>
-            </div>
-            <div className="p-6">
-              <p className={cn("mb-6 text-base", theme === "dark" ? "text-gray-300" : "text-gray-600")}>
-                You need to be logged in to access this tool. Create an account to unlock all features.
-              </p>
-              <div className="flex items-center justify-end gap-3">
-                <button
-                  onClick={closeAuthModal}
-                  className={cn(
-                    "px-4 py-2 rounded-md transition-colors",
-                    theme === "dark" ? "text-white hover:bg-neutral-700" : "text-gray-700 hover:bg-gray-100"
-                  )}
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleSignUp}
-                  className={cn(
-                    "px-6 py-2 rounded-md font-medium transition-all",
-                    "flex items-center gap-2",
-                    theme === "dark" ? "bg-blue-600 hover:bg-blue-700 text-white" : "bg-blue-500 hover:bg-blue-600 text-white"
-                  )}
-                >
-                  <IconUserCircle className="h-5 w-5" />
-                  Create Account
-                </button>
-              </div>
+              <h2 className="text-xl font-bold text-white" style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+                Authentication Required
+              </h2>
             </div>
           </div>
-        </Modal>
+          <div className="p-6">
+            <p className={cn("mb-6 text-base", theme === "dark" ? "text-gray-300" : "text-gray-600")}>
+              You need to be logged in to access this tool. Create an account to unlock all features.
+            </p>
+            <div className="flex items-center justify-end gap-3">
+              <button
+                onClick={closeAuthModal}
+                className={cn(
+                  "btn btn-md btn-secondary",
+                  theme === "dark" ? "dark:btn-secondary" : ""
+                )}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleSignUp}
+                className={cn(
+                  "btn btn-md btn-primary",
+                  theme === "dark" ? "dark:btn-primary" : ""
+                )}
+              >
+                <IconUserCircle className="h-5 w-5" />
+                Create Account
+              </button>
+              <button
+                onClick={handleSignIn}
+                className={cn(
+                  "btn btn-md btn-contrast",
+                  theme === "dark" ? "dark:btn-contrast" : ""
+                )}
+              >
+                <IconUserCircle className="h-5 w-5" />
+                Sing In
+              </button>
+            </div>
+          </div>
+        </div>
+      </Modal>
 
-        {/* Improved Profile Completion Modal */}
-        <Modal 
-          isOpen={showProfileModal} 
-          onClose={closeProfileModal}
-          className="p-0 overflow-hidden"
-        >
-          <div title=" " className={cn(
-            "rounded-lg overflow-hidden",
-            theme === "dark" ? "bg-neutral-800" : "bg-white"
-          )}>
-            <div className={cn(
-              "p-6",
-              theme === "dark" ? "bg-purple-700" : "bg-purple-600"
-            )}>
-              <div className="flex items-center gap-3">
-                <div className="p-2 bg-white/20 rounded-full">
-                  <IconUserCircle className="h-6 w-6 text-white" />
-                </div>
-                <h2 className="text-xl font-bold text-white" style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-                  Complete Your Profile
-                </h2>
+      {/* Profile Completion Modal */}
+      <Modal isOpen={showProfileModal} onClose={closeProfileModal}>
+        <div title="  ">
+          <div className={cn("p-6", theme === "dark" ? "bg-purple-600" : "bg-purple-500")}>
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-white/20 rounded-full">
+                <IconUserCircle className="h-6 w-6 text-white" />
               </div>
-            </div>
-            
-            <div className="p-6">
-              <p className={cn(
-                "mb-6 text-base",
-                theme === "dark" ? "text-gray-300" : "text-gray-600"
-              )}>
-                We need a few more details before you can access this tool. Your profile information helps us personalize your experience.
-              </p>
-              
-              <div className="flex items-center justify-end gap-3">
-                <button
-                  onClick={closeProfileModal}
-                  className={cn(
-                    "px-4 py-2 rounded-md transition-colors",
-                    theme === "dark" 
-                      ? "text-white hover:bg-neutral-700" 
-                      : "text-gray-700 hover:bg-gray-100"
-                  )}
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleCompleteProfile}
-                  className={cn(
-                    "px-6 py-2 rounded-md font-medium transition-all",
-                    "flex items-center gap-2",
-                    theme === "dark"
-                      ? "bg-purple-600 hover:bg-purple-700 text-white"
-                      : "bg-purple-500 hover:bg-purple-600 text-white"
-                  )}
-                >
-                  <IconUserCircle className="h-5 w-5" />
-                  Complete Profile
-                </button>
-              </div>
+              <h2 className="text-xl font-bold text-white" style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+                Complete Your Profile
+              </h2>
             </div>
           </div>
-        </Modal>
+          <div className="p-6">
+            <p className={cn("mb-6 text-base", theme === "dark" ? "text-gray-300" : "text-gray-600")}>
+              We need a few more details before you can access this tool. Your profile information helps us personalize your experience.
+            </p>
+            <div className="flex items-center justify-end gap-3">
+              <button
+                onClick={closeProfileModal}
+                className={cn(
+                  "btn btn-md btn-secundary",
+                  theme === "dark" ? "text-white hover:bg-neutral-700" : "text-gray-700 hover:bg-gray-100"
+                )}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleCompleteProfile}
+                className={cn(
+                  "btn btn-md btn-purple",
+                  "flex items-center gap-2",
+                  theme === "dark" ? "bg-purple-600 hover:bg-purple-700 text-white" : "bg-purple-500 hover:bg-purple-600 text-white"
+                )}
+              >
+                <IconUserCircle className="h-5 w-5" />
+                Complete Profile
+              </button>
+            </div>
+          </div>
+        </div>
+      </Modal>
       </div>
     </CarouselContext.Provider>
   );
