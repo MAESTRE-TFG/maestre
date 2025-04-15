@@ -114,15 +114,12 @@ const ClassroomsList = () => {
             <button
               onClick={handleCreate}
               className={cn(
-                "mt-4 px-8 py-4 rounded-md text-lg font-medium border border-green-500 mt-4",
-                theme === "dark"
-                  ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-                  : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]"
+                "btn btn-md btn-primary", // Use the new btn styles
+                theme === "dark" ? "dark:btn-primary" : ""
               )}
               style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             >
-              Create New Classroom + 
-              <BottomGradient isCreate={true} />
+              Create New Classroom +
             </button>
           </div>
         ) : (
@@ -159,30 +156,22 @@ const ClassroomsList = () => {
                   <button
                     onClick={() => handleEdit(classroom.id)}
                     className={cn(
-                      "absolute bottom-4 right-4 rounded-md h-10 px-6 font-medium border border-green-400",
-                      theme === "dark"
-                        ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-                        : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]"
+                      "btn btn-md btn-secondary", // Use the new btn styles
+                      theme === "dark" ? "dark:btn-secondary" : ""
                     )}
-                    type="button"
                     style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
                   >
                     Edit &rarr;
-                    <BottomGradient isCreate={false} />
                   </button>
                   <button
                     onClick={() => router.push(`/classrooms/${classroom.id}`)}
                     className={cn(
-                      "absolute bottom-4 left-4 rounded-md h-10 px-6 font-medium border border-green-400",
-                      theme === "dark"
-                        ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-                        : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]"
+                      "btn btn-md btn-success", // Use the new btn styles
+                      theme === "dark" ? "dark:btn-success" : ""
                     )}
-                    type="button"
                     style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
                   >
-                    Open class
-                    <BottomGradient isCreate={false} />
+                    Open Class
                   </button>
                 </div>
               </div>

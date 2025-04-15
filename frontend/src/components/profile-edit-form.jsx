@@ -14,7 +14,9 @@ import {
   IconMapPin,
   IconSchool,
   IconWorld,
-} from "@tabler/icons-react"; // Import necessary icons
+  IconTrash,
+} from "@tabler/icons-react";
+import { Modal } from "@/components/ui/modal";
 
 const COMUNIDADES = [
   "Andalucía",
@@ -65,149 +67,259 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
         }`
       }</style>
       <form className="my-1" onSubmit={(e) => { e.preventDefault(); handleUpdate(); }}>
-      <div className="flex flex-col md:flex-row gap-6 mb-8">
-        <div className="flex-1 md:w-1/2 border border-gray-300 rounded-md p-4">
-          {/* Personal Information Section */}
-          <LabelInputContainer className="mb-4">
-            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }} htmlFor="username">
-              <IconUser className="mr-2 h-5 w-5" />
-              Username
-            </Label>
-            <Input id="username" name="username" placeholder="Username" type="text" required value={formData.username || ""} onChange={handleChange} />
-          </LabelInputContainer>
-
-          <LabelInputContainer className="mb-4">
-            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }} htmlFor="email">
-              <IconMail className="mr-2 h-5 w-5" />
-              Email Address
-            </Label>
-            <Input id="email" name="email" placeholder="Email" type="email" required value={formData.email || ""} onChange={handleChange} />
-          </LabelInputContainer>
-
-          <LabelInputContainer className="mb-4">
-            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="name">
-              <IconIdBadge className="mr-2 h-5 w-5" />
-              Name
-            </Label>
-            <Input id="name" name="name" placeholder="Name" type="text" required value={formData.name || ""} onChange={handleChange} />
-          </LabelInputContainer>
-
-          <LabelInputContainer className="mb-4">
-            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="surname">
-              <IconEdit className="mr-2 h-5 w-5" />
-              Surname
-            </Label>
-            <Input id="surname" name="surname" placeholder="Surname" type="text" required value={formData.surname || ""} onChange={handleChange} />
-          </LabelInputContainer>
-          <br />
-          {/* Password Section */}
-          <LabelInputContainer className="flex-1">
-            <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="oldPassword">
-              <IconLock className="mr-2 h-5 w-5" />
-              Confirm Old Password
-            </Label>
-            <Input id="oldPassword" name="oldPassword" placeholder="Old Password" type="password" value={formData.oldPassword || ""} onChange={handleChange} />
-          </LabelInputContainer>
-          <br />
-          <div className="flex flex-col md:flex-row gap-6 mb-4">
-            <LabelInputContainer className="flex-1">
-              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="password">
-                <IconLock className="mr-2 h-5 w-5" />
-                New Password
-              </Label>
-              <Input id="password" name="password" placeholder="New Password" type="password" value={formData.password || ""} onChange={handleChange} />
-            </LabelInputContainer>
-            <LabelInputContainer className="flex-1">
-              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="confirmPassword">
-                <IconLock className="mr-2 h-5 w-5" />
-                Confirm Password
-              </Label>
-              <Input id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" type="password" value={formData.confirmPassword || ""} onChange={handleChange} />
-            </LabelInputContainer>
-          </div>
-        </div>
-        {isProfileComplete && (
+        <div className="flex flex-col md:flex-row gap-6 mb-8">
           <div className="flex-1 md:w-1/2 border border-gray-300 rounded-md p-4">
-            {/* Location Section */}
-            <LabelInputContainer className="mb-4">
-              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="region">
-                <IconWorld className="mr-2 h-5 w-5" />
-                Region
-              </Label>
-              <select
-                id="region"
-                name="region"
-                required
-                value={formData.region || ""}
-                onChange={handleChange}
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                disabled={!isProfileComplete}
-              >
-                <option value="" disabled>
-                  Select a community
-                </option>
-                {COMUNIDADES.map((comunidad) => (
-                  <option key={comunidad} value={comunidad}>
-                    {comunidad}
-                  </option>
-                ))}
-              </select>
-            </LabelInputContainer>
+            {/* Personal Information Section */}
+            <div className="flex flex-col gap-6 mb-8">
+              {/* Username and Email in one row */}
+              <div className="flex flex-col md:flex-row gap-6">
+                <LabelInputContainer className="flex-1">
+                  <Label
+                    className="flex items-center"
+                    style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }}
+                    htmlFor="username"
+                  >
+                    <IconUser className="mr-2 h-5 w-5" />
+                    Username
+                  </Label>
+                  <Input
+                    id="username"
+                    name="username"
+                    placeholder="Username"
+                    type="text"
+                    required
+                    value={formData.username || ""}
+                    onChange={handleChange}
+                  />
+                </LabelInputContainer>
 
-            <LabelInputContainer className="mb-4">
-              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="city">
-                <IconMapPin className="mr-2 h-5 w-5" />
-                City
-              </Label>
-              <Input id="city" name="city" placeholder="Sevilla" type="text" required value={formData.city || ""} onChange={handleChange} disabled={!isProfileComplete} />
-            </LabelInputContainer>
+                <LabelInputContainer className="flex-1">
+                  <Label
+                    className="flex items-center"
+                    style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }}
+                    htmlFor="email"
+                  >
+                    <IconMail className="mr-2 h-5 w-5" />
+                    Email Address
+                  </Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    placeholder="Email"
+                    type="email"
+                    required
+                    value={formData.email || ""}
+                    onChange={handleChange}
+                  />
+                </LabelInputContainer>
+              </div>
 
-            <LabelInputContainer className="mb-5">
-              <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="school">
-                <IconSchool className="mr-2 h-5 w-5" />
-                School
-              </Label>
-              <select
-                id="school"
-                name="school"
-                required
-                value={formData.school || ""}
-                onChange={handleChange}
-                className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                disabled={!isProfileComplete}
-              >
-                <option value="" disabled>
-                  Select a school
-                </option>
-                {schools.map((school) => (
-                  <option key={school.id} value={school.id}>
-                    {school.name}
-                  </option>
-                ))}
-              </select>
-            </LabelInputContainer>
-            <p style={{ fontFamily: "'Alfa Slab One', sans-serif" }} className={cn("text-sm mb-2", theme === "dark" ? "text-white" : "text-black")}>
-              ¿Can't find your school?
-            </p>
-            {/* Button to create a new school */}
-            <button
-              onClick={() => router.push("/schools/new")}
+              {/* Name and Surname in one row */}
+              <div className="flex flex-col md:flex-row gap-6">
+                <LabelInputContainer className="flex-1">
+                  <Label
+                    className="flex items-center"
+                    style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                    htmlFor="name"
+                  >
+                    <IconIdBadge className="mr-2 h-5 w-5" />
+                    Name
+                  </Label>
+                  <Input
+                    id="name"
+                    name="name"
+                    placeholder="Name"
+                    type="text"
+                    required
+                    value={formData.name || ""}
+                    onChange={handleChange}
+                  />
+                </LabelInputContainer>
+
+                <LabelInputContainer className="flex-1">
+                  <Label
+                    className="flex items-center"
+                    style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                    htmlFor="surname"
+                  >
+                    <IconEdit className="mr-2 h-5 w-5" />
+                    Surname
+                  </Label>
+                  <Input
+                    id="surname"
+                    name="surname"
+                    placeholder="Surname"
+                    type="text"
+                    required
+                    value={formData.surname || ""}
+                    onChange={handleChange}
+                  />
+                </LabelInputContainer>
+              </div>
+            </div>
+            <br />
+
+            {/* Title after password inputs */}
+            <h3
               className={cn(
-                "btn btn-md btn-primary w-full", // Use the new btn styles
-                theme === "dark" ? "dark:btn-primary" : ""
+                "text-lg font-bold mt-4",
+                theme === "dark" ? "text-white" : "text-gray-800"
               )}
-              type="button"
               style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             >
-              Create one &rarr;
-            </button>
+              Want to change your password?
+            </h3>
+            <p
+              className={cn(
+                "text-sm mt-2",
+                theme === "dark" ? "text-gray-400" : "text-gray-600"
+              )}
+            >
+              Fill in the fields above to update your password.
+            </p>
+            <br />
+            
+            {/* Password Section */}
+            <LabelInputContainer className="flex-1">
+              <Label
+                className="flex items-center"
+                style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                htmlFor="oldPassword"
+              >
+                <IconLock className="mr-2 h-5 w-5" />
+                Confirm Old Password
+              </Label>
+              <Input
+                id="oldPassword"
+                name="oldPassword"
+                placeholder="Old Password"
+                type="password"
+                value={formData.oldPassword || ""}
+                onChange={handleChange}
+              />
+            </LabelInputContainer>
+            <br />
+            <div className="flex flex-col md:flex-row gap-6 mb-4">
+              <LabelInputContainer className="flex-1">
+                <Label
+                  className="flex items-center"
+                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                  htmlFor="password"
+                >
+                  <IconLock className="mr-2 h-5 w-5" />
+                  New Password
+                </Label>
+                <Input
+                  id="password"
+                  name="password"
+                  placeholder="New Password"
+                  type="password"
+                  value={formData.password || ""}
+                  onChange={handleChange}
+                />
+              </LabelInputContainer>
+              <LabelInputContainer className="flex-1">
+                <Label
+                  className="flex items-center"
+                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                  htmlFor="confirmPassword"
+                >
+                  <IconLock className="mr-2 h-5 w-5" />
+                  Confirm Password
+                </Label>
+                <Input
+                  id="confirmPassword"
+                  name="confirmPassword"
+                  placeholder="Confirm Password"
+                  type="password"
+                  value={formData.confirmPassword || ""}
+                  onChange={handleChange}
+                />
+              </LabelInputContainer>
+            </div>
           </div>
-        )}
-      </div>
+          {isProfileComplete && (
+            <div className="flex-1 md:w-1/2 border border-gray-300 rounded-md p-4">
+              {/* Location Section */}
+              <LabelInputContainer className="mb-4">
+                <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="region">
+                  <IconWorld className="mr-2 h-5 w-5" />
+                  Region
+                </Label>
+                <select
+                  id="region"
+                  name="region"
+                  required
+                  value={formData.region || ""}
+                  onChange={handleChange}
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  disabled={!isProfileComplete}
+                >
+                  <option value="" disabled>
+                    Select a community
+                  </option>
+                  {COMUNIDADES.map((comunidad) => (
+                    <option key={comunidad} value={comunidad}>
+                      {comunidad}
+                    </option>
+                  ))}
+                </select>
+              </LabelInputContainer>
+
+              <LabelInputContainer className="mb-4">
+                <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="city">
+                  <IconMapPin className="mr-2 h-5 w-5" />
+                  City
+                </Label>
+                <Input id="city" name="city" placeholder="Sevilla" type="text" required value={formData.city || ""} onChange={handleChange} disabled={!isProfileComplete} />
+              </LabelInputContainer>
+
+              <LabelInputContainer className="mb-5">
+                <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="school">
+                  <IconSchool className="mr-2 h-5 w-5" />
+                  School
+                </Label>
+                <select
+                  id="school"
+                  name="school"
+                  required
+                  value={formData.school || ""}
+                  onChange={handleChange}
+                  className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  disabled={!isProfileComplete}
+                >
+                  <option value="" disabled>
+                    Select a school
+                  </option>
+                  {schools.map((school) => (
+                    <option key={school.id} value={school.id}>
+                      {school.name}
+                    </option>
+                  ))}
+                </select>
+              </LabelInputContainer>
+              <p style={{ fontFamily: "'Alfa Slab One', sans-serif" }} className={cn("text-sm mb-2", theme === "dark" ? "text-white" : "text-black")}>
+                ¿Can't find your school?
+              </p>
+              {/* Button to create a new school */}
+              <button
+                onClick={() => router.push("/schools/new")}
+                className={cn(
+                  "btn btn-md btn-primary w-full",
+                  theme === "dark" ? "dark:btn-primary" : ""
+                )}
+                type="button"
+                style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+              >
+                Create one &rarr;
+              </button>
+            </div>
+          )}
+        </div>
         {/* Update Profile Button */}
         <button
           className={cn(
-            "btn btn-md btn-success w-full", // Use the new btn styles
+            "btn btn-md btn-success w-full",
             theme === "dark" ? "dark:btn-success" : ""
           )}
           type="submit"
@@ -218,7 +330,7 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
         {/* Cancel Button */}
         <button
           className={cn(
-            "btn btn-md btn-secondary w-full mt-4", // Use the new btn styles
+            "btn btn-md btn-secondary w-full mt-4",
             theme === "dark" ? "dark:btn-secondary" : ""
           )}
           type="button"
@@ -228,18 +340,10 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
           &larr; Cancel
         </button>
       </form>
+
     </div>
   );
 }
-
-const BottomGradient = ({ isCancel }) => {
-  return (<>
-    <span className={cn("group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0", 
-      isCancel ? "bg-gradient-to-r from-transparent via-orange-500 to-transparent" : "bg-gradient-to-r from-transparent via-cyan-500 to-transparent")} />
-    <span className={cn("group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10", 
-      isCancel ? "bg-gradient-to-r from-transparent via-orange-500 to-transparent" : "bg-gradient-to-r from-transparent via-indigo-500 to-transparent")} />
-  </>);
-};
 
 const LabelInputContainer = ({
   children,

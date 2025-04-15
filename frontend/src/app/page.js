@@ -346,7 +346,7 @@ const Home = () => {
       </div>
     </section>
 
-    {/* Demo Video - Load video only when it's nearly in viewport */}
+    {/* Demo Video */}
     <section ref={demoSectionRef} className={`py-32 ${bgColor} overflow-hidden relative`}>
       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/5"></div>
       
@@ -391,104 +391,114 @@ const Home = () => {
       </div>
     </section>
 
-    {/* Tools Showcase - Dynamically loaded */}
+    {/* Tools Showcase */}
     <section className={`py-32 ${sectionBgColor} relative`}>
       
       <div className="container mx-auto px-4 relative z-10">
-        <motion.div
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, amount: 0.3 }}
-          variants={fadeIn}
-          className="max-w-4xl mx-auto text-center mb-16"
-        >
-          <h2 className={`text-4xl md:text-5xl font-bold ${textColor} font-alfa-slab-one mb-6`}>
-            Explore our tools
-          </h2>
-          <p className={`text-xl ${subtleTextColor} max-w-3xl mx-auto`}>
-            Discover our suite of intelligent educational tools designed to save time
-            and enhance learning outcomes.
-          </p>
-        </motion.div>
-        
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="max-w-7xl mx-auto"
-        >
-          <Suspense fallback={<PlaceholderSection />}>
-            <CardCarrousell />
-          </Suspense>
-        </motion.div>
+      <motion.div
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.3 }}
+        variants={fadeIn}
+        className="max-w-4xl mx-auto text-center mb-16"
+      >
+        <h2 className={`text-4xl md:text-5xl font-bold ${textColor} font-alfa-slab-one mb-6`}>
+        Explore our tools
+        </h2>
+        <p className={`text-xl ${subtleTextColor} max-w-3xl mx-auto`}>
+        Discover our suite of intelligent educational tools designed to save time
+        and enhance learning outcomes.
+        </p>
+      </motion.div>
+      
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8 }}
+        className="max-w-7xl mx-auto"
+      >
+        <Suspense fallback={<PlaceholderSection />}>
+        <CardCarrousell />
+        </Suspense>
+      </motion.div>
       </div>
 
     </section>
 
-    {/* CTA Section - Conditionally rendered */}
+    {/* CTA Section */}
     {!isAuthenticated && (
       <section className={`py-32 ${bgColor} relative overflow-hidden`}>
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10"></div>
-        
-        <div className="container mx-auto px-4 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
-            <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8 }}
-            >
-              <h2 className={`text-4xl md:text-5xl font-bold ${textColor} font-alfa-slab-one mb-6`}>
-                Ready to Transform Your Teaching?
-              </h2>
-              <p className={`${subtleTextColor} text-xl mb-10 leading-relaxed`}>
-                Join thousands of educators worldwide who are saving time and improving learning outcomes with Maestre's innovative tools.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button
-                  onClick={() => router.push('/profile/signup')}
-                  className={cn(
-                    "btn btn-lg btn-contrast px-8 py-4 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center",
-                    theme === "dark" 
-                      ? "bg-white text-black hover:bg-gray-200" 
-                      : "bg-black text-white hover:bg-gray-800",
-                    "shadow-lg hover:shadow-xl"
-                  )}
-                >
-                  Sign up as a Teacher
-                  <IconChevronRight className="ml-2 w-5 h-5" />
-                </button>
-                <button
-                  onClick={() => router.push('/tools')}
-                  className="btn btn-md btn-secondary font-medium transition-all duration-300 flex items-center justify-center border border-current hover:bg-gray-100/10"
-                >
-                  Learn more
-                </button>
-              </div>
-            </motion.div>
-            
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-              className="relative"
-            >
-              <div className="relative aspect-[3/4] max-w-md mx-auto">
-                <Image 
-                  src="/static/teachers/anonymous_teacher.webp"
-                  alt="Join Maestre" 
-                  layout="fill"
-                  objectFit="contain"
-                  className="rounded-xl"
-                  loading="lazy"
-                />
-              </div>
-            </motion.div>
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-purple-500/10"></div>
+      
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center max-w-6xl mx-auto">
+        <motion.div
+          initial={{ opacity: 0, x: -30 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.8 }}
+        >
+          <h2 className={`text-4xl md:text-5xl font-bold ${textColor} font-alfa-slab-one mb-6`}>
+          Ready to Transform Your Teaching?
+          </h2>
+          <p className={`${subtleTextColor} text-xl mb-10 leading-relaxed`}>
+          Join thousands of educators worldwide who are saving time and improving learning outcomes with Maestre's innovative tools.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4">
+          <button
+            onClick={() => router.push('/profile/signup')}
+            className={cn(
+            "btn btn-lg btn-contrast px-8 py-4 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center",
+            theme === "dark" 
+              ? "bg-white text-black hover:bg-gray-200" 
+              : "bg-black text-white hover:bg-gray-800",
+            "shadow-lg hover:shadow-xl"
+            )}
+          >
+            Sign up as a Teacher
+            <IconChevronRight className="ml-2 w-5 h-5" />
+          </button>
+          <button
+            onClick={() => router.push('/tools')}
+            className="btn btn-md btn-secondary font-medium transition-all duration-300 flex items-center justify-center border border-current hover:bg-gray-100/10"
+          >
+            Learn more
+          </button>
           </div>
+          <div className="mt-6">
+          <p className={`${subtleTextColor} text-xl mb-10 leading-relaxed`}>
+            Already have an account?{" "}
+            <button
+            onClick={() => router.push('/profile/signin')}
+            className={`underline ${accentColor} hover:${hoverColor} transition-colors duration-300`}
+            >
+            Sign in here
+            </button>
+          </p>
+          </div>
+        </motion.div>
+        
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.2 }}
+          className="relative"
+        >
+          <div className="relative aspect-[3/4] max-w-md mx-auto">
+          <Image 
+            src="/static/teachers/anonymous_teacher.webp"
+            alt="Join Maestre" 
+            layout="fill"
+            objectFit="contain"
+            className="rounded-xl"
+            loading="lazy"
+          />
+          </div>
+        </motion.div>
         </div>
+      </div>
       </section>
     )}
 
-    {/* Team Section */}
     <section className={`py-32 ${sectionBgColor} relative`}>
       
       <div className="container mx-auto px-4 relative">

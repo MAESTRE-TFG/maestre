@@ -356,7 +356,10 @@ const ClassroomPage = () => {
                 <div className="ml-4">
                   <button
                     onClick={confirmDeleteSelected}
-                    className={cn("px-3 py-1 rounded-md text-sm font-medium", theme === "dark" ? "bg-red-600 hover:bg-red-700 text-white" : "bg-red-500 hover:bg-red-700 text-white")}
+                    className={cn(
+                      "btn btn-md btn-danger", // Use the new btn styles
+                      theme === "dark" ? "dark:btn-danger" : ""
+                    )}
                   >
                     Delete Selected ({selectedStudents.length})
                   </button>
@@ -462,18 +465,17 @@ const ClassroomPage = () => {
                 </div>
               )}
             </div>
+            {/* Add Student Button */}
             <div className="flex justify-center m-4">
               <button
                 onClick={() => setShowModal(true)}
-                className={cn("relative group/btn block w-full rounded-md h-10 font-medium border border-transparent", 
-                  theme === "dark" ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]" 
-                  : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
+                className={cn(
+                  "btn btn-md btn-primary", // Use the new btn styles
+                  theme === "dark" ? "dark:btn-primary" : ""
                 )}
-                type="submit"
                 style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
               >
                 Add Student &rarr;
-              <BottomGradient />
               </button>
             </div>
             {/* Add Student Modal */}
@@ -525,8 +527,10 @@ const ClassroomPage = () => {
                       <button
                         type="button"
                         onClick={() => setShowModal(false)}
-                        className={cn("font-bold py-2 px-4 rounded", 
-                          theme === "dark" ? "bg-gray-600 hover:bg-gray-700 text-white" : "bg-gray-300 hover:bg-gray-400 text-gray-800")}
+                        className={cn(
+                          "btn btn-md btn-secondary", // Use the new btn styles
+                          theme === "dark" ? "dark:btn-secondary" : ""
+                        )}
                       >
                         Cancel
                       </button>
@@ -565,8 +569,10 @@ const ClassroomPage = () => {
                     </button>
                     <button
                       onClick={handleConfirmDelete}
-                      className={cn("font-bold py-2 px-4 rounded", 
-                        theme === "dark" ? "bg-red-600 hover:bg-red-700 text-white" : "bg-red-500 hover:bg-red-700 text-white")}
+                      className={cn(
+                        "btn btn-md btn-danger", // Use the new btn styles
+                        theme === "dark" ? "dark:btn-danger" : ""
+                      )}
                     >
                       Delete
                     </button>
@@ -596,8 +602,10 @@ const ClassroomPage = () => {
                     </button>
                     <button
                       onClick={handleConfirmDeleteSelected}
-                      className={cn("font-bold py-2 px-4 rounded", 
-                        theme === "dark" ? "bg-red-600 hover:bg-red-700 text-white" : "bg-red-500 hover:bg-red-700 text-white")}
+                      className={cn(
+                        "btn btn-md btn-danger", // Use the new btn styles
+                        theme === "dark" ? "dark:btn-danger" : ""
+                      )}
                     >
                       Delete
                     </button>

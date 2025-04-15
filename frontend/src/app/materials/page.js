@@ -375,13 +375,34 @@ const MaterialsList = () => {
 
       {/* Header Section */}
       <div className="w-full text-center mb-12">
-        <br></br>
-        <h1 className={`text-4xl font-bold font-alfa-slab-one mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+        <br />
+        <h1
+          className={`text-4xl font-bold font-alfa-slab-one mb-4 ${
+            theme === "dark" ? "text-white" : "text-black"
+          }`}
+        >
           My Materials
         </h1>
-        <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-          See all your uploaded materials at a glace.
+        <p
+          className={`text-xl ${
+            theme === "dark" ? "text-gray-300" : "text-gray-700"
+          }`}
+        >
+          See all your uploaded materials at a glance.
         </p>
+      </div>
+
+      {/* Example Button Usage */}
+      <div className="flex justify-center mt-6">
+        <button
+          className={cn(
+            "btn btn-md btn-primary",
+            theme === "dark" ? "dark:btn-primary" : ""
+          )}
+          onClick={() => alert("Button clicked!")}
+        >
+          Add New Material
+        </button>
       </div>
 
       {/* Background Images */}

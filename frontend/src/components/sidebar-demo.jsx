@@ -18,12 +18,15 @@ import axios from 'axios';
 import { useRouter } from "next/navigation";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { Modal } from "@/components/ui/modal";
+import Alert from "@/components/ui/Alert"; // Import the Alert component
 
 export function SidebarDemo({ ContentComponent }) {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
+  const [alert, setAlert] = useState(null); // State for managing alerts
+
   const openLogoutModal = () => setLogoutModalOpen(true);
   const closeLogoutModal = () => setLogoutModalOpen(false);
   
@@ -90,10 +93,14 @@ export function SidebarDemo({ ContentComponent }) {
       setUser(null);
       closeLogoutModal();
       
-      // Use router.push in a safe way
+      // Show success alert
+      setAlert({ type: "success", message: "You have successfully logged out." });
+
+      // Redirect to home page after a short delay
       setTimeout(() => {
+        setAlert(null); // Clear the alert after a few seconds
         router.push("/");
-      }, 100);
+      }, 3000);
       
     } catch (error) {
       console.error('Error during signout process:', error);
@@ -193,6 +200,15 @@ export function SidebarDemo({ ContentComponent }) {
           : "bg-gray-200 border-neutral-300"
       )}
     >
+      {/* Display the alert */}
+      {alert && (
+        <Alert
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert(null)}
+        />
+      )}
+
       <Sidebar open={open} setOpen={setOpen} className={cn(open ? "w-84 z-50" : "w-60 z-50")}>
         <SidebarBody
           className={cn(

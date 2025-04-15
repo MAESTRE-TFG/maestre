@@ -12,6 +12,7 @@ import {
   IconEye,
   IconEyeOff,
 } from "@tabler/icons-react";
+import Alert from "@/components/ui/Alert";
 
 export function SignupForm({ onSubmit }) {
   const { theme } = useTheme();
@@ -28,12 +29,13 @@ export function SignupForm({ onSubmit }) {
   const [acceptedTerms, setAcceptedTerms] = React.useState(false);
   const [error, setError] = React.useState(null);
   const [showPassword, setShowPassword] = React.useState(false);
+  const [alert, setAlert] = React.useState(null); // State for managing alerts
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -47,19 +49,28 @@ export function SignupForm({ onSubmit }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!acceptedTerms) {
+      setAlert({
+        type: "warning",
+        message: "You must accept the Terms of Use and Privacy Policy to sign up.",
+      });
+      return;
+    }
     try {
-      setError(null); // Clear any previous errors
+      setError(null);
       await onSubmit(formData);
     } catch (err) {
       setError("An error occurred while signing up. Please try again.");
     }
   };
-  
+
   return (
-    <div className={cn(
-      "max-w-4xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", 
-      theme === "dark" ? "bg-black" : "bg-white"
-    )}>
+    <div
+      className={cn(
+        "max-w-4xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input",
+        theme === "dark" ? "bg-black" : "bg-white"
+      )}
+    >
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
         
@@ -90,53 +101,76 @@ export function SignupForm({ onSubmit }) {
         }
       `}</style>
 
-      <h2 className={cn(
-        "text-2xl font-bold text-center mb-6",
-        theme === "dark" ? "text-white" : "text-black"
-      )} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+      {/* Alert Component */}
+      {alert && (
+        <Alert
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert(null)}
+        />
+      )}
+
+      <h2
+        className={cn(
+          "text-2xl font-bold text-center mb-6",
+          theme === "dark" ? "text-white" : "text-black"
+        )}
+        style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+      >
         Create Your Account
       </h2>
 
       <form className="grid grid-cols-1 gap-6" onSubmit={handleSubmit}>
         {/* Personal Information Section */}
         <fieldset className="border rounded-lg p-4">
-          <legend className={cn(
-            "px-2 font-semibold",
-            theme === "dark" ? "text-white" : "text-black"
-          )} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+          <legend
+            className={cn(
+              "px-2 font-semibold",
+              theme === "dark" ? "text-white" : "text-black"
+            )}
+            style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+          >
             Personal Information
           </legend>
-          
+
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <LabelInputContainer>
               <Label htmlFor="firstname">
                 <IconIdBadge className="inline-block mr-2" /> Name
               </Label>
-              <Input 
-                id="firstname" 
-                name="name" 
-                placeholder="Tyler" 
-                type="text" 
-                required 
-                value={formData.name} 
-                onChange={handleChange} 
-                className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
+              <Input
+                id="firstname"
+                name="name"
+                placeholder="Tyler"
+                type="text"
+                required
+                value={formData.name}
+                onChange={handleChange}
+                className={cn(
+                  theme === "dark"
+                    ? "hover:bg-white hover:text-black"
+                    : "hover:bg-gray-100"
+                )}
               />
             </LabelInputContainer>
-            
+
             <LabelInputContainer>
               <Label htmlFor="lastname">
                 <IconIdBadge className="inline-block mr-2" /> Surname
               </Label>
-              <Input 
-                id="lastname" 
-                name="surname" 
-                placeholder="Durden" 
-                type="text" 
-                required 
-                value={formData.surname} 
-                onChange={handleChange} 
-                className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
+              <Input
+                id="lastname"
+                name="surname"
+                placeholder="Durden"
+                type="text"
+                required
+                value={formData.surname}
+                onChange={handleChange}
+                className={cn(
+                  theme === "dark"
+                    ? "hover:bg-white hover:text-black"
+                    : "hover:bg-gray-100"
+                )}
               />
             </LabelInputContainer>
           </div>
@@ -223,8 +257,29 @@ export function SignupForm({ onSubmit }) {
             required
             className="h-4 w-4"
           />
-          <label htmlFor="terms" className={cn(theme === "dark" ? "text-white" : "text-black")}>
-            I accept the <a href="/terms" target="_blank" rel="noopener noreferrer" className="underline">Terms of Use</a> and <a href="/terms" target="_blank" rel="noopener noreferrer" className="underline">Privacy Policy</a>.
+          <label
+            htmlFor="terms"
+            className={cn(theme === "dark" ? "text-white" : "text-black")}
+          >
+            I accept the{" "}
+            <a
+              href="/terms"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              Terms of Use
+            </a>{" "}
+            and{" "}
+            <a
+              href="/terms"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline"
+            >
+              Privacy Policy
+            </a>
+            .
           </label>
         </div>
 

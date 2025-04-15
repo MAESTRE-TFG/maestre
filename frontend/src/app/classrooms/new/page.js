@@ -127,10 +127,27 @@ export default function CreateClassroom() {
 
         {/* Header Section */}
         <div className="w-full text-center mb-12 z-10">
-          <br></br>
-          <h1 className={`text-4xl font-bold font-alfa-slab-one mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
+          <br />
+          <h1
+            className={`text-4xl font-bold font-alfa-slab-one mb-4 ${
+              theme === "dark" ? "text-white" : "text-black"
+            }`}
+          >
             Create a New Classroom
           </h1>
+        </div>
+
+        {/* Example Button Usage */}
+        <div className="flex justify-center mt-6">
+          <button
+            className={cn(
+              "btn btn-md btn-primary",
+              theme === "dark" ? "dark:btn-primary" : ""
+            )}
+            onClick={() => alert("Button clicked!")}
+          >
+            Add Classroom
+          </button>
         </div>
   
         {/* Background Images */}

@@ -2,7 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { getApiBaseUrl } from "@/lib/api";
-import { useState, useEffect, useMemo, useCallback } from "react";
+import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
@@ -16,10 +16,11 @@ import {
   IconMail,
   IconIdBadge,
   IconEdit,
-  IconBuilding,
   IconMapPin,
   IconSchool,
-} from "@tabler/icons-react"; // Import necessary icons
+  IconTrash,
+} from "@tabler/icons-react";
+
 
 const ProfileEdit = () => {
   const router = useRouter();
@@ -44,9 +45,64 @@ const ProfileEdit = () => {
   const [schools, setSchools] = useState([]);
   const [city, setCity] = useState("");
   const [school, setSchool] = useState("");
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [usernameInput, setUsernameInput] = useState("");
   const searchParams = useSearchParams();
+  const [isDeleteAccountModalOpen, setDeleteAccountModalOpen] = useState(false);
+
+  // Function to close the delete account modal
+  const closeDeleteAccountModal = () => {
+    setDeleteAccountModalOpen(false);
+    setUsernameInput(""); // Clear the username input when closing the modal
+  };
+
+    const handleSignout = async () => {
+      console.log('Signing out...');
+      try {
+        const token = localStorage.getItem('authToken');
+        
+        if (token) {
+          try {
+            // Change the Authorization header format to match what your backend expects
+            await axios.post(`${getApiBaseUrl()}/api/users/signout/`, {}, {
+              headers: {
+                'Authorization': `Token ${token}`  // Changed from Bearer to Token
+              }
+            });
+            console.log('Successfully called signout API');
+          } catch (apiError) {
+            console.error('API error during signout:', apiError);
+            // Continue with local logout even if API call fails
+          }
+        }
+        
+        // Always clear local storage and state
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+        setUser(null);
+        
+        // Show success alert
+        setAlert({ type: "success", message: "You have successfully logged out." });
+  
+        // Redirect to home page after a short delay
+        setTimeout(() => {
+          setAlert(null); // Clear the alert after a few seconds
+          router.push("/");
+        }, 3000);
+        
+      } catch (error) {
+        console.error('Error during signout process:', error);
+        
+        // Ensure we still clear data even if there's an error
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user');
+        setUser(null);
+        
+        setTimeout(() => {
+          router.push("/");
+        }, 100);
+      }
+    };
+  
 
   const showAlert = (type, message) => {
     setAlert({ type, message });
@@ -257,11 +313,11 @@ const ProfileEdit = () => {
   }, [router, user?.id, user?.username, usernameInput]);
 
   const openDeleteModal = () => {
-    setIsDeleteModalOpen(true);
+    setDeleteAccountModalOpen(true);
   };
 
   const closeDeleteModal = () => {
-    setIsDeleteModalOpen(false);
+    setDeleteAccountModalOpen(false);
     setUsernameInput("");
   };
 
@@ -404,7 +460,7 @@ const ProfileEdit = () => {
                   </div>
   
                   {/* School Information - now spans fewer columns on larger screens */}
-                  {user.region && user.city && user.school && (
+                  {user && user.region && user.city && user.school && (
                     <div className={cn(
                       "rounded-lg p-6 md:col-span-5",
                       theme === "dark" ? "bg-gray-900 bg-opacity-50" : "bg-white bg-opacity-80"
@@ -497,60 +553,89 @@ const ProfileEdit = () => {
           </div>
           
           {/* Delete Account Modal */}
-          <Modal isOpen={isDeleteModalOpen} onClose={closeDeleteModal} title="Delete Account">
-            <div className={cn(
-              "p-6 rounded-lg",
-              theme === "dark" ? "bg-gray-800" : "bg-white"
-            )}>
-              <h2 className={`text-xl font-bold mb-4 ${theme === "dark" ? "text-white" : "text-gray-800"}`}
-                style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-              >
-                Delete Account
-              </h2>
-              <p className={`mb-4 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-                ¿Estás seguro de que deseas eliminar tu cuenta de MAESTRE? Esto eliminará también todos tus cursos y material subido a la plataforma. Esta acción NO se puede deshacer.
-              </p>
-              <p className={`mb-4 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-                Para borrar tu cuenta, escribe antes tu nombre de usuario ({user.username}):
-              </p>
-              <input
-                type="text"
-                value={usernameInput}
-                onChange={(e) => setUsernameInput(e.target.value)}
-                className={cn(
-                  "w-full px-4 py-3 rounded-lg border focus:outline-none focus:ring-2 mb-6",
-                  theme === "dark"
-                    ? "bg-gray-700 border-gray-600 text-white focus:ring-red-500"
-                    : "bg-white border-gray-300 text-black focus:ring-red-500"
-                )}
-                placeholder="Enter your username"
-              />
-              <div className="flex justify-end space-x-4">
-                {/* Cancel Button in Delete Modal */}
-                <button
-                  onClick={closeDeleteModal}
-                  className={cn(
-                    "btn btn-md btn-secondary",
-                    theme === "dark" ? "dark:btn-secondary" : ""
-                  )}
-                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-                >
-                  Cancel
-                </button>
-                {/* Confirm Delete Button in Delete Modal */}
-                <button
-                  onClick={handleDelete}
-                  className={cn(
-                    "btn btn-md btn-danger",
-                    theme === "dark" ? "dark:btn-danger" : ""
-                  )}
-                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-                >
-                  Delete
-                </button>
-              </div>
-            </div>
-          </Modal>
+          <Modal isOpen={isDeleteAccountModalOpen} onClose={closeDeleteAccountModal}>
+  <div title=" ">
+    {/* Header Section */}
+    <div className={cn("p-6", theme === "dark" ? "bg-[#f08060]" : "bg-[#f08060]")}>
+      <div className="flex items-center gap-3">
+        <div className="p-2 bg-white/20 rounded-full">
+          <IconTrash className="h-6 w-6 text-white" />
+        </div>
+        <h2 className="text-xl font-bold text-white">
+          Confirm Account Deletion
+        </h2>
+      </div>
+    </div>
+
+    {/* Content Section */}
+      <div className="p-6">
+        <p
+        className={cn(
+          "mb-6 text-base",
+          theme === "dark" ? "text-gray-300" : "text-gray-600"
+        )}
+        >
+        Are you sure you want to delete your account? This action is irreversible, and all your data will be permanently removed.
+        </p>
+        <p
+        className={cn(
+          "mb-6 text-base",
+          theme === "dark" ? "text-gray-300" : "text-gray-600"
+        )}
+        >
+        To confirm, please type your username below:
+        </p>
+        <input
+        type="text"
+        placeholder="Enter your username"
+        value={usernameInput}
+        onChange={(e) => setUsernameInput(e.target.value)}
+        className={cn(
+          "w-full px-4 py-2 mb-6 border rounded-md",
+          theme === "dark" ? "bg-gray-800 text-white border-gray-600" : "bg-gray-100 text-black border-gray-300"
+        )}
+        />
+        <div className="flex items-center justify-between gap-3">
+        {/* Sign Out Button */}
+        <button
+          onClick={handleSignout}
+          className={cn(
+          "btn btn-md",
+          theme === "dark" ? "bg-white text-black" : "bg-black text-white"
+          )}
+        >
+          Sign Out
+        </button>
+
+        <div className="flex items-center gap-3">
+          {/* Cancel Button */}
+          <button
+            onClick={closeDeleteAccountModal}
+            className={cn(
+              "btn btn-md btn-secondary",
+              theme === "dark" ? "dark:btn-secondary" : ""
+            )}
+          >
+            Cancel
+          </button>
+
+          {/* Confirm Delete Button */}
+          <button
+            onClick={handleDelete}
+            disabled={usernameInput !== user?.username} // Disable button if username doesn't match
+            className={cn(
+              "btn btn-md btn-danger",
+              usernameInput === user?.username ? "" : "opacity-50 cursor-not-allowed",
+              theme === "dark" ? "dark:btn-danger" : ""
+            )}
+          >
+            Delete Account
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</Modal>
         </div>
       </div>
     </div>

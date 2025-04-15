@@ -197,59 +197,62 @@ const ToolList = () => {
 
 
         {/* Tools Section */}
-        <div className="w-full max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {data.map((tool, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                className={cn(
-                  "rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300",
-                  theme === 'dark' ? 'bg-neutral-800 border border-neutral-700' : 'bg-white border border-gray-200'
-                )}
-                onClick={() => handleTryNowClick(tool.page)}
-              >
-                <div className="relative h-72 w-full">
-                  <Image
-                    src={baseImgFolder+tool.src}
-                    alt={tool.title}
-                    sizes={tool.sizes}
-                    fill
-                    className="object-cover object-center transition-transform duration-300 hover:scale-105"
-                  />
-                  <div className="absolute bottom-0 left-0 p-4 text-white">
-                    <span className="text-sm font-medium bg-blue-600 px-2 py-1 rounded-md">
-                      {tool.category}
-                    </span>
-                  </div>
-              </div>
-              
-              <div className="p-5">
-                <h3 className={`text-xl font-bold mb-3 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
-                  {tool.title}
-                </h3>
-                <div className="mb-4">
-                  {tool.content}
-                </div>
-                <button
-                  onClick={() => handleTryNowClick(tool.page)}
-                  className={cn(
-                    "btn btn-md btn-primary mt-2",
-                    theme === "dark" ? "dark:btn-primary" : ""
-                  )}
+          <div className="w-full max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {data.map((tool, index) => (
+                <motion.div
+            key={index}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className={cn(
+              "rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300",
+              theme === 'dark' ? 'bg-neutral-800 border border-neutral-700' : 'bg-white border border-gray-200'
+            )}
+            onClick={() => handleTryNowClick(tool.page)}
                 >
-                  Try Now
-                </button>
+            <div className="relative h-72 w-full">
+              <Image
+                src={baseImgFolder+tool.src}
+                alt={tool.title}
+                sizes={tool.sizes}
+                fill
+                className="object-cover object-center transition-transform duration-300 hover:scale-105"
+              />
+              <div className="absolute bottom-0 left-0 p-4 text-white">
+                <span className="text-sm font-medium bg-[#4777da] px-2 py-1 rounded-md">
+                  {tool.category}
+                </span>
               </div>
-            </motion.div>
-          ))}
+                </div>
+                
+                <div className="p-5">
+            <h3 className={`text-xl font-bold mb-3 ${theme === 'dark' ? 'text-white' : 'text-gray-900'}`}>
+              {tool.title}
+            </h3>
+            <div className="mb-4">
+              {tool.content}
+            </div>
+            <button
+              onClick={() => handleTryNowClick(tool.page)}
+              className={cn(
+                "px-8 py-4 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center",
+                theme === "dark" 
+                  ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 hover:scale-105" 
+                  : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 hover:scale-105",
+                "shadow-lg hover:shadow-xl"
+              )}
+            >
+              Try Now
+            </button>
+                </div>
+              </motion.div>
+            ))}
+            </div>
           </div>
-        </div>
-      </div>
+              </div>
 
-      {/* Authentication Modal */}
+              {/* Authentication Modal */}
       <Modal isOpen={showAuthModal} onClose={closeAuthModal}>
         <div title="  ">
           <div className={cn("p-6", theme === "dark" ? "bg-[#4777da]" : "bg-[#4777da]")}>
