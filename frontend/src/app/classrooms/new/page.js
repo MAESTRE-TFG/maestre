@@ -7,6 +7,7 @@ import { useTheme } from "@/components/theme-provider";
 import { useState, useEffect } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import Alert from "@/components/ui/Alert";
+import { cn } from "@/lib/utils";
 
 export default function CreateClassroom() {
   const router = useRouter();
@@ -115,74 +116,47 @@ export default function CreateClassroom() {
 
   return (
     <SidebarDemo ContentComponent={() => (
-      <div className="relative flex flex-col justify-center items-center py-12 sm:px-8 lg:px-8 overflow-auto">
-        {alert && (
-          <Alert
-            type={alert.type}
-            message={alert.message}
-            onClose={() => setAlert(null)}
-          />
-        )}
-
-
-        {/* Header Section */}
-        <div className="w-full text-center mb-12 z-10">
-          <br />
-          <h1
-            className={`text-4xl font-bold font-alfa-slab-one mb-4 ${
-              theme === "dark" ? "text-white" : "text-black"
-            }`}
-          >
-            Create a New Classroom
-          </h1>
+      <div className="min-h-screen w-screen bg-gradient-to-br from-blue-500/10 to-purple-500/5">
+        {/* Content container with max width for wider screens */}
+        <div className="relative mx-auto max-w-7xl w-full">
+          {/* Floating alert */}
+          {alert && (
+            <div className="fixed top-4 right-4 z-50 max-w-md">
+              <Alert
+                type={alert.type}
+                message={alert.message}
+                onClose={() => setAlert(null)}
+              />
+            </div>
+          )}
+          
+          <div className="relative w-full flex-1 flex flex-col items-center py-12">
+            {/* Header Section with Logo */}
+            <div className="w-full max-w-4xl flex items-center mb-8 justify-center md:justify-start space-x-6">
+              <img
+                src={theme === "dark" ? "/static/logos/maestre_logo_white_transparent.webp" : "/static/logos/maestre_logo_blue_transparent.webp"}
+                alt="MAESTRE Logo"
+                className="w-20 h-20 drop-shadow-lg"
+              />
+              <div className="text-center md:text-left">
+                <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                  Create a New Classroom
+                </h1>
+                <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                  Set up your <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>MAESTRE</span> classroom
+                </p>
+              </div>
+            </div>
+            
+            <style jsx global>{`
+              @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
+            `}</style>
+            
+            <div className="w-full max-w-4xl">
+              <CreateClassroomForm onSubmit={handleSubmit} educationalStages={filteredEducationalStages} />
+            </div>
+          </div>
         </div>
-
-        {/* Example Button Usage */}
-        <div className="flex justify-center mt-6">
-          <button
-            className={cn(
-              "btn btn-md btn-primary",
-              theme === "dark" ? "dark:btn-primary" : ""
-            )}
-            onClick={() => alert("Button clicked!")}
-          >
-            Add Classroom
-          </button>
-        </div>
-  
-        {/* Background Images */}
-        {theme === "dark" ? (
-          <>
-            <img
-              src="/static/bubbles black/5.svg"
-              alt="Bubble"
-              className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
-            />
-            <img
-              src="/static/bubbles black/6.svg"
-              alt="Bubble"
-              className="absolute bottom-0 right-0 opacity-50 z-0"
-            />
-          </>
-        ) : (
-          <>
-            <img
-              src="/static/bubbles white/5.svg"
-              alt="Bubble"
-              className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
-            />
-            <img
-              src="/static/bubbles white/6.svg"
-              alt="Bubble"
-              className="absolute bottom-0 right-0 opacity-50 z-0"
-            />
-          </>
-        )}
-
-        <div className="relative z-10 xl:mx-auto xl:w-full xl:max-w-6xl">
-          <CreateClassroomForm onSubmit={handleSubmit} educationalStages={filteredEducationalStages} />
-        </div>
-        <div className="my-12"></div>
       </div>
     )} />
   );

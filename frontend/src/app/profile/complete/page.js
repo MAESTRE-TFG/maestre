@@ -171,7 +171,7 @@ const ProfileEdit = () => {
   if (!isClient) return null;
 
   return (
-    <div className="min-h-screen pt-24 px-4 sm:px-6 md:px-8 relative bg-gradient-to-br from-blue-500/10 to-purple-500/5">
+    <div className="min-h-screen w-screen bg-gradient-to-br from-blue-500/10 to-purple-500/5">
 
       {/* Content container with max width for wider screens */}
       <div className="relative mx-auto max-w-7xl w-full">
@@ -184,13 +184,13 @@ const ProfileEdit = () => {
         
         <div className="relative w-full flex-1 flex flex-col items-center py-12">
           {/* Header Section with Logo */}
-          <div className="w-full max-w-4xl flex items-center mb-8 justify-center md:justify-start space-x-6">
+          <div className="w-full max-w-4xl flex items-center mb-8 justify-center space-x-6">
             <img
               src={theme === "dark" ? "/static/logos/maestre_logo_white_transparent.webp" : "/static/logos/maestre_logo_blue_transparent.webp"}
               alt="MAESTRE Logo"
               className="w-20 h-20 drop-shadow-lg"
             />
-            <div className="text-center md:text-left">
+            <div className="text-center">
               <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                 Complete your profile
               </h1>
@@ -211,6 +211,8 @@ const ProfileEdit = () => {
               handleComplete={handleComplete}
               handleCreateSchool={handleCreateSchool}
               schools={schools}
+              buttonClassName="btn" 
+              buttonSpacing="space-y-8"
             />
           </div>
         </div>

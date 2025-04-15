@@ -53,133 +53,136 @@ const ClassroomsList = () => {
   if (!isClient) return null;
 
   return (
-    <div className="relative flex flex-col justify-center items-center py-8 sm:px-8 lg:px-8">
-      {alert && (
-        <Alert
-          type={alert.type}
-          message={alert.message}
-          onClose={() => setAlert(null)}
-        />
-      )}
-      {/* Header Section */}
-      <div className="w-full text-center mb-12 z-10">
-        <br></br>
-        <h1 className={`text-4xl font-bold font-alfa-slab-one mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-          My Classrooms
-        </h1>
-        {classes.length > 0 && (
-          <button
-            className={cn(
-              "px-4 py-2 rounded-md text-lg font-medium border border-green-500",
-              theme === "dark"
-                ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-                : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset]"
-            )}
-            onClick={() => router.push("/classrooms/new")}
-            style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-          >
-            Create Classroom +
-            <BottomGradient isCreate={true} />
-          </button>
-        )}
-        <style jsx global>{`
-          @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
-        `}</style>
-      </div>
-
-  
-      {/* Background Images */}
-      {theme === "dark" ? (
-        <>
-          <img
-            src="/static/bubbles black/5.svg"
-            alt="Bubble"
-            className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
-          />
-        </>
-      ) : (
-        <>
-          <img
-            src="/static/bubbles white/5.svg"
-            alt="Bubble"
-            className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
-          />
-        </>
-      )}
-      {/* End of Background Images */}
-      <div className="relative xl:mx-auto xl:w-full xl:max-w-6xl">
-        {classes.length === 0 ? (
-          <div className="text-center">
-            <p className="text-lg font-bold">No classes found.</p>
-            <button
-              onClick={handleCreate}
-              className={cn(
-                "btn btn-md btn-primary", // Use the new btn styles
-                theme === "dark" ? "dark:btn-primary" : ""
-              )}
-              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-            >
-              Create New Classroom +
-            </button>
+    <div className="min-h-screen w-screen bg-gradient-to-br from-blue-500/10 to-purple-500/5">
+      {/* Content container with max width for wider screens */}
+      <div className="relative mx-auto max-w-7xl w-full">
+        {/* Floating alert */}
+        {alert && (
+          <div className="fixed top-4 right-4 z-50 max-w-md">
+            <Alert
+              type={alert.type}
+              message={alert.message}
+              onClose={() => setAlert(null)}
+            />
           </div>
-        ) : (
-          <div className={`grid ${classes.length === 1 ? "justify-center" : "grid-cols-1 md:grid-cols-2"} gap-6`}>
-            {classes.map((classroom) => (
-              <div
-                key={classroom.id}
-                className={cn(
-                  "max-w-full w-full mx-auto rounded-none md:rounded-2xl p-8 md:p-16 shadow-input relative",
-                  theme === "dark" ? "bg-black text-white" : "bg-green-900 text-white",
-                  "border-4 border-white text-center"
-                )}
-                style={{
-                  fontFamily: "'Alfa Slab One', sans-serif",
-                  boxShadow: "inset 0 0 10px rgba(0,0,0,0.5)",
-                  backgroundImage: "url('https://res.cloudinary.com/danielmeilleurimg/tictactoe/chalkboard-250')",
-                  backgroundSize: "cover"
-                }}
-              >
-                <div className="flex flex-col justify-center items-center">
-                  <div>
-                    <Label 
-                      className="text-2xl font-bold text-white cursor-pointer hover:underline" 
-                      onClick={() => router.push(`/classrooms/${classroom.id}`)}
-                    >
-                      {classroom.name}
-                    </Label>
-                    <br></br><br></br>
-                    <p className="text-lg text-white">{truncateDescription(classroom.description)}</p>
-                    <br></br>
-                    <p className="text-md text-white">Course: {classroom.academic_course}</p>
-                    <p className="text-md text-white">Year: {classroom.academic_year}</p>
-                  </div>
+        )}
+        
+        <div className="relative w-full flex-1 flex flex-col items-center py-12">
+          {/* Header Section with Logo */}
+          <div className="w-full max-w-4xl flex items-center mb-8 justify-center md:justify-start space-x-6">
+            <img
+              src={theme === "dark" ? "/static/logos/maestre_logo_white_transparent.webp" : "/static/logos/maestre_logo_blue_transparent.webp"}
+              alt="MAESTRE Logo"
+              className="w-20 h-20 drop-shadow-lg"
+            />
+            <div className="text-center md:text-left">
+              <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                My Classrooms
+              </h1>
+              <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                Manage your <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>MAESTRE</span> classes
+              </p>
+            </div>
+          </div>
+          
+          <style jsx global>{`
+            @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
+          `}</style>
+          
+          <div className="w-full max-w-6xl">
+            {classes.length === 0 ? (
+              <div className={cn(
+                "bg-opacity-30 backdrop-filter backdrop-blur-lg",
+                "rounded-xl shadow-xl p-8 text-center",
+                "w-full max-w-2xl mx-auto", // Added max-width and horizontal auto margins
+                theme === "dark"
+                  ? "bg-gray-800 border border-gray-700"
+                  : "bg-white border border-gray-100"
+              )}>
+                <p className={`text-lg font-bold mb-6 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                  No classes found
+                </p>
+                <button
+                  onClick={handleCreate}
+                  className="btn btn-success py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center w-full mx-auto max-w-sm"
+                >
+                  Create New Classroom +
+                  <BottomGradient isCreate={true} />
+                </button>
+              </div>
+            ) : (
+              <>
+                <div className="flex justify-center mb-6">
                   <button
-                    onClick={() => handleEdit(classroom.id)}
-                    className={cn(
-                      "btn btn-md btn-secondary", // Use the new btn styles
-                      theme === "dark" ? "dark:btn-secondary" : ""
-                    )}
-                    style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                    className="btn btn-success py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center px-6"
+                    onClick={() => router.push("/classrooms/new")}
                   >
-                    Edit &rarr;
-                  </button>
-                  <button
-                    onClick={() => router.push(`/classrooms/${classroom.id}`)}
-                    className={cn(
-                      "btn btn-md btn-success", // Use the new btn styles
-                      theme === "dark" ? "dark:btn-success" : ""
-                    )}
-                    style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-                  >
-                    Open Class
+                    Create Classroom +
+                    <BottomGradient isCreate={true} />
                   </button>
                 </div>
-              </div>
-            ))}
+                
+                <div className={`grid ${classes.length === 1 ? "justify-center" : "grid-cols-1 md:grid-cols-2"} gap-6`}>
+                  {classes.map((classroom) => (
+                    <div
+                      key={classroom.id}
+                      className={cn(
+                        "bg-opacity-30 backdrop-filter backdrop-blur-lg",
+                        "rounded-xl shadow-xl p-6",
+                        "w-full",
+                        theme === "dark"
+                          ? "bg-gray-800 border border-gray-700"
+                          : "bg-white border border-gray-100"
+                      )}
+                    >
+                      <div className="flex flex-col justify-center items-center">
+                        <Label 
+                          className={`text-2xl font-bold cursor-pointer hover:underline mb-4 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}
+                          onClick={() => router.push(`/classrooms/${classroom.id}`)}
+                        >
+                          {classroom.name}
+                        </Label>
+                        
+                        <p className={`text-lg mb-4 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                          {truncateDescription(classroom.description)}
+                        </p>
+                        
+                        <div className="grid grid-cols-2 gap-4 w-full mb-6">
+                          <div className={`p-3 rounded-lg ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                            <p className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Course</p>
+                            <p className={`text-md font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{classroom.academic_course}</p>
+                          </div>
+                          <div className={`p-3 rounded-lg ${theme === 'dark' ? 'bg-gray-700' : 'bg-gray-100'}`}>
+                            <p className={`text-sm font-medium ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>Year</p>
+                            <p className={`text-md font-bold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>{classroom.academic_year}</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex flex-col sm:flex-row gap-4 w-full">
+                          <button
+                            onClick={() => router.push(`/classrooms/${classroom.id}`)}
+                            className="btn btn-success py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center flex-1"
+                          >
+                            Open Class
+                            <BottomGradient />
+                          </button>
+                          <button
+                            onClick={() => handleEdit(classroom.id)}
+                            className="btn btn-secondary py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center flex-1"
+                          >
+                            Edit &rarr;
+                            <BottomGradient />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
-        )}
+        </div>
       </div>
-      <div className="my-8"></div>
     </div>
   );
 };

@@ -36,7 +36,9 @@ const ToolList = () => {
 
       if (token && user) {
         setIsAuthenticated(true);
-        setIsProfileComplete(user?.profileComplete || false);
+        if (user.region && user.city && user.school) {
+          setIsProfileComplete(true);
+        }
       } else {
         setIsAuthenticated(false);
       }
@@ -160,7 +162,7 @@ const ToolList = () => {
 
           {/* Quick Access Section */}
           { isAuthenticated && isProfileComplete && (
-            <div className="w-full max-w-7xl mx-auto mb-12">
+            <div className="w-full max-w-7xl mx-auto mb-12 px-4 sm:px-8 md:px-12 lg:px-16">
               <h2 className={`text-xl font-bold mb-4 flex items-center ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
                 Quick Access <span className="text-yellow-500 ml-1">★</span>
               </h2>
@@ -197,7 +199,7 @@ const ToolList = () => {
 
 
         {/* Tools Section */}
-          <div className="w-full max-w-7xl mx-auto">
+          <div className="w-full max-w-7xl mx-auto px-4 sm:px-8 md:px-12 lg:px-16">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {data.map((tool, index) => (
                 <motion.div

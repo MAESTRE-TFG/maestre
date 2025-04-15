@@ -419,7 +419,7 @@ const ProfileEdit = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <LabelInputContainer className="mb-4">
                         <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                          <IconUser className="mr-2 h-5 w-5" />
+                          <IconUser className="mr-2 h-5 w-5 text-blue-500" />
                           <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Username</span>
                         </Label>
                         <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
@@ -429,7 +429,7 @@ const ProfileEdit = () => {
                       
                       <LabelInputContainer className="mb-4">
                         <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                          <IconMail className="mr-2 h-5 w-5" />
+                          <IconMail className="mr-2 h-5 w-5 text-green-500" />
                           <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Email Address</span>
                         </Label>
                         <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
@@ -439,7 +439,7 @@ const ProfileEdit = () => {
                       
                       <LabelInputContainer className="mb-4">
                         <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                          <IconIdBadge className="mr-2 h-5 w-5" />
+                          <IconIdBadge className="mr-2 h-5 w-5 text-purple-500" />
                           <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Name</span>
                         </Label>
                         <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
@@ -449,7 +449,7 @@ const ProfileEdit = () => {
                       
                       <LabelInputContainer className="mb-4">
                         <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                          <IconEdit className="mr-2 h-5 w-5" />
+                          <IconEdit className="mr-2 h-5 w-5 text-amber-500" />
                           <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Surname</span>
                         </Label>
                         <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
@@ -472,7 +472,7 @@ const ProfileEdit = () => {
                       
                       <LabelInputContainer className="mb-4">
                         <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                          <IconMapPin className="mr-2 h-5 w-5" />
+                          <IconMapPin className="mr-2 h-5 w-5 text-red-500" />
                           <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>City</span>
                         </Label>
                         <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
@@ -482,7 +482,7 @@ const ProfileEdit = () => {
                       
                       <LabelInputContainer className="mb-4">
                         <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                          <IconSchool className="mr-2 h-5 w-5" />
+                          <IconSchool className="mr-2 h-5 w-5 text-purple-500" />
                           <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>School</span>
                         </Label>
                         <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
@@ -493,8 +493,8 @@ const ProfileEdit = () => {
                   )}
                 </div>
   
-                {/* Action Buttons - using the new btn class */}
-                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Action Buttons */}
+                <div className="mt-8 grid grid-cols-1 md:grid-cols-2 gap-4 justify center">
                   {/* Edit Profile Button */}
                   <button
                     onClick={() => setEditMode(true)}

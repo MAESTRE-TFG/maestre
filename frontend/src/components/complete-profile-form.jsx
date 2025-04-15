@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 import { useRouter } from "next/navigation";
+import { IconWorld, IconMapPin, IconSchool } from "@tabler/icons-react";
 
 const COMUNIDADES = [
   "Andalucía",
@@ -37,7 +38,7 @@ export function CompleteProfileForm({ formData, handleChange, handleComplete, ha
   };
 
   return (
-    <div className={cn("max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white")}>
+    <div className={cn("max-w-xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black/80 backdrop-blur-md" : "bg-white/80 backdrop-blur-md")}>
       <style jsx global>{
         `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
         select {
@@ -59,33 +60,56 @@ export function CompleteProfileForm({ formData, handleChange, handleComplete, ha
           color: ${theme === "dark" ? "#fff" : "#000"};
         }`
       }</style>
-      <form className="my-8" onSubmit={(e) => { e.preventDefault(); handleComplete(); }} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-        <LabelInputContainer className="mb-5">
-          <Label htmlFor="region">🌍 Region</Label>
-          <select
-            id="region"
-            name="region"
-            required
-            value={formData.region}
-            onChange={handleChange}
-            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          >
-            <option value="" disabled>
-              Select a community
-            </option>
-            {COMUNIDADES.map((comunidad) => (
-              <option key={comunidad} value={comunidad}>
-                {comunidad}
+      <form className="my-8" onSubmit={(e) => { e.preventDefault(); handleComplete(); }}>
+        <h2 className={cn("text-2xl font-bold mb-6 text-center mx-auto", theme === "dark" ? "text-white" : "text-gray-800")}>
+          Complete Your Profile
+        </h2>
+        
+        <div className="flex flex-col md:flex-row md:gap-4 w-full">
+          <LabelInputContainer className="mb-5 md:mb-0 md:w-1/2">
+            <Label htmlFor="region" className="flex items-center gap-2">
+              <IconWorld className="h-4 w-4 text-blue-500" /> Region
+            </Label>
+            <select
+              id="region"
+              name="region"
+              required
+              value={formData.region}
+              onChange={handleChange}
+              className="block w-full h-10 px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            >
+              <option value="" disabled>
+                Select a community
               </option>
-            ))}
-          </select>
-        </LabelInputContainer>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="city">🏙️ City</Label>
-          <Input id="city" name="city" placeholder="Sevilla" type="text" required value={formData.city} onChange={handleChange} />
-        </LabelInputContainer>
-        <LabelInputContainer className="mb-4">
-          <Label htmlFor="school">🏫 School</Label>
+              {COMUNIDADES.map((comunidad) => (
+                <option key={comunidad} value={comunidad}>
+                  {comunidad}
+                </option>
+              ))}
+            </select>
+          </LabelInputContainer>
+          
+          <LabelInputContainer className="mb-5 md:w-1/2">
+            <Label htmlFor="city" className="flex items-center gap-2">
+              <IconMapPin className="h-4 w-4 text-green-500" /> City
+            </Label>
+            <Input 
+              id="city" 
+              name="city" 
+              placeholder="Sevilla" 
+              type="text" 
+              required 
+              value={formData.city} 
+              onChange={handleChange}
+              className="h-10" 
+            />
+          </LabelInputContainer>
+        </div>
+        
+        <LabelInputContainer className="mb-6">
+          <Label htmlFor="school" className="flex items-center gap-2">
+            <IconSchool className="h-4 w-4 text-purple-500" /> School
+          </Label>
           <select
             id="school"
             name="school"
@@ -104,28 +128,35 @@ export function CompleteProfileForm({ formData, handleChange, handleComplete, ha
             ))}
           </select>
         </LabelInputContainer>
-        <p className={cn("text-sm mb-2", theme === "dark" ? "text-white" : "text-black")}>
-          ¿Can't find your school?
+        
+        <p className={cn("text-sm mb-4 text-center", theme === "dark" ? "text-white" : "text-black")}>
+          Can't find your school?
         </p>
-        <div className="flex flex-col">
+        
+        <div className="flex flex-col space-y-8">
           <button
             onClick={handleCreateSchool}
-            className="btn btn-md btn-secondary relative"
-            type="button">
-              Create one
+            className="btn btn-secondary py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center w-full mx-auto max-w-sm"
+            type="button"
+          >
+              Create School
             <BottomGradient />
           </button>
+          
           <button
             onClick={() => router.push("/profile/edit")}
-            className="btn btn-md btn-primary relative"
-            type="submit">
-            Complete &rarr;
+            className="btn btn-success py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center w-full mx-auto max-w-sm"
+            type="submit"
+          >
+            Complete Profile &rarr;
             <BottomGradient />
           </button>
+          
           <button
-            className="btn btn-md btn-danger relative"
+            className="btn btn-danger py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center w-full mx-auto max-w-sm"
             type="button"
-            onClick={handleCancelClick}>
+            onClick={handleCancelClick}
+          >
              &larr; Cancel
             <BottomGradient isCancel />
           </button>

@@ -79,7 +79,7 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                     style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }}
                     htmlFor="username"
                   >
-                    <IconUser className="mr-2 h-5 w-5" />
+                    <IconUser className="mr-2 h-5 w-5 text-blue-500" />
                     Username
                   </Label>
                   <Input
@@ -99,8 +99,8 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                     style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }}
                     htmlFor="email"
                   >
-                    <IconMail className="mr-2 h-5 w-5" />
-                    Email Address
+                    <IconMail className="mr-2 h-5 w-5 text-green-500" />
+                    Email
                   </Label>
                   <Input
                     id="email"
@@ -122,7 +122,7 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                     style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
                     htmlFor="name"
                   >
-                    <IconIdBadge className="mr-2 h-5 w-5" />
+                    <IconIdBadge className="mr-2 h-5 w-5 text-purple-500" />
                     Name
                   </Label>
                   <Input
@@ -142,7 +142,7 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                     style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
                     htmlFor="surname"
                   >
-                    <IconEdit className="mr-2 h-5 w-5" />
+                    <IconEdit className="mr-2 h-5 w-5 text-amber-500" />
                     Surname
                   </Label>
                   <Input
@@ -186,7 +186,7 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                 style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
                 htmlFor="oldPassword"
               >
-                <IconLock className="mr-2 h-5 w-5" />
+                <IconLock className="mr-2 h-5 w-5 text-red-500" />
                 Confirm Old Password
               </Label>
               <Input
@@ -206,7 +206,7 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                   style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
                   htmlFor="password"
                 >
-                  <IconLock className="mr-2 h-5 w-5" />
+                  <IconLock className="mr-2 h-5 w-5 text-red-500" />
                   New Password
                 </Label>
                 <Input
@@ -224,7 +224,7 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                   style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
                   htmlFor="confirmPassword"
                 >
-                  <IconLock className="mr-2 h-5 w-5" />
+                  <IconLock className="mr-2 h-5 w-5 text-red-500" />
                   Confirm Password
                 </Label>
                 <Input
@@ -242,8 +242,12 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
             <div className="flex-1 md:w-1/2 border border-gray-300 rounded-md p-4">
               {/* Location Section */}
               <LabelInputContainer className="mb-4">
-                <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="region">
-                  <IconWorld className="mr-2 h-5 w-5" />
+                <Label 
+                  className="flex items-center"
+                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }} 
+                  htmlFor="region"
+                >
+                  <IconWorld className="mr-2 h-5 w-5 text-blue-500" />
                   Region
                 </Label>
                 <select
@@ -267,16 +271,24 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
               </LabelInputContainer>
 
               <LabelInputContainer className="mb-4">
-                <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="city">
-                  <IconMapPin className="mr-2 h-5 w-5" />
+                <Label 
+                  className="flex items-center"
+                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }} 
+                  htmlFor="city"
+                >
+                  <IconMapPin className="mr-2 h-5 w-5 text-green-500" />
                   City
                 </Label>
                 <Input id="city" name="city" placeholder="Sevilla" type="text" required value={formData.city || ""} onChange={handleChange} disabled={!isProfileComplete} />
               </LabelInputContainer>
 
               <LabelInputContainer className="mb-5">
-                <Label style={{ fontFamily: "'Alfa Slab One', sans-serif" }} htmlFor="school">
-                  <IconSchool className="mr-2 h-5 w-5" />
+                <Label 
+                  className="flex items-center"
+                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }} 
+                  htmlFor="school"
+                >
+                  <IconSchool className="mr-2 h-5 w-5 text-purple-500" />
                   School
                 </Label>
                 <select
@@ -305,11 +317,10 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
               <button
                 onClick={() => router.push("/schools/new")}
                 className={cn(
-                  "btn btn-md btn-primary w-full",
+                  "btn btn-md btn-secondary w-full",
                   theme === "dark" ? "dark:btn-primary" : ""
                 )}
                 type="button"
-                style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
               >
                 Create one &rarr;
               </button>
@@ -317,28 +328,30 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
           )}
         </div>
         {/* Update Profile Button */}
-        <button
-          className={cn(
-            "btn btn-md btn-success w-full",
-            theme === "dark" ? "dark:btn-success" : ""
-          )}
-          type="submit"
-          style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-        >
-          Update &rarr;
-        </button>
+        <div className="flex justify-center">
+          <button
+            className={cn(
+              "btn btn-md btn-success w-1/2",
+              theme === "dark" ? "dark:btn-success" : ""
+            )}
+            type="submit"
+          >
+            Update &rarr;
+          </button>
+        </div>
         {/* Cancel Button */}
-        <button
-          className={cn(
-            "btn btn-md btn-secondary w-full mt-4",
-            theme === "dark" ? "dark:btn-secondary" : ""
-          )}
-          type="button"
-          style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-          onClick={handleCancel}
-        >
-          &larr; Cancel
-        </button>
+        <div className="flex justify-center mt-4">
+          <button
+            className={cn(
+              "btn btn-md btn-secondary w-1/2",
+              theme === "dark" ? "dark:btn-secondary" : ""
+            )}
+            type="button"
+            onClick={handleCancel}
+          >
+            &larr; Cancel
+          </button>
+        </div>
       </form>
 
     </div>

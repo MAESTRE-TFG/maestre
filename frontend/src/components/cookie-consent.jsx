@@ -57,15 +57,15 @@ export function CookieConsent() {
           />
           <h2 className="text-2xl font-bold mb-3 text-gray-900 dark:text-gray-100">¡Cookies!</h2>
           <p className="text-gray-600 dark:text-gray-400 mb-6">
-            Utilizamos cookies para mejorar tu experiencia
+            We use cookies to enhance your experience on our website. By continuing to use our website, you consent to our use of cookies.
           </p>
         </div>
         <div className="space-y-3">
           <button
             onClick={acceptCookies}
-            className="w-full px-6 py-2.5 bg-primary text-white rounded-lg hover:bg-primary/90 transition-colors font-medium"
+            className="btn btn-contrast py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center w-full mx-auto max-w-sm"
           >
-            Aceptar
+            Accept
           </button>
           <div className="flex justify-center items-center gap-2 mt-2">
             <Link 
@@ -75,14 +75,14 @@ export function CookieConsent() {
               rel="noopener noreferrer"
               className="text-primary hover:text-primary/80 dark:text-primary-foreground dark:hover:text-primary-foreground/90 text-sm font-medium"
             >
-              Política de Cookies
+              Cookie Policy
             </Link>
             <span className="text-gray-400 dark:text-gray-600">•</span>
             <button
               onClick={rejectCookies}
               className="text-primary hover:text-primary/80 dark:text-primary-foreground dark:hover:text-primary-foreground/90 text-sm font-medium"
             >
-              Rechazar
+              Reject
             </button>
           </div>
         </div>
