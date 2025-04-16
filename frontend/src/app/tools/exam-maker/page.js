@@ -16,7 +16,7 @@ const ExamMaker = () => {
   const router = useRouter();
   const [classrooms, setClassrooms] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [alerts, setAlerts] = useState([]); // State to manage alerts
+  const [alerts, setAlerts] = useState([]);
   const [formData, setFormData] = useState({
     subject: "",
     numQuestions: 5,
@@ -26,8 +26,8 @@ const ExamMaker = () => {
     customScoringDetails: "",
     additionalInfo: "",
     totalPoints: 10,
-    llmModel: "llama3.2:3b", // Default model
-    examName: "" // Added exam name field
+    llmModel: "llama3.2:3b",
+    examName: ""
   });
   const promptRef = useRef("");
   const [isGenerating, setIsGenerating] = useState(false);
@@ -50,7 +50,6 @@ const ExamMaker = () => {
   ];
 
   useEffect(() => {
-    // Only fetch materials if user is logged in
     const token = localStorage.getItem('authToken');
     const user = localStorage.getItem('user');
 
@@ -99,7 +98,7 @@ const ExamMaker = () => {
         "http://localhost:8000/api/materials/extract-text-from-url/",
         {
           file_url: material.file,
-          material_id: material.id  // Add this line to send the ID directly
+          material_id: material.id
         },
         {
           headers: {
@@ -275,12 +274,19 @@ const ExamMaker = () => {
 
   // Update the prompt whenever relevant form data changes
   useEffect(() => {
-    // 1. Parse form data to natural language
-    const parsedData = parseFormDataToNaturalLanguage(formData);
-    const user = JSON.parse(localStorage.getItem('user'));
+  const userStr = localStorage.getItem('user');
+  const user = userStr ? JSON.parse(userStr) : null;
 
-    // 2. Construcción inicial del prompt con secciones claras
-    let prompt = `[SYSTEM INSTRUCTION - DO NOT INCLUDE IN RESPONSE]
+  if (!user) {
+    console.warn("User is not authenticated. Skipping prompt generation.");
+    return;
+  }
+
+  // 1. Parse form data to natural language
+  const parsedData = parseFormDataToNaturalLanguage(formData);
+
+  // 2. Construct the prompt
+  let prompt = `[SYSTEM INSTRUCTION - DO NOT INCLUDE IN RESPONSE]
 You are an expert exam creator with years of experience in educational design and pedagogy.
 Your task is to create a high-quality exam according to the specifications below.
 IMPORTANT: Your response must contain ONLY the exam itself. DO NOT include any explanations, reasoning, or thought process about how you created the exam.
@@ -292,33 +298,33 @@ NUMBER OF QUESTIONS: MUST HAVE EXACTLY ${parsedData.numQuestions} QUESTIONS
 QUESTION TYPE: ${parsedData.questionType}
 TOTAL POINTS: ${parsedData.totalPoints}
 EDUCATION LEVEL: ${parsedData.classroom}
-REGION: ${user.region}`;
+REGION: ${user.region || "Unknown"}`; // Use a fallback value for region
 
-    // 3. Incluir información sobre el estilo de puntaje si no es "igual"
-    if (formData.scoringStyle !== "equal") {
-      prompt += `\nSCORING STYLE: Custom distribution as follows: ${parsedData.customScoringDetails}`;
-    }
+  // 3. Include scoring style if not "equal"
+  if (formData.scoringStyle !== "equal") {
+    prompt += `\nSCORING STYLE: Custom distribution as follows: ${parsedData.customScoringDetails}`;
+  }
 
-    // 4. Agregar instrucciones adicionales proporcionadas por el usuario
-    if (parsedData.additionalInfo) {
-      prompt += `
+  // 4. Add additional instructions
+  if (parsedData.additionalInfo) {
+    prompt += `
 
 [ADDITIONAL INSTRUCTIONS]
 ${parsedData.additionalInfo}`;
-    }
+  }
 
-    // 5. Agregar materiales de referencia (si existen)
-    prompt += `
+  // 5. Add reference materials
+  prompt += `
 
 [REFERENCE MATERIALS]
-Please use the following reference materials as guidelines for how could the questions and its contents could be in your exam:
+Please use the following reference materials as guidelines for how the questions and their contents could be in your exam:
 ${fileContentsRef.current
-        ? fileContentsRef.current
-        : "No reference materials provided."
-      }`;
+    ? fileContentsRef.current
+    : "No reference materials provided."
+}`;
 
-    // 6. Incluir ejemplo de plantilla (few-shot) para guiar al modelo
-    prompt += `
+  // 6. Add example template
+  prompt += `
 
 [EXAMPLE TEMPLATE] (FOR REFERENCE ONLY)
 Title: Sample Exam - Subject
@@ -334,8 +340,8 @@ Subtitle:
    True or False: ...
 `;
 
-    // 7. Reforzar requerimientos de formato
-    prompt += `
+  // 7. Add formatting requirements
+  prompt += `
 
 [FORMATTING REQUIREMENTS]
 1. The exam MUST be in English
@@ -346,7 +352,7 @@ Subtitle:
 6. Clearly indicate the point value for each question.
 7. Ensure proper spacing between questions.
 8. Format the exam in a clean, professional manner suitable for classroom use.
-9. Ensure the exam follows educational standards for ${parsedData.classroom} level in ${user.region}.
+9. Ensure the exam follows educational standards for ${parsedData.classroom} level in ${user.region || "Unknown"}.
 10. Make sure the total points add up to exactly ${parsedData.totalPoints}.
 11. Use proper formatting for each question type (e.g., multiple choice with options, true/false with clear statements).
 12. Include clear section headers if mixing different types of questions.
@@ -355,8 +361,8 @@ Subtitle:
 15. ONLY output the final exam content, starting directly with the title.
 `;
 
-    // 8. Añadir un checklist de verificación para que el modelo valide su salida
-    prompt += `
+  // 8. Add checklist
+  prompt += `
 [CHECKLIST - DO NOT INCLUDE IN RESPONSE]
 1) Did you include only the exam and nothing else?
 2) Did you include exactly ${parsedData.numQuestions} questions?
@@ -368,56 +374,59 @@ Subtitle:
 If any check fails, revise your answer before finalizing.
 `;
 
-    // *** Instrucción final para generar el examen ***
-    prompt += `
+  // 9. Final instruction
+  prompt += `
 [FINAL INSTRUCTION - DO NOT INCLUDE IN RESPONSE]
 Now, produce a complete exam following all the specifications and requirements above.
 If any information is missing, note it clearly rather than inventing details.
 CRITICAL: Your response must begin with the exam title and contain ONLY the exam content. DO NOT include any explanations, reasoning, or thought process.
 `;
 
-    // Actualizamos la referencia con el prompt final
-    promptRef.current = prompt;
-
-  }, [formData, parseFormDataToNaturalLanguage, uploadedFiles]);
+  // Update the prompt reference
+  promptRef.current = prompt;
+}, [formData, parseFormDataToNaturalLanguage, uploadedFiles]);
   
   useEffect(() => {
-    // Only run this effect on the client side
-    if (typeof window === 'undefined') return;
-    
-    const userStr = localStorage.getItem('user');
-    if (!userStr) {
-      localStorage.removeItem('authToken');
-    }
-    
-    const token = localStorage.getItem('authToken');
-    if (!token) {
-      router.push('/profile/signup');
-      return;
-    }
+  // Only run this effect on the client side
+  if (typeof window === 'undefined') return;
 
-    // Fetch user's classrooms
-    const fetchClassrooms = async () => {
-      try {
-        const parsedUser = JSON.parse(userStr);
-        const response = await axios.get("http://localhost:8000/api/classrooms/", {
-          params: {
-            creator: parsedUser.id
-          },
-          headers: {
-            Authorization: `Token ${token}`,
-          },
-        });
-        setClassrooms(response.data);
-        setLoading(false);
-      } catch (err) {
-        setLoading(false);
-        addAlert("error", "Failed to fetch classrooms. Please try again later.");
-      }
-    };
+  const userStr = localStorage.getItem('user');
+  const token = localStorage.getItem('authToken');
 
-    fetchClassrooms();
-  }, [router]); // Only depend on router
+  if (!token || !userStr) {
+    // Redirect to /tools if the user is not authenticated
+    router.push('/tools');
+    return;
+  }
+
+  const user = JSON.parse(userStr);
+
+  if (!(user.region && user.city && user.school  )) {
+    router.push('/tools');
+    return;
+  }
+
+  // Fetch user's classrooms
+  const fetchClassrooms = async () => {
+    try {
+      const response = await axios.get("http://localhost:8000/api/classrooms/", {
+        params: {
+          creator: user.id,
+        },
+        headers: {
+          Authorization: `Token ${token}`,
+        },
+      });
+      setClassrooms(response.data);
+      setLoading(false);
+    } catch (err) {
+      setLoading(false);
+      addAlert("error", "Failed to fetch classrooms. Please try again later.");
+    }
+  };
+
+  fetchClassrooms();
+}, [router]); // Only depend on router
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -750,332 +759,459 @@ CRITICAL: Your response must begin with the exam title and contain ONLY the exam
   };
 
   return (
-    <div className={cn("min-h-screen")}>
-      {alerts.map((alert) => (
-        <Alert
-          key={alert.id}
-          type={alert.type}
-          message={alert.message}
-          onClose={() => removeAlert(alert.id)}
-        />
-      ))}
-      <div className="flex flex-col items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <div className="w-full max-w-4xl">
-          <h1 className={cn("text-3xl md:text-4xl font-bold mb-6 text-center", 
-            theme === "dark" ? "text-white" : "text-gray-900")} 
-            style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+    <div className="min-h-screen w-screen bg-gradient-to-br from-indigo-500/5 via-purple-500/5 to-pink-500/5">
+      {/* Alert System */}
+      <div className="fixed top-4 right-4 z-50 space-y-2 w-80">
+        {alerts.map((alert) => (
+          <Alert
+            key={alert.id}
+            type={alert.type}
+            message={alert.message}
+            onClose={() => removeAlert(alert.id)}
+          />
+        ))}
+      </div>
+      
+      <div className="py-16 sm:py-24"></div>
+      
+      <div className="relative px-4 sm:px-6 lg:px-8">
+        {/* Header Section */}
+        <div className="w-full text-center mb-10">
+          <div className="flex justify-center mb-3">
+            <div className="relative">
+              <div className="absolute -inset-1 rounded-full blur-md bg-gradient-to-r from-indigo-400 to-purple-400 opacity-30"></div>
+              <div className={`relative p-2 rounded-full ${theme === 'dark' ? 'bg-zinc-900' : 'bg-white/90'}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-indigo-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path>
+                  <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path>
+                  <path d="M8 7h8"></path>
+                  <path d="M8 12h4"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <h1 className={`text-4xl sm:text-5xl font-bold mb-3 sm:mb-4 tracking-tight ${theme === 'dark' ? 'text-white' : 'text-black'}`}
+               style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
             AI Exam Generator
           </h1>
-          
-          <p className={cn("text-center mb-8", 
-            theme === "dark" ? "text-gray-300" : "text-gray-600")}>
+          <p className={`text-lg sm:text-xl max-w-xl mx-auto ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
             Create customized exams for your students with our AI-powered tool
           </p>
-
-          {/* AI Response Quality Warning */}
+        </div>
+  
+        {/* AI Response Quality Warning */}
+        <div className="w-full max-w-5xl mx-auto mb-8">
           <div className={cn(
-            "mb-6 p-4 rounded-md border text-sm",
-            theme === "dark" ? "bg-zinc-800 border-amber-700 text-amber-200" : "bg-amber-50 border-amber-300 text-amber-800"
+            "p-4 rounded-xl border transition-all shadow-sm",
+            theme === "dark" ? "bg-amber-950/30 border-amber-800/60 text-amber-200" : "bg-amber-50 border-amber-200 text-amber-800"
           )}>
-            <div className="flex items-start">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <div className="flex items-start mx-4">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-3 mt-0.5 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
               </svg>
               <div>
                 <p className="font-medium mb-1">AI-Generated Content Disclaimer</p>
-                <p>The exams generated by this tool are created using AI models which may occasionally produce inaccurate or incomplete information. Always review the content for accuracy and appropriateness before using it in an educational setting.</p>
+                <p className="text-sm">The exams generated by this tool are created using AI models which may occasionally produce inaccurate or incomplete information. Always review the content for accuracy and appropriateness before using it in an educational setting.</p>
               </div>
             </div>
           </div>
-
-          <div className={cn("max-w-4xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", 
-            theme === "dark" ? "bg-black" : "bg-white")}>
-            <style jsx global>{`
-              @import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
-              select {
-                appearance: none;
-                background: ${theme === "dark" ? "#333" : "#fff"};
-                color: ${theme === "dark" ? "#fff" : "#000"};
-                border: 1px solid ${theme === "dark" ? "#555" : "#ccc"};
-                padding: 0.5rem;
-                border-radius: 0.375rem;
-                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-                width: 100%;
-              }
-              select:focus {
-                outline: none;
-                border-color: ${theme === "dark" ? "#888" : "#007bff"};
-                box-shadow: 0 0 0 3px ${theme === "dark" ? "rgba(136, 136, 136, 0.5)" : "rgba(0, 123, 255, 0.25)"};
-              }
-              option {
-                background: ${theme === "dark" ? "#333" : "#fff"};
-                color: ${theme === "dark" ? "#fff" : "#000"};
-              }
-            `}</style>
-            
-            <form className="my-8 grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8" 
-                onSubmit={handleSubmit} 
-                style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+        </div>
+  
+        <div className="w-full max-w-5xl mx-auto">
+          <div className={cn(
+            "rounded-2xl overflow-hidden shadow-xl transition-all duration-300",
+            theme === 'dark' ? 'bg-zinc-900/80 backdrop-blur-md border border-zinc-800' : 'bg-white/90 backdrop-blur-md border border-gray-100'
+          )}>
+            <div className="p-6 md:p-8">
+              <style jsx global>{`
+                @import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
                 
-                <div className="space-y-6">
-                  <LabelInputContainer>
-                    <Label htmlFor="subject">📚 Subject</Label>
-                    <Input 
-                      id="subject" 
-                      name="subject" 
-                      placeholder="Mathematics, Science, History, etc." 
-                      type="text" 
-                      required 
-                      value={formData.subject} 
-                      onChange={handleChange} 
-                    />
-                  </LabelInputContainer>
-            
-                  <LabelInputContainer>
-                    <Label htmlFor="examName">📝 Exam Name</Label>
-                    <Input 
-                      id="examName" 
-                      name="examName" 
-                      placeholder="Midterm Exam, Final Test, Chapter 5 Quiz, etc." 
-                      type="text" 
-                      value={formData.examName} 
-                      onChange={handleChange} 
-                    />
-                  </LabelInputContainer>
-            
-                  <LabelInputContainer>
-                    <Label htmlFor="numQuestions">❓ Number of Questions</Label>
-                    <Input 
-                      id="numQuestions" 
-                      name="numQuestions" 
-                      type="number" 
-                      min="1" 
-                      max="20" 
-                      required 
-                      value={formData.numQuestions} 
-                      onChange={handleChange} 
-                    />
-                  </LabelInputContainer>
+                select {
+                  appearance: none;
+                  background: ${theme === "dark" ? "#1f1f23" : "#fff"};
+                  color: ${theme === "dark" ? "#fff" : "#000"};
+                  border: 1px solid ${theme === "dark" ? "#333" : "#e2e8f0"};
+                  padding: 0.625rem;
+                  border-radius: 0.5rem;
+                  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+                  width: 100%;
+                  transition: all 0.2s ease;
+                }
+                
+                select:focus {
+                  outline: none;
+                  border-color: ${theme === "dark" ? "#6366f1" : "#4f46e5"};
+                  box-shadow: 0 0 0 3px ${theme === "dark" ? "rgba(99, 102, 241, 0.3)" : "rgba(79, 70, 229, 0.25)"};
+                }
+                
+                option {
+                  background: ${theme === "dark" ? "#1f1f23" : "#fff"};
+                  color: ${theme === "dark" ? "#fff" : "#000"};
+                }
+                
+                .form-radio {
+                  appearance: none;
+                  width: 1.2rem;
+                  height: 1.2rem;
+                  border-radius: 50%;
+                  border: 2px solid ${theme === "dark" ? "#4c4f60" : "#cbd5e1"};
+                  transition: all 0.2s ease;
+                }
+                
+                .form-radio:checked {
+                  border-color: ${theme === "dark" ? "#6366f1" : "#4f46e5"};
+                  background-color: ${theme === "dark" ? "#6366f1" : "#4f46e5"};
+                  box-shadow: inset 0 0 0 3px ${theme === "dark" ? "#1f1f23" : "#fff"};
+                }
+                
+                .form-radio:focus {
+                  outline: none;
+                  box-shadow: 0 0 0 3px ${theme === "dark" ? "rgba(99, 102, 241, 0.3)" : "rgba(79, 70, 229, 0.25)"};
+                }
+              `}</style>
               
-                  <LabelInputContainer>
-                    <Label htmlFor="maxPoints">🎯 Maximum Points</Label>
-                    <Input 
-                      id="maxPoints" 
-                      name="maxPoints" 
-                      type="number" 
-                      min="1" 
-                      max="1000" 
-                      required 
-                      value={formData.totalPoints} 
-                      onChange={handleChange} 
-                    />
-                  </LabelInputContainer>
-              
-                  <LabelInputContainer>
-                    <Label htmlFor="questionType">🔤 Question Type</Label>
-                    <select
-                      id="questionType"
-                      name="questionType"
-                      required
-                      value={formData.questionType}
-                      onChange={handleChange}
-                    >
-                      {questionTypes.map(type => (
-                        <option key={type.value} value={type.value}>
-                          {type.label}
-                        </option>
-                      ))}
-                    </select>
-                  </LabelInputContainer>
-                </div>
+              <form className="grid grid-cols-1 md:grid-cols-2 gap-8" 
+                  onSubmit={handleSubmit}>
                   
-                <div className="space-y-6">
+                  {/* Form content - Left Column */}
+                  <div className="space-y-6">
                     <LabelInputContainer>
-                      <Label htmlFor="classroom">🏫 Classroom (Difficulty Level)</Label>
-                      <select
-                        id="classroom"
-                        name="classroom"
-                        required
-                        value={formData.classroom}
+                      <Label htmlFor="subject" className="flex items-center text-sm font-medium mb-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                        </svg>
+                        Subject
+                      </Label>
+                      <Input 
+                        id="subject" 
+                        name="subject" 
+                        placeholder="Mathematics, Science, History, etc." 
+                        type="text" 
+                        required 
+                        value={formData.subject} 
                         onChange={handleChange}
-                      >
-                        <option value="" disabled>Select a classroom</option>
-                        {loading ? (
-                          <option value="" disabled>Loading classrooms...</option>
-                        ) : (
-                          classrooms.map(classroom => (
-                            <option key={classroom.id} value={classroom.id}>
-                              {classroom.name} - {classroom.academic_course}
-                            </option>
-                          ))
-                        )}
-                      </select>
+                        className={`focus:ring-2 focus:ring-offset-0 ${theme === 'dark' ? 'focus:ring-indigo-500/40' : 'focus:ring-indigo-500/30'}`}
+                      />
+                    </LabelInputContainer>
+  
+                    <LabelInputContainer>
+                      <Label htmlFor="examName" className="flex items-center text-sm font-medium mb-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                        Exam Name
+                      </Label>
+                      <Input 
+                        id="examName" 
+                        name="examName" 
+                        placeholder="Midterm Exam, Final Test, Chapter 5 Quiz, etc." 
+                        type="text" 
+                        value={formData.examName} 
+                        onChange={handleChange}
+                        className={`focus:ring-2 focus:ring-offset-0 ${theme === 'dark' ? 'focus:ring-indigo-500/40' : 'focus:ring-indigo-500/30'}`}
+                      />
                     </LabelInputContainer>
               
                     <LabelInputContainer>
-                      <Label htmlFor="scoringStyle">📊 Scoring Style</Label>
-                      <div className="flex flex-wrap items-center gap-4">
-                        <div className="flex items-center space-x-2">
-                          <input
-                            type="radio"
-                            id="equalPoints"
-                            name="scoringStyle"
-                            value="equal"
-                            checked={formData.scoringStyle === "equal"}
-                            onChange={handleChange}
-                            className="form-radio"
-                          />
-                          <label 
-                            htmlFor="equalPoints"
-                            className={theme === "dark" ? "text-white" : "text-gray-900"}
-                          >
-                            Equal Points
-                          </label>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <input
-                            type="radio"
-                            id="customPoints"
-                            name="scoringStyle"
-                            value="custom"
-                            checked={formData.scoringStyle === "custom"}
-                            onChange={handleChange}
-                            className="form-radio"
-                          />
-                          <label 
-                            htmlFor="customPoints"
-                            className={theme === "dark" ? "text-white" : "text-gray-900"}
-                          >
-                            Custom Points
-                          </label>
-                        </div>
-                      </div>
-                      {formData.scoringStyle === "custom" && (
-                        <textarea
-                          id="customScoringDetails"
-                          name="customScoringDetails"
-                          placeholder="Specify your scoring system (e.g., Q1: 10pts, Q2: 15pts...)"
-                          rows="3"
-                          className={cn(
-                            "flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background mt-4",
-                            "placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2",
-                            "focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-                            theme === "dark" ? "bg-zinc-800 text-white border-zinc-700" : "bg-white text-black border-gray-300"
-                          )}
-                          value={formData.customScoringDetails || ""}
+                      <Label htmlFor="numQuestions" className="flex items-center text-sm font-medium mb-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Number of Questions
+                      </Label>
+                      <Input 
+                        id="numQuestions" 
+                        name="numQuestions" 
+                        type="number" 
+                        min="1" 
+                        max="20" 
+                        required 
+                        value={formData.numQuestions} 
+                        onChange={handleChange}
+                        className={`focus:ring-2 focus:ring-offset-0 ${theme === 'dark' ? 'focus:ring-indigo-500/40' : 'focus:ring-indigo-500/30'}`}
+                      />
+                    </LabelInputContainer>
+                
+                    <LabelInputContainer>
+                      <Label htmlFor="maxPoints" className="flex items-center text-sm font-medium mb-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        Maximum Points
+                      </Label>
+                      <Input 
+                        id="maxPoints" 
+                        name="maxPoints" 
+                        type="number" 
+                        min="1" 
+                        max="1000" 
+                        required 
+                        value={formData.totalPoints} 
+                        onChange={handleChange}
+                        className={`focus:ring-2 focus:ring-offset-0 ${theme === 'dark' ? 'focus:ring-indigo-500/40' : 'focus:ring-indigo-500/30'}`}
+                      />
+                    </LabelInputContainer>
+                
+                    <LabelInputContainer>
+                      <Label htmlFor="questionType" className="flex items-center text-sm font-medium mb-1.5">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                        </svg>
+                        Question Type
+                      </Label>
+                      <div className="relative">
+                        <select
+                          id="questionType"
+                          name="questionType"
+                          required
+                          value={formData.questionType}
                           onChange={handleChange}
-                        />
-                      )}
-                    </LabelInputContainer>
-
-                    <LabelInputContainer>
-                      <Label htmlFor="llmModel">🤖 LLM Model</Label>
-                      <select
-                        id="llmModel"
-                        name="llmModel"
-                        required
-                        value={formData.llmModel}
-                        onChange={handleChange}
-                      >
-                        {llmModels.map(model => (
-                          <option key={model.value} value={model.value}>
-                            {model.label}
-                          </option>
-                        ))}
-                      </select>
-                    </LabelInputContainer>
-              
-                    <LabelInputContainer>
-                      <Label htmlFor="additionalInfo">📝 Additional Information</Label>
-                      <textarea
-                        id="additionalInfo"
-                        name="additionalInfo"
-                        placeholder="Specific topics to cover, special instructions, etc."
-                        rows="4"
-                        className={cn(
-                          "flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background",
-                          "placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2",
-                          "focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-                          theme === "dark" ? "bg-zinc-800 text-white border-zinc-700" : "bg-white text-black border-gray-300"
-                        )}
-                        value={formData.additionalInfo}
-                        onChange={handleChange}
-                      ></textarea>
-                    </LabelInputContainer>
-                </div>
-              {/* File upload section - Modified to span both columns */}
-              <div className="col-span-1 md:col-span-2 space-y-4">
-                <div className="flex items-center space-x-4 w-full">
-                  {/* File upload instructions with hover tooltip */}
-                  <div className="relative inline-block">
-                    <div className="group">
-                      <button
-                        className={cn(
-                          "inline-flex items-center cursor-help",
-                          "p-2 rounded-md",
-                          theme === "dark" ? "bg-zinc-900 text-gray-300" : "bg-gray-50 text-gray-700"
-                        )}
-                      >
-                        <span>ℹ️</span>
-                        <span className="text-xs ml-2">Upload Instructions</span>
-                      </button>
-                      
-                      <div className={cn(
-                        "invisible group-hover:visible opacity-0 group-hover:opacity-100",
-                        "absolute z-10 w-[220%]", // Increased width to 150%
-                        "p-3 mt-1 rounded-md shadow-lg transition-all duration-200",
-                        theme === "dark" ? "bg-zinc-800 text-gray-300" : "bg-white text-gray-700",
-                        "border",
-                        theme === "dark" ? "border-zinc-700" : "border-gray-200"
-                      )}>
-                        <p className="font-medium mb-1">Local Files Upload Instructions:</p>
-                        <ul className="list-disc pl-5 space-y-1">
-                          <li>Only <strong>DOCX</strong> files are supported</li>
-                          <li>Only one file can be uploaded at a time</li>
-                          <li>Maximum file size: 5MB</li>
-                        </ul>
+                          className="appearance-none"
+                        >
+                          {questionTypes.map(type => (
+                            <option key={type.value} value={type.value}>
+                              {type.label}
+                            </option>
+                          ))}
+                        </select>
+                        <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3">
+                          <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
                       </div>
-                    </div>
+                    </LabelInputContainer>
                   </div>
-
-                  <div className="flex items-center space-x-2">
-                    <label
-                      htmlFor="fileUpload"
-                      className={cn(
-                        "px-4 py-2 rounded-md text-sm font-medium cursor-pointer",
-                        isProcessingFile ? "opacity-50 cursor-not-allowed" : "",
-                        uploadedFiles.length > 0 ? "opacity-50 cursor-not-allowed" : "",
-                        theme === "dark"
-                          ? "bg-zinc-800 hover:bg-zinc-700 text-white"
-                          : "bg-gray-200 hover:bg-gray-300 text-black"
-                      )}
-                    >
-                      {isProcessingFile ? "Processing..." : "Upload File"}
-                    </label>
-                    <input
-                      id="fileUpload"
-                      type="file"
-                      accept=".docx"
-                      onChange={handleFileUpload}
-                      className="hidden"
-                      disabled={isProcessingFile || uploadedFiles.length > 0}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        // Only show materials modal if no file is already uploaded
-                        if (uploadedFiles.length === 0 && !isProcessingFile) {
-                          setShowMaterialsModal(true);
-                        }
-                      }}
-                      className={cn(
-                        "px-4 py-2 rounded-md text-sm font-medium",
-                        (isProcessingFile || uploadedFiles.length > 0) ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
-                        theme === "dark"
-                          ? "bg-zinc-800 hover:bg-zinc-700 text-white"
-                          : "bg-gray-200 hover:bg-gray-300 text-black"
-                      )}
-                      disabled={isProcessingFile || uploadedFiles.length > 0}
+                    
+                  {/* Form content - Right Column */}
+                  <div className="space-y-6">
+                      <LabelInputContainer>
+                        <Label htmlFor="classroom" className="flex items-center text-sm font-medium mb-1.5">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                          </svg>
+                          Classroom (Difficulty Level)
+                        </Label>
+                        <div className="relative">
+                          <select
+                            id="classroom"
+                            name="classroom"
+                            required
+                            value={formData.classroom}
+                            onChange={handleChange}
+                            className="appearance-none"
+                          >
+                            <option value="" disabled>Select a classroom</option>
+                            {loading ? (
+                              <option value="" disabled>Loading classrooms...</option>
+                            ) : (
+                              classrooms.map(classroom => (
+                                <option key={classroom.id} value={classroom.id}>
+                                  {classroom.name} - {classroom.academic_course}
+                                </option>
+                              ))
+                            )}
+                          </select>
+                          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
+                        </div>
+                      </LabelInputContainer>
+                
+                      <LabelInputContainer>
+                        <Label htmlFor="scoringStyle" className="flex items-center text-sm font-medium mb-1.5">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                          </svg>
+                          Scoring Style
+                        </Label>
+                        <div className="flex flex-wrap items-center gap-4">
+                          <div className="flex items-center space-x-2">
+                            <input
+                              type="radio"
+                              id="equalPoints"
+                              name="scoringStyle"
+                              value="equal"
+                              checked={formData.scoringStyle === "equal"}
+                              onChange={handleChange}
+                              className="form-radio"
+                            />
+                            <label 
+                              htmlFor="equalPoints"
+                              className={`text-sm ${theme === "dark" ? "text-white" : "text-gray-900"}`}
+                            >
+                              Equal Points
+                            </label>
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            <input
+                              type="radio"
+                              id="customPoints"
+                              name="scoringStyle"
+                              value="custom"
+                              checked={formData.scoringStyle === "custom"}
+                              onChange={handleChange}
+                              className="form-radio"
+                            />
+                            <label 
+                              htmlFor="customPoints"
+                              className={`text-sm ${theme === "dark" ? "text-white" : "text-gray-900"}`}
+                            >
+                              Custom Points
+                            </label>
+                          </div>
+                        </div>
+                        {formData.scoringStyle === "custom" && (
+                          <textarea
+                            id="customScoringDetails"
+                            name="customScoringDetails"
+                            placeholder="Specify your scoring system (e.g., Q1: 10pts, Q2: 15pts...)"
+                            rows="3"
+                            className={cn(
+                              "flex w-full rounded-lg border border-input px-3 py-2 text-sm mt-4 transition-all duration-200",
+                              "placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-offset-0",
+                              theme === "dark" 
+                                ? "bg-zinc-800/70 text-white border-zinc-700 focus:ring-indigo-500/40" 
+                                : "bg-white text-black border-gray-300 focus:ring-indigo-500/30"
+                            )}
+                            value={formData.customScoringDetails || ""}
+                            onChange={handleChange}
+                          />
+                        )}
+                      </LabelInputContainer>
+  
+                      <LabelInputContainer>
+                        <Label htmlFor="llmModel" className="flex items-center text-sm font-medium mb-1.5">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                          </svg>
+                          LLM Model
+                        </Label>
+                        <div className="relative">
+                          <select
+                            id="llmModel"
+                            name="llmModel"
+                            required
+                            value={formData.llmModel}
+                            onChange={handleChange}
+                            className="appearance-none"
+                          >
+                            {llmModels.map(model => (
+                              <option key={model.value} value={model.value}>
+                                {model.label}
+                              </option>
+                            ))}
+                          </select>
+                          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                            </svg>
+                          </div>
+                        </div>
+                      </LabelInputContainer>
+                
+                      <LabelInputContainer>
+                        <Label htmlFor="additionalInfo" className="flex items-center text-sm font-medium mb-1.5">
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                          </svg>
+                          Additional Information
+                        </Label>
+                        <textarea
+                          id="additionalInfo"
+                          name="additionalInfo"
+                          placeholder="Specific topics to cover, special instructions, etc."
+                          rows="4"
+                          className={cn(
+                            "flex w-full rounded-lg border border-input px-3 py-2 text-sm transition-all duration-200",
+                            "placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-offset-0",
+                            theme === "dark" 
+                              ? "bg-zinc-800/70 text-white border-zinc-700 focus:ring-indigo-500/40" 
+                              : "bg-white text-black border-gray-300 focus:ring-indigo-500/30"
+                          )}
+                          value={formData.additionalInfo}
+                          onChange={handleChange}
+                        ></textarea>
+                      </LabelInputContainer>
+                  </div>
+                  
+                {/* File upload section - Modified to span both columns and with a fresh design */}
+                <div className="col-span-1 md:col-span-2 space-y-4">
+                  <div className={cn(
+                    "rounded-xl border transition-all p-6",
+                    theme === "dark" 
+                      ? "bg-zinc-800/50 border-zinc-700/80" 
+                      : "bg-gray-50/80 border-gray-200"
+                  )}>
+                    <div className="mb-4">
+                      <h3 className={`text-lg font-medium flex items-center ${theme === "dark" ? "text-white" : "text-gray-900"}`}>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                        </svg>
+                        Source Materials
+                      </h3>
+                      <p className={`text-sm mt-1 ${theme === "dark" ? "text-gray-400" : "text-gray-600"}`}>
+                        Upload a DOCX file or select from your classroom materials to help generate the exam.
+                      </p>
+                    </div>
+                  
+                    <div className="flex flex-wrap items-center gap-4">
+                      {/* Upload button with animation */}
+                      <div className="relative group">
+                        <div className={cn(
+                          "absolute -inset-0.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300",
+                          theme === "dark" ? "bg-gradient-to-r from-indigo-500 to-purple-500 blur-sm" : "bg-gradient-to-r from-indigo-300 to-purple-300 blur-sm"
+                        )}></div>
+                        <label
+                          htmlFor="fileUpload"
+                          className={cn(
+                            "relative px-4 py-2 rounded-lg text-sm font-medium cursor-pointer flex items-center transition-all duration-200",
+                            isProcessingFile ? "opacity-50 cursor-not-allowed" : "",
+                            uploadedFiles.length > 0 ? "opacity-50 cursor-not-allowed" : "",
+                            theme === "dark"
+                              ? "bg-zinc-800 hover:bg-zinc-700 text-white"
+                              : "bg-white hover:bg-gray-50 text-black border border-gray-200"
+                          )}
+                        >
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                          </svg>
+                          {isProcessingFile ? "Processing..." : "Upload File"}
+                        </label>
+                        <input
+                          id="fileUpload"
+                          type="file"
+                          accept=".docx"
+                          onChange={handleFileUpload}
+                          className="hidden"
+                          disabled={isProcessingFile || uploadedFiles.length > 0}
+                        />
+                      </div>
+                      
+                      {/* Browse classroom materials button */}
+                      <div className="relative group">
+                        <div className={cn(
+                          "absolute -inset-0.5 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-300",
+                          theme === "dark" ? "bg-gradient-to-r from-purple-500 to-indigo-500 blur-sm" : "bg-gradient-to-r from-purple-300 to-indigo-300 blur-sm"
+                        )}></div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            // Only show materials modal if no file is already uploaded
+                            if (uploadedFiles.length === 0 && !isProcessingFile) {
+                              setShowMaterialsModal(true);
+                            }
+                          }}
+                          className={cn(
+                            "relative px-4 py-2 rounded-lg text-sm font-medium flex items-center transition-all duration-200",
+                            (isProcessingFile || uploadedFiles.length > 0) ? "opacity-50 cursor-not-allowed" : "cursor-pointer",
+                            theme === "dark"
+                              ? "bg-zinc-800 hover:bg-zinc-700 text-white"
+                              : "bg-white hover:bg-gray-50 text-black border border-gray-200"
+                          )}
+                          disabled={isProcessingFile || uploadedFiles.length > 0}
                     >
                       Select from Classroom
                     </button>
@@ -1148,6 +1284,7 @@ CRITICAL: Your response must begin with the exam title and contain ONLY the exam
                     </ul>
                   </div>
                 )}
+                </div>
               </div>
 
                 <button
@@ -1191,7 +1328,7 @@ CRITICAL: Your response must begin with the exam title and contain ONLY the exam
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                               <line x1="18" y1="6" x2="6" y2="18"></line>
-                              <line x1="6" y1="6" x2="18" y2="18"></line>
+                              <line x1="6" y1="6" x2="18 18"></line>
                               </svg>
                             </button>
                             
@@ -1410,6 +1547,7 @@ CRITICAL: Your response must begin with the exam title and contain ONLY the exam
             </div>
           </div>
         </div>
+      </div>
       </div>
   );
 };

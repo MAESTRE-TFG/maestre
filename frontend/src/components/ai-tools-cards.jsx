@@ -94,6 +94,11 @@ export function AIToolsCards() {
     router.push('/profile/signup');
     closeAuthModal();
   };
+  
+  const handleSignIn = () => {
+    router.push('/profile/signin');
+    closeAuthModal();
+  };
 
   const handleCompleteProfile = () => {
     router.push('/profile/complete');
@@ -113,66 +118,100 @@ export function AIToolsCards() {
   };
 
   return (<>
-    {/* Authentication Modal */}
-      <Modal 
-        isOpen={showAuthModal} 
-        onClose={closeAuthModal} 
-        title="Authentication Required"
-        style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}
-      >
-        <div className="p-4">
-          <h2 className="text-lg font-bold mb-4">
-            Authentication Required
-          </h2>
-          <p className="mb-4">
-            You need to be logged in to access this tool. Please create an account to continue.
-          </p>
-          <div className="flex justify-end">
-            <button
-              onClick={closeAuthModal}
-              className="mr-2 px-4 py-2 bg-gray-300 rounded-md"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleSignUp}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md"
-            >
-              Create Account
-            </button>
-          </div>
-        </div>
-      </Modal>
-    {/* Profile Completion Modal */}
-      <Modal 
-        isOpen={showProfileModal} 
-        onClose={closeProfileModal} 
-        title="Complete Your Profile"
-        style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1.25rem" }}
-      >
-        <div className="p-4">
-          <h2 className="text-lg font-bold mb-4">
-            Complete Your Profile
-          </h2>
-          <p className="mb-4">
-            Please complete your profile information before accessing this tool.
-          </p>
-          <div className="flex justify-end">
-            <button
-              onClick={closeProfileModal}
-              className="mr-2 px-4 py-2 bg-gray-300 rounded-md"
-            >
-              Cancel
-            </button>
-            <button
-              onClick={handleCompleteProfile}
-              className="px-4 py-2 bg-blue-500 text-white rounded-md"
-            >
-              Complete Profile
-            </button>
-          </div>
-        </div>
-      </Modal>
+         {/* Authentication Modal */}
+         <Modal isOpen={showAuthModal} onClose={closeAuthModal}>
+           <div title="  ">
+             <div className={cn("p-6", theme === "dark" ? "bg-[#4777da]" : "bg-[#4777da]")}>
+               <div className="flex items-center gap-3">
+                 <div className="p-2 bg-white/20 rounded-full">
+                   <IconLock className="h-6 w-6 text-white" />
+                 </div>
+                 <h2 className="text-xl font-bold text-white" style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+                   Authentication Required
+                 </h2>
+               </div>
+             </div>
+             <div className="p-6">
+               <p className={cn("mb-6 text-base", theme === "dark" ? "text-gray-300" : "text-gray-600")}>
+                 You need to be logged in to access this tool. Create an account to unlock all features.
+               </p>
+               <div className="flex items-center justify-end gap-3">
+                 <button
+                   onClick={closeAuthModal}
+                   className={cn(
+                     "btn btn-md btn-secondary",
+                     theme === "dark" ? "dark:btn-secondary" : ""
+                   )}
+                 >
+                   Cancel
+                 </button>
+                 <button
+                   onClick={handleSignUp}
+                   className={cn(
+                     "btn btn-md btn-primary",
+                     theme === "dark" ? "dark:btn-primary" : ""
+                   )}
+                 >
+                   <IconUserCircle className="h-5 w-5" />
+                   Create Account
+                 </button>
+                 <button
+                   onClick={handleSignIn}
+                   className={cn(
+                     "btn btn-md btn-contrast",
+                     theme === "dark" ? "dark:btn-contrast" : ""
+                   )}
+                 >
+                   <IconUserCircle className="h-5 w-5" />
+                   Sing In
+                 </button>
+               </div>
+             </div>
+           </div>
+         </Modal>
+   
+         {/* Profile Completion Modal */}
+         <Modal isOpen={showProfileModal} onClose={closeProfileModal}>
+           <div title="  ">
+             <div className={cn("p-6", theme === "dark" ? "bg-purple-600" : "bg-purple-500")}>
+               <div className="flex items-center gap-3">
+                 <div className="p-2 bg-white/20 rounded-full">
+                   <IconUserCircle className="h-6 w-6 text-white" />
+                 </div>
+                 <h2 className="text-xl font-bold text-white" style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+                   Complete Your Profile
+                 </h2>
+               </div>
+             </div>
+             <div className="p-6">
+               <p className={cn("mb-6 text-base", theme === "dark" ? "text-gray-300" : "text-gray-600")}>
+                 We need a few more details before you can access this tool. Your profile information helps us personalize your experience.
+               </p>
+               <div className="flex items-center justify-end gap-3">
+                 <button
+                   onClick={closeProfileModal}
+                   className={cn(
+                     "btn btn-md btn-secundary",
+                     theme === "dark" ? "text-white hover:bg-neutral-700" : "text-gray-700 hover:bg-gray-100"
+                   )}
+                 >
+                   Cancel
+                 </button>
+                 <button
+                   onClick={handleCompleteProfile}
+                   className={cn(
+                     "btn btn-md btn-purple",
+                     "flex items-center gap-2",
+                     theme === "dark" ? "bg-purple-600 hover:bg-purple-700 text-white" : "bg-purple-500 hover:bg-purple-600 text-white"
+                   )}
+                 >
+                   <IconUserCircle className="h-5 w-5" />
+                   Complete Profile
+                 </button>
+               </div>
+             </div>
+           </div>
+         </Modal>
       <FocusCards cards={cards} onCardClick={handleCardClick} />
     </>
   );
