@@ -22,7 +22,7 @@ const ClassroomsList = () => {
   const classroomImages = [
     "/static/classrooms/classroom_01.webp",
     "/static/classrooms/classroom_02.webp",
-    // "/static/classrooms/classroom_03.webp",
+    "/static/classrooms/classroom_03.webp",
     // "/static/classrooms/classroom_04.webp",
     // "/static/classrooms/classroom_05.webp",
   ];
@@ -107,8 +107,8 @@ const ClassroomsList = () => {
         
         <div className="relative w-full flex-1 flex flex-col items-center py-12">
           {/* Header Section with Logo */}
-          <div className="w-full max-w-4xl flex flex-col items-center mb-8 space-y-6">
-          <IconSchool 
+          <div className="w-full max-w-4xl flex items-center mb-8 justify-center space-x-6">
+            <IconSchool 
               className={`w-20 h-20 drop-shadow-lg text-primary`}
             />
             <div className="text-center">
@@ -158,13 +158,14 @@ const ClassroomsList = () => {
                   </button>
                 </div>
                 
-                <div className={`grid ${classes.length === 1 ? "justify-center" : "grid-cols-1 md:grid-cols-2"} gap-6`}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
                   {classes.map((classroom) => (
                     <CardContainer key={classroom.id} className="inter-var" containerClassName="py-10">
                       <CardBody 
                         className={cn(
-                          "relative group/card border w-full h-auto rounded-xl p-6",
+                          "relative group/card border h-auto rounded-xl p-6",
                           "bg-opacity-30 backdrop-filter backdrop-blur-lg",
+                          "w-full sm:w-[500px]", // Increased fixed width for all cards
                           theme === "dark" 
                             ? "dark:hover:shadow-2xl dark:hover:shadow-purple-500/[0.1] bg-gray-800 border-gray-700" 
                             : "hover:shadow-xl hover:shadow-blue-500/[0.1] bg-white border-gray-100"
@@ -181,8 +182,7 @@ const ClassroomsList = () => {
                           
                           <CardItem
                             translateZ="60"
-                            className="w-full mb-4 h-40 relative cursor-pointer"
-                            onClick={() => router.push(`/classrooms/${classroom.id}`)} // Added onClick handler
+                            className="w-full mb-4 h-40 relative"
                           >
                             <Image
                               src={classroom.imageUrl}
