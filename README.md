@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="frontend/static/logos/maestre_logo_circle_black.png" align="center" width="30%">
+    <img src="/frontend/static/maestrito/maestrito_jump_transparent.webp" align="center" width="30%">
 </p>
 <p align="center"><h1 align="center">MAESTRE</h1></p>
 <p align="center">
