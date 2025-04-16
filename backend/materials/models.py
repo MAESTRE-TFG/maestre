@@ -1,20 +1,21 @@
 from django.db import models
 from django.core.validators import FileExtensionValidator
 from django.core.exceptions import ValidationError
+from django.conf import settings
 import os
 
 
 def validate_file_limit(classroom):
-    if classroom.documents.count() >= 5:
-        raise ValidationError('A classroom cannot have more than 5 files.')
+    if classroom.documents.count() >= settings.MAX_FILES_PER_CLASSROOM:
+        raise ValidationError(f'A classroom cannot have more than {settings.MAX_FILES_PER_CLASSROOM} files.')
 
 
 class Document(models.Model):
-    name = models.CharField(max_length=255)
+    name = models.CharField(max_length=30)
     file = models.FileField(
         upload_to='documents/',
         validators=[
-            FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx', 'png', 'jpg', 'pptx']),
+            FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx', 'png', 'jpg', 'pptx', 'txt', 'md', 'tex']),
         ]
     )
     classroom = models.ForeignKey(

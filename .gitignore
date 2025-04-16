@@ -4,3 +4,8 @@ node_modules/
 package-lock.json
 .DS_Store
 setup.cfg
+.env
+.env.example
+.coverage
+htmlcov/
+backend/media/documents/*

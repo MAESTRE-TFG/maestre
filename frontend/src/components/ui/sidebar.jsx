@@ -58,12 +58,12 @@ export const DesktopSidebar = ({ className, children, ...props }) => {
     <>
       <motion.div
         className={cn(
-          "h-full px-4 py-4 hidden  md:flex md:flex-col w-[300px] flex-shrink-0",
+          "h-full px-6 py-6 hidden md:flex md:flex-col w-[300px] flex-shrink-0", // Adjusted padding for larger text and icons
           theme == "dark" ? "bg-neutral-800" : "bg-neutral-100",
           className
         )}
         animate={{
-          width: animate ? (open ? "300px" : "80px") : "300px",
+          width: animate ? (open ? "300px" : "100px") : "300px", // Adjusted width for larger icons
         }}
         onMouseEnter={() => setOpen(true)}
         onMouseLeave={() => setOpen(false)}
@@ -82,18 +82,40 @@ export const MobileSidebar = ({ className, children, ...props }) => {
     <>
       <div
         className={cn(
-          "h-10 px-4 py-4 flex flex-row md:hidden  items-center justify-between w-full",
+          "h-20 px-4 py-6 flex flex-row md:hidden items-center justify-between w-full",
           theme == "dark" ? "bg-neutral-800" : "bg-neutral-100"
         )}
         {...props}
       >
         <div className="flex justify-start z-20 w-full">
-          <IconMenu2
-            className={cn(
-              theme == "dark" ? "text-neutral-200" : "text-neutral-800"
-            )}
+          <button 
             onClick={() => setOpen(!open)}
-          />
+            className={cn(
+              "p-4 rounded-full transition-all duration-300 hover:bg-opacity-20 mt-2", // Adjusted padding for larger icons
+              theme === "dark" ? "hover:bg-white text-neutral-200" : "hover:bg-neutral-300 text-neutral-800"
+            )}
+          >
+            {open ? (
+              <IconX className="w-9 h-9 transition-transform duration-300 ease-in-out" /> // Increased icon size
+            ) : (
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="32" // Increased icon size
+                height="32" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+                className="transition-transform duration-300 ease-in-out"
+              >
+                <line x1="4" y1="6" x2="20" y2="6" />
+                <line x1="4" y1="12" x2="20" y2="12" />
+                <line x1="4" y1="18" x2="14" y2="18" />
+              </svg>
+            )}
+          </button>
         </div>
         <AnimatePresence>
           {open && (
@@ -127,7 +149,7 @@ export const SidebarLink = ({ link, className, ...props }) => {
     <Link
       href={link.href}
       className={cn(
-        "flex items-center justify-start gap-2  group/sidebar py-2",
+        "flex items-center justify-start gap-3 group/sidebar py-3", // Adjusted gap and padding for larger text and icons
         className
       )}
       {...props}
@@ -139,7 +161,7 @@ export const SidebarLink = ({ link, className, ...props }) => {
           opacity: animate ? (open ? 1 : 0) : 1,
         }}
         className={cn(
-          "text-sm group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0",
+          "text-base group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0", // Increased text size
           theme == "dark" ? "text-neutral-200" : "text-neutral-700",
         )}
       >

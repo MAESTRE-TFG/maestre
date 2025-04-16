@@ -4,8 +4,14 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
-import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Alert from "@/components/ui/Alert";
+import {
+  IconBuilding,
+  IconWorld,
+  IconMapPin,
+  IconCalendarEvent,
+} from "@tabler/icons-react"; // Import necessary icons
 
 const COMUNIDADES = [
   "Andalucía",
@@ -48,6 +54,7 @@ export function CreateSchoolForm({ onSubmit }) {
     stages: [],
     user: user || ""
   });
+  const [alert, setAlert] = useState(null);
 
   const handleChange = (e) => {
     const { name, value, options } = e.target;
@@ -70,9 +77,30 @@ export function CreateSchoolForm({ onSubmit }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const formDataCopy = { ...formData };
+
+    // Validate name length
+    if (formDataCopy.name.length > 50) {
+      setAlert({ type: "warning", message: "Name cannot exceed 50 characters." });
+      return;
+    }
+
+    // Validate city is not null
+    if (!formDataCopy.city) {
+      setAlert({ type: "warning", message: "City is required." });
+      return;
+    }
+
     formDataCopy.stages = formDataCopy.stages.join(", ");
-    console.log(formDataCopy);
-    onSubmit(formDataCopy);
+    if (!formDataCopy.name || !formDataCopy.community || !formDataCopy.city) {
+      setAlert({ type: "warning", message: "All fields are required!" });
+      return;
+    }
+    try {
+      onSubmit(formDataCopy);
+      setAlert({ type: "success", message: "School created successfully!" });
+    } catch (error) {
+      setAlert({ type: "error", message: "Failed to create school. Please try again." });
+    }
   };
 
   const handleSelectStage = (etapa) => {
@@ -88,20 +116,52 @@ export function CreateSchoolForm({ onSubmit }) {
   return (
     <div
       className={cn(
-        "max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input",
-        theme === "dark" ? "bg-black" : "bg-white"
+        "max-w-xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input",
+        theme === "dark" ? "bg-black/80 backdrop-blur-md" : "bg-white/80 backdrop-blur-md"
       )}
     >
+      {alert && (
+        <Alert
+          type={alert.type}
+          message={alert.message}
+          onClose={() => setAlert(null)}
+        />
+      )}
       <style jsx global>{`
         @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
+        select {
+          appearance: none;
+          background: ${theme === "dark" ? "#333" : "#fff"};
+          color: ${theme === "dark" ? "#fff" : "#000"};
+          border: 1px solid ${theme === "dark" ? "#555" : "#ccc"};
+          padding: 0.5rem;
+          border-radius: 0.375rem;
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        select:focus {
+          outline: none;
+          border-color: ${theme === "dark" ? "#888" : "#007bff"};
+          box-shadow: 0 0 0 3px ${theme === "dark" ? "rgba(136, 136, 136, 0.5)" : "rgba(0, 123, 255, 0.25)"};
+        }
+        option {
+          background: ${theme === "dark" ? "#333" : "#fff"};
+          color: ${theme === "dark" ? "#fff" : "#000"};
+        }
       `}</style>
       <form
         className="my-8"
         onSubmit={handleSubmit}
-        style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
       >
-        <LabelInputContainer className="mb-8">
-          <Label htmlFor="name">🏫 Name</Label>
+        <h2 className={cn("text-2xl font-bold mb-6 text-center mx-auto", theme === "dark" ? "text-white" : "text-gray-800")}>
+          Create New School
+        </h2>
+
+        {/* Name Field */}
+        <LabelInputContainer className="mb-5">
+          <Label htmlFor="name" className="flex items-center gap-2">
+            <IconBuilding className="h-4 w-4 text-blue-500" />
+            Name
+          </Label>
           <Input
             id="name"
             name="name"
@@ -110,42 +170,61 @@ export function CreateSchoolForm({ onSubmit }) {
             required
             value={formData.name}
             onChange={handleChange}
+            className="h-10"
           />
         </LabelInputContainer>
-        <LabelInputContainer className="mb-8">
-          <Label htmlFor="community">🌍 Region</Label>
-          <select
-            id="community"
-            name="community"
-            required
-            value={formData.community}
-            onChange={handleChange}
-            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-          >
-            <option value="" disabled>
-              Select a community
-            </option>
-            {COMUNIDADES.map((comunidad) => (
-              <option key={comunidad} value={comunidad}>
-                {comunidad}
+
+        <div className="flex flex-col md:flex-row md:gap-4 w-full">
+          {/* Region Field */}
+          <LabelInputContainer className="mb-5 md:mb-0 md:w-1/2">
+            <Label htmlFor="community" className="flex items-center gap-2">
+              <IconWorld className="h-4 w-4 text-green-500" />
+              Region
+            </Label>
+            <select
+              id="community"
+              name="community"
+              required
+              value={formData.community}
+              onChange={handleChange}
+              className="block w-full h-10 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            >
+              <option value="" disabled>
+                Select a community
               </option>
-            ))}
-          </select>
-        </LabelInputContainer>
-        <LabelInputContainer className="mb-8">
-          <Label htmlFor="city">🏙️ City</Label>
-          <Input
-            id="city"
-            name="city"
-            placeholder="Sevilla"
-            type="text"
-            required
-            value={formData.city}
-            onChange={handleChange}
-          />
-        </LabelInputContainer>
-        <LabelInputContainer className="mb-8">
-          <Label>📆 Stages</Label>
+              {COMUNIDADES.map((comunidad) => (
+                <option key={comunidad} value={comunidad}>
+                  {comunidad}
+                </option>
+              ))}
+            </select>
+          </LabelInputContainer>
+
+          {/* City Field */}
+          <LabelInputContainer className="mb-5 md:w-1/2">
+            <Label htmlFor="city" className="flex items-center gap-2">
+              <IconMapPin className="h-4 w-4 text-purple-500" />
+              City
+            </Label>
+            <Input
+              id="city"
+              name="city"
+              placeholder="Sevilla"
+              type="text"
+              required
+              value={formData.city}
+              onChange={handleChange}
+              className="h-10"
+            />
+          </LabelInputContainer>
+        </div>
+
+        {/* Stages Field */}
+        <LabelInputContainer className="mb-6">
+          <Label htmlFor="stages" className="flex items-center gap-2">
+            <IconCalendarEvent className="h-4 w-4 text-amber-500" />
+            Stages
+          </Label>
           <div className="flex flex-wrap gap-2">
             {ETAPAS.map((etapa) => (
               <button
@@ -169,31 +248,26 @@ export function CreateSchoolForm({ onSubmit }) {
           </div>
         </LabelInputContainer>
 
-        <button
-          className={cn(
-            "relative group/btn block w-full rounded-md h-10 font-medium border border-transparent",
-            theme === "dark"
-              ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
-          )}
-          type="submit"
-        >
-          Create school &rarr;
-          <BottomGradient />
-        </button>
-        <button
-          className={cn(
-            "relative group/btn block w-full mx-auto rounded-md h-10 font-medium border border-transparent mt-4",
-            theme === "dark"
-              ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-red-300"
-          )}
-          type="button"
-          onClick={() => router.back()}>
-          &larr; Cancel
-          <BottomGradient isCancel />
-        </button>
+        <div className="flex flex-col space-y-8">
+          {/* Submit Button */}
+          <button
+            className="btn btn-success py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center w-full mx-auto max-w-sm"
+            type="submit"
+          >
+            Create School &rarr;
+            <BottomGradient />
+          </button>
 
+          {/* Cancel Button */}
+          <button
+            className="btn btn-danger py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center w-full mx-auto max-w-sm"
+            type="button"
+            onClick={() => router.back()}
+          >
+            &larr; Cancel
+            <BottomGradient isCancel />
+          </button>
+        </div>
       </form>
     </div>
   );

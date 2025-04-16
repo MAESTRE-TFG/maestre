@@ -245,3 +245,122 @@ class SchoolTests(APITestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(School.objects.count(), 1)
+
+    def test_filter_schools_by_city(self):
+        School.objects.create(
+            name='Another School',
+            community='Another Community',
+            city='Another City',
+            stages='Primary'
+        )
+
+        response = self.client.get(f"{self.create_url}?city=Test City")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['name'], 'Test School')
+
+        response = self.client.get(f"{self.create_url}?city=Another City")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['name'], 'Another School')
+
+        response = self.client.get(self.create_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+    def test_user_school_assignment_after_creation(self):
+        data = {
+            'name': 'New School',
+            'community': 'New Community',
+            'city': 'New City',
+            'stages': 'Primary, Secondary'
+        }
+        response = self.client.post(self.create_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        self.user.refresh_from_db()
+        self.assertIsNotNone(self.user.school)
+        self.assertEqual(self.user.school.name, 'New School')
+
+    def test_retrieve_school(self):
+        url = reverse('school-detail', kwargs={'pk': self.school.pk})
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['name'], self.school.name)
+
+    def test_list_schools(self):
+        School.objects.create(
+            name='Another School',
+            community='Another Community',
+            city='Another City',
+            stages='Primary'
+        )
+        response = self.client.get(self.create_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+    def test_create_school_without_authentication(self):
+        self.client.credentials()  # Remove authentication
+        data = {
+            'name': 'Unauthorized School',
+            'community': 'Unauthorized Community',
+            'city': 'Unauthorized City',
+            'stages': 'Primary'
+        }
+        response = self.client.post(self.create_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_update_school_without_authentication(self):
+        self.client.credentials()  # Remove authentication
+        url = reverse('school-detail', kwargs={'pk': self.school.pk})
+        data = {'name': 'Unauthorized Update'}
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_partial_update_school_without_authentication(self):
+        self.client.credentials()  # Remove authentication
+        url = reverse('school-detail', kwargs={'pk': self.school.pk})
+        data = {'city': 'Unauthorized Partial Update'}
+        response = self.client.patch(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_delete_school_with_invalid_id(self):
+        url = reverse('school-detail', kwargs={'pk': 9999})  # Non-existent ID
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)  # Correct status code
+
+    def test_filter_schools_by_nonexistent_city(self):
+        response = self.client.get(f"{self.create_url}?city=Nonexistent City")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)
+
+    def test_create_school_with_invalid_field(self):
+        data = {
+            'name': 'Invalid School',
+            'community': 'Invalid Community',
+            'city': 'Invalid City',
+            'stages': 'Primary',
+            'invalid_field': 'This should not be here'
+        }
+        response = self.client.post(self.create_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)  # Invalid fields are ignored
+
+    def test_update_school_with_invalid_field(self):
+        url = reverse('school-detail', kwargs={'pk': self.school.pk})
+        data = {'invalid_field': 'This should not be here'}
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)  # Invalid fields are ignored
+
+    def test_school_string_representation(self):
+        self.assertEqual(str(self.school), self.school.name)
+
+    def test_school_ordering(self):
+        school2 = School.objects.create(
+            name='A School',
+            community='Another Community',
+            city='Another City',
+            stages='Primary'
+        )
+        schools = School.objects.all()
+        self.assertEqual(schools[0], school2)
+        self.assertEqual(schools[1], self.school)

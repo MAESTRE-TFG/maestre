@@ -1,10 +1,12 @@
 import { cn } from "@/lib/utils";
 import React, { useRef, useState, useEffect } from "react";
+import { getApiBaseUrl } from "@/lib/api";
 import { motion } from "framer-motion";
 import { IconUpload } from "@tabler/icons-react";
 import { useDropzone } from "react-dropzone";
 import axios from 'axios';
 import { Modal } from "@/components/ui/modal";
+import Alert from "@/components/ui/Alert";
 
 const mainVariant = {
   initial: {
@@ -61,6 +63,12 @@ export const FileUpload = ({
   const [fileToEdit, setFileToEdit] = useState(null);
   const [newFileName, setNewFileName] = useState("");
   const [isUploading, setIsUploading] = useState(false);
+  const [alert, setAlert] = useState(null);
+
+  const showAlert = (type, message) => {
+    setAlert({ type, message });
+    setTimeout(() => setAlert(null), 5000); // Auto-dismiss after 5 seconds
+  };
 
   const handleEdit = async (e, file) => {
     e.stopPropagation();
@@ -83,7 +91,7 @@ export const FileUpload = ({
         updatedFileName = `${nameWithoutExtension}.${originalExtension}`;
       }
 
-      const response = await axios.patch(`http://localhost:8000/api/materials/${fileToEdit.id}/`,
+      const response = await axios.patch(`${getApiBaseUrl()}/api/materials/${fileToEdit.id}/`,
         { name: updatedFileName },
         {
           headers: {
@@ -103,7 +111,7 @@ export const FileUpload = ({
       }
     } catch (error) {
       console.error('Error updating file name:', error);
-      alert('Failed to update file name. Please try again.');
+      showAlert('error', 'Failed to update file name. Please try again.');
     } finally {
       setShowEditModal(false);
       setFileToEdit(null);
@@ -130,7 +138,7 @@ export const FileUpload = ({
         if (file.file && typeof file.file === 'string') {
           const fileUrl = file.file.startsWith('http')
             ? file.file
-            : `http://localhost:8000${file.file}`;
+            : `${getApiBaseUrl()}${file.file}`;
           const size = await getFileSize(fileUrl);
           if (size) {
             sizes[file.id] = size;
@@ -149,7 +157,7 @@ export const FileUpload = ({
   useEffect(() => {
     const fetchFiles = async () => {
       try {
-        const response = await axios.get('http://localhost:8000/api/materials/', {
+        const response = await axios.get(`${getApiBaseUrl()}/api/materials/`, {
           params: { classroom_id: classroomId },
           headers: {
             'Authorization': `Token ${localStorage.getItem("authToken")}`,
@@ -170,12 +178,20 @@ export const FileUpload = ({
     try {
       setIsUploading(true);
       const file = newFiles[0]; // Since multiple is false, we only handle the first file
+
+      // Truncate the file name to 30 characters if it exceeds that length
+      let truncatedFileName = file.name;
+      if (file.name.length > 30) {
+        const extension = file.name.split('.').pop();
+        truncatedFileName = `${file.name.substring(0, 30 - extension.length - 1)}.${extension}`;
+      }
+
       const formData = new FormData();
-      formData.append('name', file.name);
+      formData.append('name', truncatedFileName);
       formData.append('file', file);
       formData.append('classroom', classroomId);
 
-      await axios.post('http://localhost:8000/api/materials/', formData, {
+      await axios.post(`${getApiBaseUrl()}/api/materials/`, formData, {
         headers: {
           'Authorization': `Token ${localStorage.getItem("authToken")}`,
           'Content-Type': 'multipart/form-data',
@@ -193,17 +209,14 @@ export const FileUpload = ({
       if (error.response) {
         const errorMsg = error.response.data && error.response.data.error
           ? error.response.data.error
-          : "Failed to upload file. Maximum limit reached.";
-        setErrorMessage(errorMsg);
-        setShowErrorModal(true);
+          : "Failed to upload file. Maximum number of materials for this class reached.";
+        showAlert('error', errorMsg);
       } else if (error.request) {
         console.error('No response received:', error.request);
-        setErrorMessage("Network error. Please try again later.");
-        setShowErrorModal(true);
+        showAlert('error', "Network error. Please try again later.");
       } else {
         console.error('Error setting up request:', error.message);
-        setErrorMessage("An error occurred. Please try again.");
-        setShowErrorModal(true);
+        showAlert('error', "An error occurred. Please try again.");
       }
     } finally {
       setIsUploading(false);
@@ -225,6 +238,7 @@ export const FileUpload = ({
   
   return (
     <div className="w-full" {...getRootProps()}>
+      {alert && <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />}
       <motion.div
         onClick={handleClick}
         whileHover="animate"

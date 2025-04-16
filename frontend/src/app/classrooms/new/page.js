@@ -1,18 +1,18 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { getApiBaseUrl } from "@/lib/api";
 import { CreateClassroomForm } from "@/components/classroom-create-form";
 import { useTheme } from "@/components/theme-provider";
-import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
-import { ErrorContext } from "@/context/ErrorContext";
+import Alert from "@/components/ui/Alert";
+import { cn } from "@/lib/utils";
 
 export default function CreateClassroom() {
   const router = useRouter();
   const { theme } = useTheme();
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [alert, setAlert] = useState(null);
   const [userSchool, setUserSchool] = useState(null);
   const [userStages, setUserStages] = useState(null);
 
@@ -26,6 +26,7 @@ export default function CreateClassroom() {
     }
     const token = localStorage.getItem('authToken');
     if (!token) {
+      setAlert({ type: "error", message: "Authentication token missing. Redirecting to signup." });
       router.push('/profile/signup');
       return;
     }
@@ -35,7 +36,7 @@ export default function CreateClassroom() {
     const fetchStages = async () => {
       if (userSchool) {
         try {
-          const response = await fetch(`http://localhost:8000/api/schools/${userSchool}/`, {
+          const response = await fetch(`${getApiBaseUrl()}/api/schools/${userSchool}/`, {
             headers: {
               "Authorization": `Token ${localStorage.getItem('authToken')}`,
             },
@@ -44,15 +45,16 @@ export default function CreateClassroom() {
             const data = await response.json();
             setUserStages(data.stages);
           } else {
-            setErrorMessage("Failed to fetch stages");
+            setAlert({ type: "error", message: "Failed to fetch stages. Please try again later." });
           }
         } catch (err) {
-          setErrorMessage("Network error occurred");
+          setAlert({ type: "error", message: "Network error occurred while fetching stages." });
         }
       }
     };
     fetchStages();
   }, [userSchool]);
+
   const educationalStages = [
     {
       stage: "Infantil",
@@ -87,7 +89,7 @@ export default function CreateClassroom() {
   const handleSubmit = async (formData) => {
     try {
       const token = localStorage.getItem("authToken");
-      const response = await fetch("http://localhost:8000/api/classrooms/", {
+      const response = await fetch(`${getApiBaseUrl()}/api/classrooms/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -97,71 +99,64 @@ export default function CreateClassroom() {
       });
 
       if (response.ok) {
+        setAlert({ type: "success", message: "Classroom created successfully!" });
         router.push("/classrooms");
       } else {
         const data = await response.json();
-        setErrorMessage("Failed to create classroom");
+        if (data.error) {
+          setAlert({ type: "error", message: data.error });
+        } else {
+          setAlert({ type: "error", message: "Failed to create classroom. Please try again." });
+        }
       }
     } catch (err) {
-      setErrorMessage("Network error occurred");
+      setAlert({ type: "error", message: "Network error occurred while creating classroom." });
     }
   };
 
   return (
     <SidebarDemo ContentComponent={() => (
-      <div className="relative flex flex-col justify-center items-center py-12 sm:px-8 lg:px-8 overflow-auto">
-        {/* Floating Div */}
-        <div className="fixed top-0 left-0 w-full z-20 bg-inherit">
-          <div className="relative z-20 sm:mx-auto sm:w-full sm:max-w-full">
-            <div className="h-12"></div>
-            <h1
-              className={cn(
-                "mt-6 text-center text-3xl font-extrabold text-zinc-100",
-                theme === "dark" ? "text-white" : "text-dark"
-              )}
-            >
-              Create a New Classroom
-            </h1>
+      <div className="min-h-screen w-screen bg-gradient-to-br from-blue-500/10 to-purple-500/5">
+        {/* Content container with max width for wider screens */}
+        <div className="relative mx-auto max-w-7xl w-full">
+          {/* Floating alert */}
+          {alert && (
+            <div className="fixed top-4 right-4 z-50 max-w-md">
+              <Alert
+                type={alert.type}
+                message={alert.message}
+                onClose={() => setAlert(null)}
+              />
+            </div>
+          )}
+          
+          <div className="relative w-full flex-1 flex flex-col items-center py-12">
+            {/* Header Section with Logo */}
+            <div className="w-full max-w-4xl flex items-center mb-8 justify-center md:justify-start space-x-6">
+              <img
+                src={theme === "dark" ? "/static/logos/maestre_logo_white_transparent.webp" : "/static/logos/maestre_logo_blue_transparent.webp"}
+                alt="MAESTRE Logo"
+                className="w-20 h-20 drop-shadow-lg"
+              />
+              <div className="text-center md:text-left">
+                <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                  Create a New Classroom
+                </h1>
+                <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                  Set up your <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>MAESTRE</span> classroom
+                </p>
+              </div>
+            </div>
+            
             <style jsx global>{`
               @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
             `}</style>
+            
+            <div className="w-full max-w-4xl">
+              <CreateClassroomForm onSubmit={handleSubmit} educationalStages={filteredEducationalStages} />
+            </div>
           </div>
         </div>
-        {/* End of Floating Div */}
-        {/* Background Images */}
-        {theme === "dark" ? (
-          <>
-            <img
-              src="/static/bubbles black/5.svg"
-              alt="Bubble"
-              className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
-            />
-            <img
-              src="/static/bubbles black/6.svg"
-              alt="Bubble"
-              className="absolute bottom-0 right-0 opacity-50 z-0"
-            />
-          </>
-        ) : (
-          <>
-            <img
-              src="/static/bubbles white/5.svg"
-              alt="Bubble"
-              className="absolute top-0 left-0 w-1/2 opacity-50 z-0"
-            />
-            <img
-              src="/static/bubbles white/6.svg"
-              alt="Bubble"
-              className="absolute bottom-0 right-0 opacity-50 z-0"
-            />
-          </>
-        )}
-        {/* End of Background Images */}
-        <div className="relative z-10 my-12" style={{ height: "300px" }}></div>
-        <div className="relative z-10 xl:mx-auto xl:w-full xl:max-w-6xl">
-          <CreateClassroomForm onSubmit={handleSubmit} setErrorMessage={setErrorMessage} educationalStages={filteredEducationalStages} />
-        </div>
-        <div className="my-12"></div>
       </div>
     )} />
   );

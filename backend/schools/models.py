@@ -2,10 +2,10 @@ from django.db import models
 
 
 class School(models.Model):
-    name = models.CharField(max_length=200)
-    community = models.CharField(max_length=100)
-    city = models.CharField(max_length=100)
-    stages = models.TextField(max_length=500)
+    name = models.CharField(max_length=50)
+    community = models.CharField(max_length=50)
+    city = models.CharField(max_length=50)
+    stages = models.TextField(max_length=100)
 
     class Meta:
         verbose_name = 'School'

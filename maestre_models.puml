@@ -1,0 +1,89 @@
+@startuml Maestre Project Models
+
+' USERS APP
+class CustomUser {
+  +id: BigAutoField
+  +password: CharField
+  +last_login: DateTimeField
+  +email: EmailField
+  +username: CharField
+  +first_name: CharField
+  +last_name: CharField
+  +is_active: BooleanField
+  +is_staff: BooleanField
+  +is_superuser: BooleanField
+  +school: ForeignKey
+  +name: CharField
+  +surname: CharField
+  +region: CharField
+  +city: CharField
+}
+
+' SCHOOLS APP
+class School {
+  +id: BigAutoField
+  +name: CharField
+  +community: CharField
+  +city: CharField
+  +stages: TextField
+}
+
+' STUDENTS APP
+class Student {
+  +id: BigAutoField
+  +name: CharField
+  +surname: CharField
+  +classroom: ForeignKey
+}
+
+' CLASSROOMS APP
+class Classroom {
+  +id: BigAutoField
+  +name: CharField
+  +academic_course: CharField
+  +description: TextField
+  +academic_year: CharField
+  +creator: ForeignKey
+}
+
+' TAGS APP
+class Tag {
+  +id: BigAutoField
+  +name: CharField
+  +creator: ForeignKey
+  +color: CharField
+}
+
+' MATERIALS APP
+class Document {
+  +id: BigAutoField
+  +name: CharField
+  +file: FileField
+  +classroom: ForeignKey
+}
+
+' TERMS APP
+class Terms {
+  +id: BigAutoField
+  +name: CharField
+  +author: ForeignKey
+  +content: FileField
+  +pdf_content: FileField
+  +version: CharField
+  +tag: CharField
+  +created_at: DateTimeField
+  +updated_at: DateTimeField
+}
+
+' Relationships
+School "1" -- "*" CustomUser : school
+CustomUser "*" -- "*" Group : groups
+CustomUser "*" -- "*" Permission : user_permissions
+Classroom "1" -- "*" Student : classroom
+CustomUser "1" -- "*" Classroom : creator
+CustomUser "1" -- "*" Tag : creator
+Classroom "1" -- "*" Document : classroom
+Document "*" -- "*" Tag : tags
+CustomUser "1" -- "*" Terms : author
+
+@enduml

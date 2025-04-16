@@ -1,12 +1,15 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState, useEffect, useMemo, useCallback, use } from "react";
+import { getApiBaseUrl } from "@/lib/api";
+import { useState, useEffect, useCallback } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { CompleteProfileForm } from "@/components/complete-profile-form";
+import Alert from "@/components/ui/Alert";
+
 
 const ProfileEdit = () => {
   const router = useRouter();
@@ -23,9 +26,14 @@ const ProfileEdit = () => {
     city: "",
     school: ""
   });
-  const [errorMessage, setErrorMessage] = useState(null);
+  const [alert, setAlert] = useState(null);
   const [schools, setSchools] = useState([]);
   const [city, setCity] = useState("");
+
+  const showAlert = (type, message) => {
+    setAlert({ type, message });
+    setTimeout(() => setAlert(null), 5000); // Auto-dismiss after 5 seconds
+  };
 
   useEffect(() => {
     setIsClient(true);
@@ -53,7 +61,6 @@ const ProfileEdit = () => {
         surname: parsedFormData.surname || "Default Surname",
       }));
       setCity(parsedFormData.city);
-      console.log("Parsed form data:", parsedFormData);
     }
   }, [router]);
 
@@ -61,6 +68,14 @@ const ProfileEdit = () => {
     const { name, value } = e.target;
     if (name === "city") {
       setCity(value);
+    }
+    if (name === "username" && value.length > 30) {
+      showAlert("error", "Username cannot exceed 30 characters.");
+      return;
+    }
+    if (name === "email" && value.length > 255) {
+      showAlert("error", "Email cannot exceed 255 characters.");
+      return;
     }
     const updatedFormData = { ...formData, [name]: value };
     setFormData(updatedFormData);
@@ -70,15 +85,14 @@ const ProfileEdit = () => {
   const fetchSchools = useCallback(async () => {
     if (!city) return; 
     try {
-      const response = await axios.get(`http://localhost:8000/api/schools/?city=${city}`, {
+      const response = await axios.get(`${getApiBaseUrl()}/api/schools/?city=${city}`, {
         headers: {
           Authorization: `Token ${localStorage.getItem("authToken")}`,
         },
       });
       setSchools(response.data);
     } catch (err) {
-      console.error("Error fetching schools:", err);
-      setErrorMessage("Error fetching schools. Please try again later.");
+      showAlert("error", "Error fetching schools. Please try again later.");
     }
   }, [city]);
 
@@ -89,13 +103,22 @@ const ProfileEdit = () => {
   const handleComplete = useCallback(async () => {
     try {
       if (!formData.username || !formData.email || !formData.name || !formData.surname || !formData.region || !formData.city || !formData.school) {
-        setErrorMessage("All fields are required.");
+        showAlert("error", "All fields are required.");
         return;
       }
 
-      console.log("Submitting form data:", formData);
+      if (formData.username.length > 30) {
+        showAlert("error", "Username cannot exceed 30 characters.");
+        return;
+      }
+
+      if (formData.email.length > 255) {
+        showAlert("error", "Email cannot exceed 255 characters.");
+        return;
+      }
+
       const response = await axios.put(
-        `http://localhost:8000/api/users/${user.id}/update/`,
+        `${getApiBaseUrl()}/api/users/${user.id}/update/`,
         formData,
         {
           headers: {
@@ -103,13 +126,13 @@ const ProfileEdit = () => {
           },
         }
       );
-      console.log("Response data:", response.data);
       localStorage.setItem("user", JSON.stringify(response.data));
       localStorage.removeItem("formData");
       setUser(response.data);
       setEditMode(false);
+      showAlert("success", "Profile updated successfully.");
     } catch (err) {
-      setErrorMessage(`Update failed: ${err.response ? JSON.stringify(err.response.data) : err.message}`);
+      showAlert("error", `Update failed: ${err.response ? JSON.stringify(err.response.data) : err.message}`);
     }
   }, [formData, user?.id]);
 
@@ -140,34 +163,55 @@ const ProfileEdit = () => {
   if (!isClient) return null;
 
   return (
-    <div className="flex flex-col justify-center items-center py-12 sm:px-8 lg:px-8 overflow-auto">
-      <div className="my-12"></div>
-      <div className="sm:mx-auto sm:w-full sm:max-w-full"></div>
-      <div className="sm:mx-auto sm:w-full sm:max-w-md rounded-md md:rounded-2xl">
-        <h4
-          className={cn(
-            "mt-6 text-center text-3xl font-extrabold text-zinc-100",
-            theme === "dark" ? "text-white" : "text-dark"
-          )}
-        >
-          Complete your profile to fully enjoy <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>MAESTRE</span>
-        </h4>
-        <style jsx global>{`
-          @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
-        `}</style>
+    <div className="min-h-screen w-screen bg-gradient-to-br from-blue-500/10 to-purple-500/5">
+
+      {/* Content container with max width for wider screens */}
+      <div className="relative mx-auto max-w-7xl w-full">
+        {/* Floating alert */}
+        {alert && (
+          <div className="fixed top-4 right-4 z-50 max-w-md">
+            <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />
+          </div>
+        )}
+        
+        <div className="relative w-full flex-1 flex flex-col items-center py-12">
+          {/* Header Section with Logo */}
+          <div className="w-full max-w-4xl flex items-center mb-8 justify-center space-x-6">
+            <img
+              src={theme === "dark" ? "/static/logos/maestre_logo_white_transparent.webp" : "/static/logos/maestre_logo_blue_transparent.webp"}
+              alt="MAESTRE Logo"
+              className="w-20 h-20 drop-shadow-lg"
+            />
+            <div className="text-center">
+              <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                Complete your profile
+              </h1>
+              <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                To fully enjoy <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>MAESTRE</span>
+              </p>
+            </div>
+          </div>
+          
+          <style jsx global>{`
+            @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
+          `}</style>
+          
+          <div className="w-full max-w-4xl">
+            <CompleteProfileForm 
+              formData={formData}
+              handleChange={handleChange}
+              handleComplete={handleComplete}
+              handleCreateSchool={handleCreateSchool}
+              schools={schools}
+              buttonClassName="btn" 
+              buttonSpacing="space-y-8"
+            />
+          </div>
+        </div>
       </div>
-      <br />
-      <CompleteProfileForm 
-        formData={formData}
-        handleChange={handleChange}
-        handleComplete={handleComplete}
-        handleCreateSchool={handleCreateSchool}
-        schools={schools}
-      />
     </div>
   );
 }
-
 
 export default function Main() {
   return <SidebarDemo ContentComponent={ProfileEdit} />;

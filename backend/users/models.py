@@ -6,8 +6,7 @@ from schools.models import School
 # Since we have a custom user model, we need a custom user manager
 # that inherits from BaseUserManager. This custom user manager will handle creating
 # users and superusers. This saves us a lot of work, and it can be seen that everything is much simpler
-# at http://localhost:8000/admin/
-
+# at the admin interface (e.g., http://yourdomain.com/admin/)
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, email, username, password=None, **extra_fields):
@@ -27,10 +26,8 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
-    email = models.EmailField(unique=True)
+    email = models.EmailField(unique=True, max_length=255)
     username = models.CharField(max_length=30, unique=True)
-    first_name = models.CharField(max_length=30, blank=True)
-    last_name = models.CharField(max_length=30, blank=True)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
     is_superuser = models.BooleanField(default=False)
@@ -41,10 +38,10 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
-    name = models.CharField(max_length=100)
-    surname = models.CharField(max_length=100)
-    region = models.CharField(max_length=100, null=True, blank=True, default=None)
-    city = models.CharField(max_length=100, null=True, blank=True, default=None)
+    name = models.CharField(max_length=30)
+    surname = models.CharField(max_length=30)
+    region = models.CharField(max_length=50, null=True, blank=True, default=None)
+    city = models.CharField(max_length=50, null=True, blank=True, default=None)
 
     groups = models.ManyToManyField(
         'auth.Group',

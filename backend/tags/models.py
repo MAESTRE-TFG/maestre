@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+import re
 
 User = get_user_model()
 
@@ -25,6 +26,15 @@ class Tag(models.Model):
 
     def clean(self):
         validate_user_tags_limit(self.creator)
+
+        # Validate color as a valid hexadecimal color code
+        if self.color and not re.match(r'^#[0-9A-Fa-f]{6}$', self.color):
+            raise ValidationError({'color': 'Invalid hexadecimal color code.'})
+
+        # Ensure uniqueness of name for the creator
+        if Tag.objects.filter(name=self.name, creator=self.creator).exclude(id=self.id).exists():
+            raise ValidationError({'name': 'Tag with this Name and Creator already exists.'})
+
         super().clean()
 
     def save(self, *args, **kwargs):
