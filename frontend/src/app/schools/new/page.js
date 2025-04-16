@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { getApiBaseUrl } from "@/lib/api";
 import { CreateSchoolForm } from "@/components/school-create-form";
 import { useTheme } from "@/components/theme-provider";
-import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import Alert from "@/components/ui/Alert";
@@ -28,17 +27,6 @@ export default function CreateSchool() {
     }
   }, [router]);
 
-  useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      const parsedUser = JSON.parse(user);
-      if (parsedUser.region && parsedUser.city && parsedUser.school) {
-        setAlert({ type: "info", message: "Edit mode enabled for your school." });
-        setEditMode(true);
-      }
-    }
-  }, []);
-
   const handleSubmit = async (formData) => {
     try {
       const token = localStorage.getItem("authToken");
@@ -55,6 +43,7 @@ export default function CreateSchool() {
         const data = await response.json();
         setAlert({ type: "success", message: "School created successfully!" });
         if (editMode) {
+          router.refresh();
           router.push("/profile/edit?editMode=true");
         } else {
           router.push("/profile/complete");
@@ -70,27 +59,47 @@ export default function CreateSchool() {
 
   return (
     <SidebarDemo ContentComponent={() => (
-      <div className="relative flex flex-col justify-center items-center py-12 sm:px-8 lg:px-8 overflow-auto">
-        {alert && (
-          <Alert
-            type={alert.type}
-            message={alert.message}
-            onClose={() => setAlert(null)}
-          />
-        )}
-
-        {/* Header Section */}
-        <div className="w-full text-center mb-12">
-          <br></br>
-          <h1 className={`text-4xl font-bold font-alfa-slab-one mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-          Create your school for other teachers to join too!
-          </h1>
+      <div className="min-h-screen w-screen bg-gradient-to-br from-blue-500/10 to-purple-500/5">
+        {/* Content container with max width for wider screens */}
+        <div className="relative mx-auto max-w-7xl w-full">
+          {/* Floating alert */}
+          {alert && (
+            <div className="fixed top-4 right-4 z-50 max-w-md">
+              <Alert
+                type={alert.type}
+                message={alert.message}
+                onClose={() => setAlert(null)}
+              />
+            </div>
+          )}
+          
+          <div className="relative w-full flex-1 flex flex-col items-center py-12">
+            {/* Header Section with Logo */}
+            <div className="w-full max-w-4xl flex items-center mb-8 justify-center space-x-6">
+              <img
+                src={theme === "dark" ? "/static/logos/maestre_logo_white_transparent.webp" : "/static/logos/maestre_logo_blue_transparent.webp"}
+                alt="MAESTRE Logo"
+                className="w-20 h-20 drop-shadow-lg"
+              />
+              <div className="text-center">
+                <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                  Create your school
+                </h1>
+                <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                  For other teachers to join <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>MAESTRE</span>
+                </p>
+              </div>
+            </div>
+            
+            <style jsx global>{`
+              @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
+            `}</style>
+            
+            <div className="w-full max-w-4xl">
+              <CreateSchoolForm onSubmit={handleSubmit} />
+            </div>
+          </div>
         </div>
-
-        <div className="mt-4 sm:mx-auto sm:w-full sm:max-w-md">
-          <CreateSchoolForm onSubmit={handleSubmit} />
-        </div>
-        <div className="my-12"></div>
       </div>
     )} />
   );

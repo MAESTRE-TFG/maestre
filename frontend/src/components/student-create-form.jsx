@@ -78,6 +78,7 @@ export function StudentCreateForm({ onSubmit }) {
             required
             value={formData.name}
             onChange={handleChange}
+            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </LabelInputContainer>
         <LabelInputContainer className="mb-8">
@@ -90,15 +91,14 @@ export function StudentCreateForm({ onSubmit }) {
             required
             value={formData.surname}
             onChange={handleChange}
+            className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           />
         </LabelInputContainer>
 
         <button
           className={cn(
-            "relative group/btn block w-full rounded-md h-10 font-medium border border-transparent",
-            theme === "dark"
-              ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-blue-300"
+            "btn btn-md btn-success w-full mt-4",
+            theme === "dark" ? "dark:btn-success" : ""
           )}
           type="submit"
         >
@@ -107,13 +107,12 @@ export function StudentCreateForm({ onSubmit }) {
         </button>
         <button
           className={cn(
-            "relative group/btn block w-full mx-auto rounded-md h-10 font-medium border border-transparent mt-4",
-            theme === "dark"
-              ? "text-white bg-gradient-to-br from-zinc-900 to-zinc-900 shadow-[0px_1px_0px_0px_var(--zinc-800)_inset,0px_-1px_0px_0px_var(--zinc-800)_inset]"
-              : "text-black bg-gradient-to-br from-white to-neutral-100 shadow-[0px_1px_0px_0px_#ffffff40_inset,0px_-1px_0px_0px_#ffffff40_inset] border border-red-300"
+            "btn btn-md btn-secondary w-full mt-4",
+            theme === "dark" ? "dark:btn-secondary" : ""
           )}
           type="button"
-          onClick={() => router.back()}>
+          onClick={() => router.back()}
+        >
           &larr; Cancel
           <BottomGradient isCancel />
         </button>

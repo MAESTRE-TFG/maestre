@@ -15,7 +15,8 @@ class ClassroomViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if user.is_authenticated:
-            return Classroom.objects.all()
+            # Filter classrooms to only show those created by the current user
+            return Classroom.objects.filter(creator=user)
         return Classroom.objects.none()
 
     def check_object_permissions(self, request, obj):

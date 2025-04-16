@@ -5,17 +5,20 @@ import { getApiBaseUrl } from "@/lib/api";
 import { SigninForm } from "@/components/signin-form-demo";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
-import { useState, useEffect } from "react";
-import Alert from "@/components/ui/Alert"; // Import the Alert component
+import { useState, useEffect, useRef } from "react";
+import Alert from "@/components/ui/Alert";
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 export default function SignIn() {
   const router = useRouter();
   const { theme } = useTheme();
-  const [alert, setAlert] = useState(null); // State for managing alerts
+  const [alert, setAlert] = useState(null);
+  const videoRef = useRef(null);
+  const isLargeScreen = useMediaQuery("(min-width: 1024px)");
 
   const showAlert = (type, message) => {
     setAlert({ type, message });
-    setTimeout(() => setAlert(null), 5000); // Auto-dismiss after 5 seconds
+    setTimeout(() => setAlert(null), 5000);
   };
 
   useEffect(() => {
@@ -24,6 +27,15 @@ export default function SignIn() {
       router.push("/");
     }
   }, [router]);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.muted = true; // Ensure the video is muted
+      videoRef.current.play().catch(error => {
+        console.log("Video autoplay prevented:", error);
+      });
+    }
+  }, [isLargeScreen]);
 
   const handleSubmit = async (formData) => {
     // Field length and uniqueness restrictions
@@ -55,30 +67,6 @@ export default function SignIn() {
       showAlert("warning", "Password must contain at least one special character");
       return;
     }
-    if (formData.username && formData.username.length > 30) {
-      showAlert("warning", "Username cannot exceed 30 characters");
-      return;
-    }
-    if (formData.first_name && formData.first_name.length > 30) {
-      showAlert("warning", "First name cannot exceed 30 characters");
-      return;
-    }
-    if (formData.last_name && formData.last_name.length > 30) {
-      showAlert("warning", "Last name cannot exceed 30 characters");
-      return;
-    }
-    if (!formData.is_active) {
-      showAlert("warning", "Your account is inactive. Please contact support.");
-      return;
-    }
-    if (formData.is_superuser) {
-      showAlert("warning", "Superuser login is restricted.");
-      return;
-    }
-    if (!formData.school) {
-      showAlert("warning", "School information is required.");
-      return;
-    }
 
     try {
       const response = await fetch(`${getApiBaseUrl()}/api/users/signin/`, {
@@ -106,33 +94,96 @@ export default function SignIn() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      {alert && <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />}
-      <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <h1
-          className={cn(
-            "mt-6 text-center text-3xl font-extrabold text-zinc-100",
-            theme === "dark" ? "text-white" : "text-dark"
-          )}
-        >
-          Welcome back to{" "}
-          <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-            MAESTRE
-          </span>
-          , Sign in to your account
-        </h1>
-        <style jsx global>{`
-          @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
-        `}</style>
+    <div className={cn(
+      "min-h-screen flex flex-col md:flex-row",
+      "bg-gradient-to-br",
+      theme === "dark" 
+        ? "from-gray-900 via-zinc-900 to-gray-800" 
+        : "from-blue-50 via-white to-blue-100"
+    )}>
+      {/* Floating alert */}
+      {alert && (
+        <div className="fixed top-4 right-4 z-50 max-w-md">
+          <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />
+        </div>
+      )}
+
+      {/* Left side - Video (only on large screens) */}
+      {isLargeScreen && (
+        <div className="hidden lg:block lg:w-1/2 relative overflow-hidden">
+          <div className="absolute inset-0">
+            <video
+              ref={videoRef}
+              className="w-full h-full object-cover"
+              src="/static/maestrito/maestrito_hello_02.mp4"
+              loop
+              muted
+              playsInline
+            />
+            {/* Optional overlay for better text readability */}
+            <div className="absolute inset-0 bg-black bg-opacity-20"></div>
+          </div>
+          
+          {/* Video caption/branding */}
+          <div className="absolute bottom-8 left-8 z-10 max-w-lg">
+            <h2 className="text-3xl font-bold text-white drop-shadow-lg">
+            Maestrito is here to help with all your creative needs
+            </h2>
+          </div>
+        </div>
+      )}
+
+      {/* Right side - Login form */}
+      <div className={cn(
+        "flex flex-col justify-center items-center p-6 md:p-12", 
+        isLargeScreen ? "lg:w-1/2" : "w-full"
+      )}>
+        <div className="w-full max-w-xl">
+
+          <div className={cn(
+            "flex items-center mb-8",
+            isLargeScreen ? "justify-start space-x-6" : "justify-center space-x-4"
+          )}>
+            <img 
+              src={theme === "dark" ? "/static/logos/maestre_logo_white_transparent.webp" : "/static/logos/maestre_logo_blue_transparent.webp"} 
+              alt="MAESTRE Logo" 
+              className="w-28 h-28 drop-shadow-lg"
+            />
+            <div className={cn(
+              isLargeScreen ? "text-left" : "text-center"
+            )}>
+              <h1
+                className={cn(
+                  "text-4xl font-extrabold",
+                  theme === "dark" ? "text-white" : "text-gray-800"
+                )}
+              >
+                Welcome back
+              </h1>
+              <p className={cn(
+                "text-xl mt-2",
+                theme === "dark" ? "text-gray-300" : "text-gray-600"
+              )}>
+                to <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>MAESTRE</span>
+              </p>
+            </div>
+          </div>
+          <div className={cn(
+            "bg-opacity-30 backdrop-filter backdrop-blur-lg",
+            "rounded-xl shadow-xl p-8",
+            "w-full",
+            theme === "dark" 
+              ? "bg-gray-800 border border-gray-700" 
+              : "bg-white border border-gray-100"
+          )}>
+            <SigninForm onSubmit={handleSubmit} />
+          </div>
+        </div>
       </div>
-        <img 
-          src={theme === "dark" ? "/static/maestre_logo_circle_black.png" : "/static/maestre_logo_circle.png"} 
-          alt="MAESTRE Logo" 
-          className="mx-auto mt-4 w-32 h-32"
-        />
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <SigninForm onSubmit={handleSubmit} />
-      </div>
+
+      <style jsx global>{`
+        @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
+      `}</style>
     </div>
   );
 }

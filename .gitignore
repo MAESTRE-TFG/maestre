@@ -8,3 +8,4 @@ setup.cfg
 .env.example
 .coverage
 htmlcov/
+backend/media/documents/*
