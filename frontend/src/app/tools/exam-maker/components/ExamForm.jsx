@@ -1,5 +1,4 @@
 "use client";
-import { useState } from "react";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useTheme } from "@/components/theme-provider";
@@ -31,7 +30,7 @@ const ExamForm = ({
       <div className="space-y-6">
         <LabelInputContainer>
           <Label htmlFor="subject" className="flex items-center text-sm font-medium mb-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="rgb(76,161,84)">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
             Subject
@@ -50,7 +49,7 @@ const ExamForm = ({
 
         <LabelInputContainer>
           <Label htmlFor="examName" className="flex items-center text-sm font-medium mb-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="rgb(76,161,84)">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
             Exam Name
@@ -68,7 +67,7 @@ const ExamForm = ({
   
         <LabelInputContainer>
           <Label htmlFor="numQuestions" className="flex items-center text-sm font-medium mb-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="rgb(25,65,166)">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
             Number of Questions
@@ -88,7 +87,7 @@ const ExamForm = ({
     
         <LabelInputContainer>
           <Label htmlFor="totalPoints" className="flex items-center text-sm font-medium mb-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="rgb(25,65,166)">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
             Maximum Points
@@ -131,7 +130,7 @@ const ExamForm = ({
         {formData.scoringStyle === "custom" && (
           <LabelInputContainer>
             <Label htmlFor="customScoringDetails" className="flex items-center text-sm font-medium mb-1.5">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="rgb(25,65,166)">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
               Custom Scoring Details
@@ -165,7 +164,7 @@ const ExamForm = ({
         
         <LabelInputContainer>
           <Label htmlFor="additionalInfo" className="flex items-center text-sm font-medium mb-1.5">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="orange">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
             </svg>
             Additional Instructions (Optional)
@@ -181,14 +180,14 @@ const ExamForm = ({
           />
         </LabelInputContainer>
         
-        <div className="pt-4">
+        <div className="pt-4 flex justify-center">
           <button
             type="submit"
             disabled={isGenerating}
-            className={`w-full rounded-lg px-4 py-3 font-medium text-white transition-all ${
+            className={`btn-secundary w-2/3 py-2 px-8 text-white rounded-full flex items-center justify-center transition-all ${
               isGenerating 
-                ? 'bg-indigo-400 cursor-not-allowed' 
-                : 'bg-indigo-600 hover:bg-indigo-700 active:bg-indigo-800'
+                ? 'bg-gradient-to-r from-blue-500 to-purple-500 cursor-not-allowed' 
+                : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:bg-indigo-700 active:bg-indigo-800'
             } shadow-md hover:shadow-lg`}
           >
             {isGenerating ? (

@@ -778,19 +778,13 @@ const MaterialsList = () => {
                           setShowEditTagsModal(true);
                         }
                         }}
-                        className={cn(
-                        "px-4 py-2 rounded font-bold",
-                        theme === "dark"
-                          ? "bg-gray-700 text-white hover:bg-gray-600"
-                          : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                        )}
+                        className="btn-secundary py-2 rounded-full flex items-center justify-center flex-1"
                       >
                         Cancel
                       </button>
                       <button
-                        type="submit"
                         disabled={isSubmitting}
-                        className="px-4 py-2 rounded font-bold bg-blue-500 text-white hover:bg-blue-600"
+                        className="btn-primary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
                       >
                         {isSubmitting ? 'Creating...' : 'Create Tag'}
                       </button>

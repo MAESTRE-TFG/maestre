@@ -16,8 +16,8 @@ import ExamForm from "./components/ExamForm";
 import MaterialsModal from "./components/MaterialsModal";
 import ExamResultModal from "./components/ExamResultModal";
 import axios from "axios";
-
-// Import the prompt utility
+import Image from "next/image";
+import { IconFileText, IconBrain } from "@tabler/icons-react";
 import { buildExamPrompt } from "./utils/promptUtils";
 
 const ExamMaker = () => {
@@ -38,7 +38,6 @@ const ExamMaker = () => {
     llmModel: "llama3.2:3b",
     examName: ""
   });
-  const promptRef = useRef("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [examResult, setExamResult] = useState(null);
   const [showModal, setShowModal] = useState(false);
@@ -75,6 +74,7 @@ const ExamMaker = () => {
 
     fetchClassrooms();
   }, [router]);
+
 
   // Fetch user materials when classrooms are loaded
   useEffect(() => {
@@ -224,55 +224,94 @@ const ExamMaker = () => {
   }
 
   return (
-    <div className="flex min-h-screen">
-      <div className="flex-1">
-        <div className={cn(
-          "container mx-auto py-8 px-4 sm:px-6 lg:px-8",
-          theme === "dark" ? "text-white" : "text-gray-900"
-        )}>
-          {/* Alerts */}
-          <div className="fixed top-4 right-4 z-50 space-y-2 w-80">
-            {alerts.map(alert => (
-              <Alert
-                key={alert.id}
-                type={alert.type}
-                message={alert.message}
-                onClose={() => setAlerts(prev => prev.filter(a => a.id !== alert.id))}
+    <div className="min-h-screen w-screen bg-gradient-to-br from-blue-500/10 to-purple-500/5">
+      <div className="relative mx-auto max-w-7xl w-full">
+        {/* Alerts */}
+        <div className="fixed top-4 right-4 z-50 space-y-2 w-80">
+          {alerts.map(alert => (
+            <Alert
+              key={alert.id}
+              type={alert.type}
+              message={alert.message}
+              onClose={() => setAlerts(prev => prev.filter(a => a.id !== alert.id))}
+            />
+          ))}
+        </div>
+        
+        <div className="relative w-full flex-1 flex flex-col items-center py-12">
+          {/* Header Section with Logo and Teacher Image */}
+          <div className="w-full max-w-4xl flex items-center mb-8 justify-center space-x-6">
+            <div className="relative">
+              <IconBrain 
+                className="w-20 h-20 drop-shadow-lg text-primary"
               />
-            ))}
+              <div className="absolute -bottom-2 -right-2 bg-white dark:bg-gray-800 rounded-full p-1">
+                <IconFileText className="w-8 h-8 text-cyan-500" />
+              </div>
+            </div>
+            <div className="text-center">
+              <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                Exam Generator
+              </h1>
+              <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                Create customized exams with AI assistance
+              </p>
+            </div>
           </div>
-
-          <div className="max-w-5xl mx-auto">
-            <h1 className={cn(
-              "text-3xl font-bold mb-2",
-              theme === "dark" ? "text-white" : "text-gray-900"
-            )}>
-              Exam Generator
-            </h1>
-            <p className={cn(
-              "mb-8",
-              theme === "dark" ? "text-gray-300" : "text-gray-600"
-            )}>
-              Create customized exams for your students with AI assistance
-            </p>
-
-            <div className={cn(
-              "p-6 rounded-xl shadow-lg",
-              theme === "dark" ? "bg-zinc-900/90 border border-zinc-800" : "bg-white border border-gray-100"
-            )}>
-              <ExamForm
-                formData={formData}
-                handleChange={handleChange}
-                handleSubmit={handleSubmit}
-                isGenerating={isGenerating}
-                classrooms={classrooms}
-                uploadedFiles={uploadedFiles}
-                handleFileUpload={handleFileUpload}
-                removeUploadedFile={removeUploadedFile}
-                isProcessingFile={isProcessingFile}
-                setShowMaterialsModal={setShowMaterialsModal}
-                userMaterials={userMaterials}
-              />
+          
+          <div className="w-full max-w-6xl px-4 sm:px-8 md:px-12 lg:px-16">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {/* Teacher Image Column */}
+              <div className="hidden md:flex flex-col items-center justify-start">
+                <div className={cn(
+                  "mt-6 p-4 rounded-xl shadow-md w-full",
+                  theme === "dark" ? "bg-gray-800/80 border border-gray-700" : "bg-white/80 border border-gray-100"
+                )}>
+                  <h3 className={`text-lg font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                    AI-Powered Exams
+                  </h3>
+                  <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                    Create professional exams in seconds using our advanced AI technology. Perfect for teachers who want to save time while creating high-quality assessments.
+                  </p>
+                </div>
+                
+                {/* Updated teacher image with floating animation */}
+                <div className="relative w-full h-[700px] -mt-16 flex items-center justify-center">
+                  <div className="animate-float relative w-96 h-full">
+                    <Image
+                      src="/static/teachers/6.webp"
+                      alt="Teacher" 
+                      layout="fill"
+                      objectFit="contain"
+                      className="drop-shadow-xl"
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              {/* Form Column */}
+              <div className="col-span-1 md:col-span-2">
+                <div className={cn(
+                  "p-6 rounded-xl shadow-lg",
+                  "bg-opacity-30 backdrop-filter backdrop-blur-lg",
+                  theme === "dark" ? "bg-gray-800 border border-gray-700" : "bg-white border border-gray-100"
+                )}>
+                  <ExamForm
+                    formData={formData}
+                    handleChange={handleChange}
+                    handleSubmit={handleSubmit}
+                    isGenerating={isGenerating}
+                    classrooms={classrooms}
+                    uploadedFiles={uploadedFiles}
+                    handleFileUpload={handleFileUpload}
+                    removeUploadedFile={removeUploadedFile}
+                    isProcessingFile={isProcessingFile}
+                    setShowMaterialsModal={setShowMaterialsModal}
+                    userMaterials={userMaterials}
+                    theme={theme}
+                  />
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -302,6 +341,30 @@ const ExamMaker = () => {
   );
 };
 
+// Add the floating animation keyframes
+const styles = `
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+`;
+
 export default function Main() {
-  return <SidebarDemo ContentComponent={ExamMaker} />;
+  return (
+    <>
+      <style jsx global>{styles}</style>
+      <SidebarDemo ContentComponent={ExamMaker} />
+    </>
+  );
 }
