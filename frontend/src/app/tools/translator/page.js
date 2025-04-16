@@ -1,8 +1,9 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import { SidebarDemo } from "@/components/sidebar-demo";
+import { IconCopy, IconCheck, IconHistory, IconTrash } from "@tabler/icons-react";
 
 const languages = [
   { code: "es", name: "Spanish" },
@@ -17,7 +18,6 @@ const languages = [
   { code: "la", name: "Latin" }
 ];
 
-
 const Translator = () => {
   const { theme } = useTheme();
   const [sourceText, setSourceText] = useState("");
@@ -25,6 +25,25 @@ const Translator = () => {
   const [targetLanguage, setTargetLanguage] = useState("en");
   const [isTranslating, setIsTranslating] = useState(false);
   const [error, setError] = useState("");
+  const [translationHistory, setTranslationHistory] = useState([]);
+  const [copied, setCopied] = useState(false);
+
+  // Load translation history from localStorage on component mount
+  useEffect(() => {
+    const savedHistory = localStorage.getItem('translationHistory');
+    if (savedHistory) {
+      try {
+        setTranslationHistory(JSON.parse(savedHistory));
+      } catch (e) {
+        console.error("Error parsing translation history:", e);
+      }
+    }
+  }, []);
+
+  // Save translation history to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('translationHistory', JSON.stringify(translationHistory));
+  }, [translationHistory]);
 
   const handleTranslate = async () => {
     if (!sourceText.trim()) {
@@ -58,12 +77,51 @@ const Translator = () => {
 
       const data = await response.json();
       setTranslatedText(data.translated_text);
+      
+      // Add to translation history
+      const targetLangName = languages.find(lang => lang.code === targetLanguage)?.name || targetLanguage;
+      const newHistoryItem = {
+        id: Date.now(),
+        sourceText: sourceText,
+        translatedText: data.translated_text,
+        targetLanguage: targetLanguage,
+        targetLanguageName: targetLangName,
+        timestamp: new Date().toISOString()
+      };
+      
+      setTranslationHistory(prev => [newHistoryItem, ...prev.slice(0, 9)]); // Keep only the 10 most recent translations
     } catch (err) {
       setError("Translation failed. Please try again.");
       console.error("Translation error:", err);
     } finally {
       setIsTranslating(false);
     }
+  };
+
+  const copyToClipboard = (text) => {
+    navigator.clipboard.writeText(text).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
+
+  const loadFromHistory = (item) => {
+    setSourceText(item.sourceText);
+    setTranslatedText(item.translatedText);
+    setTargetLanguage(item.targetLanguage);
+  };
+
+  const clearHistory = () => {
+    setTranslationHistory([]);
+  };
+
+  const removeHistoryItem = (id) => {
+    setTranslationHistory(prev => prev.filter(item => item.id !== id));
+  };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleString();
   };
 
   return (
@@ -119,16 +177,30 @@ const Translator = () => {
                 ))}
               </select>
             </div>
-            <textarea
-              id="translated-text"
-              value={translatedText}
-              readOnly
-              placeholder="Translation will appear here"
-              className={cn(
-                "w-full min-h-[200px] p-3 rounded border",
-                theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300"
+            <div className="relative">
+              <textarea
+                id="translated-text"
+                value={translatedText}
+                readOnly
+                placeholder="Translation will appear here"
+                className={cn(
+                  "w-full min-h-[200px] p-3 rounded border",
+                  theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300"
+                )}
+              />
+              {translatedText && (
+                <button 
+                  onClick={() => copyToClipboard(translatedText)}
+                  className={cn(
+                    "absolute top-2 right-2 p-2 rounded-full",
+                    theme === "dark" ? "bg-gray-700 hover:bg-gray-600" : "bg-gray-200 hover:bg-gray-300"
+                  )}
+                  title="Copy to clipboard"
+                >
+                  {copied ? <IconCheck size={18} /> : <IconCopy size={18} />}
+                </button>
               )}
-            />
+            </div>
           </div>
         </div>
 
@@ -146,27 +218,110 @@ const Translator = () => {
           </button>
         </div>
 
-        {/* Document upload section - TODO: Implement */}
+        {/* Translation History Section */}
         <div className="mt-12 border-t pt-6">
-          <h2 className="text-xl font-semibold mb-4">
-            Document Translation (Coming Soon)
-          </h2>
-          <div className={cn(
-            "p-4 rounded-md border-2 border-dashed text-center",
-            theme === "dark" ? "border-gray-700 text-gray-400" : "border-gray-300 text-gray-500"
-          )}>
-            <p>Upload documents for direct translation (DOCX, PDF, TXT)</p>
-            <button
-              className={cn(
-                "mt-4 px-4 py-2 rounded border",
-                theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300",
-                "disabled:opacity-50"
-              )}
-              disabled
-            >
-              Select File
-            </button>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="text-xl font-semibold flex items-center">
+              <IconHistory className="mr-2" size={24} />
+              Translation History
+            </h2>
+            {translationHistory.length > 0 && (
+              <button
+                onClick={clearHistory}
+                className={cn(
+                  "px-3 py-1 text-sm rounded flex items-center",
+                  theme === "dark" ? "bg-red-800 hover:bg-red-700" : "bg-red-100 hover:bg-red-200",
+                  theme === "dark" ? "text-white" : "text-red-700"
+                )}
+              >
+                <IconTrash size={16} className="mr-1" />
+                Clear All
+              </button>
+            )}
           </div>
+          
+          {translationHistory.length === 0 ? (
+            <div className={cn(
+              "p-4 rounded-md border text-center",
+              theme === "dark" ? "border-gray-700 text-gray-400" : "border-gray-300 text-gray-500"
+            )}>
+              <p>Your translation history will appear here</p>
+            </div>
+          ) : (
+            <div className="space-y-4 max-h-[400px] overflow-y-auto pr-1">
+              {translationHistory.map((item) => (
+                <div 
+                  key={item.id} 
+                  className={cn(
+                    "rounded-lg border shadow-sm overflow-hidden",
+                    theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200"
+                  )}
+                >
+                  <div className={cn(
+                    "px-4 py-3 flex justify-between items-center border-b",
+                    theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-gray-50 border-gray-200"
+                  )}>
+                    <div className="font-medium flex items-center">
+                      <span className={cn(
+                        "inline-block w-2 h-2 rounded-full mr-2",
+                        theme === "dark" ? "bg-blue-400" : "bg-blue-500"
+                      )}></span>
+                      Translated to {item.targetLanguageName}
+                    </div>
+                    <div className="text-xs text-right">
+                      <span className={theme === "dark" ? "text-gray-400" : "text-gray-500"}>
+                        {formatDate(item.timestamp)}
+                      </span>
+                    </div>
+                  </div>
+                  
+                  <div className="px-4 py-3">
+                    <div className="mb-3">
+                      <div className="text-xs font-medium mb-1 uppercase tracking-wide">
+                        <span className={theme === "dark" ? "text-gray-400" : "text-gray-500"}>Source</span>
+                      </div>
+                      <div className="text-sm line-clamp-2">{item.sourceText}</div>
+                    </div>
+                    
+                    <div className="mb-2">
+                      <div className="text-xs font-medium mb-1 uppercase tracking-wide">
+                        <span className={theme === "dark" ? "text-gray-400" : "text-gray-500"}>Translation</span>
+                      </div>
+                      <div className="text-sm line-clamp-2">{item.translatedText}</div>
+                    </div>
+                  </div>
+                  
+                  <div className={cn(
+                    "px-4 py-2 flex justify-end gap-2 border-t",
+                    theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-gray-50 border-gray-200"
+                  )}>
+                    <button
+                      onClick={() => loadFromHistory(item)}
+                      className={cn(
+                        "text-xs px-3 py-1 rounded-md font-medium",
+                        theme === "dark" 
+                          ? "bg-blue-600 hover:bg-blue-700 text-white" 
+                          : "bg-blue-500 hover:bg-blue-600 text-white"
+                      )}
+                    >
+                      Load
+                    </button>
+                    <button
+                      onClick={() => removeHistoryItem(item.id)}
+                      className={cn(
+                        "text-xs px-3 py-1 rounded-md",
+                        theme === "dark" 
+                          ? "bg-gray-700 hover:bg-gray-600 text-gray-300" 
+                          : "bg-gray-200 hover:bg-gray-300 text-gray-700"
+                      )}
+                    >
+                      <IconTrash size={14} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       </div>
     </div>
