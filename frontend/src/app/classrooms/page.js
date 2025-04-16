@@ -23,8 +23,8 @@ const ClassroomsList = () => {
     "/static/classrooms/classroom_01.webp",
     "/static/classrooms/classroom_02.webp",
     "/static/classrooms/classroom_03.webp",
-    // "/static/classrooms/classroom_04.webp",
-    // "/static/classrooms/classroom_05.webp",
+    "/static/classrooms/classroom_04.webp",
+    "/static/classrooms/classroom_05.webp",
   ];
 
   // Function to assign unique random images to classrooms

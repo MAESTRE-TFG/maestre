@@ -12,7 +12,7 @@ const QuestionTypeSelector = ({ value, onChange, theme }) => {
     { value: "matching", label: "Matching" },
     { value: "ordering", label: "Ordering" },
     {value: "text analysis", label: "Text Analysis"},
-    {value: "image_analysis", label: "Image Analysis and Comparrison"},
+    {value: "image_analysis", label: "Image Analysis and Comparison"},
     { value: "mixed", label: "Mixed (Various Types)" }
   ];
 

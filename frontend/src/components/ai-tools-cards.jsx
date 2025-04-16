@@ -191,7 +191,7 @@ export function AIToolsCards() {
                  <button
                    onClick={closeProfileModal}
                    className={cn(
-                     "btn btn-md btn-secundary",
+                     "btn btn-md btn-secondary",
                      theme === "dark" ? "text-white hover:bg-neutral-700" : "text-gray-700 hover:bg-gray-100"
                    )}
                  >

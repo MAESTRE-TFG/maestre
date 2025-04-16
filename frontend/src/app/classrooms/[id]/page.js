@@ -591,7 +591,7 @@ const ClassroomPage = () => {
                         setShowModal(false);
                         setEditMode(false);
                       }}
-                      className="btn-secundary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
+                      className="btn-secondary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
                       >
                       Cancel
                       </button>
@@ -666,7 +666,7 @@ const ClassroomPage = () => {
                   <div className="flex justify-center gap-3">
                     <button
                       onClick={() => setShowDeleteModal(false)}
-                      className="btn-secundary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
+                      className="btn-secondary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
                     >
                       Cancel
                     </button>
@@ -696,7 +696,7 @@ const ClassroomPage = () => {
                   <div className="flex justify-end space-x-3">
                     <button
                       onClick={() => setShowDeleteSelectedModal(false)}
-                      className="btn btn-md btn-secundary"
+                      className="btn btn-md btn-secondary"
                     >
                       Cancel
                     </button>

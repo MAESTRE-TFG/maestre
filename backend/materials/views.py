@@ -7,14 +7,10 @@ from .models import Document
 from .serializers import DocumentSerializer
 import pdfplumber
 import docx
+from googletrans import Translator
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-import tempfile
-import os
-from .models import Document
-from django.core.exceptions import ObjectDoesNotExist
-from django.conf import settings
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
@@ -248,3 +244,61 @@ class DocumentViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+    @action(detail=False, methods=['post'], url_path='translate')
+    def translate_text(self, request):
+        """
+        Translate text from one language to another
+        
+        Expected request body:
+        {
+            "text": "Text to translate",
+            "src": "Source language code (optional)",
+            "dest": "Destination language code (default: 'en')"
+        }
+        """
+        text = request.data.get('text')
+        src = request.data.get('src', 'auto')  # Default to auto-detection
+        dest = request.data.get('dest', 'en')  # Default to English
+        
+        if not text:
+            return Response(
+                {"error": "Text parameter is required"}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        
+        try:
+            # Use the synchronous version of the library
+            from googletrans import Translator
+            translator = Translator()
+            
+            # For newer versions of googletrans that use async
+            import asyncio
+            
+            # Create a function to run the translation in an event loop
+            async def translate_async():
+                return await translator.translate(text, src=src, dest=dest)
+            
+            # Run the async function in a new event loop
+            loop = asyncio.new_event_loop()
+            asyncio.set_event_loop(loop)
+            result = loop.run_until_complete(translate_async())
+            loop.close()
+            
+            response_data = {
+                'original_text': text,
+                'translated_text': result.text,
+                'src': result.src,
+                'dest': result.dest,
+                'pronunciation': getattr(result, 'pronunciation', None)
+            }
+            
+            return Response(response_data, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            import traceback
+            error_details = traceback.format_exc()
+            print(f"Translation error: {error_details}")
+            return Response(
+                {"error": str(e)}, 
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )

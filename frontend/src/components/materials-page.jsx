@@ -450,7 +450,7 @@ export function MaterialsPage({ classroomId }) {
           <div className="flex justify-center gap-3">
             <button
               onClick={() => setShowDeleteModal(false)}
-              className="btn-secundary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
+              className="btn-secondary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
             >
               Cancel
             </button>
@@ -530,7 +530,7 @@ export function MaterialsPage({ classroomId }) {
             <div className="flex justify-center gap-3">
               <button
             onClick={() => setShowEditTagsModal(false)}
-            className="btn-secundary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
+            className="btn-secondary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
               >
             Cancel
               </button>
@@ -626,7 +626,7 @@ export function MaterialsPage({ classroomId }) {
                       setShowEditTagsModal(true);
                     }
                   }}
-                  className="btn-secundary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
+                  className="btn-secondary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
                 >
                   Cancel
                 </button>
@@ -692,7 +692,7 @@ export function MaterialsPage({ classroomId }) {
           <div className="flex justify-center gap-3">
             <button
               onClick={() => setShowEditModal(false)}
-              className="btn-secundary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
+              className="btn-secondary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
             >
               Cancel
             </button>
@@ -862,7 +862,7 @@ export function MaterialsPage({ classroomId }) {
             <div className="flex justify-end space-x-2">
               <button
                 onClick={() => setShowDeleteSelectedModal(false)}
-                className="btn btn-md btn-secundary"
+                className="btn btn-md btn-secondary"
                 >
                 Cancel
               </button>
