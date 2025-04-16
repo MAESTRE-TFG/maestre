@@ -14,6 +14,8 @@ import {
   IconMapPin,
   IconSchool,
   IconWorld,
+  IconEye,
+  IconEyeOff,
 } from "@tabler/icons-react";
 
 const COMUNIDADES = [
@@ -40,6 +42,18 @@ const COMUNIDADES = [
 export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCancel, schools, isProfileComplete, authToken }) {
   const { theme } = useTheme();
   const router = useRouter();
+
+  // State to toggle password visibility
+  const [showNewPassword, setShowNewPassword] = React.useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = React.useState(false);
+
+  const toggleNewPasswordVisibility = () => {
+    setShowNewPassword((prev) => !prev);
+  };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword((prev) => !prev);
+  };
 
   return (
     <div className={cn("max-w-4xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white")}>
@@ -198,7 +212,7 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
             </LabelInputContainer>
             <br />
             <div className="flex flex-col md:flex-row gap-6 mb-4">
-              <LabelInputContainer className="flex-1">
+              <LabelInputContainer className="flex-1 relative">
                 <Label
                   className="flex items-center"
                   style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
@@ -211,12 +225,23 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                   id="password"
                   name="password"
                   placeholder="New Password"
-                  type="password"
+                  type={showNewPassword ? "text" : "password"}
                   value={formData.password || ""}
                   onChange={handleChange}
                 />
+                <button
+                  type="button"
+                  onClick={toggleNewPasswordVisibility}
+                  className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
+                >
+                  {showNewPassword ? (
+                    <IconEyeOff className="h-5 w-5" />
+                  ) : (
+                    <IconEye className="h-5 w-5" />
+                  )}
+                </button>
               </LabelInputContainer>
-              <LabelInputContainer className="flex-1">
+              <LabelInputContainer className="flex-1 relative">
                 <Label
                   className="flex items-center"
                   style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
@@ -229,10 +254,21 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                   id="confirmPassword"
                   name="confirmPassword"
                   placeholder="Confirm Password"
-                  type="password"
+                  type={showConfirmPassword ? "text" : "password"}
                   value={formData.confirmPassword || ""}
                   onChange={handleChange}
                 />
+                <button
+                  type="button"
+                  onClick={toggleConfirmPasswordVisibility}
+                  className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
+                >
+                  {showConfirmPassword ? (
+                    <IconEyeOff className="h-5 w-5" />
+                  ) : (
+                    <IconEye className="h-5 w-5" />
+                  )}
+                </button>
               </LabelInputContainer>
             </div>
           </div>
