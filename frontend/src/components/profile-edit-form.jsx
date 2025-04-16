@@ -14,9 +14,7 @@ import {
   IconMapPin,
   IconSchool,
   IconWorld,
-  IconTrash,
 } from "@tabler/icons-react";
-import { Modal } from "@/components/ui/modal";
 
 const COMUNIDADES = [
   "Andalucía",

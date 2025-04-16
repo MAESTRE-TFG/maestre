@@ -59,6 +59,39 @@ export default function SignUp() {
       showAlert("warning", "Invalid school selection");
       return;
     }
+     // Field length and uniqueness restrictions
+     if (formData.emailOrUsername && formData.emailOrUsername.length > 255) {
+      showAlert("warning", "Email or username cannot exceed 255 characters");
+      return;
+    }
+    if (formData.password && formData.password.length > 128) {
+      showAlert("warning", "Password cannot exceed 128 characters");
+      return;
+    }
+    if (formData.password && formData.password.length < 8) {
+      showAlert("warning", "Password must be at least 8 characters long");
+      return;
+    }
+    if (formData.password && !/[A-Z]/.test(formData.password)) {
+      showAlert("warning", "Password must contain at least one uppercase letter");
+      return;
+    }
+    if (formData.password && !/[a-z]/.test(formData.password)) {
+      showAlert("warning", "Password must contain at least one lowercase letter");
+      return;
+    }
+    if (formData.password && !/[0-9]/.test(formData.password)) {
+      showAlert("warning", "Password must contain at least one number");
+      return;
+    }
+    if (formData.password && !/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
+      showAlert("warning", "Password must contain at least one special character");
+      return;
+    }
+    if (formData.password && !/^[^\s]+$/.test(formData.password)) {
+      showAlert("warning", "Password cannot contain leading or trailing whitespace");
+      return;
+    }
 
     try {
       const response = await fetch(`${getApiBaseUrl()}/api/users/signup/`, {
@@ -192,7 +225,7 @@ export default function SignUp() {
                 : "bg-white border border-gray-100"
             )}
           >
-            <SignupForm onSubmit={handleSubmit} />
+            <SignupForm onSubmit={handleSubmit} showAlert={showAlert} />
           </div>
         </div>
       </div>

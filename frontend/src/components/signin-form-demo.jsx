@@ -47,7 +47,13 @@ export function SigninForm({ onSubmit }) {
             style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             htmlFor="emailOrUsername"
           >
-            <IconUser className="inline-block mr-2" /> Email or Username
+            <IconUser
+              className={cn(
+                "inline-block mr-2",
+                theme === "dark" ? "text-cyan-400" : "text-[rgb(25,65,166)]"
+              )}
+            />{" "}
+            Email or Username
           </Label>
           <Input
             id="emailOrUsername"
@@ -69,13 +75,19 @@ export function SigninForm({ onSubmit }) {
             style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             htmlFor="password"
           >
-            <IconLock className="inline-block mr-2" /> Password
+            <IconLock
+              className={cn(
+                "inline-block mr-2",
+                theme === "dark" ? "text-cyan-400" : "text-[rgb(25,65,166)]"
+              )}
+            />{" "}
+            Password
           </Label>
           <Input
             id="password"
             name="password"
             placeholder="••••••••"
-            type={showPassword ? "text" : "password"} // Toggle input type
+            type={showPassword ? "text" : "password"}
             required
             value={formData.password}
             onChange={handleChange}
@@ -91,9 +103,19 @@ export function SigninForm({ onSubmit }) {
             className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
           >
             {showPassword ? (
-              <IconEyeOff className="h-5 w-5" />
+              <IconEyeOff
+                className={cn(
+                  "h-5 w-5",
+                  theme === "dark" ? "text-cyan-400" : "text-[rgb(25,65,166)]"
+                )}
+              />
             ) : (
-              <IconEye className="h-5 w-5" />
+              <IconEye
+                className={cn(
+                  "h-5 w-5",
+                  theme === "dark" ? "text-cyan-400" : "text-[rgb(25,65,166)]"
+                )}
+              />
             )}
           </button>
         </LabelInputContainer>

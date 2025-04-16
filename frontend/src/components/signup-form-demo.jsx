@@ -14,7 +14,7 @@ import {
 } from "@tabler/icons-react";
 import Alert from "@/components/ui/Alert";
 
-export function SignupForm({ onSubmit }) {
+export function SignupForm({ onSubmit, showAlert }) {
   const { theme } = useTheme();
   const [formData, setFormData] = React.useState({
     name: "",
@@ -27,9 +27,7 @@ export function SignupForm({ onSubmit }) {
     school: null,
   });
   const [acceptedTerms, setAcceptedTerms] = React.useState(false);
-  const [error, setError] = React.useState(null);
   const [showPassword, setShowPassword] = React.useState(false);
-  const [alert, setAlert] = React.useState(null); // State for managing alerts
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -50,17 +48,13 @@ export function SignupForm({ onSubmit }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!acceptedTerms) {
-      setAlert({
-        type: "warning",
-        message: "You must accept the Terms of Use and Privacy Policy to sign up.",
-      });
+      showAlert("warning", "You must accept the Terms of Use and Privacy Policy to sign up.");
       return;
     }
     try {
-      setError(null);
       await onSubmit(formData);
     } catch (err) {
-      setError("An error occurred while signing up. Please try again.");
+      showAlert("error", "An error occurred while signing up. Please try again.");
     }
   };
 
@@ -101,15 +95,6 @@ export function SignupForm({ onSubmit }) {
         }
       `}</style>
 
-      {/* Alert Component */}
-      {alert && (
-        <Alert
-          type={alert.type}
-          message={alert.message}
-          onClose={() => setAlert(null)}
-        />
-      )}
-
       <h2
         className={cn(
           "text-2xl font-bold text-center mb-6",
@@ -121,133 +106,133 @@ export function SignupForm({ onSubmit }) {
       </h2>
 
       <form className="grid grid-cols-1 gap-6" onSubmit={handleSubmit}>
-        {/* Personal Information Section */}
-        <fieldset className="border rounded-lg p-4">
-          <legend
+
+          <fieldset className="border rounded-lg p-4">
+            <legend
+              className={cn(
+                "px-2 font-semibold",
+                theme === "dark" ? "text-white" : "text-black"
+              )}
+              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+            >
+              Personal Information
+            </legend>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <LabelInputContainer>
+                <Label htmlFor="firstname">
+            <IconIdBadge className="inline-block mr-2 text-blue-500" /> Name
+                </Label>
+                <Input
+            id="firstname"
+            name="name"
+            placeholder="Tyler"
+            type="text"
+            required
+            value={formData.name}
+            onChange={handleChange}
             className={cn(
+              theme === "dark"
+                ? "hover:bg-white hover:text-black"
+                : "hover:bg-gray-100"
+            )}
+                />
+              </LabelInputContainer>
+
+              <LabelInputContainer>
+                <Label htmlFor="lastname">
+            <IconIdBadge className="inline-block mr-2 text-blue-500" /> Surname
+                </Label>
+                <Input
+            id="lastname"
+            name="surname"
+            placeholder="Durden"
+            type="text"
+            required
+            value={formData.surname}
+            onChange={handleChange}
+            className={cn(
+              theme === "dark"
+                ? "hover:bg-white hover:text-black"
+                : "hover:bg-gray-100"
+            )}
+                />
+              </LabelInputContainer>
+            </div>
+          </fieldset>
+
+          {/* Account Information Section */}
+          <fieldset className="border rounded-lg p-4">
+            <legend className={cn(
               "px-2 font-semibold",
               theme === "dark" ? "text-white" : "text-black"
+            )} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+              Account Information
+            </legend>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <LabelInputContainer>
+                <Label htmlFor="username">
+            <IconUser className="inline-block mr-2 text-green-500" /> Username
+                </Label>
+                <Input 
+            id="username" 
+            name="username" 
+            placeholder="superprof01" 
+            type="text" 
+            required 
+            value={formData.username} 
+            onChange={handleChange} 
+            className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
+                />
+              </LabelInputContainer>
+              
+              <LabelInputContainer>
+                <Label htmlFor="email">
+            <IconMail className="inline-block mr-2 text-red-500" /> Email
+                </Label>
+                <Input 
+            id="email" 
+            name="email" 
+            placeholder="projectmayhem@fc.com" 
+            type="email" 
+            required 
+            value={formData.email} 
+            onChange={handleChange} 
+            className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
+                />
+              </LabelInputContainer>
+              
+              <LabelInputContainer className="md:col-span-2 relative">
+                <Label htmlFor="password">
+            <IconLock className="inline-block mr-2 text-purple-500" /> Password
+                </Label>
+                <Input 
+            id="password" 
+            name="password" 
+            placeholder="••••••••" 
+            type={showPassword ? "text" : "password"}
+            required 
+            value={formData.password} 
+            onChange={handleChange} 
+            className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
+                />
+                <button
+            type="button"
+            onClick={togglePasswordVisibility}
+            className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
+                >
+            {showPassword ? (
+              <IconEyeOff className="h-5 w-5 text-gray-500" />
+            ) : (
+              <IconEye className="h-5 w-5 text-gray-500" />
             )}
-            style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-          >
-            Personal Information
-          </legend>
+                </button>
+              </LabelInputContainer>
+            </div>
+          </fieldset>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <LabelInputContainer>
-              <Label htmlFor="firstname">
-                <IconIdBadge className="inline-block mr-2" /> Name
-              </Label>
-              <Input
-                id="firstname"
-                name="name"
-                placeholder="Tyler"
-                type="text"
-                required
-                value={formData.name}
-                onChange={handleChange}
-                className={cn(
-                  theme === "dark"
-                    ? "hover:bg-white hover:text-black"
-                    : "hover:bg-gray-100"
-                )}
-              />
-            </LabelInputContainer>
-
-            <LabelInputContainer>
-              <Label htmlFor="lastname">
-                <IconIdBadge className="inline-block mr-2" /> Surname
-              </Label>
-              <Input
-                id="lastname"
-                name="surname"
-                placeholder="Durden"
-                type="text"
-                required
-                value={formData.surname}
-                onChange={handleChange}
-                className={cn(
-                  theme === "dark"
-                    ? "hover:bg-white hover:text-black"
-                    : "hover:bg-gray-100"
-                )}
-              />
-            </LabelInputContainer>
-          </div>
-        </fieldset>
-
-        {/* Account Information Section */}
-        <fieldset className="border rounded-lg p-4">
-          <legend className={cn(
-            "px-2 font-semibold",
-            theme === "dark" ? "text-white" : "text-black"
-          )} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-            Account Information
-          </legend>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <LabelInputContainer>
-              <Label htmlFor="username">
-                <IconUser className="inline-block mr-2" /> Username
-              </Label>
-              <Input 
-                id="username" 
-                name="username" 
-                placeholder="superprof01" 
-                type="text" 
-                required 
-                value={formData.username} 
-                onChange={handleChange} 
-                className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
-              />
-            </LabelInputContainer>
-            
-            <LabelInputContainer>
-              <Label htmlFor="email">
-                <IconMail className="inline-block mr-2" /> Email
-              </Label>
-              <Input 
-                id="email" 
-                name="email" 
-                placeholder="projectmayhem@fc.com" 
-                type="email" 
-                required 
-                value={formData.email} 
-                onChange={handleChange} 
-                className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
-              />
-            </LabelInputContainer>
-            
-            <LabelInputContainer className="md:col-span-2 relative">
-              <Label htmlFor="password">
-                <IconLock className="inline-block mr-2" /> Password
-              </Label>
-              <Input 
-                id="password" 
-                name="password" 
-                placeholder="••••••••" 
-                type={showPassword ? "text" : "password"}
-                required 
-                value={formData.password} 
-                onChange={handleChange} 
-                className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
-              />
-              <button
-                type="button"
-                onClick={togglePasswordVisibility}
-                className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
-              >
-                {showPassword ? (
-                  <IconEyeOff className="h-5 w-5" />
-                ) : (
-                  <IconEye className="h-5 w-5" />
-                )}
-              </button>
-            </LabelInputContainer>
-          </div>
-        </fieldset>
-
-        {/* Terms and Conditions */}
+          {/* Terms and Conditions */}
         <div className="flex items-center space-x-2 mt-2">
           <input
             type="checkbox"
@@ -283,13 +268,6 @@ export function SignupForm({ onSubmit }) {
           </label>
         </div>
 
-        {/* Error Message */}
-        {error && (
-          <div className="text-red-500 text-center">
-            {error}
-          </div>
-        )}
-
         {/* Submit Button */}
         <button
           className={cn(
@@ -297,7 +275,6 @@ export function SignupForm({ onSubmit }) {
             theme === "dark" ? "dark:btn-primary" : ""
           )}
           type="submit"
-          disabled={!acceptedTerms}
         >
           Sign up &rarr;
           <BottomGradient />

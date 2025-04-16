@@ -186,25 +186,20 @@ const ProfileEdit = () => {
 
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
-
-    // Field length restrictions
-    if (name === "username" && value.length > 30) {
-      showAlert("warning", "Username cannot exceed 30 characters");
-      return;
+  
+    // Update the form data without triggering warnings
+    setFormData((prevData) => ({ ...prevData, [name]: value || "" }));
+  
+    // Handle city updates separately
+    if (name === "city") {
+      setCity(value);
     }
-    if (name === "email" && value.length > 255) {
-      showAlert("warning", "Email cannot exceed 255 characters");
-      return;
-    }
-    if (name === "name" && value.length > 30) {
-      showAlert("warning", "First name cannot exceed 30 characters");
-      return;
-    }
-    if (name === "surname" && value.length > 30) {
-      showAlert("warning", "Last name cannot exceed 30 characters");
-      return;
-    }
-
+  }, []);
+  
+  const handleBlur = useCallback((e) => {
+    const { name, value } = e.target;
+  
+    // Validate the password field on blur
     if (name === "password") {
       if (value.length < 8) {
         showAlert("warning", "Password must be at least 8 characters long");
@@ -227,12 +222,8 @@ const ProfileEdit = () => {
         return;
       }
     }
-
-    if (name === "city") {
-      setCity(value);
-    }
-    setFormData((prevData) => ({ ...prevData, [name]: value || "" }));
   }, []);
+  
 
   const handleUpdate = useCallback(async () => {
     const updatePayload = {
@@ -244,7 +235,7 @@ const ProfileEdit = () => {
       city: formData.city,
       school: formData.school,
     };
-
+  
     if (formData.password && formData.oldPassword) {
       if (formData.password !== formData.confirmPassword) {
         showAlert("error", "Passwords do not match");
@@ -253,7 +244,14 @@ const ProfileEdit = () => {
       updatePayload.password = formData.password;
       updatePayload.oldPassword = formData.oldPassword;
     }
-
+  
+    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      showAlert("error", "Invalid email format");
+      return;
+    }
+  
+    console.log("Payload being sent:", updatePayload);
+  
     try {
       const response = await axios.put(
         `${getApiBaseUrl()}/api/users/${user.id}/update/`,
@@ -264,30 +262,32 @@ const ProfileEdit = () => {
           },
         }
       );
-
+  
       const userToStore = {
         ...response.data,
         password: undefined,
         oldPassword: undefined,
         confirmPassword: undefined,
       };
-
+  
       localStorage.setItem("user", JSON.stringify(userToStore));
       setUser(userToStore);
-
+  
       setFormData((prev) => ({
         ...prev,
         password: "",
         confirmPassword: "",
         oldPassword: "",
       }));
-
+  
       setEditMode(false);
       showAlert("success", "Profile updated successfully");
     } catch (err) {
+      console.error("Update failed:", err.response?.data || err.message);
       showAlert("error", err.response?.data?.message || "Update failed");
     }
   }, [formData, user?.id]);
+  
 
   const handleDelete = useCallback(async () => {
     if (usernameInput === user.username) {
