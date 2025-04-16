@@ -361,20 +361,8 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
             </div>
           )}
         </div>
-        {/* Update Profile Button */}
-        <div className="flex justify-center">
-          <button
-            className={cn(
-              "btn btn-md btn-success w-1/2",
-              theme === "dark" ? "dark:btn-success" : ""
-            )}
-            type="submit"
-          >
-            Update &rarr;
-          </button>
-        </div>
-        {/* Cancel Button */}
-        <div className="flex justify-center mt-4">
+        {/* Update Profile and Cancel Buttons */}
+        <div className="flex justify-center gap-4 mt-4">
           <button
             className={cn(
               "btn btn-md btn-secondary w-1/2",
@@ -384,6 +372,15 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
             onClick={handleCancel}
           >
             &larr; Cancel
+          </button>
+          <button
+            className={cn(
+              "btn btn-md btn-success w-1/2",
+              theme === "dark" ? "dark:btn-success" : ""
+            )}
+            type="submit"
+          >
+            Update &rarr;
           </button>
         </div>
       </form>

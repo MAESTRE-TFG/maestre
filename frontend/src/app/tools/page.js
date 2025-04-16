@@ -8,7 +8,7 @@ import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { cn } from "@/lib/utils";
 import { Modal } from "@/components/ui/modal";
-import { IconLock, IconUserCircle } from "@tabler/icons-react";
+import { IconLock, IconUserCircle,IconWand } from "@tabler/icons-react";
 
 const CardContent = ({ children }) => {
   const { theme } = useTheme();
@@ -146,21 +146,26 @@ const ToolList = () => {
   return (
     <div className="min-h-screen w-screen bg-gradient-to-br from-blue-500/10 to-purple-500/5">
 
-      <div className="my-16 sm:my-28"></div>
+      <div className="my-8 sm:my-14"></div>
 
 
       <div className="relative">
-        {/* Header Section */}
-        <div className="w-full text-center mb-8 md:mb-12">
-          <h1 className={`text-3xl sm:text-4xl font-bold font-alfa-slab-one mb-3 sm:mb-4 ${theme === 'dark' ? 'text-white' : 'text-black'}`}>
-            AI Tools
-          </h1>
-          <p className={`text-lg sm:text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-700'}`}>
-            Choose one of our automated tools and start creating!
-          </p>
-        </div>
+        { /* Header Section */ }
+          <div className="w-full max-w-4xl flex flex-col items-center mb-8 space-y-6 text-center mx-auto">
+            <IconWand 
+              className={`w-20 h-20 drop-shadow-lg text-primary`}
+            />
+            <div>
+              <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                AI Tools
+              </h1>
+              <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                Choose one of our automated tools and start creating!
+              </p>
+            </div>
+          </div>
 
-          {/* Quick Access Section */}
+            {/* Quick Access Section */}
           { isAuthenticated && isProfileComplete && (
             <div className="w-full max-w-7xl mx-auto mb-12 px-4 sm:px-8 md:px-12 lg:px-16">
               <h2 className={`text-xl font-bold mb-4 flex items-center ${theme === 'dark' ? 'text-white' : 'text-black'}`}>

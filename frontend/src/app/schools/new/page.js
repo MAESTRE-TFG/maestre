@@ -27,17 +27,6 @@ export default function CreateSchool() {
     }
   }, [router]);
 
-  useEffect(() => {
-    const user = localStorage.getItem("user");
-    if (user) {
-      const parsedUser = JSON.parse(user);
-      if (parsedUser.region && parsedUser.city && parsedUser.school) {
-        setAlert({ type: "info", message: "Edit mode enabled for your school." });
-        setEditMode(true);
-      }
-    }
-  }, []);
-
   const handleSubmit = async (formData) => {
     try {
       const token = localStorage.getItem("authToken");

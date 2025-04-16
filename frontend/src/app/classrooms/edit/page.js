@@ -278,13 +278,69 @@ const ClassroomEdit = () => {
           }
         `}</style>
       </div>
+
+      {isDeleteModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={closeDeleteModal}>
+          <div
+            className={cn(
+              "p-6 rounded-xl max-w-md w-full mx-4",
+              theme === "dark" ? "bg-gray-800" : "bg-white",
+              "shadow-xl"
+            )}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-center mb-4 text-red-500">
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            </div>
+
+            <h3 className={cn(
+              "text-xl font-bold mb-2 text-center",
+              theme === "dark" ? "text-white" : "text-gray-800"
+            )}>
+              Delete Classroom
+            </h3>
+
+            <p className={cn(
+              "mb-6 text-center",
+              theme === "dark" ? "text-gray-300" : "text-gray-600"
+            )}>
+              Are you sure you want to delete <span className="font-semibold">{classroom?.name}</span>? This action cannot be undone.
+            </p>
+
+            <input
+              type="text"
+              value={nameInput}
+              onChange={(e) => setNameInput(e.target.value)}
+              placeholder={`Enter classroom name (${classroom?.name})`}
+              className={cn(
+                "w-full px-4 py-2 mb-4 border rounded-md",
+                theme === "dark" ? "bg-gray-700 text-white border-gray-600" : "bg-gray-100 text-gray-800 border-gray-300"
+              )}
+            />
+
+            <div className="flex justify-center gap-3">
+              <button
+                onClick={closeDeleteModal}
+                className="btn-secundary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className="btn-danger py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       <br />
-      <div className="relative z-10 xl:mx-auto xl:w-full xl:max-w-7xl px-4 sm:px-8 md:px-12 lg:px-20 bg-gradient-to-b from-transparent to-gray-50 dark:to-gray-900 p-2 rounded-xl">
-        {memoizedForm}
-      </div>
-      
-      {/* Modal remains unchanged */}
-      
+      {memoizedForm}
+
       <div className="my-12"></div>
     </div>
   );

@@ -7,14 +7,15 @@ import { cn } from "@/lib/utils";
 import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import Alert from "@/components/ui/Alert"; // Import the Alert component
+import Alert from "@/components/ui/Alert";
+import { IconBooks} from "@tabler/icons-react";
 
 const MaterialsList = () => {
   const { theme } = useTheme();
   const [materials, setMaterials] = useState([]);
   const [tags, setTags] = useState([]);
   const [classrooms, setClassrooms] = useState([]);
-  const [alerts, setAlerts] = useState([]); // State to manage alerts
+  const [alerts, setAlerts] = useState([]);
 
   const addAlert = (type, message) => {
     const id = Date.now();
@@ -363,427 +364,508 @@ const MaterialsList = () => {
   if (!isClient) return null;
 
   return (
-    <div className="relative flex flex-col justify-center items-center py-8 sm:px-8 lg:px-8 overflow-auto px-4 sm:px-6 md:px-8">
-      {alerts.map((alert) => (
-        <Alert
-          key={alert.id}
-          type={alert.type}
-          message={alert.message}
-          onClose={() => setAlerts((prev) => prev.filter((a) => a.id !== alert.id))}
-        />
-      ))}
+    <div className="flex-col justify-center items-center py-8 px-4 sm:px-8 lg:px-8 overflow-auto w-screen min-h-screen bg-gradient-to-br from-blue-500/10 to-purple-500/5">
+
+      {/* Alert Notifications */}
+      <div className="fixed top-6 right-6 z-50 flex flex-col gap-2">
+        {alerts.map((alert) => (
+          <Alert
+            key={alert.id}
+            type={alert.type}
+            message={alert.message}
+            onClose={() => setAlerts((prev) => prev.filter((a) => a.id !== alert.id))}
+          />
+        ))}
+      </div>
 
       {/* Header Section */}
-      <div className="w-full text-center mb-12">
-        <br />
-        <h1
-          className={`text-4xl font-bold font-alfa-slab-one mb-4 ${
-            theme === "dark" ? "text-white" : "text-black"
-          }`}
-        >
-          My Materials
-        </h1>
-        <p
-          className={`text-xl ${
-            theme === "dark" ? "text-gray-300" : "text-gray-700"
-          }`}
-        >
-          See all your uploaded materials at a glance.
-        </p>
-      </div>
+      <div className="w-full max-w-6xl mx-auto text-center mb-12 flex flex-col items-center">
 
-      {/* Example Button Usage */}
-      <div className="flex justify-center mt-6">
-        <button
-          className={cn(
-            "btn btn-md btn-primary",
-            theme === "dark" ? "dark:btn-primary" : ""
-          )}
-          onClick={() => alert("Button clicked!")}
-        >
-          Add New Material
-        </button>
-      </div>
+        <div className="w-full max-w-4xl flex flex-col items-center mb-8 space-y-6">
+          <IconBooks 
+            className={`w-20 h-20 drop-shadow-lg text-primary`}
+          />
+          <div className="text-center">
+            <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+              My Materials
+            </h1>
+            <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+              See all your uploaded materials at a glance.
+            </p>
+          </div>
+        </div>
 
-      {/* Background Images */}
-      {theme === "dark" ? (
-        <img
-          src="/static/bubbles black/5.svg"
-          alt="Bubble"
-          className="absolute top-100 left-10 w-1/2 opacity-50 z-0"
-        />
-      ) : (
-        <img
-          src="/static/bubbles white/5.svg"
-          alt="Bubble"
-          className="absolute top-100 left-10 w-1/2 opacity-50 z-0"
-        />
-      )}
-
-      {/* Main Content */}
-      {/* <div className="relative xl:mx-auto xl:w-full xl:max-w-6xl"> */}
-      <div className="relative xl:mx-auto xl:w-full xl:max-w-6xl h-[calc(100vh)] overflow-y-auto">
-        {error && (
-          <div className="p-4 rounded-lg bg-red-100 text-red-700 mb-4">
-            {error}
+        { /* Add New Material Button */}
+        {classrooms.length > 0 && (
+          <div className="flex justify-center mt-6">
+            <button
+              className={cn(
+          "px-6 py-3 rounded-full font-medium text-white transition-all",
+          "bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700",
+          "shadow-md hover:shadow-lg transform hover:-translate-y-0.5",
+          "flex items-center gap-2"
+              )}
+              onClick={() => alert("Button clicked!")}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+              </svg>
+              Add New Material
+            </button>
           </div>
         )}
+      </div>
+
+
+      {/* Main Content */}
+      <div className="relative w-full max-w-6xl mx-auto">
 
         {isLoading ? (
-          <div className="flex justify-center items-center min-h-[200px]">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 dark:border-white"></div>
+          <div className="flex justify-center items-center py-20">
+            <div className="relative">
+              <div className="h-16 w-16 rounded-full border-t-4 border-b-4 border-blue-500 animate-spin"></div>
+              <div className="absolute top-0 left-0 h-16 w-16 rounded-full border-t-4 border-b-4 border-purple-500 animate-spin" style={{ animationDirection: 'reverse', opacity: 0.6 }}></div>
+            </div>
           </div>
         ) : (
           <>
-            {/* Tags Filter Section */}
-            <div className="flex flex-wrap gap-2 items-center mb-6">
-              <div className="flex items-center gap-2">
-                <span className={cn("font-bold", theme === "dark" ? "text-white" : "text-gray-800")}>
-                  Filter by Tags:
-                </span>
-                <button
-                  onClick={() => setDeleteMode(!deleteMode)}
-                  className={cn(
-                    "p-1 rounded-full transition-colors",
-                    deleteMode 
-                      ? "bg-red-500 text-white" 
-                      : theme === "dark" 
-                        ? "bg-neutral-700 text-neutral-300" 
-                        : "bg-gray-200 text-gray-600"
-                  )}
-                  title={deleteMode ? "Exit Delete Mode" : "Enter Delete Mode"}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                </button>
-              </div>
-              {tags.map(tag => (
-                <div key={tag.id} className="flex items-center">
-                  {deleteMode ? (
-                    <>
-                      <button
-                        onClick={() => handleTagSelect(tag)}
-                        className={cn(
-                          "px-3 py-1 rounded-l-full transition-colors font-bold text-white",
-                          selectedTags.includes(tag.name) ? "ring-2 ring-offset-2 ring-blue-500" : ""
-                        )}
-                        style={{ backgroundColor: tag.color }}
-                      >
-                        {tag.name}
-                      </button>
-                      <button
-                        onClick={() => handleDeleteTag(tag.id)}
-                        className={cn(
-                          "p-1 rounded-r-full transition-colors bg-red-500 hover:bg-red-600",
-                          selectedTags.includes(tag.name) ? "ring-2 ring-offset-2 ring-blue-500" : ""
-                        )}
-                        style={{ borderLeft: '1px solid rgba(255,255,255,0.2)' }}
-                        title="Delete Tag"
-                      >
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    </>
-                  ) : (
-                    <button
-                      onClick={() => handleTagSelect(tag)}
-                      className={cn(
-                        "px-3 py-1 rounded-full transition-colors font-bold text-white",
-                        selectedTags.includes(tag.name) ? "ring-2 ring-offset-2 ring-blue-500" : ""
-                      )}
-                      style={{ backgroundColor: tag.color }}
-                    >
-                      {tag.name}
-                    </button>
-                  )}
-                </div>
-              ))}
-            </div>
-
-            {/* Classroom Filter Section */}
-            <div className="flex flex-wrap gap-2 items-center mb-6">
-              <div className="flex items-center gap-2">
-                <span className={cn("font-bold", theme === "dark" ? "text-white" : "text-gray-800")}>
-                  Filter by Classroom:
-                </span>
-              </div>
-              {classrooms.map(classroom => (
-                <button
-                  key={classroom.id}
-                  onClick={() => handleClassroomSelect(classroom)}
-                  className={cn(
-                    "px-3 py-1 rounded-full transition-colors font-bold",
-                    selectedClassroom?.id === classroom.id ? "ring-2 ring-offset-2 ring-blue-500" : ""
-                  )}
-                  style={{ backgroundColor: selectedClassroom?.id === classroom.id ? '#4777DA' : '#E5E7EB' }}
-                >
-                  {classroom.name}
-                </button>
-              ))}
-            </div>
-              {/* Delete Confirmation Modal */}
-              {showDeleteModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowDeleteModal(false)}>
-                  <div className={cn(
-                    "p-6 rounded-lg w-[32rem]",
-                    theme === "dark" ? "bg-neutral-800" : "bg-white"
-                  )} onClick={e => e.stopPropagation()}>
-                    <h3 className={cn(
-                      "text-xl font-bold mb-4",
-                      theme === "dark" ? "text-white" : "text-gray-800"
-                    )}>
-                      Delete Material
-                    </h3>
-                    <p className="mb-6 text-neutral-600 dark:text-neutral-300">
-                      Are you sure you want to delete `{fileToDelete?.name}`?
-                    </p>
-                    <div className="flex justify-end space-x-2">
-                      <button
-                        onClick={() => setShowDeleteModal(false)}
-                        className="font-bold py-2 px-4 rounded bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white hover:bg-gray-400 dark:hover:bg-gray-700"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        onClick={confirmDelete}
-                        className="font-bold py-2 px-4 rounded bg-red-500 dark:bg-red-600 text-white hover:bg-red-600 dark:hover:bg-red-700"
-                      >
-                        Delete
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Edit Tags Modal */}
-              {showEditTagsModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowEditTagsModal(false)}>
-                  <div className={cn(
-                    "p-6 rounded-lg w-[32rem]",
-                    theme === "dark" ? "bg-neutral-800" : "bg-white"
-                  )} onClick={e => e.stopPropagation()}>
-                    <h3 className={cn(
-                      "text-xl font-bold mb-4",
-                      theme === "dark" ? "text-white" : "text-gray-800"
-                    )}>
-                      Manage Tags for {editingMaterial?.name}
-                    </h3>
-                    <div className="space-y-4">
-                      <div className="flex flex-wrap gap-2">
-                        {tags.map(tag => (
-                          <button
-                            key={tag.id}
-                            onClick={() => {
-                              const newSelectedTags = selectedMaterialTags.includes(tag.id)
-                                ? selectedMaterialTags.filter(id => id !== tag.id)
-                                : [...selectedMaterialTags, tag.id];
-
-                              setSelectedMaterialTags(newSelectedTags);
-                            }}
-                            className={cn(
-                              "px-3 py-1 rounded-full transition-colors font-bold",
-                              selectedMaterialTags.includes(tag.id)
-                                ? "ring-2 ring-offset-2 ring-blue-500"
-                                : ""
-                            )}
-                            style={{ backgroundColor: tag.color }}
-                          >
-                            <span className="text-white">{tag.name}</span>
-                          </button>
-                        ))}
-                        <button
-                          onClick={() => {
-                            setCreatingTagFromEdit(true);
-                            setShowEditTagsModal(false);
-                            setShowTagModal(true);
-                          }}
-                          className={cn(
-                            "px-3 py-1 rounded-full border-2 border-dashed transition-colors",
-                            theme === "dark"
-                              ? "border-neutral-600 text-neutral-400 hover:border-neutral-500"
-                              : "border-gray-300 text-gray-600 hover:border-gray-400"
-                          )}
-                        >
-                          + Create New Tag
-                        </button>
-                      </div>
-                      <div className="flex justify-end gap-2">
-                        <button
-                          onClick={() => setShowEditTagsModal(false)}
-                          className={cn(
-                            "px-4 py-2 rounded",
-                            theme === "dark"
-                              ? "bg-neutral-700 text-white hover:bg-neutral-600"
-                              : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                          )}
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          onClick={handleUpdateMaterialTags}
-                          className="px-4 py-2 rounded bg-blue-500 text-white hover:bg-blue-600"
-                        >
-                          Save Changes
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Create Tag Modal */}
-              {showTagModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowTagModal(false)}>
-                  <div className={cn(
-                    "p-6 rounded-lg w-96",
-                    theme === "dark" ? "bg-neutral-800" : "bg-white"
-                  )} onClick={e => e.stopPropagation()}>
-                    <h3 className={cn(
-                      "text-xl font-bold mb-4",
-                      theme === "dark" ? "text-white" : "text-gray-800"
-                    )}>
-                      Create New Tag
-                    </h3>
-                    <form onSubmit={handleCreateTag}>
-                      {error && (
-                        <div className="mb-4 p-2 rounded bg-red-100 text-red-600 text-sm">
-                          {error}
-                        </div>
-                      )}
-                      <input
-                        type="text"
-                        value={newTagName}
-                        onChange={(e) => setNewTagName(e.target.value)}
-                        className={cn(
-                          "w-full p-2 rounded border mb-4",
-                          theme === "dark"
-                            ? "bg-neutral-700 border-neutral-600 text-white"
-                            : "bg-white border-gray-300 text-gray-800"
-                        )}
-                        placeholder="Enter tag name"
-                        required
-                        onClick={e => e.stopPropagation()}
-                      />
-                      <div className="mb-4">
-                        <label className={cn(
-                          "block mb-2 font-medium",
-                          theme === "dark" ? "text-white" : "text-gray-800"
-                        )}>
-                          Select Color
-                        </label>
-                        <div className="grid grid-cols-5 gap-2">
-                          {TAG_COLORS.map(color => (
-                            <button
-                              key={color.value}
-                              type="button"
-                              onClick={() => setSelectedColor(color.value)}
-                              className={cn(
-                                "w-8 h-8 rounded-full transition-all duration-200",
-                                selectedColor === color.value
-                                  ? "border-4 border-blue-500 shadow-lg scale-110"
-                                  : "border-2 border-transparent hover:scale-105"
-                              )}
-                              style={{ backgroundColor: color.value }}
-                              title={color.name}
-                            />
-                          ))}
-                        </div>
-                      </div>
-                      <div className="flex justify-end gap-2">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setShowTagModal(false);
-                            if (creatingTagFromEdit) {
-                              setShowEditTagsModal(true);
-                            }
-                          }}
-                          className={cn(
-                            "px-4 py-2 rounded",
-                            theme === "dark"
-                              ? "bg-neutral-700 text-white hover:bg-neutral-600"
-                              : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                          )}
-                        >
-                          Cancel
-                        </button>
-                        <button
-                          type="submit"
-                          disabled={isSubmitting}
-                          className="px-4 py-2 rounded bg-green-500 text-white hover:bg-green-600"
-                        >
-                          {isSubmitting ? 'Creating...' : 'Create Tag'}
-                        </button>
-                      </div>
-                    </form>
-                  </div>
-                </div>
-              )}
-
-              {/* Edit Name Modal */}
-              {showEditModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowEditModal(false)}>
-                  <div className={cn(
-                    "p-6 rounded-lg w-[32rem]",
-                    theme === "dark" ? "bg-neutral-800" : "bg-white"
-                  )} onClick={e => e.stopPropagation()}>
-                    <h3 className={cn(
-                      "text-xl font-bold mb-4",
-                      theme === "dark" ? "text-white" : "text-gray-800"
-                    )}>
-                      Edit Material Name
-                    </h3>
-                    <p className="mb-4 text-neutral-600 dark:text-neutral-300">
-                      Enter a new name for the material:
-                    </p>
-                    <input
-                      type="text"
-                      value={newFileName}
-                      onChange={(e) => setNewFileName(e.target.value)}
-                      className="w-full p-2 mb-6 border rounded dark:bg-neutral-800 dark:border-neutral-700 dark:text-white"
-                      onClick={(e) => e.stopPropagation()}
-                    />
-                    <div className="flex justify-end space-x-2">
-                      <button
-                        onClick={() => setShowEditModal(false)}
-                        className="font-bold py-2 px-4 rounded bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white hover:bg-gray-400 dark:hover:bg-gray-700"
-                      >
-                        Cancel
-                      </button>
-                      <button
-                        onClick={confirmEdit}
-                        className="font-bold py-2 px-4 rounded bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-700"
-                      >
-                        Save
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              <div className="group mb-6 relative max-w-2xl">
-                <svg className="icon absolute left-4 top-1/2 transform -translate-y-1/2 fill-current text-gray-500" aria-hidden="true" viewBox="0 0 24 24">
-                  <g>
-                    <path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0-4.97-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5.808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.5 3.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z"></path>
-                  </g>
-                </svg>
+            {/* Search Bar */}
+            <div className="relative mb-8 max-w-2xl mx-auto">
+              <div className="relative">
                 <input
                   type="text"
                   value={searchQuery}
                   onChange={handleSearch}
-                  className="input w-full h-12 pl-12 pr-4 border-2 border-blue-400 rounded-lg outline-none bg-gray-200 text-gray-800 transition duration-300 ease-in-out focus:border-blue-400 focus:bg-white focus:shadow-lg"
+                  className={cn(
+                    "w-full h-14 pl-14 pr-4 rounded-xl outline-none transition duration-300",
+                    "text-gray-800 placeholder-gray-500",
+                    "border-2 focus:border-blue-500",
+                    theme === "dark" 
+                      ? "bg-gray-800 border-gray-700 text-white focus:bg-gray-900" 
+                      : "bg-white border-gray-200 focus:bg-white shadow-md focus:shadow-lg"
+                  )}
                   placeholder="Search materials..."
                 />
+                <svg className="absolute left-5 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <circle cx="11" cy="11" r="8"></circle>
+                  <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+              </div>
+            </div>
+
+            {/* Filters Section - Tags */}
+            <div className="mb-8 flex flex-col items-center">
+              <div className="flex flex-wrap gap-3 items-center mb-4">
+                <div className="flex items-center gap-2">
+                  <span className={cn("font-medium text-lg", theme === "dark" ? "text-white" : "text-gray-800")}>
+                    Filter by Tags:
+                  </span>
+                  <button
+                    onClick={() => setDeleteMode(!deleteMode)}
+                    className={cn(
+                      "p-2 rounded-full transition-colors",
+                      deleteMode 
+                        ? "bg-red-500 text-white" 
+                        : theme === "dark" 
+                          ? "bg-gray-700 text-gray-300 hover:bg-gray-600" 
+                          : "bg-gray-200 text-gray-600 hover:bg-gray-300"
+                    )}
+                    title={deleteMode ? "Exit Delete Mode" : "Enter Delete Mode"}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
+                  </button>
+                </div>
+
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {tags.map(tag => (
+                    <div key={tag.id} className="flex items-center">
+                      {deleteMode ? (
+                        <div className="flex rounded-full overflow-hidden">
+                          <button
+                            onClick={() => handleTagSelect(tag)}
+                            className={cn(
+                              "px-3 py-1 transition-colors font-medium text-white",
+                              selectedTags.includes(tag.name) ? "ring-2 ring-offset-1 ring-blue-300" : ""
+                            )}
+                            style={{ backgroundColor: tag.color }}
+                          >
+                            {tag.name}
+                          </button>
+                          <button
+                            onClick={() => handleDeleteTag(tag.id)}
+                            className="p-2 rounded-lg bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 transition-colors"
+                            title="Delete Tag"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-5 w-5 text-red-600 dark:text-red-400"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M6 18L18 6M6 6l12 12"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => handleTagSelect(tag)}
+                          className={cn(
+                            "px-3 py-1 rounded-full transition-colors font-medium text-white shadow-sm",
+                            selectedTags.includes(tag.name) ? "ring-2 ring-offset-1 ring-blue-300" : ""
+                          )}
+                          style={{ backgroundColor: tag.color }}
+                        >
+                          {tag.name}
+                        </button>
+                      )}
+                    </div>
+                  ))}
+                </div>
               </div>
 
-            {/* Materials List Section */}
+              {/* Classrooms Filter */}
+              <div className="flex flex-wrap gap-3 items-center mb-4">
+                <div className="flex items-center gap-2">
+                  <span className={cn("font-medium text-lg", theme === "dark" ? "text-white" : "text-gray-800")}>
+                    Filter by Classroom:
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {classrooms.map(classroom => (
+                    <button
+                      key={classroom.id}
+                      onClick={() => handleClassroomSelect(classroom)}
+                      className={cn(
+                        "px-3 py-1 rounded-full transition-colors font-medium shadow-sm",
+                        selectedClassroom?.id === classroom.id 
+                          ? "bg-blue-500 text-white" 
+                          : theme === "dark"
+                            ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
+                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+                      )}
+                    >
+                      {classroom.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Delete Confirmation Modal */}
+            {showDeleteModal && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowDeleteModal(false)}>
+                <div 
+                  className={cn(
+                    "p-6 rounded-xl max-w-md w-full mx-4",
+                    theme === "dark" ? "bg-gray-800" : "bg-white",
+                    "shadow-xl"
+                  )} 
+                  onClick={e => e.stopPropagation()}
+                >
+                  <div className="flex items-center justify-center mb-4 text-red-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                  
+                  <h3 className={cn(
+                    "text-xl font-bold mb-2 text-center",
+                    theme === "dark" ? "text-white" : "text-gray-800"
+                  )}>
+                    Delete Material
+                  </h3>
+                  
+                  <p className={cn(
+                    "mb-6 text-center",
+                    theme === "dark" ? "text-gray-300" : "text-gray-600"
+                  )}>
+                    Are you sure you want to delete <span className="font-semibold">{fileToDelete?.name}</span>?
+                  </p>
+                  
+                  <div className="flex justify-center gap-3">
+                    <button
+                      onClick={() => setShowDeleteModal(false)}
+                      className="btn-secundary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      onClick={confirmDelete}
+                      className="btn-danger py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            { /* Edit Tags Modal */ }
+            {showEditTagsModal && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowEditTagsModal(false)}>
+              <div 
+                className={cn(
+                "p-6 rounded-xl max-w-md w-full mx-4",
+                theme === "dark" ? "bg-gray-800" : "bg-white",
+                "shadow-xl"
+                )} 
+                onClick={e => e.stopPropagation()}
+              >
+                <div className="flex items-center justify-center mb-4 text-blue-500">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" clipRule="evenodd" />
+                </svg>
+                </div>
+                
+                <h3 className={cn(
+                "text-xl font-bold mb-2 text-center",
+                theme === "dark" ? "text-white" : "text-gray-800"
+                )}>
+                Manage Tags for {editingMaterial?.name}
+                </h3>
+                
+                <div className={cn(
+                "mb-6 text-center",
+                theme === "dark" ? "text-gray-300" : "text-gray-600"
+                )}>
+                Select or create tags to associate with this material.
+                </div>
+                
+                <div className="space-y-4 mb-6">
+                <div className="flex flex-wrap gap-2 justify-center">
+                  {tags.map(tag => (
+                  <button
+                    key={tag.id}
+                    onClick={() => {
+                    const newSelectedTags = selectedMaterialTags.includes(tag.id)
+                      ? selectedMaterialTags.filter(id => id !== tag.id)
+                      : [...selectedMaterialTags, tag.id];
+                    setSelectedMaterialTags(newSelectedTags);
+                    }}
+                    className={cn(
+                    "px-3 py-1 rounded-full transition-colors font-medium text-white",
+                    selectedMaterialTags.includes(tag.id)
+                      ? "ring-2 ring-offset-1 ring-blue-300"
+                      : "",
+                    "shadow-sm"
+                    )}
+                    style={{ backgroundColor: tag.color }}
+                  >
+                    {tag.name}
+                  </button>
+                  ))}
+                  <button
+                  onClick={() => {
+                    setCreatingTagFromEdit(true);
+                    setShowEditTagsModal(false);
+                    setShowTagModal(true);
+                    }}
+                    className={cn(
+                    "px-3 py-1 rounded-full border-2 border-dashed transition-colors flex items-center gap-1",
+                    theme === "dark"
+                    ? "border-gray-600 text-gray-400 hover:border-gray-500"
+                    : "border-gray-300 text-gray-600 hover:border-gray-400"
+                    )}
+                    >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                    <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                    </svg>
+                    Create New Tag
+                    </button>
+                  </div>
+                  </div>
+                  
+                  <div className="flex justify-center gap-3">
+                  <button
+                    onClick={() => setShowEditTagsModal(false)}
+                    className="btn-secundary py-2 rounded-full flex items-center justify-center flex-1"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    onClick={handleUpdateMaterialTags}
+                    className="btn-primary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
+                  >
+                    Save Changes
+                  </button>
+                  </div>
+                  </div>
+                  </div>
+                )}
+                
+                  {showTagModal && (
+                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowTagModal(false)}>
+                    <div 
+                    className={cn(
+                      "p-6 rounded-xl max-w-md w-full mx-4",
+                      theme === "dark" ? "bg-gray-800" : "bg-white",
+                      "shadow-xl"
+                    )} 
+                    onClick={e => e.stopPropagation()}
+                    >
+                    <div className="flex items-center justify-center mb-4 text-blue-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    
+                    <h3 className={cn(
+                      "text-xl font-bold mb-2 text-center",
+                      theme === "dark" ? "text-white" : "text-gray-800"
+                    )}>
+                      Create New Tag
+                    </h3>
+                    
+                    <form onSubmit={handleCreateTag}>
+                      {error && (
+                      <div className="mb-4 p-2 rounded bg-red-100 text-red-600 text-sm">
+                        {error}
+                      </div>
+                      )}
+                      <input
+                      type="text"
+                      value={newTagName}
+                      onChange={(e) => setNewTagName(e.target.value)}
+                      className={cn(
+                        "w-full p-2 rounded border mb-4",
+                        theme === "dark"
+                        ? "bg-gray-700 border-gray-600 text-white"
+                        : "bg-white border-gray-300 text-gray-800"
+                      )}
+                      placeholder="Enter tag name"
+                      required
+                      onClick={e => e.stopPropagation()}
+                      />
+                      <div className="mb-4">
+                      <label className={cn(
+                        "block mb-2 font-medium text-center",
+                        theme === "dark" ? "text-white" : "text-gray-800"
+                      )}>
+                        Select Color
+                      </label>
+                      <div className="grid grid-cols-5 gap-2 justify-center">
+                        {TAG_COLORS.map(color => (
+                        <button
+                          key={color.value}
+                          type="button"
+                          onClick={() => setSelectedColor(color.value)}
+                          className={cn(
+                          "w-8 h-8 rounded-full transition-all duration-200",
+                          selectedColor === color.value
+                            ? "border-4 border-blue-500 shadow-lg scale-110"
+                            : "border-2 border-transparent hover:scale-105"
+                          )}
+                          style={{ backgroundColor: color.value }}
+                          title={color.name}
+                        />
+                        ))}
+                      </div>
+                      </div>
+                      <div className="flex justify-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() => {
+                        setShowTagModal(false);
+                        if (creatingTagFromEdit) {
+                          setShowEditTagsModal(true);
+                        }
+                        }}
+                        className={cn(
+                        "px-4 py-2 rounded font-bold",
+                        theme === "dark"
+                          ? "bg-gray-700 text-white hover:bg-gray-600"
+                          : "bg-gray-200 text-gray-800 hover:bg-gray-300"
+                        )}
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={isSubmitting}
+                        className="px-4 py-2 rounded font-bold bg-blue-500 text-white hover:bg-blue-600"
+                      >
+                        {isSubmitting ? 'Creating...' : 'Create Tag'}
+                      </button>
+                      </div>
+                    </form>
+                    </div>
+                  </div>
+                  )}
+
+              { /* Edit Material Modal */}
+                {showEditModal && (
+                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowEditModal(false)}>
+                  <div 
+                  className={cn(
+                    "p-6 rounded-xl max-w-md w-full mx-4",
+                    theme === "dark" ? "bg-gray-800" : "bg-white",
+                    "shadow-xl"
+                  )} 
+                  onClick={e => e.stopPropagation()}
+                  >
+                  <div className="flex items-center justify-center mb-4 text-blue-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" viewBox="0 0 20 20" fill="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </div>
+                  
+                  <h3 className={cn(
+                    "text-xl font-bold mb-2 text-center",
+                    theme === "dark" ? "text-white" : "text-gray-800"
+                  )}>
+                    Edit Material Name
+                  </h3>
+                  
+                  <p className={cn(
+                    "mb-6 text-center",
+                    theme === "dark" ? "text-gray-300" : "text-gray-600"
+                  )}>
+                    Enter a new name for the material:
+                  </p>
+                  
+                  <input
+                    type="text"
+                    value={newFileName}
+                    onChange={(e) => setNewFileName(e.target.value)}
+                    className={cn(
+                    "w-full p-2 rounded border mb-6",
+                    theme === "dark"
+                      ? "bg-gray-700 border-gray-600 text-white"
+                      : "bg-white border-gray-300 text-gray-800"
+                    )}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                  
+                  <div className="flex justify-center gap-3">
+                    <button
+                    onClick={() => setShowEditModal(false)}
+                    className="btn-secundary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
+                    >
+                    Cancel
+                    </button>
+                    <button
+                    onClick={confirmEdit}
+                    className="btn-primary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
+                    >
+                    Save
+                    </button>
+                  </div>
+                  </div>
+                </div>
+                )}
+
+
             <div className="w-full mt-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className={cn("text-2xl font-bold", theme === "dark" ? "text-white" : "text-gray-800")}>
-                  Materials
-                </h2>
+
                 {selectedMaterials.length > 0 && (
                   <div className="ml-4">
                     <button

@@ -107,8 +107,8 @@ const ClassroomsList = () => {
         
         <div className="relative w-full flex-1 flex flex-col items-center py-12">
           {/* Header Section with Logo */}
-          <div className="w-full max-w-4xl flex items-center mb-8 justify-center space-x-6">
-            <IconSchool 
+          <div className="w-full max-w-4xl flex flex-col items-center mb-8 space-y-6">
+          <IconSchool 
               className={`w-20 h-20 drop-shadow-lg text-primary`}
             />
             <div className="text-center">
@@ -181,7 +181,8 @@ const ClassroomsList = () => {
                           
                           <CardItem
                             translateZ="60"
-                            className="w-full mb-4 h-40 relative"
+                            className="w-full mb-4 h-40 relative cursor-pointer"
+                            onClick={() => router.push(`/classrooms/${classroom.id}`)} // Added onClick handler
                           >
                             <Image
                               src={classroom.imageUrl}
