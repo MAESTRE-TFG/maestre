@@ -184,7 +184,7 @@ const ExamForm = ({
           <button
             type="submit"
             disabled={isGenerating}
-            className={`btn-secundary w-2/3 py-2 px-8 text-white rounded-full flex items-center justify-center transition-all ${
+            className={`btn-secondary w-2/3 py-2 px-8 text-white rounded-full flex items-center justify-center transition-all ${
               isGenerating 
                 ? 'bg-gradient-to-r from-blue-500 to-purple-500 cursor-not-allowed' 
                 : 'bg-gradient-to-r from-blue-600 to-purple-600 hover:bg-indigo-700 active:bg-indigo-800'

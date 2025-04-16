@@ -229,7 +229,7 @@ export const CreateClassroomForm = ({ onSubmit, educationalStages }) => {
         
         <div className="flex flex-col sm:flex-row gap-4 mt-8">
           <button
-            className="btn btn-secundary py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center w-full mx-auto max-w-sm"
+            className="btn btn-secondary py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center w-full mx-auto max-w-sm"
             onClick={() => router.back()}
           >
              &larr; Cancel

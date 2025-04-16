@@ -320,7 +320,7 @@ const MaterialCreateModal = ({
                     resetForm();
                   }}
                   disabled={isProcessing}
-                  className="btn-secundary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
+                  className="btn-secondary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
                 >
                   Cancel
                 </button>
