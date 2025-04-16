@@ -9,6 +9,7 @@ import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
 import Alert from "@/components/ui/Alert";
 import { IconBooks} from "@tabler/icons-react";
+import MaterialCreateModal from "@/components/material-create-modal";
 
 const MaterialsList = () => {
   const { theme } = useTheme();
@@ -16,11 +17,17 @@ const MaterialsList = () => {
   const [tags, setTags] = useState([]);
   const [classrooms, setClassrooms] = useState([]);
   const [alerts, setAlerts] = useState([]);
+  const [showNewMaterialModal, setShowNewMaterialModal] = useState(false); 
 
   const addAlert = (type, message) => {
     const id = Date.now();
     setAlerts((prev) => [...prev, { id, type, message }]);
     setTimeout(() => setAlerts((prev) => prev.filter((alert) => alert.id !== id)), 5000);
+  };
+
+  const handleMaterialCreate = (newMaterial) => {
+    setMaterials(prevMaterials => [newMaterial, ...prevMaterials]);
+    addAlert("success", "Material created successfully!");
   };
 
   const TAG_COLORS = [
@@ -378,6 +385,14 @@ const MaterialsList = () => {
         ))}
       </div>
 
+      { /* New Material Modal */ }
+      <MaterialCreateModal
+        showModal={showNewMaterialModal}
+        setShowModal={setShowNewMaterialModal}
+        onMaterialCreate={handleMaterialCreate}
+        isProcessing={false}
+      />
+
       {/* Header Section */}
       <div className="w-full max-w-6xl mx-auto text-center mb-12 flex flex-col items-center">
 
@@ -405,10 +420,10 @@ const MaterialsList = () => {
           "shadow-md hover:shadow-lg transform hover:-translate-y-0.5",
           "flex items-center gap-2"
               )}
-              onClick={() => alert("Button clicked!")}
+              onClick={() => setShowNewMaterialModal(true)}
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-          <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
               </svg>
               Add New Material
             </button>
@@ -778,19 +793,13 @@ const MaterialsList = () => {
                           setShowEditTagsModal(true);
                         }
                         }}
-                        className={cn(
-                        "px-4 py-2 rounded font-bold",
-                        theme === "dark"
-                          ? "bg-gray-700 text-white hover:bg-gray-600"
-                          : "bg-gray-200 text-gray-800 hover:bg-gray-300"
-                        )}
+                        className="btn-secundary py-2 rounded-full flex items-center justify-center flex-1"
                       >
                         Cancel
                       </button>
                       <button
-                        type="submit"
                         disabled={isSubmitting}
-                        className="px-4 py-2 rounded font-bold bg-blue-500 text-white hover:bg-blue-600"
+                        className="btn-primary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
                       >
                         {isSubmitting ? 'Creating...' : 'Create Tag'}
                       </button>
