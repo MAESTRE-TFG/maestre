@@ -9,15 +9,7 @@ import { cn } from "@/lib/utils";
 import axios from "axios";
 import { CompleteProfileForm } from "@/components/complete-profile-form";
 import Alert from "@/components/ui/Alert";
-import {
-  IconUser,
-  IconMail,
-  IconIdBadge,
-  IconEdit,
-  IconWorld,
-  IconMapPin,
-  IconSchool,
-} from "@tabler/icons-react"; // Import necessary icons
+
 
 const ProfileEdit = () => {
   const router = useRouter();
@@ -34,7 +26,7 @@ const ProfileEdit = () => {
     city: "",
     school: ""
   });
-  const [alert, setAlert] = useState(null); // State for managing alerts
+  const [alert, setAlert] = useState(null);
   const [schools, setSchools] = useState([]);
   const [city, setCity] = useState("");
 

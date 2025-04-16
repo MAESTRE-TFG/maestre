@@ -25,7 +25,7 @@ export function SidebarDemo({ ContentComponent }) {
   const router = useRouter();
   const [user, setUser] = useState(null);
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
-  const [alert, setAlert] = useState(null); // State for managing alerts
+  const [alert, setAlert] = useState(null);
 
   const openLogoutModal = () => setLogoutModalOpen(true);
   const closeLogoutModal = () => setLogoutModalOpen(false);
@@ -133,7 +133,7 @@ export function SidebarDemo({ ContentComponent }) {
         <IconHome
           className={cn(
             "h-6 w-6 ml-2 flex-shrink-0",
-            theme == "dark" ? "text-neutral-200" : "text-neutral-700"
+            theme == "dark" ? "text-blue-300" : "text-[rgb(25,65,166)]"
           )}
         />
       ),
@@ -144,8 +144,8 @@ export function SidebarDemo({ ContentComponent }) {
       icon: (
         <IconPlus
           className={cn(
-            "h-6 w-6 ml-2 flex-shrink-0", // Reduced size from h-8 w-8
-            theme == "dark" ? "text-neutral-200" : "text-neutral-700"
+            "h-6 w-6 ml-2 flex-shrink-0",
+            theme == "dark" ? "text-green-300" : "text-green-600"
           )}
         />
       ),
@@ -156,8 +156,8 @@ export function SidebarDemo({ ContentComponent }) {
       icon: (
         <IconSchool
           className={cn(
-            "h-6 w-6 ml-2 flex-shrink-0", // Reduced size from h-8 w-8
-            theme == "dark" ? "text-neutral-200" : "text-neutral-700"
+            "h-6 w-6 ml-2 flex-shrink-0",
+            theme == "dark" ? "text-purple-300" : "text-purple-600"
           )}
         />
       ),
@@ -168,8 +168,8 @@ export function SidebarDemo({ ContentComponent }) {
       icon: (
         <IconBooks
           className={cn(
-            "h-6 w-6 ml-2 flex-shrink-0", // Reduced size from h-8 w-8
-            theme == "dark" ? "text-neutral-200" : "text-neutral-700"
+            "h-6 w-6 ml-2 flex-shrink-0",
+            theme == "dark" ? "text-amber-300" : "text-amber-600"
           )}
         />
       ),
@@ -180,8 +180,8 @@ export function SidebarDemo({ ContentComponent }) {
       icon: (
         <IconUser
           className={cn(
-            "h-6 w-6 ml-2 flex-shrink-0", // Reduced size from h-8 w-8
-            theme == "dark" ? "text-neutral-200" : "text-neutral-700"
+            "h-6 w-6 ml-2 flex-shrink-0",
+            theme == "dark" ? "text-cyan-300" : "text-cyan-600"
           )}
         />
       ),
