@@ -55,10 +55,7 @@ export const FileUpload = ({
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
   const [fileSizes, setFileSizes] = useState({});
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [fileToDelete, setFileToDelete] = useState(null);
   const [showErrorModal, setShowErrorModal] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
   const [fileToEdit, setFileToEdit] = useState(null);
   const [newFileName, setNewFileName] = useState("");
@@ -258,9 +255,6 @@ export const FileUpload = ({
           onClose={() => setShowErrorModal(false)}
         >
           <div title="File Upload Error">
-            <p className="mb-6 text-neutral-600 dark:text-neutral-300">
-              {errorMessage}
-            </p>
             <div className="flex justify-end space-x-2">
               <button
                 onClick={(e) => {

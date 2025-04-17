@@ -94,5 +94,65 @@
       "profile_modal_description": "We need a few more details before you can access this tool. Your profile information helps us personalize your experience.",
       "profile_modal_cancel": "Cancel",
       "profile_modal_complete": "Complete Profile"
+    },
+
+
+   
+    "Translator": {
+      "title": "Maestre Translator",
+      "subtitle": "Translate text between multiple languages",
+      "feature_title": "AI-Powered Translation",
+      "feature_description": "Translate text between multiple languages with our advanced AI technology. Perfect for teachers who need to communicate with students and parents in different languages.",
+      "error": {
+        "emptyText": "Please enter text to translate",
+        "textTooLong": "Text exceeds 5000 character limit",
+        "translationFailed": "Translation failed. Please try again."
+      },
+      "source_text": "Source Text",
+      "target_text": "Translation",
+      "characters_remaining": "/5000 characters",
+      "target_language": "Target Language",
+      "placeholder": {
+        "source_text": "Enter text to translate (max 5000 characters)",
+        "target_text": "Translated text will appear here"
+      },
+      "languages": {
+        "es": "Spanish",
+        "ca": "Catalan",
+        "gl": "Galician",
+        "eu": "Basque",
+        "en": "English",
+        "fr": "French",
+        "de": "German",
+        "it": "Italian",
+        "el": "Greek",
+        "la": "Latin"
+      },
+      "translate_button": "Translate",
+      "translation_history": "Translation History",
+      "translation_history_description": "Your translation history will appear here"
+    },
+
+
+
+    "ExamMaker": {
+      "header": {
+        "title": "Exam Generator",
+        "subtitle": "Create customized exams with AI assistance",
+        "featureTitle": "AI-Powered Exams",
+        "featureDescription": "Create professional exams in seconds using our advanced AI technology. Perfect for teachers who want to save time while creating high-quality assessments.",
+        "teacherImageAlt": "Teacher"
+      },
+      "alerts": {
+        "fetchClassroomsError": "Failed to fetch classrooms. Please try again later.",
+        "fetchMaterialsError": "Failed to fetch materials. Please try again later.",
+        "fileProcessedSuccess": "File processed successfully!",
+        "unsupportedFileType": "Only DOCX files are supported for exam generation.",
+        "materialProcessedSuccess": "Material processed successfully!",
+        "missingSubject": "Please enter a subject.",
+        "missingClassroom": "Please select a classroom.",
+        "examGeneratedSuccess": "Exam generated successfully!",
+        "examGenerationFailed": "Failed to generate exam"
+      }
     }
 }

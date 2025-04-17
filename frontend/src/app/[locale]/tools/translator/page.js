@@ -1,29 +1,19 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "@/i18n/navigation";
+import { useRouter } from "next/navigation"; // Import the router for redirection
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { IconCopy, IconCheck, IconHistory, IconTrash, IconLanguage, IconWorld } from "@tabler/icons-react";
 import Image from "next/image";
 import { getApiBaseUrl } from "@/lib/api";
+import { useTranslations } from "next-intl";
 
 
-const languages = [
-  { code: "es", name: "Spanish" },
-  { code: "ca", name: "Catalan" },
-  { code: "gl", name: "Galician" },
-  { code: "eu", name: "Basque" },
-  { code: "en", name: "English" },
-  { code: "fr", name: "French" },
-  { code: "de", name: "German" },
-  { code: "it", name: "Italian" },
-  { code: "el", name: "Greek" },
-  { code: "la", name: "Latin" }
-];
-
-const Translator = () => {
+const Translator = ({ params }) => {
+  const t = useTranslations("Translator");
   const { theme } = useTheme();
+  const router = useRouter(); // Initialize the router
   const [sourceText, setSourceText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
   const [targetLanguage, setTargetLanguage] = useState("en");
@@ -32,15 +22,35 @@ const Translator = () => {
   const [translationHistory, setTranslationHistory] = useState([]);
   const [copied, setCopied] = useState(false);
   const [isClient, setIsClient] = useState(false);
+  const locale = params?.locale || 'es';
 
-  // Set isClient to true when component mounts
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
 
-  // Load translation history from localStorage on component mount
+  const languages = [
+    { code: "es", name: t("languages.es") },
+    { code: "ca", name: t("languages.ca") },
+    { code: "gl", name: t("languages.gl") },
+    { code: "eu", name: t("languages.eu") },
+    { code: "en", name: t("languages.en") },
+    { code: "fr", name: t("languages.fr") },
+    { code: "de", name: t("languages.de") },
+    { code: "it", name: t("languages.it") },
+    { code: "el", name: t("languages.el") },
+    { code: "la", name: t("languages.la") }
+  ];
+  
+// Check if the user is authenticated
   useEffect(() => {
-    const savedHistory = localStorage.getItem('translationHistory');
+    const authToken = localStorage.getItem("authToken");
+    if (!authToken) {
+      router.push(`/${locale}/profile/signin`); // Redirect to the sign-in page if not authenticated
+    } else {
+      setIsClient(true);
+    }
+  }, [router]);
+
+// Load translation history from localStorage on component mount
+  useEffect(() => {
+    const savedHistory = localStorage.getItem("translationHistory");
     if (savedHistory) {
       try {
         setTranslationHistory(JSON.parse(savedHistory));
@@ -50,30 +60,30 @@ const Translator = () => {
     }
   }, []);
 
-  // Save translation history to localStorage whenever it changes
+// Save translation history to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('translationHistory', JSON.stringify(translationHistory));
+    localStorage.setItem("translationHistory", JSON.stringify(translationHistory));
   }, [translationHistory]);
 
   const handleTranslate = async () => {
     if (!sourceText.trim()) {
-      setError("Please enter text to translate");
+      setError(t("error.emptyText"));
       return;
     }
     if (sourceText.length > 5000) {
-      setError("Text exceeds 5000 character limit");
+      setError(t("error.textTooLong"));
       return;
     }
 
     setIsTranslating(true);
     setError("");
-    
+
     try {
       const response = await fetch(`${getApiBaseUrl()}/api/materials/translate/`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Token ${localStorage.getItem('authToken')}`
+          "Content-Type": "application/json",
+          Authorization: `Token ${localStorage.getItem("authToken")}`
         },
         body: JSON.stringify({
           text: sourceText,
@@ -82,13 +92,13 @@ const Translator = () => {
       });
 
       if (!response.ok) {
-        throw new Error('Translation failed');
+        throw new Error("Translation failed");
       }
 
       const data = await response.json();
       setTranslatedText(data.translated_text);
-      
-      // Add to translation history
+
+// Add to translation history
       const targetLangName = languages.find(lang => lang.code === targetLanguage)?.name || targetLanguage;
       const newHistoryItem = {
         id: Date.now(),
@@ -98,24 +108,24 @@ const Translator = () => {
         targetLanguageName: targetLangName,
         timestamp: new Date().toISOString()
       };
-      
-      setTranslationHistory(prev => [newHistoryItem, ...prev.slice(0, 9)]); // Keep only the 10 most recent translations
+
+      setTranslationHistory(prev => [newHistoryItem, ...prev.slice(0, 9)]);
     } catch (err) {
-      setError("Translation failed. Please try again.");
+      setError(t("error.translationFailed"));
       console.error("Translation error:", err);
     } finally {
       setIsTranslating(false);
     }
   };
 
-  const copyToClipboard = (text) => {
+  const copyToClipboard = text => {
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
   };
 
-  const loadFromHistory = (item) => {
+  const loadFromHistory = item => {
     setSourceText(item.sourceText);
     setTranslatedText(item.translatedText);
     setTargetLanguage(item.targetLanguage);
@@ -125,11 +135,11 @@ const Translator = () => {
     setTranslationHistory([]);
   };
 
-  const removeHistoryItem = (id) => {
+  const removeHistoryItem = id => {
     setTranslationHistory(prev => prev.filter(item => item.id !== id));
   };
 
-  const formatDate = (dateString) => {
+  const formatDate = dateString => {
     const date = new Date(dateString);
     return date.toLocaleString();
   };
@@ -139,43 +149,42 @@ const Translator = () => {
   return (
     <div className="min-h-screen w-screen bg-gradient-to-br from-blue-500/10 to-purple-500/5">
       <div className="relative mx-auto max-w-7xl w-full">
-        {/* Error Alert */}
         {error && (
           <div className="fixed top-4 right-4 z-50 w-80">
-            <div className={cn(
-              "p-4 rounded-md shadow-lg",
-              theme === "dark" ? "bg-red-900 text-red-100" : "bg-red-100 text-red-900"
-            )}>
+            <div
+              className={cn(
+                "p-4 rounded-md shadow-lg",
+                theme === "dark" ? "bg-red-900 text-red-100" : "bg-red-100 text-red-900"
+              )}
+            >
               {error}
-              <button 
-                onClick={() => setError("")}
-                className="absolute top-2 right-2"
-              >
+              <button onClick={() => setError("")} className="absolute top-2 right-2">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                  <path
+                    fillRule="evenodd"
+                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                    clipRule="evenodd"
+                  />
                 </svg>
               </button>
             </div>
           </div>
         )}
-        
+
         <div className="relative w-full flex-1 flex flex-col items-center py-12">
-          {/* Header Section with Logo */}
           <div className="w-full max-w-4xl flex items-center mb-8 justify-center space-x-6">
             <div className="relative">
-              <IconLanguage 
-                className="w-20 h-20 drop-shadow-lg text-primary"
-              />
+              <IconLanguage className="w-20 h-20 drop-shadow-lg text-primary" />
               <div className="absolute -bottom-2 -right-2 bg-white dark:bg-gray-800 rounded-full p-1">
                 <IconWorld className="w-8 h-8 text-cyan-500" />
               </div>
             </div>
             <div className="text-center">
-              <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-                Maestre Translator
+              <h1 className={`text-4xl font-extrabold mb-2 ${theme === "dark" ? "text-white" : "text-gray-800"}`}>
+                {t("title")}
               </h1>
-              <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-                Translate text between multiple languages
+              <p className={`text-xl ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+                {t("subtitle")}
               </p>
             </div>
           </div>
@@ -189,10 +198,10 @@ const Translator = () => {
                   theme === "dark" ? "bg-gray-800/80 border border-gray-700" : "bg-white/80 border border-gray-100"
                 )}>
                   <h3 className={`text-lg font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-                    AI-Powered Translation
+                    {t("feature_title")}
                   </h3>
                   <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-                    Translate text between multiple languages with our advanced AI technology. Perfect for teachers who need to communicate with students and parents in different languages.
+                    {t('feature_description')}
                   </p>
                 </div>
                 
@@ -221,13 +230,13 @@ const Translator = () => {
                     {/* Source Text */}
                     <div>
                       <label htmlFor="source-text" className={`block font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-                        Source Text
+                        {t("source_text")}
                       </label>
                       <textarea
                         id="source-text"
                         value={sourceText}
                         onChange={(e) => setSourceText(e.target.value)}
-                        placeholder="Enter text to translate (max 5000 characters)"
+                        placeholder={t("placeholder.source_text")}
                         className={cn(
                           "w-full min-h-[180px] p-4 rounded-lg border focus:ring-2 focus:ring-primary",
                           theme === "dark" ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-900"
@@ -235,14 +244,14 @@ const Translator = () => {
                         maxLength={5000}
                       />
                       <div className={`text-sm mt-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                        {sourceText.length}/5000 characters
+                        {sourceText.length}{t('characters_remaining')}
                       </div>
                     </div>
 
                     {/* Target Language Selection */}
                     <div>
                       <label htmlFor="target-language" className={`block font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-                        Target Language
+                        {t('target_language')}
                       </label>
                       <select
                         id="target-language"
@@ -282,7 +291,7 @@ const Translator = () => {
                         ) : (
                           <>
                             <IconWorld size={20} />
-                            Translate
+                            {t('translate_button')}
                           </>
                         )}
                       </button>
@@ -291,14 +300,14 @@ const Translator = () => {
                     {/* Translation Result */}
                     <div>
                       <label htmlFor="translated-text" className={`block font-medium mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-                        Translation
+                        {t("target_text")}
                       </label>
                       <div className="relative">
                         <textarea
                           id="translated-text"
                           value={translatedText}
                           readOnly
-                          placeholder="Translation will appear here"
+                          placeholder={t("placeholder.target_text")}
                           className={cn(
                             "w-full min-h-[180px] p-4 rounded-lg border",
                             theme === "dark" ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-900"
@@ -330,7 +339,7 @@ const Translator = () => {
                   <div className="flex justify-between items-center mb-4">
                     <h2 className={`text-xl font-semibold flex items-center ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                       <IconHistory className="mr-2" size={24} />
-                      Translation History
+                      {t("translation_history")}
                     </h2>
                     {translationHistory.length > 0 && (
                       <button
@@ -352,7 +361,7 @@ const Translator = () => {
                       "p-4 rounded-md border text-center",
                       theme === "dark" ? "border-gray-700 text-gray-400" : "border-gray-300 text-gray-500"
                     )}>
-                      <p>Your translation history will appear here</p>
+                      <p>{t('translation_history_description')}</p>
                     </div>
                   ) : (
                     <div className="space-y-4 max-h-[400px] overflow-y-auto pr-1">

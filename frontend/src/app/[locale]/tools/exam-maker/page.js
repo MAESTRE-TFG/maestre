@@ -20,10 +20,12 @@ import Image from "next/image";
 import { IconFileText, IconBrain } from "@tabler/icons-react";
 import { buildExamPrompt } from "./utils/promptUtils";
 import { getApiBaseUrl } from "@/lib/api";
+import { useTranslations } from "next-intl";
 
-
-const ExamMaker = () => {
+const ExamMaker = ({ params }) => {
+  const t = useTranslations("ExamMaker");
   const { theme } = useTheme();
+  const locale = params?.locale || "es";
   const router = useRouter();
   const [classrooms, setClassrooms] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -47,49 +49,54 @@ const ExamMaker = () => {
   const [showMaterialsModal, setShowMaterialsModal] = useState(false);
   const [isProcessingFile, setIsProcessingFile] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
-  const fileContentsRef = useRef('');
+  const fileContentsRef = useRef("");
 
   // Fetch classrooms on component mount
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    const user = localStorage.getItem('user');
+    const token = localStorage.getItem("authToken");
+    const user = localStorage.getItem("user");
 
     if (!token || !user) {
-      router.push('/login');
+      router.push(`/${locale}/signin`);
       return;
     }
 
     const fetchClassrooms = async () => {
       try {
-        const response = await axios.get("/api/classrooms/", {
+        const response = await axios.get(`${getApiBaseUrl()}/api/classrooms/`, {
           headers: {
             Authorization: `Token ${token}`,
           },
         });
-        setClassrooms(response.data);
+
+        if (Array.isArray(response.data)) {
+          setClassrooms(response.data);
+        } else {
+          throw new Error("Invalid data format: Expected an array");
+        }
+
         setLoading(false);
       } catch (error) {
-        addAlert("error", "Failed to fetch classrooms. Please try again later.");
+        addAlert("error", t("alerts.fetchClassroomsError"));
         setLoading(false);
       }
     };
 
     fetchClassrooms();
-  }, [router]);
-
+  }, [router, t]);
 
   // Fetch user materials when classrooms are loaded
   useEffect(() => {
-    const token = localStorage.getItem('authToken');
-    const user = localStorage.getItem('user');
+    const token = localStorage.getItem("authToken");
+    const user = localStorage.getItem("user");
 
     if (token && user && classrooms.length > 0) {
       const fetchUserMaterials = async () => {
         try {
           const response = await axios.get(`${getApiBaseUrl()}/api/materials/`, {
             headers: {
-              Authorization: `Token ${token}`,
-            },
+              Authorization: `Token ${token}`
+            }
           });
 
           // Filter materials by user's classrooms
@@ -99,13 +106,13 @@ const ExamMaker = () => {
 
           setUserMaterials(userMaterials);
         } catch (err) {
-          addAlert("error", "Failed to fetch materials. Please try again later.");
+          addAlert("error", t("alerts.fetchMaterialsError"));
         }
       };
 
       fetchUserMaterials();
     }
-  }, [classrooms]);
+  }, [classrooms, t]);
 
   // Alert management
   const addAlert = (type, message) => {
@@ -117,28 +124,28 @@ const ExamMaker = () => {
   };
 
   // Form change handler
-  const handleChange = (e) => {
+  const handleChange = e => {
     const { name, value, type } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'number' ? parseInt(value) || 0 : value
+      [name]: type === "number" ? parseInt(value) || 0 : value
     }));
   };
 
   // File upload handler
-  const handleFileUpload = async (e) => {
+  const handleFileUpload = async e => {
     const file = e.target.files[0];
     if (!file) return;
 
     setIsProcessingFile(true);
 
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
       const processedFile = await processUploadedFile(file, token);
 
       setUploadedFiles([processedFile]);
       fileContentsRef.current = processedFile.content;
-      addAlert("success", "File processed successfully!");
+      addAlert("success", t("alerts.fileProcessedSuccess"));
     } catch (error) {
       addAlert("error", error.message);
     } finally {
@@ -147,9 +154,9 @@ const ExamMaker = () => {
   };
 
   // Material selection handler
-  const handleMaterialSelect = async (material) => {
-    if (!material.file.toLowerCase().endsWith('.docx')) {
-      addAlert("error", "Only DOCX files are supported for exam generation.");
+  const handleMaterialSelect = async material => {
+    if (!material.file.toLowerCase().endsWith(".docx")) {
+      addAlert("error", t("alerts.unsupportedFileType"));
       setShowMaterialsModal(false);
       return;
     }
@@ -158,12 +165,12 @@ const ExamMaker = () => {
     setShowMaterialsModal(false);
 
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
       const processedMaterial = await processMaterialFromClassroom(material, token);
 
       setUploadedFiles([processedMaterial]);
       fileContentsRef.current = processedMaterial.content;
-      addAlert("success", "Material processed successfully!");
+      addAlert("success", t("alerts.materialProcessedSuccess"));
     } catch (error) {
       addAlert("error", error.message);
     } finally {
@@ -172,44 +179,42 @@ const ExamMaker = () => {
   };
 
   // Remove uploaded file
-  const removeUploadedFile = (id) => {
+  const removeUploadedFile = id => {
     setUploadedFiles(prev => prev.filter(file => file.id !== id));
-    fileContentsRef.current = '';
+    fileContentsRef.current = "";
   };
 
   // Form submission handler
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     setIsGenerating(true);
-  
+
     try {
       // Validate form data
       if (!formData.subject) {
-        throw new Error("Please enter a subject.");
+        throw new Error(t("alerts.missingSubject"));
       }
-  
+
       if (!formData.classroom) {
-        throw new Error("Please select a classroom.");
+        throw new Error(t("alerts.missingClassroom"));
       }
-  
+
       // Get user data from localStorage
-      const userString = localStorage.getItem('user');
+      const userString = localStorage.getItem("user");
       const user = userString ? JSON.parse(userString) : {};
-  
+
       // Build the prompt using the utility function
       const prompt = buildExamPrompt(formData, classrooms, fileContentsRef.current, user);
-      
-      console.log(prompt); // Log the prompt for debugging purpose
-  
+
       // Generate the exam
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
       const result = await generateExam(prompt, formData.llmModel);
-  
+
       setExamResult(result);
       setShowModal(true);
-      addAlert("success", "Exam generated successfully!");
+      addAlert("success", t("alerts.examGeneratedSuccess"));
     } catch (error) {
-      addAlert("error", `Failed to generate exam: ${error.message}`);
+      addAlert("error", `${t("alerts.examGenerationFailed")}: ${error.message}`);
     } finally {
       setIsGenerating(false);
     }
@@ -239,50 +244,50 @@ const ExamMaker = () => {
             />
           ))}
         </div>
-        
+
         <div className="relative w-full flex-1 flex flex-col items-center py-12">
-          {/* Header Section with Logo and Teacher Image */}
+          {/* Header Section */}
           <div className="w-full max-w-4xl flex items-center mb-8 justify-center space-x-6">
             <div className="relative">
-              <IconBrain 
-                className="w-20 h-20 drop-shadow-lg text-primary"
-              />
+              <IconBrain className="w-20 h-20 drop-shadow-lg text-primary" />
               <div className="absolute -bottom-2 -right-2 bg-white dark:bg-gray-800 rounded-full p-1">
                 <IconFileText className="w-8 h-8 text-cyan-500" />
               </div>
             </div>
             <div className="text-center">
-              <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-                Exam Generator
+              <h1 className={`text-4xl font-extrabold mb-2 ${theme === "dark" ? "text-white" : "text-gray-800"}`}>
+                {t("header.title")}
               </h1>
-              <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-                Create customized exams with AI assistance
+              <p className={`text-xl ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+                {t("header.subtitle")}
               </p>
             </div>
           </div>
-          
+
+          {/* Form Section */}
           <div className="w-full max-w-6xl px-4 sm:px-8 md:px-12 lg:px-16">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {/* Teacher Image Column */}
               <div className="hidden md:flex flex-col items-center justify-start">
-                <div className={cn(
-                  "mt-6 p-4 rounded-xl shadow-md w-full",
-                  theme === "dark" ? "bg-gray-800/80 border border-gray-700" : "bg-white/80 border border-gray-100"
-                )}>
-                  <h3 className={`text-lg font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-                    AI-Powered Exams
+                <div
+                  className={cn(
+                    "mt-6 p-4 rounded-xl shadow-md w-full",
+                    theme === "dark" ? "bg-gray-800/80 border border-gray-700" : "bg-white/80 border border-gray-100"
+                  )}
+                >
+                  <h3 className={`text-lg font-bold mb-2 ${theme === "dark" ? "text-white" : "text-gray-800"}`}>
+                    {t("header.featureTitle")}
                   </h3>
-                  <p className={`text-sm ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-                    Create professional exams in seconds using our advanced AI technology. Perfect for teachers who want to save time while creating high-quality assessments.
+                  <p className={`text-sm ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+                    {t("header.featureDescription")}
                   </p>
                 </div>
-                
-                {/* Updated teacher image with floating animation */}
+
                 <div className="relative w-full h-[700px] -mt-16 flex items-center justify-center">
                   <div className="animate-float relative w-96 h-full">
                     <Image
                       src="/static/teachers/6.webp"
-                      alt="Teacher" 
+                      alt={t("header.teacherImageAlt")}
                       layout="fill"
                       objectFit="contain"
                       className="drop-shadow-xl"
@@ -290,14 +295,16 @@ const ExamMaker = () => {
                   </div>
                 </div>
               </div>
-              
+
               {/* Form Column */}
               <div className="col-span-1 md:col-span-2">
-                <div className={cn(
-                  "p-6 rounded-xl shadow-lg",
-                  "bg-opacity-30 backdrop-filter backdrop-blur-lg",
-                  theme === "dark" ? "bg-gray-800 border border-gray-700" : "bg-white border border-gray-100"
-                )}>
+                <div
+                  className={cn(
+                    "p-6 rounded-xl shadow-lg",
+                    "bg-opacity-30 backdrop-filter backdrop-blur-lg",
+                    theme === "dark" ? "bg-gray-800 border border-gray-700" : "bg-white border border-gray-100"
+                  )}
+                >
                   <ExamForm
                     formData={formData}
                     handleChange={handleChange}

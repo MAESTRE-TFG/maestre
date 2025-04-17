@@ -94,5 +94,65 @@
       "profile_modal_description": "Necesitamos algunos detalles más antes de que puedas acceder a esta herramienta. La información de tu perfil nos ayuda a personalizar tu experiencia.",
       "profile_modal_cancel": "Cancelar",
       "profile_modal_complete": "Completar Perfil"
+    },
+
+
+
+    "Translator": {
+      "title": "Traductor Maestre",
+      "subtitle": "Traduce texto entre múltiples idiomas",
+      "feature_title": "Traducción impulsada por IA",
+      "feature_description": "Traduce texto entre múltiples idiomas con nuestra avanzada tecnología de IA. Perfecto para docentes que necesitan comunicarse con estudiantes y padres en diferentes idiomas.",
+      "error": {
+        "emptyText": "Por favor, introduce texto para traducir",
+        "textTooLong": "El texto supera el límite de 5000 caracteres",
+        "translationFailed": "La traducción falló. Por favor, inténtalo de nuevo."
+      },
+      "source_text": "Texto de origen",
+      "target_text": "Traducción",
+      "characters_remaining": "/5000 caracteres",
+      "target_language": "Idioma de destino",
+      "placeholder": {
+        "source_text": "Introduce texto para traducir (máx. 5000 caracteres)",
+        "target_text": "El texto traducido aparecerá aquí"
+      },
+      "languages": {
+        "es": "Español",
+        "ca": "Catalán",
+        "gl": "Gallego",
+        "eu": "Euskera",
+        "en": "Inglés",
+        "fr": "Francés",
+        "de": "Alemán",
+        "it": "Italiano",
+        "el": "Griego",
+        "la": "Latín"
+      },
+      "translate_button": "Traducir",
+      "translation_history": "Historial de traducciones",
+      "translation_history_description": "Tu historial de traducciones aparecerá aquí"
+    },
+
+
+
+    "ExamMaker": {
+      "header": {
+        "title": "Generador de Exámenes",
+        "subtitle": "Crea exámenes personalizados con asistencia de IA",
+        "featureTitle": "Exámenes Impulsados por IA",
+        "featureDescription": "Crea exámenes profesionales en segundos utilizando nuestra avanzada tecnología de IA. Perfecto para docentes que desean ahorrar tiempo mientras crean evaluaciones de alta calidad.",
+        "teacherImageAlt": "Docente"
+      },
+      "alerts": {
+        "fetchClassroomsError": "No se pudieron obtener las clases. Por favor, inténtalo de nuevo más tarde.",
+        "fetchMaterialsError": "No se pudieron obtener los materiales. Por favor, inténtalo de nuevo más tarde.",
+        "fileProcessedSuccess": "¡Archivo procesado con éxito!",
+        "unsupportedFileType": "Solo se admiten archivos DOCX para la generación de exámenes.",
+        "materialProcessedSuccess": "¡Material procesado con éxito!",
+        "missingSubject": "Por favor, introduce una asignatura.",
+        "missingClassroom": "Por favor, selecciona una clase.",
+        "examGeneratedSuccess": "¡Examen generado con éxito!",
+        "examGenerationFailed": "Error al generar el examen"
+      }
     }
 }

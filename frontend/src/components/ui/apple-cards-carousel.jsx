@@ -26,13 +26,13 @@ import { useTranslations } from 'next-intl';
 export const CarouselContext = createContext({
   onCardClose: () => {},
   currentIndex: 0,
-  handleToolClick: (path) => {},
+  handleToolClick: (path) => {}
 });
 
 export const Carousel = ({
   items,
   initialScroll = 0,
-  onToolClick
+  params
 }) => {
   const t = useTranslations('HomePage');
   const carouselRef = React.useRef(null);
@@ -317,14 +317,16 @@ export const Carousel = ({
 export const Card = ({
   card,
   index,
-  layout = false
+  layout = false,
+  params
 }) => {
   const [open, setOpen] = useState(false);
   const containerRef = useRef(null);
   const { onCardClose, currentIndex, handleToolClick } = useContext(CarouselContext);
   const { theme } = useTheme();
-  const t = useTranslations('HomePage'); // Add this line to define the t variable
-  
+  const t = useTranslations('HomePage');
+  const locale = params?.locale || 'es';
+
   useEffect(() => {
     function onKeyDown(event) {
       if (event.key === "Escape") {
@@ -356,7 +358,7 @@ export const Card = ({
   const handleTryNowClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    handleToolClick(`/tools/${card.page}`);
+    handleToolClick(`/${locale}/tools/${card.page}`);
   };
 
   return (

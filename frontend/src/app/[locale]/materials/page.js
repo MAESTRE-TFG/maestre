@@ -64,7 +64,6 @@ const MaterialsList = () => {
   const [newFileName, setNewFileName] = useState("");
   const [newTagName, setNewTagName] = useState('');
 
-  const [error, setError] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   const [selectedMaterials, setSelectedMaterials] = useState([]);
@@ -184,7 +183,6 @@ const MaterialsList = () => {
   // Update fetchMaterials function
   const fetchMaterials = useCallback(async () => {
     setIsLoading(true);
-    setError(null);
     try {
       const params = {};
       if (selectedTags.length > 0) {
@@ -254,7 +252,6 @@ const MaterialsList = () => {
   const handleCreateTag = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError(null);
 
     try {
       const response = await axios.post(`${getApiBaseUrl()}/api/tags/`, {
