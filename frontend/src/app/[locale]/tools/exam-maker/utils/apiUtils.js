@@ -1,4 +1,5 @@
 import axios from "axios";
+import { getApiBaseUrl } from "@/lib/api";
 
 // Upload PDF to classroom
 export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token) => {
@@ -27,7 +28,7 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
       blobType: pdfBlob.type 
     });
     
-    const response = await axios.post('http://localhost:8000/api/materials/', formData, {
+    const response = await axios.post(`${getApiBaseUrl()}/api/materials/`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
         'Authorization': `Token ${token}`
@@ -79,7 +80,7 @@ export const processUploadedFile = async (file, token) => {
 
   try {
     const response = await axios.post(
-      "http://localhost:8000/api/materials/extract-text/",
+      `${getApiBaseUrl()}:8000/api/materials/extract-text/`,
       formData,
       {
         headers: {
@@ -117,7 +118,7 @@ export const processMaterialFromClassroom = async (material, token) => {
 
   try {
     const response = await axios.post(
-      "http://localhost:8000/api/materials/extract-text-from-url/",
+      `${getApiBaseUrl()}/api/materials/extract-text-from-url/`,
       {
         file_url: material.file,
         material_id: material.id
@@ -154,7 +155,7 @@ export const processMaterialFromClassroom = async (material, token) => {
 // Generate exam using Ollama
 export const generateExam = async (prompt, model = "llama3.2:3b") => {
   try {
-    const response = await axios.post("http://localhost:11434/api/generate", {
+    const response = await axios.post(`${getApiBaseUrl()}:11434/api/generate`, {
       model: model,
       prompt: prompt,
       stream: false,

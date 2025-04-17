@@ -1,10 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
+import { useRouter } from "@/i18n/navigation";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { IconCopy, IconCheck, IconHistory, IconTrash, IconLanguage, IconWorld } from "@tabler/icons-react";
 import Image from "next/image";
+import { getApiBaseUrl } from "@/lib/api";
+
 
 const languages = [
   { code: "es", name: "Spanish" },
@@ -66,7 +69,7 @@ const Translator = () => {
     setError("");
     
     try {
-      const response = await fetch('http://localhost:8000/api/materials/translate/', {
+      const response = await fetch(`${getApiBaseUrl()}/api/materials/translate/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

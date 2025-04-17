@@ -19,6 +19,8 @@ import axios from "axios";
 import Image from "next/image";
 import { IconFileText, IconBrain } from "@tabler/icons-react";
 import { buildExamPrompt } from "./utils/promptUtils";
+import { getApiBaseUrl } from "@/lib/api";
+
 
 const ExamMaker = () => {
   const { theme } = useTheme();
@@ -59,7 +61,7 @@ const ExamMaker = () => {
 
     const fetchClassrooms = async () => {
       try {
-        const response = await axios.get("http://localhost:8000/api/classrooms/", {
+        const response = await axios.get("/api/classrooms/", {
           headers: {
             Authorization: `Token ${token}`,
           },
@@ -84,7 +86,7 @@ const ExamMaker = () => {
     if (token && user && classrooms.length > 0) {
       const fetchUserMaterials = async () => {
         try {
-          const response = await axios.get("http://localhost:8000/api/materials/", {
+          const response = await axios.get(`${getApiBaseUrl()}/api/materials/`, {
             headers: {
               Authorization: `Token ${token}`,
             },
