@@ -8,7 +8,6 @@ import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import axios from "axios";
 import { ClassroomEditForm } from "@/components/classroom-edit-form";
-import { Modal } from "@/components/ui/modal";
 import Alert from "@/components/ui/Alert";
 
 const ClassroomEdit = () => {
@@ -226,15 +225,17 @@ const ClassroomEdit = () => {
     setNameInput("");
   };
 
-  const memoizedForm = useMemo(
+  const memorizedForm = useMemo(
     () => (
-      <ClassroomEditForm
-        formData={formData}
-        handleChange={handleChange}
-        handleUpdate={handleUpdate}
-        openDeleteModal={openDeleteModal}
-        educationalStages={filteredEducationalStages}
-      />
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <ClassroomEditForm
+          formData={formData}
+          handleChange={handleChange}
+          handleUpdate={handleUpdate}
+          openDeleteModal={openDeleteModal}
+          educationalStages={filteredEducationalStages}
+        />
+      </div>
     ),
     [formData, handleChange, handleUpdate, openDeleteModal, filteredEducationalStages]
   );
@@ -245,7 +246,7 @@ const ClassroomEdit = () => {
     <div className="min-h-screen w-screen bg-gradient-to-br from-blue-500/10 to-purple-500/5">
       {alert && <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />}
 
-      <div className="relative z-10 sm:mx-auto sm:w-full sm:max-w-full">
+      <div className="relative px-4 z-10 sm:mx-auto sm:w-full sm:max-w-full">
         <h1
           className={cn(
             "mt-6 text-center text-4xl font-bold",
@@ -339,7 +340,7 @@ const ClassroomEdit = () => {
       )}
 
       <br />
-      {memoizedForm}
+      {memorizedForm}
 
       <div className="my-12"></div>
     </div>
