@@ -8,7 +8,7 @@ import { IconCopy, IconCheck, IconHistory, IconTrash, IconLanguage, IconWorld } 
 import Image from "next/image";
 import { getApiBaseUrl } from "@/lib/api";
 import { useTranslations } from "next-intl";
-
+import Alert from "@/components/ui/Alert"; // Import the Alert component
 
 const Translator = ({ params }) => {
   const t = useTranslations("Translator");
@@ -18,7 +18,7 @@ const Translator = ({ params }) => {
   const [translatedText, setTranslatedText] = useState("");
   const [targetLanguage, setTargetLanguage] = useState("en");
   const [isTranslating, setIsTranslating] = useState(false);
-  const [error, setError] = useState("");
+  const [alert, setAlert] = useState(null); // Use this for Alert messages
   const [translationHistory, setTranslationHistory] = useState([]);
   const [copied, setCopied] = useState(false);
   const [isClient, setIsClient] = useState(false);
@@ -37,12 +37,20 @@ const Translator = ({ params }) => {
     { code: "el", name: t("languages.el") },
     { code: "la", name: t("languages.la") }
   ];
-  
+
+  const showAlert = (type, message) => {
+    setAlert({ type, message });
+    setTimeout(() => setAlert(null), 5000); // Auto-dismiss after 5 seconds
+  };
+
 // Check if the user is authenticated
   useEffect(() => {
     const authToken = localStorage.getItem("authToken");
     if (!authToken) {
-      router.push(`/${locale}/profile/signin`); // Redirect to the sign-in page if not authenticated
+      showAlert("error", "You need to log in to access this feature.");
+      setTimeout(() => {
+        router.push(`/${locale}/profile/signin`); // Redirect to the sign-in page
+      }, 2000);
     } else {
       setIsClient(true);
     }
@@ -55,7 +63,7 @@ const Translator = ({ params }) => {
       try {
         setTranslationHistory(JSON.parse(savedHistory));
       } catch (e) {
-        console.error("Error parsing translation history:", e);
+        showAlert("error", "Error parsing translation history.");
       }
     }
   }, []);
@@ -67,16 +75,16 @@ const Translator = ({ params }) => {
 
   const handleTranslate = async () => {
     if (!sourceText.trim()) {
-      setError(t("error.emptyText"));
+      showAlert("warning", t("error.emptyText"));
       return;
     }
     if (sourceText.length > 5000) {
-      setError(t("error.textTooLong"));
+      showAlert("warning", t("error.textTooLong"));
       return;
     }
 
     setIsTranslating(true);
-    setError("");
+    setAlert("");
 
     try {
       const response = await fetch(`${getApiBaseUrl()}/api/materials/translate/`, {
@@ -92,7 +100,7 @@ const Translator = ({ params }) => {
       });
 
       if (!response.ok) {
-        throw new Error("Translation failed");
+        throw showAlert("error", "Translation failed");
       }
 
       const data = await response.json();
@@ -111,8 +119,7 @@ const Translator = ({ params }) => {
 
       setTranslationHistory(prev => [newHistoryItem, ...prev.slice(0, 9)]);
     } catch (err) {
-      setError(t("error.translationFailed"));
-      console.error("Translation error:", err);
+      showAlert("error", t("error.translationFailed"));
     } finally {
       setIsTranslating(false);
     }
@@ -149,26 +156,8 @@ const Translator = ({ params }) => {
   return (
     <div className="min-h-screen w-screen bg-gradient-to-br from-blue-500/10 to-purple-500/5">
       <div className="relative mx-auto max-w-7xl w-full">
-        {error && (
-          <div className="fixed top-4 right-4 z-50 w-80">
-            <div
-              className={cn(
-                "p-4 rounded-md shadow-lg",
-                theme === "dark" ? "bg-red-900 text-red-100" : "bg-red-100 text-red-900"
-              )}
-            >
-              {error}
-              <button onClick={() => setError("")} className="absolute top-2 right-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                  <path
-                    fillRule="evenodd"
-                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-              </button>
-            </div>
-          </div>
+        {alert && (
+          <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />
         )}
 
         <div className="relative w-full flex-1 flex flex-col items-center py-12">

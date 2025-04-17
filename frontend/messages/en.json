@@ -154,5 +154,98 @@
         "examGeneratedSuccess": "Exam generated successfully!",
         "examGenerationFailed": "Failed to generate exam"
       }
+    },
+
+    "StudentCreateForm": {
+      "nameLabel": "Name",
+      "namePlaceholder": "Enter the student's first name",
+      "surnameLabel": "Surname",
+      "surnamePlaceholder": "Enter the student's last name",
+      "createButton": "Create Student",
+      "cancelButton": "Cancel"
+    },
+
+    "SignupForm": {
+      "title": "Create Your Account",
+      "sections": {
+        "personalInfo": "Personal Information",
+        "accountInfo": "Account Information"
+      },
+      "fields": {
+        "name": {
+          "label": "Name",
+          "placeholder": "Enter your first name"
+        },
+        "surname": {
+          "label": "Surname",
+          "placeholder": "Enter your last name"
+        },
+        "username": {
+          "label": "Username",
+          "placeholder": "Choose a username"
+        },
+        "email": {
+          "label": "Email",
+          "placeholder": "Enter your email address"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "Enter a secure password"
+        }
+      },
+      "terms": {
+        "text": "I accept the",
+        "termsOfUse": "Terms of Use",
+        "privacyPolicy": "Privacy Policy",
+        "and": "and"
+      },
+      "buttons": {
+        "signup": "Sign up",
+        "signin": "Sign in"
+      },
+      "alreadyHaveAccount": "Already have an account?",
+      "alerts": {
+        "acceptTerms": "You must accept the Terms of Use and Privacy Policy to sign up.",
+        "signupError": "An error occurred while signing up. Please try again."
+      }
+    },
+
+    "SigninForm": {
+      "fields": {
+        "emailOrUsername": {
+          "label": "Email or Username",
+          "placeholder": "email@example.com or username"
+        },
+        "password": {
+          "label": "Password",
+          "placeholder": "••••••••"
+        }
+      },
+      "buttons": {
+        "signin": "Sign in",
+        "signup": "Sign up"
+      },
+      "noAccount": "Don't have an account?"
+    },
+
+    "Sidebar": {
+      "links": {
+        "home": "Home",
+        "create": "Create",
+        "myClasses": "My Classes",
+        "myMaterials": "My Materials",
+        "signin": "Sign in",
+        "signout": "Sign out",
+        "theme": "Theme"
+      },
+      "alerts": {
+        "logoutSuccess": "You have successfully logged out."
+      },
+      "logoutModal": {
+        "title": "Confirm Logout",
+        "description": "Are you sure you want to log out? You will need to sign in again to access your account.",
+        "cancelButton": "Cancel",
+        "logoutButton": "Logout"
+      }
     }
 }

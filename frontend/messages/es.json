@@ -154,5 +154,104 @@
         "examGeneratedSuccess": "¡Examen generado con éxito!",
         "examGenerationFailed": "Error al generar el examen"
       }
+    },
+
+
+
+    "StudentCreateForm": {
+      "nameLabel": "Nombre",
+      "namePlaceholder": "Introduce el nombre del estudiante",
+      "surnameLabel": "Apellido",
+      "surnamePlaceholder": "Introduce el apellido del estudiante",
+      "createButton": "Crear Estudiante",
+      "cancelButton": "Cancelar"
+    },
+
+
+
+    "SigninForm": {
+      "fields": {
+        "emailOrUsername": {
+          "label": "Correo o Nombre de Usuario",
+          "placeholder": "correo@ejemplo.com o nombre de usuario"
+        },
+        "password": {
+          "label": "Contraseña",
+          "placeholder": "••••••••"
+        }
+      },
+      "buttons": {
+        "signin": "Iniciar sesión",
+        "signup": "Regístrate"
+      },
+      "noAccount": "¿No tienes una cuenta?"
+    },
+
+
+
+    "SignupForm": {
+      "title": "Crea tu cuenta",
+      "sections": {
+        "personalInfo": "Información Personal",
+        "accountInfo": "Información de la Cuenta"
+      },
+      "fields": {
+        "name": {
+          "label": "Nombre",
+          "placeholder": "Introduce tu nombre"
+        },
+        "surname": {
+          "label": "Apellido",
+          "placeholder": "Introduce tu apellido"
+        },
+        "username": {
+          "label": "Nombre de usuario",
+          "placeholder": "Elige un nombre de usuario"
+        },
+        "email": {
+          "label": "Correo electrónico",
+          "placeholder": "Introduce tu correo electrónico"
+        },
+        "password": {
+          "label": "Contraseña",
+          "placeholder": "Introduce una contraseña segura"
+        }
+      },
+      "terms": {
+        "text": "Acepto los",
+        "termsOfUse": "Términos de Uso",
+        "privacyPolicy": "Política de Privacidad",
+        "and": "y"
+      },
+      "buttons": {
+        "signup": "Regístrate",
+        "signin": "Inicia sesión"
+      },
+      "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+      "alerts": {
+        "acceptTerms": "Debes aceptar los Términos de Uso y la Política de Privacidad para registrarte.",
+        "signupError": "Ocurrió un error al registrarte. Por favor, inténtalo de nuevo."
+      }
+    },
+
+    "Sidebar": {
+      "links": {
+        "home": "Inicio",
+        "create": "Crear",
+        "myClasses": "Mis Clases",
+        "myMaterials": "Mis Materiales",
+        "signin": "Iniciar sesión",
+        "signout": "Cerrar sesión",
+        "theme": "Tema"
+      },
+      "alerts": {
+        "logoutSuccess": "Has cerrado sesión correctamente."
+      },
+      "logoutModal": {
+        "title": "Confirmar Cierre de Sesión",
+        "description": "¿Estás seguro de que deseas cerrar sesión? Necesitarás iniciar sesión nuevamente para acceder a tu cuenta.",
+        "cancelButton": "Cancelar",
+        "logoutButton": "Cerrar sesión"
+      }
     }
 }

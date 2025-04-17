@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { getApiBaseUrl } from "@/lib/api";
+import Alert from "@/components/ui/Alert";
 
 const MaterialCreateModal = ({ 
   showModal, 
@@ -16,8 +17,13 @@ const MaterialCreateModal = ({
   const [materialName, setMaterialName] = useState("");
   const [selectedClassroom, setSelectedClassroom] = useState("");
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [alert, setAlert] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
+
+  const showAlert = (type, message) => {
+    setAlert({ type, message });
+    setTimeout(() => setAlert(null), 5000);
+  };
 
   useEffect(() => {
     if (showModal) {
@@ -39,7 +45,7 @@ const MaterialCreateModal = ({
         setSelectedClassroom(response.data[0].id);
       }
     } catch (err) {
-      setError("Failed to fetch classrooms");
+      showAlert("error", "Failed to fetch classrooms");
       console.error(err);
     } finally {
       setIsLoading(false);
@@ -94,7 +100,7 @@ const MaterialCreateModal = ({
 
   const handleSubmit = async () => {
     if (!selectedFile || !materialName || !selectedClassroom) {
-      setError("Please fill all required fields");
+      showAlert("warning", "Please fill all required fields");
       return;
     }
 
@@ -114,7 +120,7 @@ const MaterialCreateModal = ({
 
       const token = localStorage.getItem('authToken');
       if (!token) {
-        setError("You are not logged in. Please log in and try again.");
+        showAlert("error", "You are not logged in. Please log in and try again.");
         return;
       }
 
@@ -143,7 +149,7 @@ const MaterialCreateModal = ({
       
       // Handle different error scenarios
       if (err.response?.status === 401) {
-        setError("Your session has expired. Please log in again.");
+        showAlert("error", "Your session has expired. Please log in again.");
         setTimeout(() => {
           window.location.href = '/signin';
         }, 2000);
@@ -157,11 +163,11 @@ const MaterialCreateModal = ({
                               .join(', ') : 
                             err.response?.data);
         
-        setError(`Failed to upload material: ${errorDetail || 'Invalid data'}`);
+        showAlert("error", `Failed to upload material: ${errorDetail || 'Invalid data'}`);
       } else if (err.code === 'ECONNABORTED') {
-        setError("Request timed out. Please try with a smaller file or check your connection.");
+        showAlert("error", "Request timed out. Please try with a smaller file or check your connection.");
       } else {
-        setError("Failed to upload material: " + (err.message || "Unknown error"));
+        showAlert("error", "Failed to upload material: " + (err.message || "Unknown error"));
       }
     }
   };
@@ -169,7 +175,7 @@ const MaterialCreateModal = ({
   const resetForm = () => {
     setSelectedFile(null);
     setMaterialName("");
-    setError(null);
+    setAlert(null);
   };
 
   if (!showModal) return null;
@@ -189,6 +195,9 @@ const MaterialCreateModal = ({
         )}
         onClick={(e) => e.stopPropagation()}
       >
+        {/* Alert Component */}
+        {alert && <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />}
+
         {/* Modal Header with Icon */}
         <div className="flex flex-col items-center justify-center mb-4">
           <div className="flex items-center justify-center mb-3 text-primary">
