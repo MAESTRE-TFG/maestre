@@ -49,7 +49,7 @@ export function MaterialsPage({ classroomId }) {
   // This state tracks if we're creating a tag from the edit modal
   const [creatingTagFromEdit, setCreatingTagFromEdit] = useState(false);
 
-  const NAME_LIMIT = 30; // Add this constant for the name limit
+  const NAME_LIMIT = 50; // Add this constant for the name limit
   const [nameWarning, setNameWarning] = useState(null); // Add state for name warning
 
   const handleEdit = (material) => {
