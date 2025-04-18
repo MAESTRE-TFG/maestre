@@ -3,15 +3,15 @@ import { FocusCards } from "@/components/ui/focus-cards";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import { Modal } from "@/components/ui/modal";
-import axios from "axios";
 
-export function AIToolsCards() {
+export function AIToolsCards(params) {
   const router = useRouter();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isProfileComplete, setIsProfileComplete] = useState(false);
   const [selectedToolPath, setSelectedToolPath] = useState("");
+  const locale = params?.locale || 'es';
 
   useEffect(() => {
     checkAuthStatus();
@@ -27,9 +27,7 @@ export function AIToolsCards() {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('authToken');
       const user = localStorage.getItem('user');
-      
-      console.log("Checking auth status:", { token: !!token, user: !!user });
-      
+            
       if (!user || !token) {
         setIsAuthenticated(false);
         setIsProfileComplete(false);
@@ -38,17 +36,12 @@ export function AIToolsCards() {
       
       try {
         setIsAuthenticated(true);
-        const userData = JSON.parse(user);
-        console.log("User data:", userData);
-        
+        const userData = JSON.parse(user);        
         const isComplete = userData.region && 
                           userData.city && 
                           userData.school;
-        
-        console.log("Profile complete:", isComplete);
         setIsProfileComplete(isComplete);
       } catch (error) {
-        console.error('Error parsing user data:', error);
         setIsAuthenticated(false);
         setIsProfileComplete(false);
       }
@@ -60,25 +53,25 @@ export function AIToolsCards() {
       // title: "Exam Maker",
       src: "/static/tools/exam_maker.webp",
       description: "Create comprehensive exams with our intuitive exam maker",
-      url: "/tools/exam-maker"
+      url: `/${locale}/tools/exam-maker`
     },
     {
       // title: "Test Generator",
       src: "/static/tools/test_maker.webp",
       description: "Generate tests efficiently with AI-powered assistance",
-      url: "/tools/test-generator"
+      url: `/${locale}/tools/test-generator`
     },
     {
       // title: "Class Planner",
       src: "/static/tools/planner.webp",
       description: "Plan your classes with our comprehensive planning tools",
-      url: "/tools/class-planner"
+      url: `/${locale}/tools/class-planner`
     },
     {
       // title: "Translator",
       src: "/static/tools/translator.webp",
       description: "Break language barriers in your classroom",
-      url: "/tools/translator"
+      url: `/${locale}/tools/translator`
     }
   ];
 
@@ -91,17 +84,17 @@ export function AIToolsCards() {
   };
 
   const handleSignUp = () => {
-    router.push('/profile/signup');
+    router.push(`/${locale}/profile/signup`);
     closeAuthModal();
   };
   
   const handleSignIn = () => {
-    router.push('/profile/signin');
+    router.push(`/${locale}/profile/signin`);
     closeAuthModal();
   };
 
   const handleCompleteProfile = () => {
-    router.push('/profile/complete');
+    router.push(`/${locale}/profile/complete`);
     closeProfileModal();
   };
 

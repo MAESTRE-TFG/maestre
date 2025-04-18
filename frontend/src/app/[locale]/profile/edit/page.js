@@ -56,7 +56,6 @@ const ProfileEdit = () => {
   };
 
     const handleSignout = async () => {
-      console.log('Signing out...');
       try {
         const token = localStorage.getItem('authToken');
         
@@ -68,7 +67,6 @@ const ProfileEdit = () => {
                 'Authorization': `Token ${token}`  // Changed from Bearer to Token
               }
             });
-            console.log('Successfully called signout API');
           } catch (apiError) {
             console.error('API error during signout:', apiError);
             // Continue with local logout even if API call fails
@@ -249,9 +247,7 @@ const ProfileEdit = () => {
       showAlert("error", "Invalid email format");
       return;
     }
-  
-    console.log("Payload being sent:", updatePayload);
-  
+    
     try {
       const response = await axios.put(
         `${getApiBaseUrl()}/api/users/${user.id}/update/`,
@@ -283,7 +279,6 @@ const ProfileEdit = () => {
       setEditMode(false);
       showAlert("success", "Profile updated successfully");
     } catch (err) {
-      console.error("Update failed:", err.response?.data || err.message);
       showAlert("error", err.response?.data?.message || "Update failed");
     }
   }, [formData, user?.id]);

@@ -1,19 +1,20 @@
 import { Label } from "@/components/ui/label";
 import LabelInputContainer from "./LabelInputContainer";
+import { useTranslations } from "next-intl";
 
 const QuestionTypeSelector = ({ value, onChange, theme }) => {
+  const t = useTranslations("ExamMaker");
+
   const questionTypes = [
-    // { value: "multiple_choice", label: "Multiple Choice" },
-    // { value: "true_false", label: "True/False" },
-    { value: "short_answer", label: "Short Answer" },
-    { value: "essay", label: "Essay (Max 1 page)" },
-    { value: "long_essay", label: "Long Essay (More than 1 page)" },
-    { value: "fill_blank", label: "Fill in the Blank" },
-    { value: "matching", label: "Matching" },
-    { value: "ordering", label: "Ordering" },
-    {value: "text analysis", label: "Text Analysis"},
-    {value: "image_analysis", label: "Image Analysis and Comparison"},
-    { value: "mixed", label: "Mixed (Various Types)" }
+    { value: "short_answer", label: t("fields.questionType.options.shortAnswer") }, 
+    { value: "essay", label: t("fields.questionType.options.essay") }, 
+    { value: "long_essay", label: t("fields.questionType.options.longEssay") }, 
+    { value: "fill_blank", label: t("fields.questionType.options.fillBlank") }, 
+    { value: "matching", label: t("fields.questionType.options.matching") }, 
+    { value: "ordering", label: t("fields.questionType.options.ordering") }, 
+    { value: "text_analysis", label: t("fields.questionType.options.textAnalysis") }, 
+    { value: "image_analysis", label: t("fields.questionType.options.imageAnalysis") }, 
+    { value: "mixed", label: t("fields.questionType.options.mixed") } 
   ];
 
   return (
@@ -22,7 +23,7 @@ const QuestionTypeSelector = ({ value, onChange, theme }) => {
         <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="orange">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
         </svg>
-        Question Type
+        {t("fields.questionType.label")} 
       </Label>
       <div className="relative">
         <select

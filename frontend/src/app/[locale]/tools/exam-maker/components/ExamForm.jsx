@@ -2,6 +2,7 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { useTheme } from "@/components/theme-provider";
+import { useTranslations } from "next-intl";
 import LabelInputContainer from "./LabelInputContainer";
 import QuestionTypeSelector from "./QuestionTypeSelector";
 import ClassroomSelector from "./ClassroomSelector";
@@ -23,6 +24,7 @@ const ExamForm = ({
   userMaterials
 }) => {
   const { theme } = useTheme();
+  const t = useTranslations("ExamMaker");
 
   return (
     <form className="grid grid-cols-1 md:grid-cols-2 gap-8" onSubmit={handleSubmit}>
@@ -33,12 +35,12 @@ const ExamForm = ({
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="rgb(76,161,84)">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
             </svg>
-            Subject
+            {t("fields.subject.label")}
           </Label>
           <Input 
             id="subject" 
             name="subject" 
-            placeholder="Mathematics, Science, History, etc." 
+            placeholder={t("fields.subject.placeholder")}
             type="text" 
             required 
             value={formData.subject} 
@@ -52,12 +54,12 @@ const ExamForm = ({
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="rgb(76,161,84)">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
-            Exam Name
+            {t("fields.examName.label")} 
           </Label>
           <Input 
             id="examName" 
             name="examName" 
-            placeholder="Midterm Exam, Final Test, Chapter 5 Quiz, etc." 
+            placeholder={t("fields.examName.placeholder")} 
             type="text" 
             value={formData.examName} 
             onChange={handleChange}
@@ -70,7 +72,7 @@ const ExamForm = ({
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="rgb(25,65,166)">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
             </svg>
-            Number of Questions
+            {t("fields.numQuestions.label")} 
           </Label>
           <Input 
             id="numQuestions" 
@@ -90,7 +92,7 @@ const ExamForm = ({
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="rgb(25,65,166)">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
-            Maximum Points
+            {t("fields.totalPoints.label")} 
           </Label>
           <Input 
             id="totalPoints" 
@@ -133,12 +135,12 @@ const ExamForm = ({
               <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="rgb(25,65,166)">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
               </svg>
-              Custom Scoring Details
+              {t("fields.customScoringDetails.label")} 
             </Label>
             <Input 
               id="customScoringDetails" 
               name="customScoringDetails" 
-              placeholder="E.g., Questions 1-5: 2 points each, Questions 6-10: 3 points each" 
+              placeholder={t("fields.customScoringDetails.placeholder")} 
               type="text" 
               value={formData.customScoringDetails} 
               onChange={handleChange}
@@ -167,12 +169,12 @@ const ExamForm = ({
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="orange">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
             </svg>
-            Additional Instructions (Optional)
+            {t("fields.additionalInfo.label")} 
           </Label>
           <textarea
             id="additionalInfo"
             name="additionalInfo"
-            placeholder="Add any specific instructions or requirements for the exam..."
+            placeholder={t("fields.additionalInfo.placeholder")} 
             rows="3"
             value={formData.additionalInfo}
             onChange={handleChange}
@@ -196,10 +198,10 @@ const ExamForm = ({
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                Generating Exam...
+                {t("buttons.generating")} 
               </div>
             ) : (
-              "Generate Exam"
+              t("buttons.generateExam")
             )}
           </button>
         </div>

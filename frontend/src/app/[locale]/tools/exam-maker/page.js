@@ -72,7 +72,7 @@ const ExamMaker = ({ params }) => {
         if (Array.isArray(response.data)) {
           setClassrooms(response.data);
         } else {
-          throw new Error("Invalid data format: Expected an array");
+            addAlert("error", t("alerts.fetchClassroomsError"));
         }
 
         setLoading(false);
@@ -114,7 +114,6 @@ const ExamMaker = ({ params }) => {
     }
   }, [classrooms, t]);
 
-  // Alert management
   const addAlert = (type, message) => {
     const id = Date.now();
     setAlerts(prev => [...prev, { id, type, message }]);

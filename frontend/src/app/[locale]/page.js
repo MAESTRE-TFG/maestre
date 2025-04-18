@@ -92,7 +92,6 @@ const Home = ({ params }) => {
             setVideoPlaying(true);
           })
           .catch(error => {
-            console.log("Autoplay prevented:", error);
             setVideoPlaying(false);
           });
       }

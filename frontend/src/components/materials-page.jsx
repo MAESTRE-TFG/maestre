@@ -1,14 +1,16 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from "react";
 import { getApiBaseUrl } from "@/lib/api";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
-import axios from 'axios';
-import { FileUploadDemo } from '@/components/file-upload-demo';
-import Alert from '@/components/ui/Alert';
+import axios from "axios";
+import { FileUploadDemo } from "@/components/file-upload-demo";
+import Alert from "@/components/ui/Alert";
+import { useTranslations } from "next-intl";
 
 export function MaterialsPage({ classroomId }) {
   const { theme } = useTheme();
+  const t = useTranslations("MaterialsPage");
   const [alert, setAlert] = useState(null);
 
   const [materials, setMaterials] = useState([]);
@@ -21,27 +23,27 @@ export function MaterialsPage({ classroomId }) {
   const [showTagModal, setShowTagModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
-  
-  const [newTagName, setNewTagName] = useState('');
+
+  const [newTagName, setNewTagName] = useState("");
   const [fileToDelete, setFileToDelete] = useState(null);
   const [fileToEdit, setFileToEdit] = useState(null);
   const [newFileName, setNewFileName] = useState("");
 
-  const [refreshTrigger, setRefreshTrigger] = useState(0);  // Force re-fetching
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   const [selectedMaterials, setSelectedMaterials] = useState([]);
   const [showDeleteSelectedModal, setShowDeleteSelectedModal] = useState(false);
 
   const TAG_COLORS = [
-    { name: 'Purple', value: '#A350C4' },
-    { name: 'Orange', value: '#E58914' },
-    { name: 'Coral', value: '#FA5C2B' },
-    { name: 'Teal', value: '#44AF9E' },
-    { name: 'Green', value: '#118E6C' },
-    { name: 'Blue', value: '#4777DA' },
-    { name: 'Light Blue', value: '#8ABAEA' },
-    { name: 'Black', value: '#000000' },
-    { name: 'Grey', value: '#808080' }
+    { name: t("tagColors.purple"), value: "#A350C4" },
+    { name: t("tagColors.orange"), value: "#E58914" },
+    { name: t("tagColors.coral"), value: "#FA5C2B" },
+    { name: t("tagColors.teal"), value: "#44AF9E" },
+    { name: t("tagColors.green"), value: "#118E6C" },
+    { name: t("tagColors.blue"), value: "#4777DA" },
+    { name: t("tagColors.lightBlue"), value: "#8ABAEA" },
+    { name: t("tagColors.black"), value: "#000000" },
+    { name: t("tagColors.grey"), value: "#808080" },
   ];
 
   const [selectedColor, setSelectedColor] = useState(TAG_COLORS[0].value);
@@ -49,8 +51,8 @@ export function MaterialsPage({ classroomId }) {
   // This state tracks if we're creating a tag from the edit modal
   const [creatingTagFromEdit, setCreatingTagFromEdit] = useState(false);
 
-  const NAME_LIMIT = 50; // Add this constant for the name limit
-  const [nameWarning, setNameWarning] = useState(null); // Add state for name warning
+  const NAME_LIMIT = 50;
+  const [nameWarning, setNameWarning] = useState(null);
 
   const handleEdit = (material) => {
     setFileToEdit(material);
@@ -61,15 +63,13 @@ export function MaterialsPage({ classroomId }) {
   const confirmEdit = async () => {
     try {
       const originalName = fileToEdit.name;
-      const hasExtension = originalName.includes('.');
+      const hasExtension = originalName.includes(".");
       let updatedFileName = newFileName;
 
       if (hasExtension) {
-        const originalExtension = originalName.split('.').pop();
-        // Make sure the new name has the same extension
+        const originalExtension = originalName.split(".").pop();
         if (!newFileName.endsWith(`.${originalExtension}`)) {
-          // If user removed or changed extension, restore it
-          const nameWithoutExtension = newFileName.split('.')[0];
+          const nameWithoutExtension = newFileName.split(".")[0];
           updatedFileName = `${nameWithoutExtension}.${originalExtension}`;
         }
       }
@@ -79,18 +79,20 @@ export function MaterialsPage({ classroomId }) {
         { name: updatedFileName },
         {
           headers: {
-            'Authorization': `Token ${localStorage.getItem("authToken")}`,
-            'Content-Type': 'application/json'
-          }
+            Authorization: `Token ${localStorage.getItem("authToken")}`,
+            "Content-Type": "application/json",
+          },
         }
       );
 
-      setMaterials(prevMaterials =>
-        prevMaterials.map(m => m.id === fileToEdit.id ? { ...m, name: updatedFileName } : m)
+      setMaterials((prevMaterials) =>
+        prevMaterials.map((m) =>
+          m.id === fileToEdit.id ? { ...m, name: updatedFileName } : m
+        )
       );
-      setAlert({ type: 'success', message: 'Material name updated successfully!' });
+      setAlert({ type: "success", message: t("alerts.editSuccess") });
     } catch (error) {
-      setAlert({ type: 'error', message: 'Failed to update material name. Please try again.' });
+      setAlert({ type: "error", message: t("alerts.editError") });
     } finally {
       setShowEditModal(false);
       setFileToEdit(null);
@@ -104,17 +106,18 @@ export function MaterialsPage({ classroomId }) {
 
   const confirmDelete = async () => {
     try {
-      await axios.delete(`${getApiBaseUrl()}/api/materials/${fileToDelete.id}/`, { // Fix the URL
+      await axios.delete(`${getApiBaseUrl()}/api/materials/${fileToDelete.id}/`, {
         headers: {
-          'Authorization': `Token ${localStorage.getItem("authToken")}`,
-        }
+          Authorization: `Token ${localStorage.getItem("authToken")}`,
+        },
       });
 
-      // Remove the deleted material from the materials state
-      setMaterials(prevMaterials => prevMaterials.filter(m => m.id !== fileToDelete.id));
-      setAlert({ type: 'success', message: 'Material deleted successfully!' });
+      setMaterials((prevMaterials) =>
+        prevMaterials.filter((m) => m.id !== fileToDelete.id)
+      );
+      setAlert({ type: "success", message: t("alerts.deleteSuccess") });
     } catch (error) {
-      setAlert({ type: 'error', message: 'Failed to delete material. Please try again.' });
+      setAlert({ type: "error", message: t("alerts.deleteError") });
     } finally {
       setShowDeleteModal(false);
       setFileToDelete(null);
@@ -122,7 +125,7 @@ export function MaterialsPage({ classroomId }) {
   };
 
   const refreshMaterials = () => {
-    setRefreshTrigger(prev => prev + 1);
+    setRefreshTrigger((prev) => prev + 1);
   };
 
   useEffect(() => {
@@ -133,34 +136,37 @@ export function MaterialsPage({ classroomId }) {
   const fetchMaterials = async () => {
     try {
       const params = {
-        classroom_id: classroomId
+        classroom_id: classroomId,
       };
 
       if (selectedTags.length > 0) {
-        const response = await axios.get(`${getApiBaseUrl()}/api/tags/filtered_documents/`, {
-          params: {
-            tags: selectedTags,
-            classroom_id: classroomId
-          },
-          paramsSerializer: {
-            indexes: null // This will serialize arrays as tags=value1&tags=value2
-          },
-          headers: {
-            Authorization: `Token ${localStorage.getItem('authToken')}`
+        const response = await axios.get(
+          `${getApiBaseUrl()}/api/tags/filtered_documents/`,
+          {
+            params: {
+              tags: selectedTags,
+              classroom_id: classroomId,
+            },
+            paramsSerializer: {
+              indexes: null,
+            },
+            headers: {
+              Authorization: `Token ${localStorage.getItem("authToken")}`,
+            },
           }
-        });
+        );
         setMaterials(response.data);
       } else {
         const response = await axios.get(`${getApiBaseUrl()}/api/materials/`, {
           params,
           headers: {
-            Authorization: `Token ${localStorage.getItem('authToken')}`
-          }
+            Authorization: `Token ${localStorage.getItem("authToken")}`,
+          },
         });
         setMaterials(response.data);
       }
     } catch (error) {
-      setAlert({ type: 'error', message: 'Error fetching materials. Please try again.' });
+      setAlert({ type: "error", message: t("alerts.fetchMaterialsError") });
     }
   };
 
@@ -168,12 +174,12 @@ export function MaterialsPage({ classroomId }) {
     try {
       const response = await axios.get(`${getApiBaseUrl()}/api/tags/user_tags/`, {
         headers: {
-          Authorization: `Token ${localStorage.getItem('authToken')}`
-        }
+          Authorization: `Token ${localStorage.getItem("authToken")}`,
+        },
       });
       setTags(response.data);
     } catch (error) {
-      setAlert({ type: 'error', message: 'Error fetching tags. Please try again.' });
+      setAlert({ type: "error", message: t("alerts.fetchTagsError") });
     }
   };
 
@@ -206,12 +212,12 @@ export function MaterialsPage({ classroomId }) {
 
       setNewTagName('');
       setSelectedColor(TAG_COLORS[0].value);
-      setAlert({ type: 'success', message: 'Tag created successfully!' });
+      setAlert({ type: 'success', message: t("alerts.tagCreateSuccess") });
     } catch (error) {
       if (error.response?.data?.includes('15 tags')) {
-        setAlert({ type: 'error', message: 'You have reached the maximum limit of 15 tags.' });
+        setAlert({ type: 'error', message: t("alerts.tagLimit") });
       } else {
-        setAlert({ type: 'error', message: 'Error creating tag. Please try again.' });
+        setAlert({ type: 'error', message: t("alerts.tagCreateError") });
       }
     } finally {
       setIsSubmitting(false);
@@ -258,9 +264,9 @@ export function MaterialsPage({ classroomId }) {
       );
 
       setShowEditTagsModal(false);
-      setAlert({ type: 'success', message: 'Tags updated successfully!' });
+      setAlert({ type: 'success', message: t("alerts.tagUpdateSuccess") });
     } catch (error) {
-      setAlert({ type: 'error', message: 'Error updating tags. Please try again.' });
+      setAlert({ type: 'error', message: t("alerts.tagUpdateError") });
     }
   };
 
@@ -283,9 +289,9 @@ export function MaterialsPage({ classroomId }) {
         fetchTags(),
         fetchMaterials()
       ]);
-      setAlert({ type: 'success', message: 'Tag deleted successfully!' });
+      setAlert({ type: 'success', message: t("alerts.tagDeleteSuccess") });
     } catch (error) {
-      setAlert({ type: 'error', message: 'Error deleting tag. Please try again.' });
+      setAlert({ type: 'error', message: t("alerts.tagDeleteError") });
     }
   };
 
@@ -315,10 +321,10 @@ export function MaterialsPage({ classroomId }) {
       setMaterials((prevMaterials) =>
         prevMaterials.filter((material) => !selectedMaterials.includes(material.id))
       );
-      setAlert({ type: 'success', message: 'Selected materials deleted successfully!' });
+      setAlert({ type: 'success', message: t("alerts.deleteSelectedSuccess") });
       setSelectedMaterials([]);
     } catch (error) {
-      setAlert({ type: 'error', message: 'Error deleting selected materials. Please try again.' });
+      setAlert({ type: 'error', message: t("alerts.deleteSelectedError") });
     } finally {
       setShowDeleteSelectedModal(false);
     }
@@ -327,9 +333,9 @@ export function MaterialsPage({ classroomId }) {
   const handleFileNameChange = (value) => {
     setNewFileName(value);
     if (value.length > NAME_LIMIT) {
-      setAlert({ type: 'warning', message: `Name exceeds the limit of ${NAME_LIMIT} characters.` });
+      setAlert({ type: 'warning', message: t("alerts.nameLimitExceeded", { limit: NAME_LIMIT }) });
     } else {
-      setAlert(null); // Clear the alert if the name is within the limit
+      setAlert(null);
     }
   };
 
@@ -345,8 +351,13 @@ export function MaterialsPage({ classroomId }) {
       {/* Tags Filter Section */}
       <div className="flex flex-wrap gap-2 items-center mb-6">
         <div className="flex items-center gap-2">
-          <span className={cn("font-bold", theme === "dark" ? "text-white" : "text-gray-800")}>
-            Filter by Tags:
+          <span
+            className={cn(
+              "font-bold",
+              theme === "dark" ? "text-white" : "text-gray-800"
+            )}
+          >
+            {t("filterByTags")}
           </span>
           <button
             onClick={() => setDeleteMode(!deleteMode)}
@@ -358,7 +369,7 @@ export function MaterialsPage({ classroomId }) {
                   ? "bg-neutral-700 text-neutral-300"
                   : "bg-gray-200 text-gray-600"
             )}
-            title={deleteMode ? "Exit Delete Mode" : "Enter Delete Mode"}
+            title={deleteMode ? t("exitDeleteMode") : t("enterDeleteMode")}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -382,7 +393,7 @@ export function MaterialsPage({ classroomId }) {
                 <button
                   onClick={() => handleDeleteTag(tag.id)}
                   className="p-2 rounded-lg bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 transition-colors"
-                  title="Delete Tag"
+                  title={t("deleteTag", { tagName: tag.name })}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -437,14 +448,14 @@ export function MaterialsPage({ classroomId }) {
             "text-xl font-bold mb-2 text-center",
             theme === "dark" ? "text-white" : "text-gray-800"
           )}>
-            Delete Material
+            {t("deleteMaterial")}
           </h3>
           
           <p className={cn(
             "mb-6 text-center",
             theme === "dark" ? "text-gray-300" : "text-gray-600"
           )}>
-            Are you sure you want to delete <span className="font-semibold">{fileToDelete?.name}</span>?
+            {t("deleteMaterialConfirmation")} <span className="font-semibold">{fileToDelete?.name}</span>?
           </p>
           
           <div className="flex justify-center gap-3">
@@ -452,20 +463,20 @@ export function MaterialsPage({ classroomId }) {
               onClick={() => setShowDeleteModal(false)}
               className="btn-secondary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
             >
-              Cancel
+              {t("cancel")}
             </button>
             <button
               onClick={confirmDelete}
               className="btn-danger py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
             >
-              Delete
+              {t("delete")}
             </button>
           </div>
             </div>
           </div>
         )}
 
-      { /* Edit Tags Modal */ }
+       {/* Edit Tags Modal */ }
         {showEditTagsModal && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowEditTagsModal(false)}>
             <div 
@@ -476,7 +487,7 @@ export function MaterialsPage({ classroomId }) {
           )} 
           onClick={e => e.stopPropagation()}
             >
-          <div className="flex items-center justify-center mb-4 text-[#5a2380]">
+          <div className="flex items-center justify-center mb-4 text-[#A350C4]">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" clipRule="evenodd" />
             </svg>
@@ -486,7 +497,7 @@ export function MaterialsPage({ classroomId }) {
             "text-xl font-bold mb-4 text-center",
             theme === "dark" ? "text-white" : "text-gray-800"
           )}>
-            Manage Tags for {editingMaterial?.name}
+            {t("manageTags")} <span style={{ color: "#A350C4" }}>{editingMaterial?.name}</span>
           </h3>
           <div className="space-y-4">
             <div className="flex flex-wrap gap-2 justify-center">
@@ -524,7 +535,7 @@ export function MaterialsPage({ classroomId }) {
                 : "border-gray-300 text-gray-600 hover:border-gray-400"
             )}
               >
-            + Create New Tag
+            {t("createTag")}
               </button>
             </div>
             <div className="flex justify-center gap-3">
@@ -532,13 +543,13 @@ export function MaterialsPage({ classroomId }) {
             onClick={() => setShowEditTagsModal(false)}
             className="btn-secondary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
               >
-            Cancel
+            {t("cancel")}
               </button>
               <button
             onClick={handleUpdateMaterialTags}
             className="btn-success py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
               >
-            Save Changes
+            {t("saveChanges")}
               </button>
             </div>
           </div>
@@ -573,7 +584,7 @@ export function MaterialsPage({ classroomId }) {
                 theme === "dark" ? "text-white" : "text-gray-800"
               )}
             >
-              Create New Tag
+              {t("createTag")}
             </h3>
             <form onSubmit={handleCreateTag}>
               <input
@@ -597,7 +608,7 @@ export function MaterialsPage({ classroomId }) {
                     theme === "dark" ? "text-white" : "text-gray-800"
                   )}
                 >
-                  Select Color
+                  {t("selectTagColor")}
                 </label>
                 <div className="grid grid-cols-5 gap-2 justify-center">
                   {TAG_COLORS.map((color) => (
@@ -628,14 +639,14 @@ export function MaterialsPage({ classroomId }) {
                   }}
                   className="btn-secondary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
                 >
-                  Cancel
+                  {t("cancel")}
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
                   className="btn-success py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
                 >
-                  {isSubmitting ? "Creating..." : "Create Tag"}
+                  {isSubmitting ? t("creating") : t("createTag")}
                 </button>
               </div>
             </form>
@@ -665,13 +676,13 @@ export function MaterialsPage({ classroomId }) {
             "text-xl font-bold mb-4 text-center",
             theme === "dark" ? "text-white" : "text-gray-800"
           )}>
-            Edit Material Name
+            {t("editMaterialName")}
           </h3>
           <p className={cn(
             "mb-4 text-center",
             theme === "dark" ? "text-gray-300" : "text-gray-600"
           )}>
-            Enter a new name for the material:
+            {t("editMaterialNameDescription")}
           </p>
           <input
             type="text"
@@ -694,13 +705,13 @@ export function MaterialsPage({ classroomId }) {
               onClick={() => setShowEditModal(false)}
               className="btn-secondary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
             >
-              Cancel
+              {t("cancel")}
             </button>
             <button
               onClick={confirmEdit}
               className="btn-success py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
             >
-              Save
+              {t("saveChanges")}
             </button>
           </div>
             </div>
@@ -716,7 +727,7 @@ export function MaterialsPage({ classroomId }) {
                       onClick={confirmDeleteSelected}
                       className="btn btn-sm btn-danger"
                       >
-                      Delete Selected ({selectedMaterials.length})
+                      {t("deleteSelected")} ({selectedMaterials.length})
                     </button>
                   </div>
                 )}
@@ -839,7 +850,7 @@ export function MaterialsPage({ classroomId }) {
                 </div>
               ) : (
                 <div className="text-center py-8 text-neutral-500 dark:text-neutral-400">
-                  No materials found. {selectedTags.length > 0 ? "Try removing some tag filters." : ""}
+                  {t("noMaterialsFound")} {selectedTags.length > 0 ? "Try removing some tag filters." : ""}
                 </div>
               )}
             </div>
@@ -854,23 +865,23 @@ export function MaterialsPage({ classroomId }) {
               "text-xl font-bold mb-4",
               theme === "dark" ? "text-white" : "text-gray-800"
             )}>
-              Confirm Deletion
+              {t("confirmDelete")}
             </h3>
             <p className="mb-6 text-neutral-600 dark:text-neutral-300">
-              Are you sure you want to delete the selected materials?
+              {t("confirmDeleteSelected")}
             </p>
             <div className="flex justify-end space-x-2">
               <button
                 onClick={() => setShowDeleteSelectedModal(false)}
                 className="btn btn-md btn-secondary"
                 >
-                Cancel
+                {t("cancel")}
               </button>
               <button
                 onClick={handleDeleteSelected}
                 className="btn btn-md btn-danger"
                 >
-                Delete
+                {t("delete")}
               </button>
             </div>
           </div>

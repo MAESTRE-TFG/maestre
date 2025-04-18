@@ -1,6 +1,6 @@
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
-
+import { useTranslations } from "next-intl";
 const MaterialsModal = ({ 
   showModal, 
   setShowModal, 
@@ -9,6 +9,7 @@ const MaterialsModal = ({
   isProcessingFile
 }) => {
   const { theme } = useTheme();
+  const t = useTranslations("ExamMaker");
 
   if (!showModal) return null;
 
@@ -23,7 +24,7 @@ const MaterialsModal = ({
           "flex items-center justify-between p-4 border-b",
           theme === "dark" ? "border-zinc-700" : "border-gray-200"
         )}>
-          <h3 className="text-xl font-semibold">Select Classroom Material</h3>
+          <h3 className="text-xl font-semibold">{t("materialsModal.title")}</h3> 
           <button
             onClick={() => setShowModal(false)}
             disabled={isProcessingFile}
@@ -47,10 +48,10 @@ const MaterialsModal = ({
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
               </svg>
               <p className={theme === "dark" ? "text-gray-300" : "text-gray-600"}>
-                No materials found in your classrooms.
+                {t("materialsModal.noMaterials")} 
               </p>
               <p className="text-sm mt-2 text-gray-500">
-                Upload materials to your classrooms first.
+                {t("materialsModal.uploadPrompt")} 
               </p>
             </div>
           ) : (
@@ -103,7 +104,7 @@ const MaterialsModal = ({
             disabled={isProcessingFile}
             className="btn btn-secondary px-4 py-1.5 rounded-full text-sm font-medium transition-all duration-300"
           >
-            Cancel
+            {t("buttons.cancel")} 
           </button>
         </div>
       </div>

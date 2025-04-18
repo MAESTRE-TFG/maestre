@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import axios from "axios";
 import { getApiBaseUrl } from "@/lib/api";
 import Alert from "@/components/ui/Alert";
+import { useTranslations } from "next-intl"; // Import the translation hook
 
 const MaterialCreateModal = ({ 
   showModal, 
@@ -12,6 +13,7 @@ const MaterialCreateModal = ({
   isProcessing
 }) => {
   const { theme } = useTheme();
+  const t = useTranslations("MaterialsPage"); // Use translations for this component
   const [classrooms, setClassrooms] = useState([]);
   const [selectedFile, setSelectedFile] = useState(null);
   const [materialName, setMaterialName] = useState("");
@@ -34,7 +36,7 @@ const MaterialCreateModal = ({
   const fetchClassrooms = async () => {
     setIsLoading(true);
     try {
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
       const response = await axios.get(`${getApiBaseUrl()}/api/classrooms/`, {
         headers: {
           Authorization: `Token ${token}`,
@@ -45,8 +47,7 @@ const MaterialCreateModal = ({
         setSelectedClassroom(response.data[0].id);
       }
     } catch (err) {
-      showAlert("error", "Failed to fetch classrooms");
-      console.error(err);
+      showAlert("error", t("alerts.fetchMaterialsError")); // Reused from MaterialsPage
     } finally {
       setIsLoading(false);
     }
@@ -56,13 +57,11 @@ const MaterialCreateModal = ({
     const file = e.target.files[0];
     if (file) {
       setSelectedFile(file);
-      // Set default material name from file name (without extension)
-      const fileName = file.name.split('.').slice(0, -1).join('.');
+      const fileName = file.name.split(".").slice(0, -1).join(".");
       setMaterialName(fileName);
     }
   };
 
-  // Add drag and drop handlers
   const handleDragEnter = useCallback((e) => {
     e.preventDefault();
     e.stopPropagation();
@@ -87,54 +86,41 @@ const MaterialCreateModal = ({
     e.preventDefault();
     e.stopPropagation();
     setIsDragging(false);
-    
+
     const files = e.dataTransfer.files;
     if (files && files.length > 0) {
       const file = files[0];
       setSelectedFile(file);
-      // Set default material name from file name (without extension)
-      const fileName = file.name.split('.').slice(0, -1).join('.');
+      const fileName = file.name.split(".").slice(0, -1).join(".");
       setMaterialName(fileName);
     }
   }, []);
 
   const handleSubmit = async () => {
     if (!selectedFile || !materialName || !selectedClassroom) {
-      showAlert("warning", "Please fill all required fields");
+      showAlert("warning", t("alerts.missingFields")); // New translation key
       return;
     }
 
     try {
       const formData = new FormData();
-      formData.append('file', selectedFile);
-      formData.append('name', materialName);
-      // Convert classroom ID to string to ensure proper formatting
-      formData.append('classroom', String(selectedClassroom));
-      
-      // Add debugging to check form data
-      console.log("Submitting form with:", {
-        name: materialName,
-        classroom: selectedClassroom,
-        file: selectedFile.name
-      });
+      formData.append("file", selectedFile);
+      formData.append("name", materialName);
+      formData.append("classroom", String(selectedClassroom));
 
-      const token = localStorage.getItem('authToken');
+      const token = localStorage.getItem("authToken");
       if (!token) {
-        showAlert("error", "You are not logged in. Please log in and try again.");
+        showAlert("error", t("alerts.notLoggedIn")); // New translation key
         return;
       }
 
-      // Try with explicit content type (some APIs are strict about this)
       const response = await axios.post(
-        `${getApiBaseUrl()}/api/materials/`, 
-        formData, 
+        `${getApiBaseUrl()}/api/materials/`,
+        formData,
         {
           headers: {
-            'Authorization': `Token ${token}`,
-            // Let axios set the Content-Type header with boundary automatically
-            // for proper multipart/form-data formatting
+            Authorization: `Token ${token}`,
           },
-          // Add timeout and better error handling
           timeout: 30000,
         }
       );
@@ -145,29 +131,26 @@ const MaterialCreateModal = ({
       setShowModal(false);
       resetForm();
     } catch (err) {
-      console.error("Upload error details:", err.response?.data || err.message);
-      
-      // Handle different error scenarios
       if (err.response?.status === 401) {
-        showAlert("error", "Your session has expired. Please log in again.");
+        showAlert("error", t("alerts.sessionExpired"));
         setTimeout(() => {
-          window.location.href = '/signin';
+          window.location.href = "/signin";
         }, 2000);
       } else if (err.response?.status === 400) {
-        // Extract and display more specific error messages from the response
-        const errorDetail = err.response?.data?.detail || 
-                          err.response?.data?.error || 
-                          (typeof err.response?.data === 'object' ? 
-                            Object.entries(err.response.data)
-                              .map(([key, value]) => `${key}: ${value}`)
-                              .join(', ') : 
-                            err.response?.data);
-        
-        showAlert("error", `Failed to upload material: ${errorDetail || 'Invalid data'}`);
-      } else if (err.code === 'ECONNABORTED') {
-        showAlert("error", "Request timed out. Please try with a smaller file or check your connection.");
+        const errorDetail =
+          err.response?.data?.detail ||
+          err.response?.data?.error ||
+          (typeof err.response?.data === "object"
+            ? Object.entries(err.response.data)
+                .map(([key, value]) => `${key}: ${value}`)
+                .join(", ")
+            : err.response?.data);
+
+        showAlert("error", `${t("alerts.uploadError")}: ${errorDetail || t("alerts.invalidData")}`);
+      } else if (err.code === "ECONNABORTED") {
+        showAlert("error", t("alerts.timeout"));
       } else {
-        showAlert("error", "Failed to upload material: " + (err.message || "Unknown error"));
+        showAlert("error", `${t("alerts.uploadError")}: ${err.message || t("alerts.unknownError")}`);
       }
     }
   };
@@ -181,28 +164,26 @@ const MaterialCreateModal = ({
   if (!showModal) return null;
 
   return (
-    <div 
+    <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 backdrop-blur-sm"
       onClick={() => {
         setShowModal(false);
         resetForm();
       }}
     >
-      <div 
+      <div
         className={cn(
           "p-4 rounded-lg max-w-md w-full mx-4 shadow-lg",
           theme === "dark" ? "bg-gray-800" : "bg-white"
         )}
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Alert Component */}
         {alert && <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />}
 
-        {/* Modal Header with Icon */}
         <div className="flex flex-col items-center justify-center mb-4">
           <div className="flex items-center justify-center mb-3 text-primary">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/>
+              <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
             </svg>
           </div>
           <h3
@@ -212,98 +193,67 @@ const MaterialCreateModal = ({
             )}
             style={{ fontFamily: "'Poppins', sans-serif" }}
           >
-            Create New Material
+            {t("createMaterial")}
           </h3>
         </div>
-        
-        {/* Modal Content */}
+
         <div className="mb-4">
           {isLoading ? (
             <div className="flex justify-center items-center py-6">
               <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary"></div>
             </div>
-          ) : error ? (
-            <div className="text-center py-3">
-              <p className="text-red-500">{error}</p>
-              <button 
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setError(null);
-                  fetchClassrooms();
-                }}
-                className="mt-2 text-primary hover:underline"
-              >
-                Try again
-              </button>
-            </div>
+          ) : classrooms.length === 0 ? (
+            <p className="text-sm text-red-500">{t("alerts.noClassrooms")}</p>
           ) : (
-            <form onSubmit={(e) => {
-              e.preventDefault();
-              handleSubmit();
-            }}>
-              {/* Classroom Selection */}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit();
+              }}
+            >
               <div className="mb-3">
-                <label className={cn(
-                  "block text-sm font-bold mb-1",
-                  theme === "dark" ? "text-gray-300" : "text-gray-700"
-                )}>
-                  Select Classroom
+                <label className={cn("block text-sm font-bold mb-1", theme === "dark" ? "text-gray-300" : "text-gray-700")}>
+                  {t("selectClassroom")} {/* New translation key */}
                 </label>
-                {classrooms.length === 0 ? (
-                  <p className="text-sm text-red-500">No classrooms available. Please create a classroom first.</p>
-                ) : (
-                  <select
-                    value={selectedClassroom}
-                    onChange={(e) => setSelectedClassroom(e.target.value)}
-                    className={cn(
-                      "shadow appearance-none border rounded-md w-full py-1 px-2 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500",
-                      theme === "dark" 
-                        ? "bg-gray-700 border-gray-600 text-white" 
-                        : "bg-white border-gray-300 text-gray-700"
-                    )}
-                    required
-                  >
-                    {classrooms.map(classroom => (
-                      <option key={classroom.id} value={classroom.id}>
-                        {classroom.name}
-                      </option>
-                    ))}
-                  </select>
-                )}
+                <select
+                  value={selectedClassroom}
+                  onChange={(e) => setSelectedClassroom(e.target.value)}
+                  className={cn(
+                    "shadow appearance-none border rounded-md w-full py-1 px-2 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500",
+                    theme === "dark" ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-700"
+                  )}
+                  required
+                >
+                  {classrooms.map((classroom) => (
+                    <option key={classroom.id} value={classroom.id}>
+                      {classroom.name}
+                    </option>
+                  ))}
+                </select>
               </div>
-              
-              {/* Material Name */}
+
               <div className="mb-3">
-                <label className={cn(
-                  "block text-sm font-bold mb-1",
-                  theme === "dark" ? "text-gray-300" : "text-gray-700"
-                )}>
-                  Material Name
+                <label className={cn("block text-sm font-bold mb-1", theme === "dark" ? "text-gray-300" : "text-gray-700")}>
+                  {t("materialName")}
                 </label>
                 <input
                   type="text"
                   value={materialName}
                   onChange={(e) => setMaterialName(e.target.value)}
-                  placeholder="Enter material name"
+                  placeholder={t("materialNamePlaceholder")}
                   className={cn(
                     "shadow appearance-none border rounded-md w-full py-1 px-2 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500",
-                    theme === "dark" 
-                      ? "bg-gray-700 border-gray-600 text-white" 
-                      : "bg-white border-gray-300 text-gray-700"
+                    theme === "dark" ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-700"
                   )}
                   required
                 />
               </div>
-              
-              {/* File Upload */}
+
               <div className="mb-4">
-                <label className={cn(
-                  "block text-sm font-bold mb-1",
-                  theme === "dark" ? "text-gray-300" : "text-gray-700"
-                )}>
-                  Upload File
+                <label className={cn("block text-sm font-bold mb-1", theme === "dark" ? "text-gray-300" : "text-gray-700")}>
+                  {t("uploadFile")} {/* Reused from FileUpload */}
                 </label>
-                <div 
+                <div
                   className={cn(
                     "border-2 border-dashed rounded-md p-4 text-center min-h-[120px] flex flex-col items-center justify-center",
                     theme === "dark" ? "border-gray-600" : "border-gray-300",
@@ -317,16 +267,13 @@ const MaterialCreateModal = ({
                 >
                   {selectedFile ? (
                     <div>
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 mx-auto text-green-500 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                      </svg>
                       <p className={`text-sm ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
                         {selectedFile.name}
                       </p>
                       <p className={`text-xs mt-1 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
                         {(selectedFile.size / 1024 / 1024).toFixed(2)} MB
                       </p>
-                      <button 
+                      <button
                         onClick={(e) => {
                           e.stopPropagation();
                           setSelectedFile(null);
@@ -334,38 +281,29 @@ const MaterialCreateModal = ({
                         className="mt-2 px-2 py-1 text-xs text-red-500 hover:text-red-700 hover:underline"
                         type="button"
                       >
-                        Remove
+                        {t("removeFile")} {/* New translation key */}
                       </button>
                     </div>
                   ) : (
                     <div className="w-full">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10 mx-auto text-gray-400 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                      </svg>
                       <p className={`text-sm mb-1 ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
-                        {isDragging ? "Drop your file here" : "Drag and drop your file here"}
-                      </p>
-                      <p className={`text-xs mb-2 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
-                        - or -
+                        {isDragging ? t("dropIt") : t("dragOrDrop")}
                       </p>
                       <label className="px-3 py-1 bg-primary text-white rounded-full cursor-pointer hover:bg-primary/90 transition-colors inline-block">
-                        Browse Files
-                        <input 
-                          type="file" 
-                          className="hidden" 
+                        {t("browseFiles")}
+                        <input
+                          type="file"
+                          className="hidden"
                           onChange={handleFileChange}
                           accept=".pdf,.doc,.docx,.ppt,.pptx,.txt"
                         />
                       </label>
-                      <p className="text-xs text-gray-500 mt-2">
-                        Supported formats: PDF, DOCX, PPT, TXT
-                      </p>
+                      <p className="text-xs text-gray-500 mt-2">{t("supportedFormats")}</p>
                     </div>
                   )}
                 </div>
               </div>
-              
-              {/* Action Buttons */}
+
               <div className="flex justify-center gap-2">
                 <button
                   type="button"
@@ -377,18 +315,14 @@ const MaterialCreateModal = ({
                   disabled={isProcessing}
                   className="btn-secondary py-1 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
                 >
-                  Cancel
+                  {t("cancel")} {/* Reused from MaterialsPage */}
                 </button>
                 <button
                   type="submit"
                   disabled={isProcessing || isLoading || classrooms.length === 0 || !selectedFile || !materialName}
                   className="btn-success py-1 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
                 >
-                  {isProcessing ? (
-                    <>Processing...</>
-                  ) : (
-                    <>Create Material</>
-                  )}
+                  {isProcessing ? t("creating") : t("createMaterial")} {/* Reused and new keys */}
                 </button>
               </div>
             </form>

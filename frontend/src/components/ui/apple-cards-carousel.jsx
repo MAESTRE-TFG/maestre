@@ -39,6 +39,7 @@ export const Carousel = ({
   const [canScrollLeft, setCanScrollLeft] = React.useState(false);
   const [canScrollRight, setCanScrollRight] = React.useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const locale = params?.locale || 'es';
 
   useEffect(() => {
     if (carouselRef.current) {
@@ -153,18 +154,18 @@ export const Carousel = ({
   };
 
   const handleSignUp = () => {
-    router.push('/profile/signup');
+    router.push(`/${locale}/profile/signup`);
     closeAuthModal();
   };
 
   const handleSignIn = () => {
-    router.push('/profile/signin');
+    router.push(`/${locale}/profile/signin`);
     closeAuthModal();
   };
 
 
   const handleCompleteProfile = () => {
-    router.push('/profile/complete');
+    router.push(`/${locale}/profile/complete`);
     closeProfileModal();
   };
 
@@ -215,7 +216,7 @@ export const Carousel = ({
           </button>
         </div>
         
-              {/* Authentication Modal */}
+      {/* Authentication Modal */}
       <Modal isOpen={showAuthModal} onClose={closeAuthModal}>
         <div title="  ">
           <div className={cn("p-6", theme === "dark" ? "bg-[#4777da]" : "bg-[#4777da]")}>
@@ -462,7 +463,7 @@ export const BlurImage = ({
       loading="lazy"
       decoding="async"
       blurDataURL={typeof src === "string" ? src : undefined}
-      alt={alt ? alt : "Background of a beautiful view"}
+      alt={alt ? alt : "Image"}
       {...rest} />
   );
 };

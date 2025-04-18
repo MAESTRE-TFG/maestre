@@ -96,7 +96,6 @@
       "profile_modal_complete": "Complete Profile"
     },
 
-
    
     "Translator": {
       "title": "Maestre Translator",
@@ -130,9 +129,15 @@
       },
       "translate_button": "Translate",
       "translation_history": "Translation History",
+      "load": "Load",
+      "translation": "Translation",
+      "source": "Source",
+      "translatedTo": "Translated to",
+      "clearAll": "Clear all",
+      "copyToClipboard": "Copy to Clipboard",
+      "translating": "Translating...",
       "translation_history_description": "Your translation history will appear here"
     },
-
 
 
     "ExamMaker": {
@@ -152,9 +157,115 @@
         "missingSubject": "Please enter a subject.",
         "missingClassroom": "Please select a classroom.",
         "examGeneratedSuccess": "Exam generated successfully!",
-        "examGenerationFailed": "Failed to generate exam"
+        "examGenerationFailed": "Failed to generate exam",
+        "pdfSavedSuccess": "PDF saved to classroom materials successfully!",
+        "pdfDownloadedSuccess": "PDF downloaded successfully!",
+        "pdfSaveFailed": "Failed to save PDF: {error}",
+        "pdfDownloadFailed": "Failed to download PDF: {error}",
+        "unknownError": "Unknown error"
+      },
+      "selectClassroom": "Classroom (Difficulty Level)",
+      "selectClassroomPlaceholder": "Select a classroom",
+      "fields": {
+        "subject": {
+          "label": "Subject",
+          "placeholder": "Mathematics, Science, History, etc."
+        },
+        "examName": {
+          "label": "Exam Name",
+          "placeholder": "Midterm Exam, Final Test, Chapter 5 Quiz, etc."
+        },
+        "numQuestions": {
+          "label": "Number of Questions"
+        },
+        "totalPoints": {
+          "label": "Maximum Points"
+        },
+        "customScoringDetails": {
+          "label": "Custom Scoring Details",
+          "placeholder": "E.g., Questions 1-5: 2 points each, Questions 6-10: 3 points each"
+        },
+        "additionalInfo": {
+          "label": "Additional Instructions (Optional)",
+          "placeholder": "Add any specific instructions or requirements for the exam..."
+        },
+        "referenceMaterials": {
+          "label": "Reference Materials",
+          "upload": "Upload a file",
+          "dragAndDrop": " or drag and drop",
+          "fileRequirements": ".docx files only (max 5MB)",
+          "or": "or",
+          "selectFromClassroom": "Select from Classroom Materials",
+          "fromClassroom": "From Classroom",
+          "processing": "Processing file..."
+        },
+        "llmModel": {
+          "label": "AI Model",
+          "options": {
+            "llama": "Llama 3.2 3B",
+            "deepseek": "DeepSeek R1"
+          }
+        },
+        "questionType": {
+          "label": "Question Type",
+          "options": {
+            "shortAnswer": "Short Answer",
+            "essay": "Essay (Max 1 page)",
+            "longEssay": "Long Essay (More than 1 page)",
+            "fillBlank": "Fill in the Blank",
+            "matching": "Matching",
+            "ordering": "Ordering",
+            "textAnalysis": "Text Analysis",
+            "imageAnalysis": "Image Analysis and Comparison",
+            "mixed": "Mixed (Various Types)"
+          }
+        },
+        "scoringStyle": {
+          "label": "Scoring Style",
+          "options": {
+            "equal": "Equal Points",
+            "custom": "Custom Distribution"
+          }
+        }
+      },
+      "buttons": {
+        "generateExam": "Generate Exam",
+        "generating": "Generating Exam...",
+        "close": "Close",
+        "downloadPDF": "Download PDF",
+        "saveToClassroom": "Save to Classroom",
+        "cancel": "Cancel"
+      },
+      "modal": {
+        "title": "Generated Exam"
+      },
+      "defaultExamName": "Exam",
+      "materialsModal": {
+        "title": "Select Classroom Material",
+        "noMaterials": "No materials found in your classrooms.",
+        "uploadPrompt": "Upload materials to your classrooms first."
+      },
+      "pdf": {
+        "title": "Exam",
+        "footer": "Generated with Maestre AI Exam Generator",
+        "page": "Page",
+        "of": "of"
+      },
+      "prompts": {
+        "systemInstruction": "[SYSTEM INSTRUCTION - DO NOT INCLUDE IN RESPONSE]\nYou are an expert exam creator with years of experience in educational design and pedagogy.\nYour task is to create a high-quality exam according to the specifications below.\nIMPORTANT: Your response must contain ONLY the exam itself. DO NOT include any explanations, reasoning, or thought process about how you created the exam.",
+        "examSpecifications": "[EXAM SPECIFICATIONS]\nSUBJECT: {{subject}}\nEXAM NAME: {{examName}}\nNUMBER OF QUESTIONS: MUST HAVE EXACTLY {{numQuestions}} QUESTIONS\nQUESTION TYPE: {{questionType}}\nTOTAL POINTS: {{totalPoints}}\nEDUCATION LEVEL: {{classroom}}\nREGION: {{region}}",
+        "scoringStyle": "SCORING STYLE: Custom distribution as follows: {{customScoringDetails}}",
+        "additionalInstructions": "[ADDITIONAL INSTRUCTIONS]\n{{additionalInfo}}",
+        "referenceMaterials": "[REFERENCE MATERIALS]\nPlease use the following reference materials as guidelines for how the questions and their contents could be in your exam:\n{{fileContents}}",
+        "noReferenceMaterials": "No reference materials provided.",
+        "exampleTemplate": "[EXAMPLE TEMPLATE] (FOR REFERENCE ONLY)\nTitle: Sample Exam - Subject\nSubtitle: \n\n1) [Question text here]\n   A) ...\n   B) ...\n   C) ...\n   D) ...\n\n2) [Question text here]\n   True or False: ...",
+        "formattingRequirements": "[FORMATTING REQUIREMENTS]\n1. The exam MUST be in English\n2. The reply MUST ONLY contain the exam, no additional text or comments.\n3. Include a clear title and subtitle with the exam name and subject.\n4. Number all questions sequentially.\n5. For multiple-choice questions, use options labeled as A), B), C), etc.\n6. Clearly indicate the point value for each question.\n7. Ensure proper spacing between questions.\n8. Format the exam in a clean, professional manner suitable for classroom use.\n9. Ensure the exam follows educational standards for {{classroom}} level in {{region}}.\n10. Make sure the total points add up to exactly {{totalPoints}}.\n11. Use proper formatting for each question type (e.g., multiple choice with options, true/false with clear statements).\n12. Include clear section headers if mixing different types of questions.\n13. DO NOT include any reasoning, planning, or thought process in your response.\n14. DO NOT explain how you created the exam or what considerations you made.\n15. ONLY output the final exam content, starting directly with the title.",
+        "checklist": "[CHECKLIST - DO NOT INCLUDE IN RESPONSE]\n1) Did you include only the exam and nothing else?\n2) Did you include exactly {{numQuestions}} questions?\n3) Do the total points add up to exactly {{totalPoints}}?\n4) Are there any details that are not supported by the references?\n5) Did you follow all formatting requirements strictly?\n6) Did you remove ALL reasoning and explanations from your response?",
+        "finalInstruction": "[FINAL INSTRUCTION - DO NOT INCLUDE IN RESPONSE]\nNow, produce a complete exam following all the specifications and requirements above.\nIf any information is missing, note it clearly rather than inventing details.\nCRITICAL: Your response must begin with the exam title and contain ONLY the exam content. DO NOT include any explanations, reasoning, or thought process.",
+        "unknown": "Unknown"
       }
     },
+
 
     "StudentCreateForm": {
       "nameLabel": "Name",
@@ -164,6 +275,7 @@
       "createButton": "Create Student",
       "cancelButton": "Cancel"
     },
+
 
     "SignupForm": {
       "title": "Create Your Account",
@@ -210,6 +322,7 @@
       }
     },
 
+
     "SigninForm": {
       "fields": {
         "emailOrUsername": {
@@ -227,6 +340,7 @@
       },
       "noAccount": "Don't have an account?"
     },
+
 
     "Sidebar": {
       "links": {
@@ -247,5 +361,300 @@
         "cancelButton": "Cancel",
         "logoutButton": "Logout"
       }
+    },
+
+
+    "ProfileEditForm": {
+      "fields": {
+        "username": {
+          "label": "Username",
+          "placeholder": "Enter your username"
+        },
+        "email": {
+          "label": "Email",
+          "placeholder": "Enter your email"
+        },
+        "name": {
+          "label": "Name",
+          "placeholder": "Enter your name"
+        },
+        "surname": {
+          "label": "Surname",
+          "placeholder": "Enter your surname"
+        },
+        "oldPassword": {
+          "label": "Old Password",
+          "placeholder": "Enter your old password"
+        },
+        "newPassword": {
+          "label": "New Password",
+          "placeholder": "Enter your new password"
+        },
+        "confirmPassword": {
+          "label": "Confirm Password",
+          "placeholder": "Confirm your new password"
+        },
+        "region": {
+          "label": "Region",
+          "placeholder": "Select a region"
+        },
+        "city": {
+          "label": "City",
+          "placeholder": "Enter your city"
+        },
+        "school": {
+          "label": "School",
+          "placeholder": "Select a school",
+          "notFound": "Can't find your school?",
+          "createButton": "Create one"
+        }
+      },
+      "password": {
+        "changeTitle": "Want to change your password?",
+        "changeDescription": "Fill in the fields above to update your password."
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "update": "Update"
+      }
+    },
+
+
+    "MaterialsPage": {
+      "filterByTags": "Filter by Tags:",
+      "createMaterial": "Create new material",
+      "selectClassroom": "Select a classroom",
+      "materialName": "Material name",
+      "materialNamePlaceholder": "Enter a name for the material",
+      "uploadFile": "Upload file",
+      "dragOrDrop": "Drag or drop your files here or click to upload",
+      "supportedFormats": "PDF, DOC, DOCX, PNG, JPG, PPTX or TXT",
+      "browseFiles": "Browse files",
+      "alerts": {
+        "editSuccess": "Material name updated successfully!",
+        "editError": "Failed to update material name. Please try again.",
+        "deleteSuccess": "Material deleted successfully!",
+        "deleteError": "Failed to delete material. Please try again.",
+        "fetchMaterialsError": "Error fetching materials. Please try again.",
+        "fetchTagsError": "Error fetching tags. Please try again.",
+        "tagCreateSuccess": "Tag created successfully!",
+        "tagLimit": "You have reached the maximum limit of 15 tags.",
+        "tagCreateError": "Error creating tag. Please try again.",
+        "tagUpdateSuccess": "Tag updated successfully!",
+        "tagUpdateError": "Error updating tag. Please try again.",
+        "tagDeleteSuccess": "Tag deleted successfully!",
+        "tagDeleteError": "Error deleting tag. Please try again.",
+        "deleteSelectedSuccess": "Selected materials deleted successfully!",
+        "deleteSelectedError": "Error deleting selected materials. Please try again.",
+        "nameLimitExceeded": "Name exceeds the limit of ${NAME_LIMIT} characters."
+      },
+      "enterDeleteMode": "Enter Delete Mode",
+      "exitDeleteMode": "Exit Delete Mode",
+      "deleteTag": "Delete Tag ${tag.name}",
+      "deleteMaterial": "Delete Material",
+      "deleteMaterialConfirmation": "Are you sure you want to delete",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "manageTags": "Manage Tags for ",
+      "createTag": "+ Create Tag",
+      "saveChanges": "Save Changes",
+      "selectColor": "Select Color",
+      "creating": "Creating...",
+      "editMaterialName": "Edit Material Name",
+      "editMaterialNameDescription": "Enter a new name for the material:",
+      "deleteSelected": "Delete Selected",
+      "noMaterialsFound": "No materials found.",
+      "confirmDelete": "Confirm Delete",
+      "confirmDeleteSelected": "Are you sure you want to delete the selected materials?",
+      "tagColors": {
+        "purple": "Purple",
+        "orange": "Orange",
+        "coral": "Coral",
+        "teal": "Teal",
+        "green": "Green",
+        "blue": "Blue",
+        "lightBlue": "Light Blue",
+        "black": "Black",
+        "grey": "Grey"
+      }
+    },
+
+
+    "FileUpload": {
+      "uploading": "Uploading...",
+      "uploadFile": "Upload file",
+      "dragOrDrop": "Drag or drop your files here or click to upload",
+      "supportedFormats": "Supported formats: PDF, DOC, DOCX, PNG, JPG, PPTX, TXT",
+      "dropIt": "Drop it",
+      "alerts": {
+        "editSuccess": "File name updated successfully!",
+        "editError": "Failed to update file name. Please try again.",
+        "uploadSuccess": "File uploaded successfully!",
+        "uploadError": "Failed to upload file. Maximum number of materials for this class reached.",
+        "sizeError": "Error getting file size. Please try again.",
+        "networkError": "Network error. Please try again later.",
+        "fetchMaterialsError": "Error fetching materials. Please try again.",
+        "genericError": "An error occurred. Please try again.",
+        "invalidFile": "Invalid file type. Please upload a supported file."
+      }
+    },
+
+
+    "CookieConsent": {
+      "title": "Cookies!",
+      "description": "We use cookies to enhance your experience on our website. By continuing to use our website, you consent to our use of cookies.",
+      "acceptButton": "Accept",
+      "rejectButton": "Reject",
+      "cookiePolicyLink": "Cookie Policy",
+      "imageAlt": "Cookies"
+    },
+
+
+    "DemoWindow": {
+      "videoUnsupported": "Your browser does not support the video tag.",
+      "learnMore": "Learn more",
+      "featuresTitle": "Product Features",
+      "featuresDescription": "Experience our intuitive interface designed for maximum productivity. This demo showcases our latest features that streamline your workflow.",
+      "feature1Title": "Real-time Collaboration",
+      "feature1Description": "Work together with your team seamlessly, no matter where they are located.",
+      "feature2Title": "Advanced Analytics",
+      "feature2Description": "Get valuable insights with our comprehensive reporting dashboard.",
+      "viewDocumentation": "View Documentation"
+    },
+
+
+    "CompleteProfileForm": {
+      "title": "Complete Your Profile",
+      "fields": {
+        "region": {
+          "label": "Region",
+          "placeholder": "Select a community"
+        },
+        "city": {
+          "label": "City",
+          "placeholder": "Enter your city"
+        },
+        "school": {
+          "label": "School",
+          "placeholder": "Select a school",
+          "notFound": "Can't find your school?",
+          "createButton": "Create School"
+        }
+      },
+      "buttons": {
+        "completeProfile": "Complete Profile",
+        "cancel": "Cancel"
+      }
+    },
+
+
+    "ClassroomEditForm": {
+      "sections": {
+        "information": {
+          "title": "Classroom Information"
+        },
+        "description": {
+          "title": "Classroom Description"
+        }
+      },
+      "fields": {
+        "name": {
+          "label": "Classroom Name",
+          "placeholder": "Enter the classroom name"
+        },
+        "academicCourse": {
+          "label": "Academic Course",
+          "placeholder": "Select an academic course"
+        },
+        "academicYear": {
+          "label": "Academic Year",
+          "placeholder": "YYYY-YYYY"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Describe your classroom"
+        }
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "update": "Update Classroom",
+        "delete": "Delete Classroom"
+      }
+    },
+
+
+    "ClassroomCreateForm": {
+      "sections": {
+        "information": {
+          "title": "Classroom Information"
+        },
+        "description": {
+          "title": "Classroom Description"
+        }
+      },
+      "fields": {
+        "name": {
+          "label": "Classroom Name",
+          "placeholder": "Enter the classroom name"
+        },
+        "academicCourse": {
+          "label": "Academic Course",
+          "placeholder": "Select an academic course"
+        },
+        "academicYear": {
+          "label": "Academic Year",
+          "placeholder": "YYYY-YYYY"
+        },
+        "description": {
+          "label": "Description",
+          "placeholder": "Describe your classroom"
+        }
+      },
+      "buttons": {
+        "cancel": "Cancel",
+        "create": "Create Classroom"
+      },
+      "alerts": {
+        "nameRequired": "Name is required and cannot be empty.",
+        "nameTooLong": "Name cannot exceed 30 characters.",
+        "descriptionRequired": "Description is required and cannot be empty.",
+        "descriptionTooLong": "Description cannot exceed 255 characters.",
+        "invalidAcademicYear": "Academic Year must be in the format 'YYYY-YYYY'.",
+        "success": "Classroom created successfully!",
+        "error": "An error occurred while submitting the form."
+      }
+    },
+
+
+    "SchoolCreateForm": {
+    "title": "Create New School",
+    "fields": {
+      "name": {
+        "label": "School Name",
+        "placeholder": "Enter the school name"
+      },
+      "community": {
+        "label": "Region",
+        "placeholder": "Select a community"
+      },
+      "city": {
+        "label": "City",
+        "placeholder": "Enter the city"
+      },
+      "stages": {
+        "label": "Educational Stages"
+      }
+    },
+    "buttons": {
+      "create": "Create School",
+      "cancel": "Cancel"
+    },
+    "alerts": {
+      "nameTooLong": "Name cannot exceed 50 characters.",
+      "cityRequired": "City is required.",
+      "allFieldsRequired": "All fields are required!",
+      "success": "School created successfully!",
+      "error": "Failed to create school. Please try again."
     }
+  }
 }

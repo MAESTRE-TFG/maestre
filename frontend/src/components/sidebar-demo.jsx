@@ -98,7 +98,7 @@ export function SidebarDemo({ ContentComponent, params }) {
       setUser(null);
       closeLogoutModal();
 
-      setAlert({ type: "success", message: t("alerts.logoutSuccess") }); // Internationalized
+      setAlert({ type: "success", message: t("alerts.logoutSuccess") });
 
       setTimeout(() => {
         setAlert(null);
@@ -234,10 +234,10 @@ export function SidebarDemo({ ContentComponent, params }) {
                     onClick={() => setOpen(false)}
                   />
                 </div>
-                <Logo />
+                <Logo locale={locale} />
               </>
             ) : (
-              <LogoIcon />
+              <LogoIcon locale={locale} />
             )}
             <div className="mt-8 flex flex-col gap-2 z-50">
               {links.map((link, idx) => (
@@ -328,7 +328,8 @@ export function SidebarDemo({ ContentComponent, params }) {
     </div>
   );
 }
-export const Logo = () => {
+
+export const Logo = ({ locale }) => {
   const { theme } = useTheme();
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -377,7 +378,7 @@ export const Logo = () => {
   );
 };
 
-export const LogoIcon = () => {
+export const LogoIcon = ({ locale }) => {
   const { theme } = useTheme();
   const router = useRouter();
   return (

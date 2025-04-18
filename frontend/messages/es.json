@@ -97,7 +97,6 @@
     },
 
 
-
     "Translator": {
       "title": "Traductor Maestre",
       "subtitle": "Traduce texto entre múltiples idiomas",
@@ -130,9 +129,15 @@
       },
       "translate_button": "Traducir",
       "translation_history": "Historial de traducciones",
+      "load": "Cargar",
+      "translation": "Traducción",
+      "source": "Texto de origen",
+      "translatedTo": "Traducido a",
+      "clearAll": "Borrar todo",
+      "copyToClipboard": "Copiar al portapapeles",
+      "translating": "Traduciendo...",
       "translation_history_description": "Tu historial de traducciones aparecerá aquí"
     },
-
 
 
     "ExamMaker": {
@@ -152,10 +157,114 @@
         "missingSubject": "Por favor, introduce una asignatura.",
         "missingClassroom": "Por favor, selecciona una clase.",
         "examGeneratedSuccess": "¡Examen generado con éxito!",
-        "examGenerationFailed": "Error al generar el examen"
+        "examGenerationFailed": "Error al generar el examen",
+        "pdfSavedSuccess": "¡PDF guardado en los materiales del aula con éxito!",
+        "pdfDownloadedSuccess": "¡PDF descargado con éxito!",
+        "pdfSaveFailed": "Error al guardar el PDF: {error}",
+        "pdfDownloadFailed": "Error al descargar el PDF: {error}",
+        "unknownError": "Error desconocido"
+      },
+      "selectClassroom": "Clase (Nivel de Dificultad)",
+      "selectClassroomPlaceholder": "Selecciona una clase",
+      "fields": {
+        "subject": {
+          "label": "Asignatura",
+          "placeholder": "Matemáticas, Ciencias, Historia, etc."
+        },
+        "examName": {
+          "label": "Nombre del Examen",
+          "placeholder": "Examen de Mitad de Curso, Prueba Final, Quiz del Capítulo 5, etc."
+        },
+        "numQuestions": {
+          "label": "Número de Preguntas"
+        },
+        "totalPoints": {
+          "label": "Puntos Máximos"
+        },
+        "customScoringDetails": {
+          "label": "Detalles de Puntuación Personalizada",
+          "placeholder": "Ej., Preguntas 1-5: 2 puntos cada una, Preguntas 6-10: 3 puntos cada una"
+        },
+        "additionalInfo": {
+          "label": "Instrucciones Adicionales (Opcional)",
+          "placeholder": "Añade instrucciones o requisitos específicos para el examen..."
+        },
+        "referenceMaterials": {
+          "label": "Materiales de Referencia",
+          "upload": "Sube un archivo",
+          "dragAndDrop": " o arrastra y suelta",
+          "fileRequirements": "Solo archivos .docx (máx. 5MB)",
+          "or": "o",
+          "selectFromClassroom": "Seleccionar de Materiales del Aula",
+          "fromClassroom": "Desde el Aula",
+          "processing": "Procesando archivo..."
+        },
+        "llmModel": {
+          "label": "Modelo de IA",
+          "options": {
+            "llama": "Llama 3.2 3B",
+            "deepseek": "DeepSeek R1"
+          }
+        },
+        "questionType": {
+          "label": "Tipo de Pregunta",
+          "options": {
+            "shortAnswer": "Respuesta Corta",
+            "essay": "Ensayo (Máx. 1 página)",
+            "longEssay": "Ensayo Largo (Más de 1 página)",
+            "fillBlank": "Rellenar el Espacio",
+            "matching": "Emparejar",
+            "ordering": "Ordenar",
+            "textAnalysis": "Análisis de Texto",
+            "imageAnalysis": "Análisis y Comparación de Imágenes",
+            "mixed": "Mixto (Varios Tipos)"
+          }
+        },
+        "scoringStyle": {
+          "label": "Estilo de Puntuación",
+          "options": {
+            "equal": "Puntos Iguales",
+            "custom": "Distribución Personalizada"
+          }
+        }
+      },
+      "buttons": {
+        "generateExam": "Generar Examen",
+        "generating": "Generando Examen...",
+        "close": "Cerrar",
+        "downloadPDF": "Descargar PDF",
+        "saveToClassroom": "Guardar en el Aula",
+        "cancel": "Cancelar"
+      },
+      "modal": {
+        "title": "Examen Generado"
+      },
+      "defaultExamName": "Examen",
+      "materialsModal": {
+        "title": "Seleccionar Material del Aula",
+        "noMaterials": "No se encontraron materiales en tus aulas.",
+        "uploadPrompt": "Primero sube materiales a tus aulas."
+      },
+      "pdf": {
+        "title": "Examen",
+        "footer": "Generado con el Generador de Exámenes de Maestre AI",
+        "page": "Página",
+        "of": "de"
+      },
+      "prompts": {
+        "systemInstruction": "[INSTRUCCIÓN DEL SISTEMA - NO INCLUIR EN LA RESPUESTA]\nEres un creador de exámenes experto con años de experiencia en diseño educativo y pedagogía.\nTu tarea es crear un examen de alta calidad según las especificaciones a continuación.\nIMPORTANTE: Tu respuesta debe contener ÚNICAMENTE el examen. NO incluyas explicaciones, razonamientos o procesos de pensamiento sobre cómo creaste el examen.",
+        "examSpecifications": "[ESPECIFICACIONES DEL EXAMEN]\nASIGNATURA: {{subject}}\nNOMBRE DEL EXAMEN: {{examName}}\nNÚMERO DE PREGUNTAS: DEBE TENER EXACTAMENTE {{numQuestions}} PREGUNTAS\nTIPO DE PREGUNTAS: {{questionType}}\nPUNTOS TOTALES: {{totalPoints}}\nNIVEL EDUCATIVO: {{classroom}}\nREGIÓN: {{region}}",
+        "scoringStyle": "ESTILO DE PUNTUACIÓN: Distribución personalizada como sigue: {{customScoringDetails}}",
+        "additionalInstructions": "[INSTRUCCIONES ADICIONALES]\n{{additionalInfo}}",
+        "referenceMaterials": "[MATERIALES DE REFERENCIA]\nPor favor, utiliza los siguientes materiales de referencia como guía para cómo podrían ser las preguntas y su contenido en tu examen:\n{{fileContents}}",
+        "noReferenceMaterials": "No se proporcionaron materiales de referencia.",
+        "exampleTemplate": "[PLANTILLA DE EJEMPLO] (SOLO PARA REFERENCIA)\nTítulo: Examen de Ejemplo - Asignatura\nSubtítulo: \n\n1) [Texto de la pregunta aquí]\n   A) ...\n   B) ...\n   C) ...\n   D) ...\n\n2) [Texto de la pregunta aquí]\n   Verdadero o Falso: ...",
+        "formattingRequirements": "[REQUISITOS DE FORMATO]\n1. El examen DEBE estar en inglés\n2. La respuesta DEBE contener ÚNICAMENTE el examen, sin texto adicional ni comentarios.\n3. Incluye un título y subtítulo claros con el nombre del examen y la asignatura.\n4. Numera todas las preguntas de forma secuencial.\n5. Para preguntas de opción múltiple, usa opciones etiquetadas como A), B), C), etc.\n6. Indica claramente el valor en puntos de cada pregunta.\n7. Asegúrate de un espaciado adecuado entre las preguntas.\n8. Formatea el examen de manera limpia y profesional, adecuado para uso en el aula.\n9. Asegúrate de que el examen siga los estándares educativos para el nivel {{classroom}} en {{region}}.\n10. Asegúrate de que los puntos totales sumen exactamente {{totalPoints}}.\n11. Usa un formato adecuado para cada tipo de pregunta (por ejemplo, opción múltiple con opciones, verdadero/falso con declaraciones claras).\n12. Incluye encabezados claros de sección si mezclas diferentes tipos de preguntas.\n13. NO incluyas razonamientos, planificación o procesos de pensamiento en tu respuesta.\n14. NO expliques cómo creaste el examen ni qué consideraciones tomaste.\n15. SOLO incluye el contenido final del examen, comenzando directamente con el título.",
+        "checklist": "[LISTA DE VERIFICACIÓN - NO INCLUIR EN LA RESPUESTA]\n1) ¿Incluiste solo el examen y nada más?\n2) ¿Incluiste exactamente {{numQuestions}} preguntas?\n3) ¿Los puntos totales suman exactamente {{totalPoints}}?\n4) ¿Hay detalles que no están respaldados por las referencias?\n5) ¿Seguiste estrictamente todos los requisitos de formato?\n6) ¿Eliminaste TODO razonamiento y explicaciones de tu respuesta?",
+        "finalInstruction": "[INSTRUCCIÓN FINAL - NO INCLUIR EN LA RESPUESTA]\nAhora, produce un examen completo siguiendo todas las especificaciones y requisitos anteriores.\nSi falta alguna información, indícalo claramente en lugar de inventar detalles.\nCRÍTICO: Tu respuesta debe comenzar con el título del examen y contener ÚNICAMENTE el contenido del examen. NO incluyas explicaciones, razonamientos o procesos de pensamiento.",
+        "unknown": "Desconocido"
       }
     },
-
 
 
     "StudentCreateForm": {
@@ -166,7 +275,6 @@
       "createButton": "Crear Estudiante",
       "cancelButton": "Cancelar"
     },
-
 
 
     "SigninForm": {
@@ -186,7 +294,6 @@
       },
       "noAccount": "¿No tienes una cuenta?"
     },
-
 
 
     "SignupForm": {
@@ -234,6 +341,7 @@
       }
     },
 
+
     "Sidebar": {
       "links": {
         "home": "Inicio",
@@ -252,6 +360,301 @@
         "description": "¿Estás seguro de que deseas cerrar sesión? Necesitarás iniciar sesión nuevamente para acceder a tu cuenta.",
         "cancelButton": "Cancelar",
         "logoutButton": "Cerrar sesión"
+      }
+    },
+
+
+    "ProfileEditForm": {
+      "fields": {
+      "username": {
+        "label": "Nombre de Usuario",
+        "placeholder": "Introduce tu nombre de usuario"
+      },
+      "email": {
+        "label": "Correo Electrónico",
+        "placeholder": "Introduce tu correo electrónico"
+      },
+      "name": {
+        "label": "Nombre",
+        "placeholder": "Introduce tu nombre"
+      },
+      "surname": {
+        "label": "Apellido",
+        "placeholder": "Introduce tu apellido"
+      },
+      "oldPassword": {
+        "label": "Contraseña Antigua",
+        "placeholder": "Introduce tu contraseña antigua"
+      },
+      "newPassword": {
+        "label": "Nueva Contraseña",
+        "placeholder": "Introduce tu nueva contraseña"
+      },
+      "confirmPassword": {
+        "label": "Confirmar Contraseña",
+        "placeholder": "Confirma tu nueva contraseña"
+      },
+      "region": {
+        "label": "Región",
+        "placeholder": "Selecciona una región"
+      },
+      "city": {
+        "label": "Ciudad",
+        "placeholder": "Introduce tu ciudad"
+      },
+      "school": {
+        "label": "Centro Educativo",
+        "placeholder": "Selecciona un centro educativo",
+        "notFound": "¿No encuentras tu centro?",
+        "createButton": "Crear una"
+      }
+      },
+      "password": {
+      "changeTitle": "¿Quieres cambiar tu contraseña?",
+      "changeDescription": "Rellena los campos de arriba para actualizar tu contraseña."
+      },
+      "buttons": {
+      "cancel": "Cancelar",
+      "update": "Actualizar"
+      }
+    },
+
+
+    "MaterialsPage": {
+      "filterByTags": "Filtrar por etiquetas:",
+      "createMaterial": "Crear nuevo material",
+      "selectClassroom": "Selecciona una clase",
+      "materialName": "Nombre del material",
+      "materialNamePlaceholder": "Introduce un nombre para el material",
+      "uploadFile": "Subir archivo",
+      "dragOrDrop": "Arrastra o suelta tus archivos aquí o haz clic para subirlos",
+      "supportedFormats": "PDF, DOC, DOCX, PNG, JPG, PPTX o TXT",
+      "browseFiles": "Exportar archivos",
+      "alerts": {
+        "editSuccess": "¡Nombre del material actualizado con éxito!",
+        "editError": "Error al actualizar el nombre del material. Por favor, inténtalo de nuevo.",
+        "deleteSuccess": "¡Material eliminado con éxito!",
+        "deleteError": "Error al eliminar el material. Por favor, inténtalo de nuevo.",
+        "fetchMaterialsError": "Error al obtener los materiales. Por favor, inténtalo de nuevo.",
+        "fetchTagsError": "Error al obtener las etiquetas. Por favor, inténtalo de nuevo.",
+        "tagCreateSuccess": "Etiqueta creada correctamente.",
+        "tagLimit": "No se pueden crear más de 15 etiquetas.",
+        "tagCreateError": "Error al crear la etiqueta. Por favor, inténtalo de nuevo.",
+        "tagUpdateSuccess": "Etiqueta actualizada correctamente.",
+        "tagUpdateError": "Error al actualizar la etiqueta. Por favor, inténtalo de nuevo.",
+        "tagDeleteSuccess": "Etiqueta eliminada correctamente.",
+        "tagDeleteError": "Error al eliminar la etiqueta. Por favor, inténtalo de nuevo.",
+        "deleteSelectedSuccess": "Materiales seleccionados eliminados correctamente.",
+        "deleteSelectedError": "Error al eliminar los materiales seleccionados. Por favor, inténtalo de nuevo.",
+        "nameLimitExceeded": "El nombre supera el límite de ${NAME_LIMIT} caracteres."
+      },
+      "enterDeleteMode": "Entrar en modo de eliminación",
+      "exitDeleteMode": "Salir del modo de eliminación",
+      "deleteTag": "Eliminar etiqueta '${tag.name}'",
+      "deleteMaterial": "Eliminar material",
+      "deleteMaterialConfirmation": "¿Estás seguro de que deseas eliminar ",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "manageTags": "Gestionar etiquetas de ",
+      "createTag": "+ Crear etiqueta",
+      "saveChanges": "Guardar cambios",
+      "selectColor": "Selecciona un color",
+      "creating": "Creando ...",
+      "editMaterialName": "Editar nombre del material",
+      "editMaterialNameDescription": "Introduce un nuevo nombre para el material",
+      "deleteSelected": "Eliminar seleccionados",
+      "noMaterialsFound": "No se encontraron materiales",
+      "confirmDelete": "Confirmar eliminación",
+      "confirmDeleteSelected": "¿Estás seguro de que deseas eliminar los materiales seleccionados?",
+      "tagColors": {
+        "purple": "Morado",
+        "orange": "Naranja",
+        "coral": "Coral",
+        "teal": "Verde azulado",
+        "green": "Verde",
+        "blue": "Azul",
+        "lightBlue": "Azul claro",
+        "black": "Negro",
+        "grey": "Gris"
+      }
+    },
+
+
+    "FileUpload": {
+      "uploading": "Subiendo...",
+      "uploadFile": "Subir archivo",
+      "dragOrDrop": "Arrastra o suelta tus archivos aquí o haz clic para subirlos",
+      "supportedFormats": "Formatos soportados: PDF, DOC, DOCX, PNG, JPG, PPTX, TXT",
+      "dropIt": "Suéltalo",
+      "alerts": {
+        "editSuccess": "¡Nombre del archivo actualizado con éxito!",
+        "editError": "Error al actualizar el nombre del archivo. Por favor, inténtalo de nuevo.",
+        "uploadSuccess": "¡Archivo subido con éxito!",
+        "uploadError": "Error al subir el archivo. Se alcanzó el número máximo de materiales para esta clase.",
+        "sizeError": "Error al obtener el tamaño del archivo. Por favor, inténtalo de nuevo.",
+        "networkError": "Error de red. Por favor, inténtalo de nuevo más tarde.",
+        "fetchMaterialsError": "Error al obtener los materiales. Por favor, inténtalo de nuevo.",
+        "genericError": "Ocurrió un error. Por favor, inténtalo de nuevo.",
+        "invalidFile": "Tipo de archivo no válido. Por favor, sube un archivo soportado."
+      }
+    },
+
+
+    "CookieConsent": {
+      "title": "¡Cookies!",
+      "description": "Usamos cookies para mejorar tu experiencia en nuestro sitio web. Al continuar navegando, aceptas el uso de cookies.",
+      "acceptButton": "Aceptar",
+      "rejectButton": "Rechazar",
+      "cookiePolicyLink": "Política de Cookies",
+      "imageAlt": "Cookies"
+    },
+
+
+    "DemoWindow": {
+      "videoUnsupported": "Tu navegador no soporta este formato de video.",
+      "learnMore": "Saber más",
+      "featuresTitle": "Características del Producto",
+      "featuresDescription": "Experimenta nuestra interfaz intuitiva diseñada para maximizar la productividad. Esta demo muestra nuestras últimas características que optimizan tu flujo de trabajo.",
+      "feature1Title": "Colaboración en Tiempo Real",
+      "feature1Description": "Trabaja con tu equipo sin problemas, sin importar dónde se encuentren.",
+      "feature2Title": "Analíticas Avanzadas",
+      "feature2Description": "Obtén información valiosa con nuestro completo panel de informes.",
+      "viewDocumentation": "Ver Documentación"
+    },
+
+
+    "CompleteProfileForm": {
+      "title": "Completa tu perfil",
+      "fields": {
+        "region": {
+          "label": "Región / Comunidad Autónoma",
+          "placeholder": "Selecciona una comunidad"
+        },
+        "city": {
+          "label": "Ciudad",
+          "placeholder": "Introduce tu ciudad"
+        },
+        "school": {
+          "label": "Centro educativo",
+          "placeholder": "Selecciona un centro educativo",
+          "notFound": "¿No encuentras tu centro?",
+          "createButton": "Crear centro"
+        }
+      },
+      "buttons": {
+        "completeProfile": "Completar perfil",
+        "cancel": "Cancelar"
+      }
+    },
+
+
+    "ClassroomEditForm": {
+      "sections": {
+        "information": {
+          "title": "Información de la clase"
+        },
+        "description": {
+          "title": "Descripción de la clase"
+        }
+      },
+      "fields": {
+        "name": {
+          "label": "Nombre de la clase",
+          "placeholder": "Introduce el nombre de la clase"
+        },
+        "academicCourse": {
+          "label": "Curso académico",
+          "placeholder": "Selecciona un curso académico"
+        },
+        "academicYear": {
+          "label": "Año / Curso escolar",
+          "placeholder": "AAAA-AAAA"
+        },
+        "description": {
+          "label": "Descripción",
+          "placeholder": "Describe tu clase"
+        }
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "update": "Actualizar clase",
+        "delete": "Eliminar clase"
+      }
+    },
+
+
+    "ClassroomCreateForm": {
+      "sections": {
+        "information": {
+          "title": "Información de la clase"
+        },
+        "description": {
+          "title": "Descripción de la clase"
+        }
+      },
+      "fields": {
+        "name": {
+          "label": "Nombre de la clase",
+          "placeholder": "Introduce el nombre de la clase"
+        },
+        "academicCourse": {
+          "label": "Curso Académico",
+          "placeholder": "Selecciona un curso académico"
+        },
+        "academicYear": {
+          "label": "Año / Curso Escolar",
+          "placeholder": "AAAA-AAAA"
+        },
+        "description": {
+          "label": "Descripción",
+          "placeholder": "Describe tu clase"
+        }
+      },
+      "buttons": {
+        "cancel": "Cancelar",
+        "create": "Crear clase"
+      },
+      "alerts": {
+        "nameRequired": "El nombre es obligatorio y no puede estar vacío.",
+        "nameTooLong": "El nombre no puede superar los 30 caracteres.",
+        "descriptionRequired": "La descripción es obligatoria y no puede estar vacía.",
+        "descriptionTooLong": "La descripción no puede superar los 255 caracteres.",
+        "invalidAcademicYear": "El año debe tener el formato 'AAAA-AAAA'.",
+        "success": "Clase creada con éxito!",
+        "error": "Ocurrió un error al enviar el formulario."
+      }
+    },
+
+
+    "SchoolCreateForm": {
+      "title": "Crear Nuevo Centro Educativo",
+      "fields": {
+        "name": {
+          "label": "Nombre del Centro",
+          "placeholder": "Introduce el nombre del centro"
+        },
+        "community": {
+          "label": "Región",
+          "placeholder": "Selecciona una comunidad"
+        },
+        "city": {
+          "label": "Ciudad",
+          "placeholder": "Introduce la ciudad"
+        },
+        "stages": {
+          "label": "Etapas Educativas"
+        }
+      },
+      "buttons": {
+        "create": "Crear Centro",
+        "cancel": "Cancelar"
+      },
+      "alerts": {
+        "nameTooLong": "El nombre no puede superar los 50 caracteres.",
+        "cityRequired": "La ciudad es obligatoria.",
+        "allFieldsRequired": "¡Todos los campos son obligatorios!",
+        "success": "¡Centro creado con éxito!",
+        "error": "Error al crear el centro. Por favor, inténtalo de nuevo."
       }
     }
 }

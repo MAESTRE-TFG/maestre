@@ -3,7 +3,7 @@ import { cn } from "@/lib/utils";
 import Link from "next/link";
 import React, { useState, createContext, useContext } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { IconMenu2, IconX } from "@tabler/icons-react";
+import { IconX } from "@tabler/icons-react";
 import { useTheme } from "@/components/theme-provider";
 
 const SidebarContext = createContext(undefined);
@@ -100,7 +100,7 @@ export const MobileSidebar = ({ className, children, ...props }) => {
             ) : (
               <svg 
                 xmlns="http://www.w3.org/2000/svg" 
-                width="32" // Increased icon size
+                width="32" // Icon size
                 height="32" 
                 viewBox="0 0 24 24" 
                 fill="none" 
@@ -149,7 +149,7 @@ export const SidebarLink = ({ link, className, ...props }) => {
     <Link
       href={link.href}
       className={cn(
-        "flex items-center justify-start gap-3 group/sidebar py-3", // Adjusted gap and padding for larger text and icons
+        "flex items-center justify-start gap-3 group/sidebar py-3",
         className
       )}
       {...props}
@@ -161,7 +161,7 @@ export const SidebarLink = ({ link, className, ...props }) => {
           opacity: animate ? (open ? 1 : 0) : 1,
         }}
         className={cn(
-          "text-base group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0", // Increased text size
+          "text-base group-hover/sidebar:translate-x-1 transition duration-150 whitespace-pre inline-block !p-0 !m-0",
           theme == "dark" ? "text-neutral-200" : "text-neutral-700",
         )}
       >

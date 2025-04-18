@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // Import the router for redirection
+import { useRouter } from "next/navigation";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import { SidebarDemo } from "@/components/sidebar-demo";
@@ -8,22 +8,21 @@ import { IconCopy, IconCheck, IconHistory, IconTrash, IconLanguage, IconWorld } 
 import Image from "next/image";
 import { getApiBaseUrl } from "@/lib/api";
 import { useTranslations } from "next-intl";
-import Alert from "@/components/ui/Alert"; // Import the Alert component
+import Alert from "@/components/ui/Alert";
 
 const Translator = ({ params }) => {
   const t = useTranslations("Translator");
   const { theme } = useTheme();
-  const router = useRouter(); // Initialize the router
+  const router = useRouter();
   const [sourceText, setSourceText] = useState("");
   const [translatedText, setTranslatedText] = useState("");
   const [targetLanguage, setTargetLanguage] = useState("en");
   const [isTranslating, setIsTranslating] = useState(false);
-  const [alert, setAlert] = useState(null); // Use this for Alert messages
+  const [alert, setAlert] = useState(null);
   const [translationHistory, setTranslationHistory] = useState([]);
   const [copied, setCopied] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const locale = params?.locale || 'es';
-
+  const locale = params?.locale || "es";
 
   const languages = [
     { code: "es", name: t("languages.es") },
@@ -35,51 +34,51 @@ const Translator = ({ params }) => {
     { code: "de", name: t("languages.de") },
     { code: "it", name: t("languages.it") },
     { code: "el", name: t("languages.el") },
-    { code: "la", name: t("languages.la") }
+    { code: "la", name: t("languages.la") },
   ];
 
   const showAlert = (type, message) => {
     setAlert({ type, message });
-    setTimeout(() => setAlert(null), 5000); // Auto-dismiss after 5 seconds
+    setTimeout(() => setAlert(null), 5000);
   };
 
-// Check if the user is authenticated
+  // Check if the user is authenticated
   useEffect(() => {
     const authToken = localStorage.getItem("authToken");
     if (!authToken) {
-      showAlert("error", "You need to log in to access this feature.");
+      showAlert("error", t("error.authRequired")); 
       setTimeout(() => {
-        router.push(`/${locale}/profile/signin`); // Redirect to the sign-in page
+        router.push(`/${locale}/profile/signin`);
       }, 2000);
     } else {
       setIsClient(true);
     }
   }, [router]);
 
-// Load translation history from localStorage on component mount
+  // Load translation history from localStorage on component mount
   useEffect(() => {
     const savedHistory = localStorage.getItem("translationHistory");
     if (savedHistory) {
       try {
         setTranslationHistory(JSON.parse(savedHistory));
       } catch (e) {
-        showAlert("error", "Error parsing translation history.");
+        showAlert("error", t("error.historyParse")); 
       }
     }
   }, []);
 
-// Save translation history to localStorage whenever it changes
+  // Save translation history to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem("translationHistory", JSON.stringify(translationHistory));
   }, [translationHistory]);
 
   const handleTranslate = async () => {
     if (!sourceText.trim()) {
-      showAlert("warning", t("error.emptyText"));
+      showAlert("warning", t("error.emptyText")); 
       return;
     }
     if (sourceText.length > 5000) {
-      showAlert("warning", t("error.textTooLong"));
+      showAlert("warning", t("error.textTooLong")); 
       return;
     }
 
@@ -91,33 +90,33 @@ const Translator = ({ params }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Token ${localStorage.getItem("authToken")}`
+          Authorization: `Token ${localStorage.getItem("authToken")}`,
         },
         body: JSON.stringify({
           text: sourceText,
-          dest: targetLanguage
-        })
+          dest: targetLanguage,
+        }),
       });
 
       if (!response.ok) {
-        throw showAlert("error", "Translation failed");
+        throw showAlert("error", t("error.translationFailed")); 
       }
 
       const data = await response.json();
       setTranslatedText(data.translated_text);
 
-// Add to translation history
-      const targetLangName = languages.find(lang => lang.code === targetLanguage)?.name || targetLanguage;
+      // Add to translation history
+      const targetLangName = languages.find((lang) => lang.code === targetLanguage)?.name || targetLanguage;
       const newHistoryItem = {
         id: Date.now(),
         sourceText: sourceText,
         translatedText: data.translated_text,
         targetLanguage: targetLanguage,
         targetLanguageName: targetLangName,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
       };
 
-      setTranslationHistory(prev => [newHistoryItem, ...prev.slice(0, 9)]);
+      setTranslationHistory((prev) => [newHistoryItem, ...prev.slice(0, 9)]);
     } catch (err) {
       showAlert("error", t("error.translationFailed"));
     } finally {
@@ -125,14 +124,14 @@ const Translator = ({ params }) => {
     }
   };
 
-  const copyToClipboard = text => {
+  const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     });
   };
 
-  const loadFromHistory = item => {
+  const loadFromHistory = (item) => {
     setSourceText(item.sourceText);
     setTranslatedText(item.translatedText);
     setTargetLanguage(item.targetLanguage);
@@ -142,11 +141,11 @@ const Translator = ({ params }) => {
     setTranslationHistory([]);
   };
 
-  const removeHistoryItem = id => {
-    setTranslationHistory(prev => prev.filter(item => item.id !== id));
+  const removeHistoryItem = (id) => {
+    setTranslationHistory((prev) => prev.filter((item) => item.id !== id));
   };
 
-  const formatDate = dateString => {
+  const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleString();
   };
@@ -275,7 +274,7 @@ const Translator = ({ params }) => {
                         {isTranslating ? (
                           <>
                             <div className="h-5 w-5 rounded-full border-t-2 border-b-2 border-white animate-spin"></div>
-                            Translating...
+                            {t("translating")}
                           </>
                         ) : (
                           <>
@@ -309,7 +308,7 @@ const Translator = ({ params }) => {
                               "absolute top-3 right-3 p-2 rounded-full",
                               theme === "dark" ? "bg-gray-600 hover:bg-gray-500" : "bg-gray-200 hover:bg-gray-300"
                             )}
-                            title="Copy to clipboard"
+                            title={t("copyToClipboard")}
                           >
                             {copied ? <IconCheck size={18} /> : <IconCopy size={18} />}
                           </button>
@@ -340,7 +339,7 @@ const Translator = ({ params }) => {
                         )}
                       >
                         <IconTrash size={16} className="mr-1" />
-                        Clear All
+                        {t("clearAll")}
                       </button>
                     )}
                   </div>
@@ -371,7 +370,7 @@ const Translator = ({ params }) => {
                                 "inline-block w-2 h-2 rounded-full mr-2",
                                 theme === "dark" ? "bg-blue-400" : "bg-blue-500"
                               )}></span>
-                              Translated to {item.targetLanguageName}
+                              {t("translatedTo")} {item.targetLanguageName}
                             </div>
                             <div className="text-xs text-right">
                               <span className={theme === "dark" ? "text-gray-400" : "text-gray-500"}>
@@ -383,14 +382,14 @@ const Translator = ({ params }) => {
                           <div className="px-4 py-3">
                             <div className="mb-3">
                               <div className="text-xs font-medium mb-1 uppercase tracking-wide">
-                                <span className={theme === "dark" ? "text-gray-400" : "text-gray-500"}>Source</span>
+                                <span className={theme === "dark" ? "text-gray-400" : "text-gray-500"}>{t("source")}</span>
                               </div>
                               <div className="text-sm line-clamp-2">{item.sourceText}</div>
                             </div>
                             
                             <div className="mb-2">
                               <div className="text-xs font-medium mb-1 uppercase tracking-wide">
-                                <span className={theme === "dark" ? "text-gray-400" : "text-gray-500"}>Translation</span>
+                                <span className={theme === "dark" ? "text-gray-400" : "text-gray-500"}>{t("translation")}</span>
                               </div>
                               <div className="text-sm line-clamp-2">{item.translatedText}</div>
                             </div>
@@ -409,7 +408,7 @@ const Translator = ({ params }) => {
                                   : "bg-blue-500 hover:bg-blue-600 text-white"
                               )}
                             >
-                              Load
+                              {t("load")}
                             </button>
                             <button
                               onClick={() => removeHistoryItem(item.id)}

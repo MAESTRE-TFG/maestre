@@ -12,16 +12,22 @@ import {
   IconFileDescription,
   IconTrash,
 } from "@tabler/icons-react";
+import { useTranslations } from "next-intl";
 
 export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDeleteModal, educationalStages }) {
   const { theme } = useTheme();
   const router = useRouter();
+  const t = useTranslations("ClassroomEditForm");
 
   return (
-    <div className={cn("max-w-6xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", 
-      theme === "dark" ? "bg-black" : "bg-white")}>
-      <style jsx global>{
-        `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
+    <div
+      className={cn(
+        "max-w-6xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input",
+        theme === "dark" ? "bg-black" : "bg-white"
+      )}
+    >
+      <style jsx global>{`
+        @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
         select {
           appearance: none;
           background: ${theme === "dark" ? "#333" : "#fff"};
@@ -34,15 +40,24 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
         select:focus {
           outline: none;
           border-color: ${theme === "dark" ? "#888" : "#007bff"};
-          box-shadow: 0 0 0 3px ${theme === "dark" ? "rgba(136, 136, 136, 0.5)" : "rgba(0, 123, 255, 0.25)"};
+          box-shadow: 0 0 0 3px
+            ${theme === "dark"
+              ? "rgba(136, 136, 136, 0.5)"
+              : "rgba(0, 123, 255, 0.25)"};
         }
         option {
           background: ${theme === "dark" ? "#333" : "#fff"};
           color: ${theme === "dark" ? "#fff" : "#000"};
-        }`
-      }</style>
-      
-      <form className="my-4" onSubmit={(e) => { e.preventDefault(); handleUpdate(); }}>
+        }
+      `}</style>
+
+      <form
+        className="my-4"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleUpdate();
+        }}
+      >
         <div className="flex flex-col md:flex-row gap-6 mb-8">
           <div className="flex-1 md:w-2/5 border border-gray-300 rounded-md p-4">
             <h3
@@ -52,9 +67,9 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
               )}
               style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             >
-              Classroom Information
+              {t("sections.information.title")} 
             </h3>
-            
+
             <div className="flex flex-col gap-6">
               <LabelInputContainer className="flex-1">
                 <Label
@@ -63,12 +78,12 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
                   htmlFor="name"
                 >
                   <IconSchool className="mr-2 h-5 w-5 text-blue-500" />
-                  Classroom Name
+                  {t("fields.name.label")} 
                 </Label>
                 <Input
                   id="name"
                   name="name"
-                  placeholder="Applied Maths 1º ESO"
+                  placeholder={t("fields.name.placeholder")} 
                   type="text"
                   required
                   value={formData.name || ""}
@@ -83,7 +98,7 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
                   htmlFor="academic_course"
                 >
                   <IconBook className="mr-2 h-5 w-5 text-purple-500" />
-                  Academic Course
+                  {t("fields.academicCourse.label")} 
                 </Label>
                 <select
                   id="academic_course"
@@ -98,11 +113,15 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
                       : "bg-white border-gray-300 text-black"
                   )}
                 >
-                  <option value="" disabled>Select Academic Course</option>
+                  <option value="" disabled>
+                    {t("fields.academicCourse.placeholder")} 
+                  </option>
                   {educationalStages.map((stage) => (
                     <optgroup key={stage.stage} label={stage.stage}>
                       {stage.courses.map((course) => (
-                        <option key={course} value={course}>{course}</option>
+                        <option key={course} value={course}>
+                          {course}
+                        </option>
                       ))}
                     </optgroup>
                   ))}
@@ -116,12 +135,12 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
                   htmlFor="academic_year"
                 >
                   <IconCalendar className="mr-2 h-5 w-5 text-green-500" />
-                  Academic Year
+                  {t("fields.academicYear.label")} 
                 </Label>
                 <Input
                   id="academic_year"
                   name="academic_year"
-                  placeholder="YYYY-YYYY"
+                  placeholder={t("fields.academicYear.placeholder")} 
                   type="text"
                   required
                   value={formData.academic_year || ""}
@@ -130,7 +149,7 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
               </LabelInputContainer>
             </div>
           </div>
-          
+
           <div className="flex-1 md:w-3/5 border border-gray-300 rounded-md p-4">
             <h3
               className={cn(
@@ -139,9 +158,9 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
               )}
               style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             >
-              Classroom Description
+              {t("sections.description.title")} 
             </h3>
-            
+
             <LabelInputContainer className="mb-4">
               <Label
                 className="flex items-center"
@@ -149,12 +168,12 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
                 htmlFor="description"
               >
                 <IconFileDescription className="mr-2 h-5 w-5 text-amber-500" />
-                Description
+                {t("fields.description.label")} 
               </Label>
               <textarea
                 id="description"
                 name="description"
-                placeholder="Describe your classroom"
+                placeholder={t("fields.description.placeholder")} 
                 value={formData.description || ""}
                 onChange={handleChange}
                 rows="5"
@@ -168,8 +187,8 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
             </LabelInputContainer>
           </div>
         </div>
-        
-        {/* Update and Cancel Buttons in one row */}
+
+        {/* Cancel Buttons */}
         <div className="flex justify-center gap-4 mt-8">
           <button
             className={cn(
@@ -179,7 +198,7 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
             type="button"
             onClick={() => router.back()}
           >
-            &larr; Cancel
+            &larr; {t("buttons.cancel")} 
           </button>
           <button
             className={cn(
@@ -188,10 +207,10 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
             )}
             type="submit"
           >
-            Update Classroom &rarr;
+            {t("buttons.update")} &rarr; 
           </button>
         </div>
-        
+
         {/* Delete Button */}
         <div className="flex justify-center mt-4">
           <button
@@ -202,7 +221,7 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
             type="button"
             onClick={openDeleteModal}
           >
-            <IconTrash className="mr-2 h-5 w-5" /> Delete Classroom
+            <IconTrash className="mr-2 h-5 w-5" /> {t("buttons.delete")} 
           </button>
         </div>
       </form>
@@ -210,16 +229,13 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
   );
 }
 
-const LabelInputContainer = ({
-  children,
-  className
-}) => {
+const LabelInputContainer = ({ children, className }) => {
   return (
     <div className={cn("flex flex-col space-y-2 w-full", className)}>
-      {React.Children.map(children, child => {
+      {React.Children.map(children, (child) => {
         if (child.type === Label) {
           return React.cloneElement(child, {
-            style: { ...child.props.style, fontSize: "1.25rem" }
+            style: { ...child.props.style, fontSize: "1.25rem" },
           });
         }
         return child;

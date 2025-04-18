@@ -1,4 +1,5 @@
 import jsPDF from "jspdf";
+import { useTranslations } from "next-intl";
 
 // Format exam text for display
 export const formatExamText = (text) => {
@@ -85,7 +86,7 @@ export const formatExamText = (text) => {
 };
 
 // Create a document-friendly version of the exam
-export const createDocumentVersion = (examText) => {
+export const createDocumentVersion = (examText, t) => {
   // Add page styling for print/document version
   const documentStyles = `
     <style>
@@ -126,18 +127,18 @@ export const createDocumentVersion = (examText) => {
     <html>
     <head>
       <meta charset="UTF-8">
-      <title>Exam Document</title>
+      <title>${t("pdf.title")}</title>
       ${documentStyles}
     </head>
     <body>
       ${formatExamText(examText)}
-      <div class="footer">Generated with Maestre AI Exam Generator</div>
+      <div class="footer">${t("pdf.footer")}</div>
     </body>
     </html>`;
 };
 
 // Create a PDF version of the exam
-export const createPDFVersion = async (examText, subject = "Exam") => {
+export const createPDFVersion = async (examText, subject = "Exam", t) => {
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',
@@ -146,7 +147,7 @@ export const createPDFVersion = async (examText, subject = "Exam") => {
 
   // Add a title to the PDF
   doc.setFontSize(18);
-  doc.text(`${subject} Exam`, 105, 20, { align: 'center' });
+  doc.text(`${subject} ${t("pdf.title")}`, 105, 20, { align: 'center' });
 
   // Create a temporary DOM element to render the HTML
   const tempDiv = document.createElement('div');
@@ -197,7 +198,7 @@ export const createPDFVersion = async (examText, subject = "Exam") => {
     doc.setFontSize(10);
     doc.setTextColor(100);
     doc.text(
-      `Generated with Maestre AI Exam Generator - Page ${i} of ${totalPages}`,
+      `${t("pdf.footer")} - ${t("pdf.page")} ${i} ${t("pdf.of")} ${totalPages}`,
       105,
       pageHeight - 10,
       { align: 'center' }

@@ -50,7 +50,6 @@ const ToolList = () => {
   }, [router]);
 
   const handleTryNowClick = (toolPage) => {
-    console.log(isAuthenticated, isProfileComplete);
     if (!isAuthenticated) {
       setShowAuthModal(true);
     } else if (!isProfileComplete) {

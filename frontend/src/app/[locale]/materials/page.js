@@ -198,10 +198,7 @@ const MaterialsList = () => {
           Authorization: `Token ${localStorage.getItem('authToken')}`
         }
       });
-      // Log the request and response for debugging
-      console.log('Request params:', params);
-      console.log('Response data:', response.data);
-      
+
       setMaterials(response.data.map(material => ({
         ...material,
         classroom: material.classroom || null
