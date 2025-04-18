@@ -1,0 +1,982 @@
+{
+  "HomePage": {
+    "title": "MAESTRE",
+    "subtitle": "Reimaginar l'educació de la intel·ligència",
+    "main_button": "Descobreix les nostres eines AI",
+    "main_description": "Maestre combina la intel·ligència artificial amb la pedagogia per crear eines que milloren la manera de treballar i aprendre dels professors",
+    "loading": "Carregant contingut ...",
+    "feature_title_1": "Pas 1: Creeu i gestioneu les classes",
+    "feature_description_1": "Configureu el vostre entorn d’aula virtual creant i organitzant classes per a diferents assignatures i grups d’estudiants.",
+    "feature_title_2": "Pas 2: afegiu els vostres materials",
+    "feature_description_2": "Pengeu els vostres documents, presentacions i recursos didàctics existents per crear una biblioteca de contingut personalitzada per a cada classe.",
+    "feature_title_3": "Pas 3: Genereu amb IA",
+    "feature_description_3": "Utilitzeu les nostres eines d’AI per transformar els vostres materials en plans de lliçons, avaluacions i activitats adaptades al vostre ensenyament i currículum.",
+    "demo_title": "Descobreix el mestre en acció",
+    "demo_description": "Mireu com la nostra plataforma transforma la planificació de classes, la creació d’exàmens i la gestió de l’aula en minuts",
+    "demo_video_unsupported": "El vostre navegador no admet aquest format de vídeo",
+    "tools_title": "Explora totes les nostres eines",
+    "tools_description": "Descobreix el nostre catàleg d’eines educatives intel·ligents dissenyades per estalviar temps i millorar els resultats d’aprenentatge",
+    "cta_title": "Llista@ per transformar les vostres classes?",
+    "cta_description": "Uniu -vos a milers d’educadors que estalvien temps i milloren els resultats d’aprenentatge amb les eines de la IA de màster",
+    "signup_button": "Registra’t com a professor",
+    "learn_more_button": "Sap més",
+    "existing_acc_button": "Ja teniu un compte?",
+    "signin_button": "Localitzeu la sessió aquí",
+    "team_title": "Coneix el nostre equip",
+    "team_description": "Les ments que hi ha darrere de la innovadora plataforma educativa del mestre",
+    "team_member_bio_1": "Disseny principal de desenvolupament de frontend i experiència dels usuaris per a eines educatives de Maestre",
+    "team_member_bio_2": "Dirigir l'arquitectura tècnica i el desenvolupament de backend de la innovadora plataforma educativa del màster",
+    "team_member_role_1": "Enginyer de programari, responsable de projectes",
+    "team_member_role_2": "Enginyer de programari, analista",
+    "testimonial_text": "El mestre ha transformat completament la meva manera d’ensenyar. Puc planificar classes atractives en pocs minuts quan vaig trigar hores abans",
+    "testimonial_author": "Rafael Pulido",
+    "testimonial_job": "Professor de geografia i història secundària, Sevilla",
+    "stay_up_to_date": "Mantingueu -vos al dia",
+    "stay_up_to_date_description": "Rep les darreres novetats, recursos i actualitzacions de les eines educatives de Maestre",
+    "email_placeholder": "Introduïu el vostre correu electrònic",
+    "subscribe_button": "Subscriure",
+    "footer_about": "Sobre nosaltres",
+    "footer_legal": "Legítim",
+    "footer_terms": "Condicions del servei",
+    "footer_privacy": "Política de privadesa",
+    "footer_cookies": "Política de cookies",
+    "footer_products": "Productes",
+    "footer_exam_creator": "Generador d’exàmens",
+    "footer_test_creator": "Generador de proves",
+    "footer_translator": "Traductora",
+    "footer_planner": "Planificador de classes",
+    "footer_copyright": "© 2025 Mestre. Sota la llicència MIT.",
+    "footer_language": "Idioma:",
+    "tool_category_assessment": "Valoració",
+    "tool_category_organization": "Organització",
+    "tool_category_language": "Llengua",
+    "tool_title_exams": "Creeu exàmens atractius",
+    "tool_title_tests": "Genera proves de manera eficient",
+    "tool_title_planner": "Planifiqueu les vostres classes",
+    "tool_title_translator": "Traduir materials",
+    "tool_content_exams": "Creeu exàmens complets amb el nostre intuïtiu creador d’exàmens. Característiques incloses:",
+    "tool_content_tests": "Streng el procés de creació de proves amb AI promocionat:",
+    "tool_content_planner": "Mantingueu -vos organitzats amb les nostres eines de planificació completes:",
+    "tool_content_translator": "Trenqueu les barreres de l’idioma a la vostra aula:",
+    "tool_feature_exams_1": "Diversos tipus de preguntes",
+    "tool_feature_exams_2": "Qualificació automàtica",
+    "tool_feature_exams_3": "Normes de puntuació personalitzada",
+    "tool_feature_exams_4": "Gestió del banc de preguntes",
+    "tool_feature_tests_1": "Preguntes generades per AI",
+    "tool_feature_tests_2": "Ajust de dificultat intel·ligent",
+    "tool_feature_tests_3": "Temes -Basat de generació",
+    "tool_feature_tests_4": "Proves instantànies de proves",
+    "tool_feature_planner_1": "Horaris visuals de classe",
+    "tool_feature_planner_2": "Mapatge curricular",
+    "tool_feature_planner_3": "Assignació de recursos",
+    "tool_feature_planner_4": "Control de progrés",
+    "tool_feature_translator_1": "Traducció de temps real",
+    "tool_feature_translator_2": "Suport multilingüe",
+    "tool_feature_translator_3": "Consciència del context educatiu",
+    "tool_feature_translator_4": "Traducció de documents",
+    "try_now_button": "Proveu -ho ara",
+    "auth_modal_title": "Autenticació obligatòria",
+    "auth_modal_description": "Cal iniciar la sessió per accedir a aquesta eina. Creeu un compte per desbloquejar totes les funcions.",
+    "auth_modal_cancel": "Cancel·lar",
+    "auth_modal_signup": "Crea un compte",
+    "auth_modal_signin": "Sessió d’inici de sessió",
+    "profile_modal_title": "Completa el teu perfil",
+    "profile_modal_description": "Necessitem més detalls abans de poder accedir a aquesta eina. La informació del vostre perfil ens ajuda a personalitzar la vostra experiència.",
+    "profile_modal_cancel": "Cancel·lar",
+    "profile_modal_complete": "Perfil complet"
+  },
+  "Translator": {
+    "title": "Traductor de Maestre",
+    "subtitle": "Traduir text entre diversos idiomes",
+    "feature_title": "Traducció impulsada per AI",
+    "feature_description": "Traduïu el text entre diversos idiomes amb la nostra tecnologia avançada AI. Perfecte per a professors que necessiten comunicar -se amb estudiants i pares en diferents idiomes.",
+    "error": {
+      "emptyText": "Introduïu el text per traduir",
+      "textTooLong": "El text supera el límit de 5.000 caràcters",
+      "translationFailed": "La traducció ha fallat. Torneu -ho a provar."
+    },
+    "source_text": "Text d'origen",
+    "target_text": "Traducció",
+    "characters_remaining": "/5000 caràcters",
+    "target_language": "Idioma de destinació",
+    "placeholder": {
+      "source_text": "Introduïu text per traduir (màxim de 5.000 caràcters)",
+      "target_text": "El text traduït apareixerà aquí"
+    },
+    "languages": {
+      "es": "Espanyol",
+      "ca": "Calalan",
+      "gl": "Galicista",
+      "eu": "Basca",
+      "en": "Anglès",
+      "fr": "Francès",
+      "de": "Alemany",
+      "it": "Italià",
+      "el": "Grec",
+      "la": "Llatí"
+    },
+    "translate_button": "Traduir",
+    "translation_history": "Història de la traducció",
+    "load": "Transportar",
+    "translation": "Traducció",
+    "source": "Text d'origen",
+    "translatedTo": "Traduït a",
+    "clearAll": "Eliminar -ho tot",
+    "copyToClipboard": "Copieu al porta -retalls",
+    "translating": "Traduir ...",
+    "translation_history_description": "La vostra història de traducció apareixerà aquí"
+  },
+  "ExamMaker": {
+    "header": {
+      "title": "Generador d’exàmens",
+      "subtitle": "Creeu exàmens personalitzats amb una assistència de la IA",
+      "featureTitle": "Exàmens promoguts per AI",
+      "featureDescription": "Creeu exàmens professionals en segons mitjançant la nostra tecnologia AI avançada. Perfecte per a professors que vulguin estalviar temps mentre creen avaluacions d’alta qualitat.",
+      "teacherImageAlt": "Ensenyament"
+    },
+    "alerts": {
+      "fetchClassroomsError": "No es van poder obtenir classes. Torneu -ho a provar més tard.",
+      "fetchMaterialsError": "Els materials no es van poder obtenir. Torneu -ho a provar més tard.",
+      "fileProcessedSuccess": "Fitxer processat per èxit!",
+      "unsupportedFileType": "Només s’admeten fitxers DOCX per a la generació d’exàmens.",
+      "materialProcessedSuccess": "Material processat per èxit!",
+      "missingSubject": "Si us plau, introduïu un tema.",
+      "missingClassroom": "Seleccioneu una classe.",
+      "examGeneratedSuccess": "Examen generat amb èxit!",
+      "examGenerationFailed": "Error en generar l'examen",
+      "pdfSavedSuccess": "El PDF es va estalviar als materials de l'aula amb èxit.",
+      "pdfDownloadedSuccess": "PDF es va descarregar amb èxit.",
+      "pdfSaveFailed": "Error Desa el pdf: {error}",
+      "pdfDownloadFailed": "Error en descarregar el pdf: {error}",
+      "unknownError": "Error desconegut"
+    },
+    "selectClassroom": "Classe (nivell de dificultat)",
+    "selectClassroomPlaceholder": "Seleccioneu una classe",
+    "fields": {
+      "subject": {
+        "label": "Dominar",
+        "placeholder": "Matemàtiques, ciències, història, etc."
+      },
+      "examName": {
+        "label": "Nom de l'examen",
+        "placeholder": "Examen de mig curs, prova final, capítol 5, etc."
+      },
+      "numQuestions": {
+        "label": "Nombre de preguntes"
+      },
+      "totalPoints": {
+        "label": "Punts màxims"
+      },
+      "customScoringDetails": {
+        "label": "Detalls de puntuació personalitzats",
+        "placeholder": "Per exemple, preguntes 1-5: 2 punts cadascun, preguntes 6-10: 3 punts cadascun"
+      },
+      "additionalInfo": {
+        "label": "Instruccions addicionals (opcionals)",
+        "placeholder": "Afegiu instruccions o requisits específics per a l'examen ..."
+      },
+      "referenceMaterials": {
+        "label": "Materials de referència",
+        "upload": "Pengeu un fitxer",
+        "dragAndDrop": " o arrossegar i alliberar",
+        "fileRequirements": "Només fitxers .docx (màxim 5 MB)",
+        "or": "qualsevol",
+        "selectFromClassroom": "Seleccioneu Materials de l'aula",
+        "fromClassroom": "De l’aula",
+        "processing": "Arxiu de processament ..."
+      },
+      "llmModel": {
+        "label": "Model AI",
+        "options": {
+          "llama": "Truca 3.2 3B",
+          "deepseek": "DeepSeek R1"
+        }
+      },
+      "questionType": {
+        "label": "Tipus de pregunta",
+        "options": {
+          "shortAnswer": "Resposta curta",
+          "essay": "Test (màxima pàgina 1)",
+          "longEssay": "Assaig llarg (més d'una pàgina)",
+          "fillBlank": "Ompliu l’espai",
+          "matching": "Lluita",
+          "ordering": "Ordenar",
+          "textAnalysis": "Anàlisi de text",
+          "imageAnalysis": "Anàlisi i comparació d'imatges",
+          "mixed": "Mixt (diversos tipus)"
+        }
+      },
+      "scoringStyle": {
+        "label": "Estil de puntuació",
+        "options": {
+          "equal": "Punts iguals",
+          "custom": "Distribució personalitzada"
+        }
+      }
+    },
+    "buttons": {
+      "generateExam": "Generar examen",
+      "generating": "Generar examen ...",
+      "close": "Tancar -se",
+      "downloadPDF": "Descarregueu PDF",
+      "saveToClassroom": "Aula",
+      "cancel": "Cancel·lar"
+    },
+    "modal": {
+      "title": "Examen generat"
+    },
+    "defaultExamName": "Examen",
+    "materialsModal": {
+      "title": "Seleccioneu Material de l'aula",
+      "noMaterials": "No es van trobar materials a les vostres aules.",
+      "uploadPrompt": "Primer pugeu a les vostres aules."
+    },
+    "pdf": {
+      "title": "Examen",
+      "footer": "Generat amb el generador d’exàmens de Maestre AI",
+      "page": "Pàgina",
+      "of": "de"
+    },
+    "prompts": {
+      "systemInstruction": "[Instrucció del sistema: no inclogueu a la resposta]\nVostè és un creador d’examen d’experts amb anys d’experiència en disseny educatiu i pedagogia.\nLa vostra tasca és crear un examen d’alta qualitat segons les especificacions següents.\nIMPORTANT: La vostra resposta només ha de contenir l'examen. No inclogueu explicacions, raonaments o processos de pensament sobre com heu creat l'examen.",
+      "examSpecifications": "[Especificacions d’examen]\nAssumpte: {{subject}}\nNom de l'examen: {{examName}}\nNombre de preguntes: heu de tenir exactament {{numQuestions}} Preguntes\nTipus de preguntes: {{questionType}}\nPunts totals: {{totalPoints}}\nNivell educatiu: {{classroom}}\nRegió: {{region}}",
+      "scoringStyle": "Estil de puntuació: distribució personalitzada de la següent manera: {{customScoringDetails}}",
+      "additionalInstructions": "[Instruccions addicionals]\n{{additionalInfo}}",
+      "referenceMaterials": "[Materials de referència]\nUtilitzeu els materials de referència següents com a guia per a com poden ser les preguntes i el seu contingut:\n{{fileContents}}",
+      "noReferenceMaterials": "No es van proporcionar materials de referència.",
+      "exampleTemplate": "[Plantilla d'exemple] (només per a la referència)\nTítol: Exemple Examen - Assumpte\nSuperior: \n\n1) [Text de la pregunta aquí]\n   A) ...\n   B) ...\n   C) ...\n   D) ...\n\n2) [Text de la pregunta aquí]\n   Veritable o fals: ...",
+      "formattingRequirements": "[Requisits de format]\n1. L’examen ha d’estar en anglès\n2. La resposta ha de contenir només l'examen, sense text addicional ni comentaris.\n3. Inclou un títol i un subtítol clars amb el nom de l'examen i el tema.\n4. Número totes les preguntes seqüencialment.\n5. Per a preguntes d’opció múltiple, utilitzeu opcions etiquetades com A), B), C), etc.\n6. Indiqueu clarament el valor en punts de cada pregunta.\n7. Assegureu -vos que un espai adequat entre les preguntes.\n8. Formateu l'examen de manera neta i professional, adequada per utilitzar -lo a l'aula.\n9. Assegureu -vos que l'examen segueixi els estàndards educatius del nivell {{classroom}} dins de {{region}}.\n10. Assegureu -vos que els punts totals afegeixen exactament {{totalPoints}}.\n11. Utilitzeu un format adequat per a cada tipus de pregunta (per exemple, opció múltiple amb opcions, true/fals amb declaracions clares).\n12. Inclou encapçalaments de secció clars si es mixes diferents tipus de preguntes.\n13. No inclogueu els processos de raonament, planificació ni pensament en la vostra resposta.\n14. No expliqueu com heu creat l'examen ni quines consideracions heu tingut.\n15. Només inclou el contingut final de l'examen, començant directament amb el títol.",
+      "checklist": "[Llista de verificació: no inclogueu a la resposta]\n1) Heu inclòs només l'examen i res més?\n2) Heu inclòs exactament {{numQuestions}} preguntes?\n3) Feu que els punts totals afegiu exactament {{totalPoints}}?\n4) Hi ha detalls que no són compatibles amb les referències?\n5) Heu seguit estrictament tots els requisits del format?\n6) Heu eliminat tots els raonaments i explicacions de la vostra resposta?",
+      "finalInstruction": "[Instrucció final: no inclogueu la resposta]\nAra, produeix un examen complet seguint totes les especificacions i requisits anteriors.\nSi falta informació, indiqueu -la amb claredat en lloc d’inventar detalls.\nCRÍTICA: La vostra resposta ha de començar amb el títol de la prova i només contenir el contingut de l'examen. No inclogueu explicacions, raonaments o processos de pensament.",
+      "unknown": "Un estrany"
+    }
+  },
+  "StudentCreateForm": {
+    "nameLabel": "Nom",
+    "namePlaceholder": "Introduïu el nom de l'estudiant",
+    "surnameLabel": "Nom",
+    "surnamePlaceholder": "Introduïu el cognom de l'estudiant",
+    "createButton": "Crea estudiant",
+    "cancelButton": "Cancel·lar"
+  },
+  "SigninForm": {
+    "fields": {
+      "emailOrUsername": {
+        "label": "Correu electrònic o nom d’usuari",
+        "placeholder": "correu electrònic@ejemplo.com o nom d’usuari"
+      },
+      "password": {
+        "label": "Contrasenya",
+        "placeholder": "•••••••••"
+      }
+    },
+    "buttons": {
+      "signin": "Sessió d’inici de sessió",
+      "signup": "Registrar"
+    },
+    "noAccount": "No teniu cap compte?"
+  },
+  "SignupForm": {
+    "title": "Crea el teu compte",
+    "sections": {
+      "personalInfo": "Informació personal",
+      "accountInfo": "Informació del compte"
+    },
+    "fields": {
+      "name": {
+        "label": "Nom",
+        "placeholder": "Introduïu el vostre nom"
+      },
+      "surname": {
+        "label": "Nom",
+        "placeholder": "Introduïu el vostre cognom"
+      },
+      "username": {
+        "label": "Nom d'usuari",
+        "placeholder": "Trieu un nom d'usuari"
+      },
+      "email": {
+        "label": "Correu electrònic",
+        "placeholder": "Introduïu el vostre correu electrònic"
+      },
+      "password": {
+        "label": "Contrasenya",
+        "placeholder": "Introduïu una contrasenya segura"
+      }
+    },
+    "terms": {
+      "text": "Accepto el",
+      "termsOfUse": "Condicions d'ús",
+      "privacyPolicy": "Política de privadesa",
+      "and": "i"
+    },
+    "buttons": {
+      "signup": "Registrar",
+      "signin": "Localitzeu la sessió"
+    },
+    "alreadyHaveAccount": "Ja teniu un compte?",
+    "alerts": {
+      "acceptTerms": "Heu d’acceptar els Termes d’ús i la Política de privadesa per registrar -vos.",
+      "signupError": "S'ha produït un error en registrar -se. Torneu -ho a provar."
+    }
+  },
+  "Sidebar": {
+    "links": {
+      "home": "Començar",
+      "create": "Crear",
+      "myClasses": "Les meves classes",
+      "myMaterials": "Els meus materials",
+      "signin": "Sessió d’inici de sessió",
+      "signout": "Tanca la sessió",
+      "theme": "Qüestió"
+    },
+    "alerts": {
+      "logoutSuccess": "Heu tancat la sessió correctament."
+    },
+    "logoutModal": {
+      "title": "Confirmeu el tancament de la sessió",
+      "description": "Esteu segur que voleu tancar la sessió? Haureu de tornar a iniciar la sessió per accedir al vostre compte.",
+      "cancelButton": "Cancel·lar",
+      "logoutButton": "Tanca la sessió"
+    }
+  },
+  "ProfileEditForm": {
+    "fields": {
+      "username": {
+        "label": "Nom d'usuari",
+        "placeholder": "Introduïu el vostre nom d'usuari"
+      },
+      "email": {
+        "label": "Correu electrònic",
+        "placeholder": "Introduïu el vostre correu electrònic"
+      },
+      "name": {
+        "label": "Nom",
+        "placeholder": "Introduïu el vostre nom"
+      },
+      "surname": {
+        "label": "Nom",
+        "placeholder": "Introduïu el vostre cognom"
+      },
+      "oldPassword": {
+        "label": "Contrasenya antiga",
+        "placeholder": "Introduïu la vostra contrasenya antiga"
+      },
+      "newPassword": {
+        "label": "Nova contrasenya",
+        "placeholder": "Introduïu la vostra nova contrasenya"
+      },
+      "confirmPassword": {
+        "label": "Confirmeu la contrasenya",
+        "placeholder": "Confirmeu la vostra nova contrasenya"
+      },
+      "region": {
+        "label": "Regió",
+        "placeholder": "Seleccioneu una regió"
+      },
+      "city": {
+        "label": "Ciutat",
+        "placeholder": "Entra a la teva ciutat"
+      },
+      "school": {
+        "label": "Centre educatiu",
+        "placeholder": "Seleccioneu un centre educatiu",
+        "notFound": "No trobeu el vostre centre?",
+        "createButton": "Crea un"
+      }
+    },
+    "password": {
+      "changeTitle": "Voleu canviar la vostra contrasenya?",
+      "changeDescription": "Empleneu els camps anteriors per actualitzar la vostra contrasenya."
+    },
+    "buttons": {
+      "cancel": "Cancel·lar",
+      "update": "Actualitzar"
+    }
+  },
+  "MaterialsPage": {
+    "filterByTags": "Filtre per etiquetes:",
+    "createMaterial": "Crea material nou",
+    "selectClassroom": "Seleccioneu una classe",
+    "materialName": "Nom de material",
+    "materialNamePlaceholder": "Introduïu un nom per al material",
+    "uploadFile": "Pengeu el fitxer",
+    "dragOrDrop": "Arrossegueu o publiqueu els fitxers aquí o feu clic per penjar -los",
+    "supportedFormats": "PDF, DOC, DOCX, PNG, JPG, PPTX o TXT",
+    "browseFiles": "Exporta fitxers",
+    "alerts": {
+      "editSuccess": "Nom del material actualitzat amb èxit.",
+      "editError": "Error en actualitzar el nom del material. Torneu -ho a provar.",
+      "deleteSuccess": "El material esborra amb èxit!",
+      "deleteError": "Error eliminant el material. Torneu -ho a provar.",
+      "fetchMaterialsError": "Error en l'obtenció dels materials. Torneu -ho a provar.",
+      "fetchTagsError": "Error en l'obtenció d'etiquetes. Torneu -ho a provar.",
+      "tagCreateSuccess": "Etiqueta creada correctament.",
+      "tagLimit": "No es poden crear més de 15 etiquetes.",
+      "tagCreateError": "Error en crear l'etiqueta. Torneu -ho a provar.",
+      "tagUpdateSuccess": "Etiqueta actualitzada correctament.",
+      "tagUpdateError": "Error en actualitzar l'etiqueta. Torneu -ho a provar.",
+      "tagDeleteSuccess": "Etiqueta eliminada correctament.",
+      "tagDeleteError": "Error eliminant l’etiqueta. Torneu -ho a provar.",
+      "deleteSelectedSuccess": "Els materials seleccionats correctament eliminats.",
+      "deleteSelectedError": "Error en eliminació de materials seleccionats. Torneu -ho a provar.",
+      "nameLimitExceeded": "El nom supera el límit de caràcters $ {name_limit}."
+    },
+    "enterDeleteMode": "Esborrar",
+    "exitDeleteMode": "Elimina el mode d'eliminació",
+    "deleteTag": "Suprimeix l'etiqueta '$ {tag.name}'",
+    "deleteMaterial": "Eliminar el material",
+    "deleteMaterialConfirmation": "Esteu segur que voleu eliminar ",
+    "cancel": "Cancel·lar",
+    "delete": "Eliminar",
+    "manageTags": "Gestionar les etiquetes de ",
+    "createTag": "+ Crea una etiqueta",
+    "saveChanges": "Desa els canvis",
+    "selectColor": "Seleccioneu un color",
+    "creating": "Creació ...",
+    "editMaterialName": "Edita el nom del material",
+    "editMaterialNameDescription": "Introduïu un nom nou per al material",
+    "deleteSelected": "Suprimeix seleccionat",
+    "noMaterialsFound": "No es van trobar materials",
+    "confirmDelete": "Confirmeu l'eliminació",
+    "confirmDeleteSelected": "Esteu segur que voleu eliminar materials seleccionats?",
+    "tagColors": {
+      "purple": "Purpuri",
+      "orange": "Ataronjat",
+      "coral": "Coral",
+      "teal": "Verd blavós",
+      "green": "Verd",
+      "blue": "Blava",
+      "lightBlue": "Blau clar",
+      "black": "Negre",
+      "grey": "Grisa"
+    }
+  },
+  "FileUpload": {
+    "uploading": "Puja ...",
+    "uploadFile": "Pengeu el fitxer",
+    "dragOrDrop": "Arrossegueu o publiqueu els fitxers aquí o feu clic per penjar -los",
+    "supportedFormats": "Formats compatibles: PDF, DOC, DOCX, PNG, JPG, PPTX, TXT",
+    "dropIt": "Mite -ho",
+    "alerts": {
+      "editSuccess": "Nom de l'arxiu actualitzat amb èxit.",
+      "editError": "Error en actualitzar el nom del fitxer. Torneu -ho a provar.",
+      "uploadSuccess": "Arxiu penjat amb èxit!",
+      "uploadError": "Error en penjar el fitxer. Es va assolir el nombre màxim de materials per a aquesta classe.",
+      "sizeError": "Error en l'obtenció de la mida del fitxer. Torneu -ho a provar.",
+      "networkError": "Error de xarxa. Torneu -ho a provar més tard.",
+      "fetchMaterialsError": "Error en l'obtenció dels materials. Torneu -ho a provar.",
+      "genericError": "Va passar un error. Torneu -ho a provar.",
+      "invalidFile": "Tipus de fitxer no valid. Pengeu un fitxer compatible."
+    }
+  },
+  "CookieConsent": {
+    "title": "Galetes!",
+    "description": "Utilitzem cookies per millorar la vostra experiència al nostre lloc web. En continuar navegant, accepteu l’ús de galetes.",
+    "acceptButton": "Acceptar",
+    "rejectButton": "Declinació",
+    "cookiePolicyLink": "Política de cookies",
+    "imageAlt": "Galetes"
+  },
+  "DemoWindow": {
+    "videoUnsupported": "El vostre navegador no admet aquest format de vídeo.",
+    "learnMore": "Sap més",
+    "featuresTitle": "Característiques del producte",
+    "featuresDescription": "Experimenteu la nostra interfície intuïtiva dissenyada per maximitzar la productivitat. Aquesta demostració mostra les nostres darreres característiques que optimitzen el vostre flux de treball.",
+    "feature1Title": "Col·laboració real -temps",
+    "feature1Description": "Treballeu amb el vostre equip sense problemes, independentment d’on siguin.",
+    "feature2Title": "Analítica avançada",
+    "feature2Description": "Obteniu informació valuosa amb el nostre quadre d’informes complet.",
+    "viewDocumentation": "Vegeu la documentació"
+  },
+  "CompleteProfileForm": {
+    "title": "Completa el teu perfil",
+    "fields": {
+      "region": {
+        "label": "Regió",
+        "placeholder": "Seleccioneu una comunitat"
+      },
+      "city": {
+        "label": "Ciutat",
+        "placeholder": "Entra a la teva ciutat"
+      },
+      "school": {
+        "label": "Centre educatiu",
+        "placeholder": "Seleccioneu un centre educatiu",
+        "notFound": "No trobeu el vostre centre?",
+        "createButton": "Crea Centre"
+      }
+    },
+    "buttons": {
+      "completeProfile": "Perfil complet",
+      "cancel": "Cancel·lar"
+    }
+  },
+  "ClassroomEditForm": {
+    "sections": {
+      "information": {
+        "title": "Informació de classe"
+      },
+      "description": {
+        "title": "Descripció de la classe"
+      }
+    },
+    "fields": {
+      "name": {
+        "label": "Nom de la classe",
+        "placeholder": "Introduïu el nom de la classe"
+      },
+      "academicCourse": {
+        "label": "Curs acadèmic",
+        "placeholder": "Seleccioneu un curs acadèmic"
+      },
+      "academicYear": {
+        "label": "Any / curs escolar",
+        "placeholder": "Aaaa-aaa"
+      },
+      "description": {
+        "label": "Descripció",
+        "placeholder": "Descriviu la vostra classe"
+      }
+    },
+    "buttons": {
+      "cancel": "Cancel·lar",
+      "update": "Classe d'actualització",
+      "delete": "Esborra la classe"
+    }
+  },
+  "ClassroomCreateForm": {
+    "sections": {
+      "information": {
+        "title": "Informació de classe"
+      },
+      "description": {
+        "title": "Descripció de la classe"
+      }
+    },
+    "fields": {
+      "name": {
+        "label": "Nom de la classe",
+        "placeholder": "Introduïu el nom de la classe"
+      },
+      "academicCourse": {
+        "label": "Curs acadèmic",
+        "placeholder": "Seleccioneu un curs acadèmic"
+      },
+      "academicYear": {
+        "label": "Any / curs escolar",
+        "placeholder": "Aaaa-aaa"
+      },
+      "description": {
+        "label": "Descripció",
+        "placeholder": "Descriviu la vostra classe"
+      }
+    },
+    "buttons": {
+      "cancel": "Cancel·lar",
+      "create": "Crea classe"
+    },
+    "alerts": {
+      "nameRequired": "El nom és obligatori i no pot estar buit.",
+      "nameTooLong": "El nom no pot superar els 30 caràcters.",
+      "descriptionRequired": "La descripció és obligatòria i no pot estar buida.",
+      "descriptionTooLong": "La descripció no pot superar els 255 caràcters.",
+      "invalidAcademicYear": "L’any ha de tenir el format “AAAA-AAA”.",
+      "success": "Classe creada amb èxit!",
+      "error": "S'ha produït un error en enviar el formulari."
+    }
+  },
+  "SchoolCreateForm": {
+    "title": "Creeu un nou centre educatiu",
+    "fields": {
+      "name": {
+        "label": "Nom central",
+        "placeholder": "Introduïu el nom del centre"
+      },
+      "community": {
+        "label": "Regió",
+        "placeholder": "Seleccioneu una comunitat"
+      },
+      "city": {
+        "label": "Ciutat",
+        "placeholder": "Entra a la ciutat"
+      },
+      "stages": {
+        "label": "Etapes educatives"
+      }
+    },
+    "buttons": {
+      "create": "Crea Centre",
+      "cancel": "Cancel·lar"
+    },
+    "alerts": {
+      "nameTooLong": "El nom no pot superar els 50 caràcters.",
+      "cityRequired": "La ciutat és obligatòria.",
+      "allFieldsRequired": "Tots els camps són obligatoris.",
+      "success": "Centre creat amb èxit!",
+      "error": "Error en crear el centre. Torneu -ho a provar."
+    }
+  },
+  "TermsPage": {
+    "header": {
+      "title": "Master - Informació legal",
+      "description": "Benvingut a la nostra secció d'informació legal. Aquí trobareu tots els documents i polítiques necessàries que regeixen l’ús de la nostra plataforma. Si us plau, reviseu -los detingudament per entendre els vostres drets i responsabilitats."
+    },
+    "terms": {
+      "cookies": "Política de cookies",
+      "privacy": "Política de privadesa",
+      "termsOfUse": "Condicions d'ús",
+      "licenses": "Llicències",
+      "document": "Document"
+    },
+    "alerts": {
+      "fetchTermsError": "Els termes no es podrien carregar. Torneu -ho a provar més tard.",
+      "checkAdminError": "Error a l’hora de verificar l’estat d’administrador.",
+      "deleteSuccess": "Terme eliminat amb èxit.",
+      "deleteError": "Error eliminant el terme. Torneu -ho a provar més tard.",
+      "fetchContentError": "Error en obtenir el contingut del fitxer.",
+      "addSuccess": "Nou terme afegit amb èxit.",
+      "addError": "Error afegint un terme nou. Torneu -ho a provar més tard.",
+      "tagError": "Error de l'etiqueta: {{error}}",
+      "contentError": "Error de contingut: {{error}}",
+      "pdfContentError": "Error de contingut PDF: {{error}}",
+      "versionError": "Error de la versió: {{error}}",
+      "nameError": "Error en el nom: {{error}}",
+      "noPdf": "No hi ha PDF per a aquest document.",
+      "noMd": "Pengeu un fitxer de marcatge (.md)",
+      "failedToOpenPdf": "El document no es va poder obrir en una fitxa nova. Comproveu la configuració del vostre navegador.",
+      "termTypeError": "Seleccioneu un tipus de terme vàlid.",
+      "noVersion": "Introduïu un número de versió."
+    },
+    "buttons": {
+      "addNewTerm": "Afegiu un nou terme",
+      "viewFullDocument": "Vegeu el document complet",
+      "openDocument": "Document obert",
+      "cancel": "Cancel·lar",
+      "save": "Mantenir",
+      "delete": "Eliminar"
+    },
+    "messages": {
+      "allTermsCreated": "Ja s’han creat tots els tipus de termes. No podeu afegir més termes."
+    },
+    "loading": {
+      "title": "Carregant ...",
+      "description": "Espereu mentre carreguem el contingut."
+    },
+    "noTerms": {
+      "title": "Termes no disponibles",
+      "description": "Els termes i les condicions no es podrien cobrar en aquest moment. Això pot ser degut a:",
+      "reason1": "Els termes s'estan actualitzant",
+      "reason2": "Heu d’iniciar sessió per accedir a aquesta informació",
+      "reason3": "Hi ha un problema temporal amb el servidor",
+      "contactSupport": "Si necessiteu accedir a aquesta informació, inicieu la sessió o poseu -vos en contacte amb el nostre equip d’assistència."
+    },
+    "additionalInfo": {
+      "agreements": "Aquests acords s'apliquen a tots els usuaris que accedeixen a la plataforma, ja sigui mitjançant navegadors web o aplicacions mòbils.",
+      "modifications": "Ens reservem el dret de modificar aquests acords basats en canvis legislatius o necessitats operatives.",
+      "governance": "Aquest Acord es regirà i s’interpretarà d’acord amb la legislació aplicable.",
+      "acceptance": "L’ús de la plataforma implica l’acceptació total de totes les condicions establertes aquí."
+    },
+    "addForm": {
+      "title": "Afegiu un nou terme",
+      "termTypeLabel": "Tipus de terme",
+      "selectTermType": "Seleccioneu un tipus de terme",
+      "markdownContentLabel": "Contingut de marcatge",
+      "uploadMarkdown": "Arrossegueu i allibereu un fitxer .md aquí o feu clic per seleccionar -lo",
+      "pdfContentLabel": "Contingut PDF",
+      "uploadPdf": "Arrossegueu i allibereu un fitxer .pdf aquí o feu clic per seleccionar -lo",
+      "uploadedFile": "Arxiu penjat",
+      "versionLabel": "Versió",
+      "versionPlaceholder": "Per exemple, \"v1.0\"",
+      "availableTermTypes": {
+        "termsOfUse": "Condicions d'ús",
+        "privacyPolicy": "Política de privadesa",
+        "cookiePolicy": "Política de cookies",
+        "licenses": "Llicències"
+      }
+    },
+    "footer": {
+      "lastUpdated": "Última actualització: ",
+      "contactSupport": "Si teniu preguntes sobre els nostres termes o no els podeu accedir, poseu -vos en contacte amb nosaltres."
+    },
+    "deleteModal": {
+      "title": "Confirmeu l'eliminació",
+      "description": "Esteu segur que voleu suprimir aquest document? Aquesta acció no es pot desfer."
+    }
+  },
+  "CreateSchoolPage": {
+    "header": {
+      "title": "Creeu el vostre centre educatiu",
+      "subtitle": "Així que s’uneixen altres professors",
+      "logoAlt": "Logotip mestre"
+    },
+    "alerts": {
+      "mustSignUp": "Heu de registrar -vos per crear un centre educatiu.",
+      "success": "Centre educatiu creat amb èxit!",
+      "failure": "Error en crear el centre educatiu.",
+      "networkError": "S'ha produït un error de xarxa."
+    }
+  },
+  "SignUpPage": {
+    "welcomeMessage": "Benvingut a",
+    "createAccount": "Crea el teu compte",
+    "logoAlt": "Logotip mestre",
+    "videoCaption": "El mestre és aquí per ajudar -vos a les vostres classes",
+    "videoAutoplayError": "Es preveia la reproducció automàtica de vídeo",
+    "alerts": {
+      "usernameTooLong": "El nom d'usuari no pot superar els 30 caràcters",
+      "emailTooLong": "El correu electrònic no pot superar els 255 caràcters",
+      "nameTooLong": "El nom no pot superar els 30 caràcters",
+      "surnameTooLong": "El cognom no pot superar els 30 caràcters",
+      "passwordTooLong": "La contrasenya no pot superar els 128 caràcters",
+      "passwordTooShort": "La contrasenya ha de tenir almenys 8 caràcters",
+      "passwordUppercase": "La contrasenya ha de contenir almenys una majúscula",
+      "passwordLowercase": "La contrasenya ha de contenir almenys una lletra minúscula",
+      "passwordNumber": "La contrasenya ha de contenir almenys un número",
+      "passwordSpecialCharacter": "La contrasenya ha de contenir almenys un caràcter especial",
+      "passwordNoWhitespace": "La contrasenya no pot contenir espais en blanc al principi o al final",
+      "signupSuccess": "Compte creat",
+      "signupFailure": "Error en registrar -se",
+      "networkError": "S'ha produït un error de xarxa"
+    }
+  },
+  "SignInPage": {
+    "welcomeBack": "Benvingut de nou",
+    "to": "a",
+    "logoAlt": "Logotip mestre",
+    "videoCaption": "El mestre és aquí per ajudar -vos a les vostres classes",
+    "videoAutoplayError": "Es preveia la reproducció automàtica de vídeo",
+    "alerts": {
+      "emailOrUsernameTooLong": "El correu o el nom de l'usuari no pot superar els 255 caràcters",
+      "passwordTooLong": "La contrasenya no pot superar els 128 caràcters",
+      "passwordTooShort": "La contrasenya ha de tenir almenys 8 caràcters",
+      "passwordUppercase": "La contrasenya ha de contenir almenys una majúscula",
+      "passwordLowercase": "La contrasenya ha de contenir almenys una lletra minúscula",
+      "passwordNumber": "La contrasenya ha de contenir almenys un número",
+      "passwordSpecialCharacter": "La contrasenya ha de contenir almenys un caràcter especial",
+      "signinSuccess": "Inici de sessió amb èxit",
+      "signinFailure": "Error al registre",
+      "networkError": "S'ha produït un error de xarxa"
+    }
+  },
+  "ProfileEditPage": {
+    "header": {
+      "logoAlt": "Logotip mestre",
+      "greeting": "Hola",
+      "subtitle": "Comproveu i editeu el vostre perfil i dades"
+    },
+    "sections": {
+      "personalInfo": "Informació personal",
+      "schoolInfo": "Informació del Centre Educatiu"
+    },
+    "buttons": {
+      "deleteAccount": "Suprimeix el compte",
+      "cancel": "Cancel·lar",
+      "signOut": "Tanca la sessió",
+      "editProfile": "Editar perfil",
+      "completeProfile": "Perfil complet"
+    },
+    "alerts": {
+      "signoutSuccess": "Heu tancat la sessió correctament.",
+      "signoutError": "Error durant el procés de tancament de la sessió.",
+      "signoutApiError": "Error de l'API durant la sessió.",
+      "fetchSchoolsError": "Error en l'obtenció de centres educatius.",
+      "fetchSchoolError": "Error en l'obtenció del centre educatiu.",
+      "passwordMismatch": "Les contrasenyes no coincideixen.",
+      "invalidEmail": "Format de correu electrònic no valid.",
+      "updateSuccess": "Perfil actualitzat amb èxit.",
+      "updateError": "Error en actualitzar el perfil.",
+      "deleteSuccess": "El compte es va suprimir amb èxit.",
+      "deleteError": "Error eliminant el compte.",
+      "usernameMismatch": "El nom d'usuari no coincideix. Eliminació del compte cancel·lat."
+    },
+    "fields": {
+      "username": "Nom d'usuari",
+      "email": "Correu electrònic",
+      "name": "Nom",
+      "surname": "Nom",
+      "oldPassword": "Contrasenya antiga",
+      "newPassword": "Nova contrasenya",
+      "confirmPassword": "Confirmeu la contrasenya",
+      "city": "Ciutat",
+      "school": "Centre educatiu"
+    },
+    "modals": {
+      "deleteAccount": {
+        "title": "Suprimeix el compte",
+        "message": "Esteu segur que voleu eliminar el vostre compte? Aquesta acció no es pot desfer.",
+        "confirmation": "Escriviu el vostre nom d'usuari per confirmar",
+        "placeholder": "Nom d'usuari"
+      }
+    }
+  },
+  "ProfileCompletePage": {
+    "header": {
+      "logoAlt": "Logotip mestre",
+      "title": "Completa el teu perfil",
+      "subtitle": "Per gaudir plenament del mestre"
+    },
+    "alerts": {
+      "usernameTooLong": "El nom d'usuari no pot superar els 30 caràcters.",
+      "emailTooLong": "El correu electrònic no pot superar els 255 caràcters.",
+      "allFieldsRequired": "Tots els camps són obligatoris.",
+      "fetchSchoolsError": "Error en l'obtenció de centres educatius. Torneu -ho a provar més tard.",
+      "updateSuccess": "Perfil actualitzat amb èxit.",
+      "updateError": "Actualització d'errors: {error}"
+    },
+    "defaultName": "Nom predeterminat",
+    "defaultSurname": "Cognom predeterminat"
+  },
+  "ClassroomsPage": {
+    "header": {
+      "title": "Les meves classes",
+      "subtitle": "Gestioneu les vostres classes"
+    },
+    "noClasses": "No es van trobar classes",
+    "createClassButton": "Crea nova classe +",
+    "openClassButton": "Classe oberta",
+    "editButton": "Edita →",
+    "courseLabel": "Direcció",
+    "yearLabel": "Any",
+    "imageAlt": "Imatge de classe {nom}",
+    "alerts": {
+      "fetchError": "No es van poder obtenir classes. Torneu -ho a provar més tard."
+    }
+  },
+  "ClassroomEditPage": {
+    "header": {
+      "title": "Editar classe",
+      "subtitle": "Actualitzeu la informació de la vostra classe a continuació"
+    },
+    "alerts": {
+      "nameTooLong": "El nom no ha de superar els 30 caràcters.",
+      "courseTooLong": "El curs acadèmic no ha de superar els 30 caràcters.",
+      "descriptionTooLong": "La descripció no ha de superar els 255 caràcters.",
+      "descriptionEmpty": "La descripció no ha d’estar buida.",
+      "invalidYearFormat": "El curs acadèmic ha de tenir el format \"AAAA-AAA\".",
+      "fetchStagesError": "Error en l'obtenció de les etapes educatives.",
+      "networkError": "S'ha produït un error de xarxa.",
+      "fetchClassroomError": "Error en obtenir dades de classe.",
+      "missingClassroomData": "Falten dades de classe.",
+      "updateSuccess": "Classe actualitzada amb èxit.",
+      "updateError": "Error en actualitzar les dades de la classe.",
+      "deleteSuccess": "La classe es va suprimir amb èxit.",
+      "deleteError": "Error d’eliminació de la classe.",
+      "nameMismatch": "El nom de la classe no coincideix. Eliminació cancel·lada."
+    },
+    "deleteModal": {
+      "title": "Esborra la classe",
+      "description": "Esteu segur que voleu eliminar {nom}? Aquesta acció no es pot desfer.",
+      "placeholder": "Introduïu el nom de la classe ({nom})",
+      "cancel": "Cancel·lar",
+      "delete": "Eliminar"
+    }
+  },
+  "ClassroomCreatePage": {
+    "header": {
+      "title": "Crea una nova classe",
+      "subtitle": "Configura la teva aula magistral",
+      "logoAlt": "Logotip mestre"
+    },
+    "alerts": {
+      "authTokenMissing": "Falta el testimoni d’autenticació. Redirigir el registre.",
+      "fetchStagesError": "Error en l'obtenció de les etapes educatives. Torneu -ho a provar més tard.",
+      "networkError": "Error de xarxa en obtenir les etapes educatives.",
+      "success": "Classe creada amb èxit!",
+      "creationFailed": "Error en crear la classe. Torneu -ho a provar."
+    }
+  },
+  "ClassroomPage": {
+    "backToClassrooms": "Vés a les classes",
+    "unnamedClassroom": "Classe sense nom",
+    "studentsTab": "Estudiants",
+    "materialsTab": "Materials",
+    "studentsTitle": "Estudiants",
+    "materialsTitle": "Materials",
+    "cancel": "Cancel·lar",
+    "deleteSelected": "Eliminar ({count})",
+    "deleteSelectedDescription": "Esteu segur que voleu eliminar els estudiants seleccionats?",
+    "confirmDelete": "Confirmeu l'eliminació",
+    "confirmDeleteDescription": "Esteu segur que voleu eliminar ",
+    "delete": "Eliminar",
+    "students": "Estudiants",
+    "materials": "Materials",
+    "addStudent": "Afegir estudiant",
+    "addFirstStudent": "Afegiu el vostre primer estudiant!",
+    "noStudents": "No es van trobar estudiants en aquesta classe.",
+    "alerts": {
+      "fetchClassroomError": "Error en obtenir dades de classe.",
+      "fetchStudentsError": "Error en obtenir els estudiants.",
+      "deleteStudentSuccess": "L’estudiant s’ha suprimit amb èxit.",
+      "deleteStudentError": "Error eliminant l’alumne.",
+      "editStudentSuccess": "Estudiant actualitzat amb èxit.",
+      "editStudentError": "Error en actualitzar l'estudiant.",
+      "addStudentSuccess": "L’estudiant va afegir amb èxit.",
+      "addStudentError": "Error afegint l'estudiant.",
+      "deleteSelectedSuccess": "Els estudiants seleccionats es van suprimir amb èxit.",
+      "deleteSelectedError": "Error eliminant els estudiants seleccionats.",
+      "nameLimitExceeded": "El nom supera el límit de caràcters {límit}.",
+      "surnameLimitExceeded": "El cognom supera el límit de caràcters {límit}."
+    }
+  },
+  "StudentModal": {
+    "editStudent": "Editar estudiant",
+    "addStudent": "Afegir estudiant",
+    "nameLabel": "Nom",
+    "surnameLabel": "Nom",
+    "cancelButton": "Cancel·lar",
+    "saveChanges": "Desa els canvis",
+    "processing": "Processament ..."
+  },
+  "EditMaterialModal": {
+    "editMaterialName": "Edita el nom del material",
+    "editMaterialNameDescription": "Introduïu un nom nou per al material:",
+    "cancel": "Cancel·lar",
+    "save": "Mantenir"
+  },
+  "MaterialPage": {
+    "header": {
+      "title": "Els meus materials",
+      "subtitle": "Comproveu tots els vostres materials d’un cop d’ull."
+    },
+    "createMaterial": "Afegiu material nou",
+    "searchPlaceholder": "Materials de cerca ...",
+    "filterByTags": "Filtre per etiquetes:",
+    "enterDeleteMode": "Esborrar",
+    "exitDeleteMode": "Elimina el mode d'eliminació",
+    "noMaterialsFound": "No es van trobar materials.",
+    "filterByClassroom": "Filtre per classe:",
+    "deleteMaterial": "Eliminar el material",
+    "deleteMaterialConfirmation": "Esteu segur que voleu eliminar",
+    "cancel": "Cancel·lar",
+    "delete": "Eliminar",
+    "manageTags": "Gestionar les etiquetes de",
+    "selectOrCreateTags": "Seleccioneu o creeu etiquetes per associar -les amb aquest material.",
+    "createTag": "Crea una nova etiqueta",
+    "saveChanges": "Desa els canvis",
+    "deleteTag": "Traieu l'etiqueta",
+    "editTag": "Gestionar les etiquetes",
+    "editName": "Editar el nom",
+    "downloadFile": "Descarregueu el fitxer",
+    "creating": "Creació ...",
+    "alerts": {
+      "createdSuccess": "Material creat amb correctament!",
+      "deleteSelectedSuccess": "Els materials seleccionats correctament eliminats.",
+      "deleteSelectedError": "Error en eliminació de materials seleccionats. Torneu -ho a provar.",
+      "editSuccess": "Nom actualitzat de material actualitzat.",
+      "editError": "Error en actualitzar el nom del material. Torneu -ho a provar.",
+      "deleteSuccess": "El material es va suprimir amb èxit.",
+      "deleteError": "Error eliminant el material. Torneu -ho a provar.",
+      "fetchMaterialsError": "Error en l'obtenció dels materials. Torneu -ho a provar més tard.",
+      "fetchTagsError": "Error en l'obtenció d'etiquetes. Torneu -ho a provar més tard.",
+      "fetchClassroomsError": "Error en obtenir classes. Torneu -ho a provar més tard.",
+      "tagCreateSuccess": "Etiqueta creada correctament.",
+      "tagLimit": "Heu arribat al límit màxim de 15 etiquetes.",
+      "tagCreateError": "Error en crear l'etiqueta. Torneu -ho a provar.",
+      "tagUpdateSuccess": "Etiquetes actualitzades correctament.",
+      "tagUpdateError": "Error en actualitzar les etiquetes. Torneu -ho a provar.",
+      "tagDeleteSuccess": "Etiqueta eliminada correctament.",
+      "tagDeleteError": "Error eliminant l’etiqueta. Torneu -ho a provar."
+    }
+  }
+}
