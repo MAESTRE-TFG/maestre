@@ -8,10 +8,12 @@ import { cn } from "@/lib/utils";
 import { useState, useEffect, useRef } from "react";
 import Alert from "@/components/ui/Alert";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { useTranslations } from "next-intl";
 
 export default function SignUp() {
   const router = useRouter();
   const { theme } = useTheme();
+  const t = useTranslations("SignUpPage");
   const [alert, setAlert] = useState(null);
   const videoRef = useRef(null);
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");
@@ -30,66 +32,61 @@ export default function SignUp() {
 
   useEffect(() => {
     if (videoRef.current) {
-      videoRef.current.muted = true; // Ensure the video is muted
+      videoRef.current.muted = true;
       videoRef.current.play().catch((error) => {
-        console.log("Video autoplay prevented:", error);
+        console.log(t("videoAutoplayError"), error);
       });
     }
-  }, [isLargeScreen]);
+  }, [isLargeScreen, t]);
 
   const handleSubmit = async (formData) => {
     // Field length restrictions
     if (formData.username && formData.username.length > 30) {
-      showAlert("warning", "Username cannot exceed 30 characters");
+      showAlert("warning", t("alerts.usernameTooLong"));
       return;
     }
     if (formData.email && formData.email.length > 255) {
-      showAlert("warning", "Email cannot exceed 255 characters");
+      showAlert("warning", t("alerts.emailTooLong"));
       return;
     }
     if (formData.name && formData.name.length > 30) {
-      showAlert("warning", "First name cannot exceed 30 characters");
+      showAlert("warning", t("alerts.nameTooLong"));
       return;
     }
     if (formData.surname && formData.surname.length > 30) {
-      showAlert("warning", "Last name cannot exceed 30 characters");
+      showAlert("warning", t("alerts.surnameTooLong"));
       return;
     }
     if (formData.school && typeof formData.school !== "string") {
       showAlert("warning", "Invalid school selection");
       return;
     }
-     // Field length and uniqueness restrictions
-     if (formData.emailOrUsername && formData.emailOrUsername.length > 255) {
-      showAlert("warning", "Email or username cannot exceed 255 characters");
-      return;
-    }
     if (formData.password && formData.password.length > 128) {
-      showAlert("warning", "Password cannot exceed 128 characters");
+      showAlert("warning", t("alerts.passwordTooLong"));
       return;
     }
     if (formData.password && formData.password.length < 8) {
-      showAlert("warning", "Password must be at least 8 characters long");
+      showAlert("warning", t("alerts.passwordTooShort"));
       return;
     }
     if (formData.password && !/[A-Z]/.test(formData.password)) {
-      showAlert("warning", "Password must contain at least one uppercase letter");
+      showAlert("warning", t("alerts.passwordUppercase"));
       return;
     }
     if (formData.password && !/[a-z]/.test(formData.password)) {
-      showAlert("warning", "Password must contain at least one lowercase letter");
+      showAlert("warning", t("alerts.passwordLowercase"));
       return;
     }
     if (formData.password && !/[0-9]/.test(formData.password)) {
-      showAlert("warning", "Password must contain at least one number");
+      showAlert("warning", t("alerts.passwordNumber"));
       return;
     }
     if (formData.password && !/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
-      showAlert("warning", "Password must contain at least one special character");
+      showAlert("warning", t("alerts.passwordSpecialCharacter"));
       return;
     }
     if (formData.password && !/^[^\s]+$/.test(formData.password)) {
-      showAlert("warning", "Password cannot contain leading or trailing whitespace");
+      showAlert("warning", t("alerts.passwordNoWhitespace"));
       return;
     }
 
@@ -108,13 +105,13 @@ export default function SignUp() {
         const user = JSON.stringify(data);
         localStorage.setItem("user", user);
         router.push("/");
-        showAlert("success", "Account created successfully");
+        showAlert("success", t("alerts.signupSuccess"));
       } else {
         const data = await response.json();
-        showAlert("error", data.detail || "Registration failed");
+        showAlert("error", data.detail || t("alerts.signupFailure"));
       }
     } catch (err) {
-      showAlert("error", "Network error occurred");
+      showAlert("error", t("alerts.networkError"));
     }
   };
 
@@ -158,7 +155,7 @@ export default function SignUp() {
           {/* Video caption/branding */}
           <div className="absolute bottom-8 left-8 z-10 max-w-lg">
             <h2 className="text-3xl font-bold text-white drop-shadow-lg">
-              Maestrito is here to help with all your creative needs
+              {t("videoCaption")}
             </h2>
           </div>
         </div>
@@ -184,7 +181,7 @@ export default function SignUp() {
                   ? "/static/logos/maestre_logo_white_transparent.webp"
                   : "/static/logos/maestre_logo_blue_transparent.webp"
               }
-              alt="MAESTRE Logo"
+              alt={t("logoAlt")}
               className="w-28 h-28 drop-shadow-lg"
             />
             <div
@@ -196,7 +193,7 @@ export default function SignUp() {
                   theme === "dark" ? "text-white" : "text-gray-800"
                 )}
               >
-                Welcome to{" "}
+                {t("welcomeMessage")}{" "}
                 <span
                   style={{
                     fontFamily: "'Alfa Slab One', sans-serif",
@@ -211,7 +208,7 @@ export default function SignUp() {
                   theme === "dark" ? "text-gray-300" : "text-gray-600"
                 )}
               >
-                Create your account
+                {t("createAccount")}
               </p>
             </div>
           </div>

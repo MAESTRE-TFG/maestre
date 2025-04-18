@@ -15,13 +15,15 @@ import {
   IconAlertCircle,
   IconTrash,
   IconPlus,
-  IconCheck,
   IconX,
 } from "@tabler/icons-react";
 import axios from "axios";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
+import { useTranslations } from "next-intl";
+import AddTermModal from "@/components/term-add-modal";
+
 
 const POLICY_ORDER = {
   cookies: 1,
@@ -31,11 +33,10 @@ const POLICY_ORDER = {
 };
 
 export default function TermsPage() {
+  const t = useTranslations("TermsPage");
   const [terms, setTerms] = useState([]);
   const [loading, setLoading] = useState(true);
   const { theme } = useTheme();
-
-  const [alerts, setAlerts] = useState([]); // State to manage alerts
 
   const [noTermsFound, setNoTermsFound] = useState(false);
 
@@ -48,12 +49,18 @@ export default function TermsPage() {
   const [newTermVersion, setNewTermVersion] = useState("");
   const [uploadedMdFileName, setUploadedMdFileName] = useState(""); // Track uploaded markdown file name
   const [uploadedPdfFileName, setUploadedPdfFileName] = useState(""); // Track uploaded PDF file name
-  const [pdfFile, setPdfFile] = useState(null); // Store the actual PDF file object
+  const [pdfFile, setPdfFile] = useState(null);
 
   const [activeTermId, setActiveTermId] = useState(null);
 
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [termToDelete, setTermToDelete] = useState(null);
+  const [alert, setAlert] = useState(null);
+
+  const showAlert = (type, message) => {
+    setAlert({ type, message });
+    setTimeout(() => setAlert(null), 5000);
+  };
 
   const handleFileUpload = (file, type) => {
     if (file) {
@@ -69,14 +76,6 @@ export default function TermsPage() {
         setPdfFile(file);
       }
     }
-  };
-
-  const addAlert = (type, message) => {
-    const id = Date.now();
-    setAlerts((prev) => [...prev, { id, type, message }]);
-    setTimeout(() => {
-      setAlerts((prev) => prev.filter((alert) => alert.id !== id));
-    }, 5000);
   };
 
   // Function to fetch terms data
@@ -106,7 +105,7 @@ export default function TermsPage() {
           setNoTermsFound(true);
         }
       } catch (error) {
-        addAlert("error", "Failed to load terms. Please try again later.");
+        showAlert("error", t("alerts.fetchTermsError")); 
         setNoTermsFound(true);
       } finally {
         setLoading(false);
@@ -140,14 +139,14 @@ export default function TermsPage() {
           setIsAdmin(false);
           setAdminUsername("");
         } else {
-          addAlert("error", "Error checking admin status.");
+          showAlert("error", t("alerts.checkAdminError")); 
         }
       }
     };
 
     fetchTerms();
     checkAdminStatus();
-  }, []);
+  }, [t]);
 
   // Get icon component based on term tag
   const getIconForTag = (tag) => {
@@ -169,15 +168,15 @@ export default function TermsPage() {
   const getTermTitle = (tag) => {
     switch (tag) {
       case "cookies":
-        return "Cookie Policy";
+        return t("terms.cookies"); 
       case "privacy":
-        return "Privacy Policy";
+        return t("terms.privacy"); 
       case "terms":
-        return "Terms of Use";
+        return t("terms.termsOfUse"); 
       case "license":
-        return "Licenses";
+        return t("terms.licenses"); 
       default:
-        return "Document";
+        return t("terms.document"); 
     }
   };
 
@@ -185,10 +184,10 @@ export default function TermsPage() {
   const getAvailableTermTypes = () => {
     const existingTags = terms.map((term) => term.tag);
     const allTypes = [
-      { value: "cookies", label: "Cookie Policy" },
-      { value: "privacy", label: "Privacy Policy" },
-      { value: "terms", label: "Terms of Use" },
-      { value: "license", label: "Licenses" },
+      { value: "cookies", label: t("terms.cookies") }, 
+      { value: "privacy", label: t("terms.privacy") }, 
+      { value: "terms", label: t("terms.termsOfUse") }, 
+      { value: "license", label: t("terms.licenses") }, 
     ];
 
     // Show only types that don't exist yet
@@ -244,35 +243,31 @@ export default function TermsPage() {
       // Close the modal
       setShowDeleteModal(false);
       setTermToDelete(null);
-      addAlert("success", "Term deleted successfully.");
+      showAlert("success", t("alerts.deleteSuccess")); 
     } catch (error) {
-      addAlert("error", "Failed to delete term. Please try again later.");
+      showAlert("error", t("alerts.deleteError")); 
     }
   };
 
   const handleAddTerm = async () => {
     // Validate form
     if (!newTermType) {
-      setModalError("Please select a term type");
-      handleModalErrorFade();
+      showAlert("error", t("alerts.termTypeError")); 
       return;
     }
 
     if (!uploadedMdFileName) {
-      setModalError("Please upload a markdown (.md) file");
-      handleModalErrorFade();
+      showAlert("error", t("alerts.noMd")); 
       return;
     }
 
     if (!uploadedPdfFileName || !pdfFile) {
-      setModalError("Please upload a PDF file");
-      handleModalErrorFade();
+      showAlert("error", t("alerts.noPdf")); 
       return;
     }
 
     if (!newTermVersion) {
-      setModalError("Please enter a version number");
-      handleModalErrorFade();
+      showAlert("error", t("alerts.noVersion")); 
       return;
     }
 
@@ -293,8 +288,7 @@ export default function TermsPage() {
       if (pdfFile) {
         formData.append("pdf_content", pdfFile, `${newTermType}.pdf`);
       } else {
-        setModalError("PDF file is missing. Please upload again.");
-        handleModalErrorFade();
+        showAlert("error", t("alerts.noPdf")); 
         return;
       }
 
@@ -328,28 +322,28 @@ export default function TermsPage() {
       setUploadedPdfFileName(""); // Reset PDF file name
       setPdfFile(null); // Reset the PDF file object
       setShowAddForm(false);
-      addAlert("success", "New term added successfully.");
+      showAlert("success", t("alerts.addSuccess"));
     } catch (error) {
-      let errorMessage = "Failed to add term. Please try again later.";
+      let errorMessage = t("alerts.addError");
 
       // Check for specific error messages from API
       if (error.response && error.response.data) {
         if (error.response.data.tag) {
-          errorMessage = `Tag Error: ${error.response.data.tag[0]}`;
+          errorMessage = t("alerts.tagError", { error: error.response.data.tag[0] });
         } else if (error.response.data.content) {
-          errorMessage = `Content Error: ${error.response.data.content[0]}`;
+          errorMessage = t("alerts.contentError", { error: error.response.data.content[0] });
         } else if (error.response.data.pdf_content) {
-          errorMessage = `PDF Content Error: ${error.response.data.pdf_content[0]}`;
+          errorMessage = t("alerts.pdfContentError", { error: error.response.data.pdf_content[0] });
         } else if (error.response.data.version) {
-          errorMessage = `Version Error: ${error.response.data.version[0]}`;
+          errorMessage = t("alerts.versionError", { error: error.response.data.version[0] });
         } else if (error.response.data.name) {
-          errorMessage = `Name Error: ${error.response.data.name[0]}`;
+          errorMessage = t("alerts.nameError", { error: error.response.data.name[0] });
         } else if (typeof error.response.data === "string") {
           errorMessage = error.response.data;
         }
       }
 
-      addAlert("error", errorMessage);
+      showAlert("error", errorMessage);
     }
   };
 
@@ -359,48 +353,48 @@ export default function TermsPage() {
       const response = await axios.get(url);
       return response.data;
     } catch (error) {
-      addAlert("error", "Error fetching file content.");
+      showAlert("error", t("alerts.fetchContentError"));
       return "";
     }
   };
 
   // -------------------- Main Render --------------------
   return (
-    <>
-      {alerts.map((alert) => (
-        <Alert
-          key={alert.id}
-          type={alert.type}
-          message={alert.message}
-          onClose={() =>
-            setAlerts((prev) => prev.filter((a) => a.id !== alert.id))
-          }
-        />
-      ))}
 
       <SidebarDemo
         ContentComponent={() => (
-          <div className="container mx-auto py-16 px-4 sm:px-6 lg:px-8 max-w-7xl">
+          <div className="min-h-screen w-screen bg-gradient-to-br from-blue-500/10 to-purple-500/5">
 
-                  <div className="w-full text-center mb-12">
-                    <h1
-                    className={`text-4xl font-bold font-alfa-slab-one mb-4 ${
-                      theme === "dark" ? "text-white" : "text-black"
-                    }`}
-                    >
-                    MAESTRE - Legal Information
+            <div className="relative mx-auto max-w-7xl w-full px-6 py-8">
+              {/* Floating alert */}
+              {alert && (
+                <div className="fixed top-4 right-4 z-50 max-w-md">
+                  <Alert
+                    type={alert.type}
+                    message={alert.message}
+                    onClose={() => setAlert(null)}
+                  />
+                </div>
+              )}
+
+                {/* Header Section with Logo */}
+                <br />
+                <div className="w-full max-w-4xl flex items-center mb-8 justify-center space-x-6">
+                  <img
+                    src={theme === "dark" ? "/static/logos/maestre_logo_white_transparent.webp" : "/static/logos/maestre_logo_blue_transparent.webp"}
+                    alt="MAESTRE Logo"
+                    className="w-20 h-20 drop-shadow-lg"
+                  />
+                  <div className="text-center">
+                    <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                      {t("header.title")}
                     </h1>
-                    <p
-                    className={`text-xl ${
-                      theme === "dark" ? "text-gray-300" : "text-gray-700"
-                    }`}
-                    >
-                    Welcome to our legal information section. Here you'll find all the
-                    necessary documents and policies that govern the use of our
-                    platform. Please review them carefully to understand your rights
-                    and responsibilities.
+                    <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                      {t("header.description")}  <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>MAESTRE</span>
                     </p>
                   </div>
+                </div>
+                  
 
                   {/* Button to add term if you're Admin */}
                   {isAdmin && (!allTermsCreated || noTermsFound) && (
@@ -413,7 +407,7 @@ export default function TermsPage() {
                       )}
                     >
                       <IconPlus className="h-5 w-5" />
-                      Add New Term
+                      {t("buttons.addNewTerm")}
                     </button>
                     </div>
                   )}
@@ -422,7 +416,7 @@ export default function TermsPage() {
             {isAdmin && allTermsCreated && (
               <div className="mb-10 text-center">
                 <p className="text-gray-600 dark:text-gray-300">
-                  All term types have already been created. You cannot add more terms.
+                  {t("messages.allTermsCreated")}
                 </p>
               </div>
             )}
@@ -431,14 +425,14 @@ export default function TermsPage() {
               // -------- Loading skeleton --------
               <div className="container mx-auto py-12">
                 <h2 className="text-2xl font-semibold text-center mb-4 text-foreground">
-                  Loading...
+                  {t("loading.title")}
                 </h2>
                 <BentoGrid className="max-w-6xl mx-auto">
                   {[1, 2, 3, 4].map((item) => (
                     <BentoGridItem
                       key={item}
-                      title="Loading..."
-                      description="Please wait while we load the content."
+                      title={t("loading.title")}
+                      description={t("loading.description")}
                       icon={
                         <IconRefresh className="h-4 w-4 text-neutral-500 animate-spin" />
                       }
@@ -452,20 +446,18 @@ export default function TermsPage() {
               <div className="max-w-2xl mx-auto text-center p-8 bg-gray-50 dark:bg-gray-800 rounded-xl shadow-sm">
                 <IconAlertCircle className="h-12 w-12 text-amber-500 mx-auto mb-4" />
                 <h2 className="text-xl font-semibold mb-2 text-foreground">
-                  Terms Not Available
+                  {t("noTerms.title")}
                 </h2>
                 <p className="text-muted-foreground mb-4">
-                  The terms and conditions could not be loaded at this time. This
-                  may be because:
+                  {t("noTerms.description")}
                 </p>
                 <ul className="text-left text-muted-foreground mb-4 pl-8 list-disc">
-                  <li>The terms are being updated</li>
-                  <li>You need to log in to access this information</li>
-                  <li>There is a temporary server issue</li>
+                  <li>{t("noTerms.reason1")}</li>
+                  <li>{t("noTerms.reason2")}</li>
+                  <li>{t("noTerms.reason3")}</li>
                 </ul>
                 <p className="text-sm text-muted-foreground">
-                  If you need to access this information, please log in or
-                  contact our support team.
+                  {t("noTerms.contactSupport")}
                 </p>
               </div>
             ) : (
@@ -530,7 +522,7 @@ export default function TermsPage() {
                                 onClick={() => setActiveTermId(term.id)}
                                 className="px-3 py-1.5 bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 rounded-md text-xs font-medium hover:bg-blue-100 dark:hover:bg-blue-900/50 transition-colors"
                               >
-                                View full document
+                                {t("buttons.viewFullDocument")} 
                               </button>
                               {isAdmin && (
                                 <div className="flex space-x-2">
@@ -547,13 +539,13 @@ export default function TermsPage() {
                         }
                         icon={term.icon}
                         className={
-                          term.title === "Terms of Use"
+                          term.title === t("terms.termsOfUse")
                             ? "md:col-span-2"
-                            : term.title === "Cookie Policy"
+                            : term.title === t("terms.cookies")
                             ? "md:col-span-1"
-                            : term.title === "Privacy Policy"
+                            : term.title === t("terms.privacy")
                             ? "md:col-span-1"
-                            : term.title === "Licenses"
+                            : term.title === t("terms.licenses")
                             ? "md:col-span-2"
                             : ""
                         }
@@ -567,20 +559,16 @@ export default function TermsPage() {
                   <br />
                   <br />
                   <p className="text-gray-600 dark:text-gray-300">
-                    These agreements apply to all users who access the FisioFind
-                    platform, whether through web browsers or mobile applications.
+                    {t("additionalInfo.agreements")}
                   </p>
                   <p className="text-gray-600 dark:text-gray-300">
-                    Maestre reserves the right to modify these agreements based on
-                    legislative changes or operational needs.
+                    {t("additionalInfo.modifications")}
                   </p>
                   <p className="text-gray-600 dark:text-gray-300">
-                    This agreement will be governed and interpreted in accordance
-                    with Spanish legislation.
+                    {t("additionalInfo.governance")}
                   </p>
                   <p className="text-gray-600 dark:text-gray-300">
-                    Use of the platform implies full acceptance of all conditions
-                    set forth herein.
+                    {t("additionalInfo.acceptance")}
                   </p>
                   <br />
                   <hr className="my-8 border-gray-200 dark:border-gray-700" />
@@ -654,12 +642,12 @@ export default function TermsPage() {
                                 onClick={() => {
                                   const activeTerm = terms.find((term) => term.id === activeTermId);
                                   if (!activeTerm || !activeTerm.pdf_content) {
-                                    alert("No PDF exists for this document.");
+                                    alert(t("alerts.noPdf"));
                                     return;
                                   }
                                   const newTab = window.open(activeTerm.pdf_content, "_blank");
                                   if (!newTab) {
-                                    alert("Failed to open the document in a new tab. Please check your browser settings.");
+                                    alert(t("alerts.failedToOpenPdf"));
                                   }
                                 }}
                                 className={`
@@ -681,7 +669,7 @@ export default function TermsPage() {
                                     d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
                                   />
                                 </svg>
-                                Open document
+                                {t("buttons.openDocument")}
                               </button>
                             </div>
                           </>
@@ -693,164 +681,35 @@ export default function TermsPage() {
               </>
             )}
 
-            {/* This form is now rendered regardless of the noTermsFound state,
-                and is controlled by the showAddForm state variable */}
+            {/* Add Term Form */}
             {showAddForm && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <div
-                  className={`
-                  p-6 rounded-lg shadow-lg max-w-2xl w-full relative
-                  ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"}
-                `}
-                >
-
-                  <h2 className="text-xl font-bold mb-4">Add New Term</h2>
-
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium mb-1">
-                      Term Type
-                    </label>
-                    <select
-                      value={newTermType}
-                      onChange={(e) => setNewTermType(e.target.value)}
-                      className={`
-                      w-full p-2 border rounded-md
-                      ${theme === "dark" 
-                        ? "bg-gray-700 border-gray-600 text-white" 
-                        : "bg-white border-gray-300 text-black"}
-                    `}
-                    >
-                      <option value="">Select a term type</option>
-                      {getAvailableTermTypes().map((type) => (
-                        <option key={type.value} value={type.value}>
-                          {type.label}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium mb-1">
-                      Markdown Content
-                    </label>
-                    <label
-                      htmlFor="md-file-upload"
-                      className={`
-                      flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer
-                      ${theme === "dark" 
-                        ? "bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600" 
-                        : "bg-gray-50 border-gray-300 text-gray-500 hover:bg-gray-100"}
-                    `}
-                    >
-                      <input
-                        id="md-file-upload"
-                        type="file"
-                        accept=".md"
-                        onChange={(e) => handleFileUpload(e.target.files[0], "md")}
-                        className="hidden"
-                      />
-                      <div className="text-center">
-                        <IconFileText className="h-8 w-8 mx-auto" />
-                        <p className="mt-2 text-sm font-medium">
-                          Drag and drop a .md file here, or click to select
-                        </p>
-                      </div>
-                    </label>
-                    {uploadedMdFileName && (
-                      <p className="mt-2 text-sm text-blue-500 dark:text-blue-400">
-                        Uploaded file: <span className="font-medium">{uploadedMdFileName}</span>
-                      </p>
-                    )}
-                  </div>
-
-                  <div className="mb-4">
-                    <label className="block text-sm font-medium mb-1">
-                      PDF Content
-                    </label>
-                    <label
-                      htmlFor="pdf-file-upload"
-                      className={`
-                      flex items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer
-                      ${theme === "dark" 
-                        ? "bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600" 
-                        : "bg-gray-50 border-gray-300 text-gray-500 hover:bg-gray-100"}
-                    `}
-                        >
-                          <input
-                            id="pdf-file-upload"
-                            type="file"
-                            accept=".pdf"
-                            onChange={(e) => handleFileUpload(e.target.files[0], "pdf")}
-                            className="hidden"
-                          />
-                          <div className="text-center">
-                            <IconFileText className="h-8 w-8 mx-auto" />
-                            <p className="mt-2 text-sm font-medium">
-                              Drag and drop a .pdf file here, or click to select
-                            </p>
-                          </div>
-                        </label>
-                        {uploadedPdfFileName && (
-                          <p className="mt-2 text-sm text-blue-500 dark:text-blue-400">
-                            Uploaded file: <span className="font-medium">{uploadedPdfFileName}</span>
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="mb-4">
-                        <label className="block text-sm font-medium mb-1">
-                          Version
-                        </label>
-                        <input
-                          type="text"
-                          className={`
-                        w-full p-2 border rounded-md
-                        ${theme === "dark" 
-                          ? "bg-gray-700 border-gray-600 text-white" 
-                          : "bg-white border-gray-300 text-black"}
-                      `}
-                          placeholder='E.g. "v1.0"'
-                          value={newTermVersion}
-                          onChange={(e) => setNewTermVersion(e.target.value)}
-                        />
-                      </div>
-
-                      <div className="flex justify-end space-x-2">
-                        <button
-                          onClick={() => {
-                            setShowAddForm(false);
-                            setUploadedMdFileName(""); // Reset markdown file name on cancel
-                            setUploadedPdfFileName(""); // Reset PDF file name on cancel
-                          }}
-                          className={cn(
-                            "btn btn-md btn-secondary",
-                            theme === "dark" ? "dark:btn-secondary" : ""
-                          )}
-                        >
-                          <IconX className="h-5 w-5" />
-                          Cancel
-                        </button>
-                        <button
-                          onClick={handleAddTerm}
-                          className={cn(
-                            "btn btn-md btn-success",
-                            theme === "dark" ? "dark:btn-success" : ""
-                          )}
-                        >
-                          <IconCheck className="h-5 w-5" />
-                          Save
-                        </button>
-                      </div>
-                    </div>
-                  </div>
-                )}
+              <AddTermModal
+                showAddForm={showAddForm}
+                setShowAddForm={setShowAddForm}
+                newTermType={newTermType}
+                setNewTermType={setNewTermType}
+                newTermContent={newTermContent}
+                setNewTermContent={setNewTermContent}
+                newTermVersion={newTermVersion}
+                setNewTermVersion={setNewTermVersion}
+                uploadedMdFileName={uploadedMdFileName}
+                setUploadedMdFileName={setUploadedMdFileName}
+                uploadedPdfFileName={uploadedPdfFileName}
+                setUploadedPdfFileName={setUploadedPdfFileName}
+                pdfFile={pdfFile}
+                setPdfFile={setPdfFile}
+                handleFileUpload={handleFileUpload}
+                handleAddTerm={handleAddTerm}
+                alert={alert}
+                setAlert={setAlert}
+                t={t}
+                theme={theme}
+              />
+            )}
 
                 <div className="text-center mt-8 text-sm text-gray-500 dark:text-gray-400">
-                  <p>Last updated: {new Date().toLocaleDateString()}</p>
-                  <p>
-                    If you have any questions about our terms or cannot access
-                    them, please contact us.
-                  </p>
+                  <p>{t("footer.lastUpdated")} {new Date().toLocaleDateString()} </p>
+                  <p>{t("footer.contactSupport")} </p>
                 </div>
 
             {showDeleteModal && (
@@ -861,15 +720,14 @@ export default function TermsPage() {
                   ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"}
                 `}
                 >
-                  <h3 className="text-xl font-bold mb-4">Confirm Deletion</h3>
+                  <h3 className="text-xl font-bold mb-4">{t("deleteModal.title")} </h3>
                   <p
                     className={`
                     mb-6
                     ${theme === "dark" ? "text-gray-300" : "text-gray-600"}
                   `}
                   >
-                    Are you sure you want to delete this document? This action
-                    cannot be undone.
+                    {t("deleteModal.description")} 
                   </p>
                   <div className="flex justify-end space-x-3">
                     <button
@@ -884,7 +742,7 @@ export default function TermsPage() {
                           : "bg-gray-100 text-gray-600 hover:bg-gray-200"}
                       `}
                     >
-                      Cancel
+                      {t("buttons.cancel")} 
                     </button>
                     <button
                       onClick={confirmDelete}
@@ -895,15 +753,15 @@ export default function TermsPage() {
                           : "bg-red-500 text-white hover:bg-red-600"}
                       `}
                     >
-                      Delete
+                      {t("buttons.delete")} 
                     </button>
                   </div>
                 </div>
               </div>
-            )}
+            )} 
+            </div>
           </div>
         )}
       />
-    </>
   );
 }

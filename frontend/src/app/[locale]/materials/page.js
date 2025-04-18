@@ -6,13 +6,17 @@ import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
-import Link from 'next/link';
 import Alert from "@/components/ui/Alert";
 import { IconBooks} from "@tabler/icons-react";
 import MaterialCreateModal from "@/components/material-create-modal";
+import EditMaterialModal from "@/components/material-edit-modal";
+import { useTranslations } from "next-intl";
 
 const MaterialsList = () => {
   const { theme } = useTheme();
+
+  const t = useTranslations("MaterialPage");
+
   const [materials, setMaterials] = useState([]);
   const [tags, setTags] = useState([]);
   const [classrooms, setClassrooms] = useState([]);
@@ -27,7 +31,7 @@ const MaterialsList = () => {
 
   const handleMaterialCreate = (newMaterial) => {
     setMaterials(prevMaterials => [newMaterial, ...prevMaterials]);
-    addAlert("success", "Material created successfully!");
+    addAlert("success", t("alerts.createdSuccess"));
   };
 
   const TAG_COLORS = [
@@ -95,10 +99,10 @@ const MaterialsList = () => {
       setMaterials((prevMaterials) =>
         prevMaterials.filter((material) => !selectedMaterials.includes(material.id))
       );
-      addAlert("success", "Selected materials deleted successfully.");
+      addAlert("success", t("alerts.deleteSelectedSuccess"));
       setSelectedMaterials([]);
     } catch (error) {
-      addAlert("error", "Error deleting selected materials. Please try again.");
+      addAlert("error", t("alerts.deleteSelectedError"));
     } finally {
       setShowDeleteSelectedModal(false);
     }
@@ -142,9 +146,9 @@ const MaterialsList = () => {
       setMaterials(prevMaterials =>
         prevMaterials.map(m => m.id === fileToEdit.id ? { ...m, name: updatedFileName } : m)
       );
-      addAlert("success", "Material name updated successfully.");
+      addAlert("success", t("alerts.editSuccess"));
     } catch (error) {
-      addAlert("error", "Failed to update material name. Please try again.");
+      addAlert("error", t("alerts.editError"));
     } finally {
       setShowEditModal(false);
       setFileToEdit(null);
@@ -167,9 +171,9 @@ const MaterialsList = () => {
 
       // Remove the deleted material from the materials state
       setMaterials(prevMaterials => prevMaterials.filter(m => m.id !== fileToDelete.id));
-      addAlert("success", "Material deleted successfully.");
+      addAlert("success", t("alerts.deleteSuccess"));
     } catch (error) {
-      addAlert("error", "Failed to delete material. Please try again.");
+      addAlert("error", t("alerts.deleteError"));
     } finally {
       setShowDeleteModal(false);
       setFileToDelete(null);
@@ -204,7 +208,7 @@ const MaterialsList = () => {
         classroom: material.classroom || null
       })));
     } catch (error) {
-      const errorMessage = error.response?.data?.error || 'Failed to fetch materials. Please try again later.';
+      const errorMessage = error.response?.data?.error || t("fetchMaterialsError");
       addAlert("error", errorMessage);
     } finally {
       setIsLoading(false);
@@ -228,7 +232,7 @@ const MaterialsList = () => {
       });
       setTags(response.data);
     } catch (error) {
-      addAlert("error", "Failed to fetch tags. Please try again later.");
+      addAlert("error", t("alerts.fetchTagsError"));
     }
   };
 
@@ -241,7 +245,7 @@ const MaterialsList = () => {
       });
       setClassrooms(response.data);
     } catch (error) {
-      addAlert("error", "Failed to fetch classrooms. Please try again later.");
+      addAlert("error", t("alerts.fetchClassroomsError"));
     }
   };
 
@@ -275,12 +279,12 @@ const MaterialsList = () => {
 
       setNewTagName('');
       setSelectedColor(TAG_COLORS[0].value);
-      addAlert("success", "Tag created successfully.");
+      addAlert("success", t("alerts.tagCreateSuccess"));
     } catch (error) {
       if (error.response?.data?.includes('15 tags')) {
-        addAlert("error", "You have reached the maximum limit of 15 tags.");
+        addAlert("error", t("alerts.tagLimit"));
       } else {
-        addAlert("error", "Error creating tag. Please try again.");
+        addAlert("error", t("alerts.tagCreateError"));
       }
     } finally {
       setIsSubmitting(false);
@@ -322,9 +326,9 @@ const MaterialsList = () => {
       );
 
       setShowEditTagsModal(false);
-      addAlert("success", "Tags updated successfully.");
+      addAlert("success", t("alerts.tagUpdateSuccess"));
     } catch (error) {
-      addAlert("error", "Failed to update tags. Please try again.");
+      addAlert("error", t("alerts.tagUpdateError"));
     }
   };
 
@@ -347,9 +351,9 @@ const MaterialsList = () => {
         fetchTags(),
         fetchMaterials()
       ]);
-      addAlert("success", "Tag deleted successfully.");
+      addAlert("success", t("alerts.tagDeleteSuccess"));
     } catch (error) {
-      addAlert("error", "Failed to delete tag. Please try again.");
+      addAlert("error", t("alerts.tagDeleteError"));
     }
   };
 
@@ -396,10 +400,10 @@ const MaterialsList = () => {
           />
           <div className="text-center">
             <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-              My Materials
+              {t("header.title")}
             </h1>
             <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-              See all your uploaded materials at a glance.
+              {t("header.subtitle")}
             </p>
           </div>
         </div>
@@ -419,7 +423,7 @@ const MaterialsList = () => {
               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                 <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
               </svg>
-              Add New Material
+              {t("createMaterial")}
             </button>
           </div>
         )}
@@ -453,7 +457,7 @@ const MaterialsList = () => {
                       ? "bg-gray-800 border-gray-700 text-white focus:bg-gray-900" 
                       : "bg-white border-gray-200 focus:bg-white shadow-md focus:shadow-lg"
                   )}
-                  placeholder="Search materials..."
+                  placeholder={t("searchPlaceholder")}
                 />
                 <svg className="absolute left-5 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <circle cx="11" cy="11" r="8"></circle>
@@ -467,7 +471,7 @@ const MaterialsList = () => {
               <div className="flex flex-wrap gap-3 items-center mb-4">
                 <div className="flex items-center gap-2">
                   <span className={cn("font-medium text-lg", theme === "dark" ? "text-white" : "text-gray-800")}>
-                    Filter by Tags:
+                    {t("filterByTags")}
                   </span>
                   <button
                     onClick={() => setDeleteMode(!deleteMode)}
@@ -479,7 +483,7 @@ const MaterialsList = () => {
                           ? "bg-gray-700 text-gray-300 hover:bg-gray-600" 
                           : "bg-gray-200 text-gray-600 hover:bg-gray-300"
                     )}
-                    title={deleteMode ? "Exit Delete Mode" : "Enter Delete Mode"}
+                    title={deleteMode ? t("exitDeleteMode") : t("enterDeleteMode")}
                   >
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -544,7 +548,7 @@ const MaterialsList = () => {
               <div className="flex flex-wrap gap-3 items-center mb-4">
                 <div className="flex items-center gap-2">
                   <span className={cn("font-medium text-lg", theme === "dark" ? "text-white" : "text-gray-800")}>
-                    Filter by Classroom:
+                    {t("filterByClassroom")}
                   </span>
                 </div>
                 <div className="flex flex-wrap gap-2">
@@ -589,14 +593,14 @@ const MaterialsList = () => {
                     "text-xl font-bold mb-2 text-center",
                     theme === "dark" ? "text-white" : "text-gray-800"
                   )}>
-                    Delete Material
+                    {t("deleteMaterial")}
                   </h3>
                   
                   <p className={cn(
                     "mb-6 text-center",
                     theme === "dark" ? "text-gray-300" : "text-gray-600"
                   )}>
-                    Are you sure you want to delete <span className="font-semibold">{fileToDelete?.name}</span>?
+                    {t("deleteMaterialConfirmation")} <span className="font-semibold">{fileToDelete?.name}</span>?
                   </p>
                   
                   <div className="flex justify-center gap-3">
@@ -604,13 +608,13 @@ const MaterialsList = () => {
                       onClick={() => setShowDeleteModal(false)}
                       className="btn-secondary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
                     >
-                      Cancel
+                      {t("cancel")}
                     </button>
                     <button
                       onClick={confirmDelete}
                       className="btn-danger py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
                     >
-                      Delete
+                      {t("delete")}
                     </button>
                   </div>
                 </div>
@@ -638,14 +642,14 @@ const MaterialsList = () => {
                 "text-xl font-bold mb-2 text-center",
                 theme === "dark" ? "text-white" : "text-gray-800"
                 )}>
-                Manage Tags for {editingMaterial?.name}
+                {t("manageTags")} {editingMaterial?.name}
                 </h3>
                 
                 <div className={cn(
                 "mb-6 text-center",
                 theme === "dark" ? "text-gray-300" : "text-gray-600"
                 )}>
-                Select or create tags to associate with this material.
+                {t("selectOrCreateTags")}
                 </div>
                 
                 <div className="space-y-4 mb-6">
@@ -687,7 +691,7 @@ const MaterialsList = () => {
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                     <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
                     </svg>
-                    Create New Tag
+                    {t("createTag")}
                     </button>
                   </div>
                   </div>
@@ -697,13 +701,13 @@ const MaterialsList = () => {
                     onClick={() => setShowEditTagsModal(false)}
                     className="btn-secondary py-2 rounded-full flex items-center justify-center flex-1"
                   >
-                    Cancel
+                    {t("cancel")}
                   </button>
                   <button
                     onClick={handleUpdateMaterialTags}
                     className="btn-primary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
                   >
-                    Save Changes
+                    {t("saveChanges")}
                   </button>
                   </div>
                   </div>
@@ -730,15 +734,11 @@ const MaterialsList = () => {
                       "text-xl font-bold mb-2 text-center",
                       theme === "dark" ? "text-white" : "text-gray-800"
                     )}>
-                      Create New Tag
+                      {t("createNewTag")}
                     </h3>
                     
                     <form onSubmit={handleCreateTag}>
-                      {error && (
-                      <div className="mb-4 p-2 rounded bg-red-100 text-red-600 text-sm">
-                        {error}
-                      </div>
-                      )}
+                      
                       <input
                       type="text"
                       value={newTagName}
@@ -758,7 +758,7 @@ const MaterialsList = () => {
                         "block mb-2 font-medium text-center",
                         theme === "dark" ? "text-white" : "text-gray-800"
                       )}>
-                        Select Color
+                        {t("selectColor")}
                       </label>
                       <div className="grid grid-cols-5 gap-2 justify-center">
                         {TAG_COLORS.map(color => (
@@ -789,13 +789,13 @@ const MaterialsList = () => {
                         }}
                         className="btn-secondary py-2 rounded-full flex items-center justify-center flex-1"
                       >
-                        Cancel
+                        {t("cancel")}
                       </button>
                       <button
                         disabled={isSubmitting}
                         className="btn-primary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
                       >
-                        {isSubmitting ? 'Creating...' : 'Create Tag'}
+                        {isSubmitting ? 'Creating...' : t("createTag")}
                       </button>
                       </div>
                     </form>
@@ -805,64 +805,14 @@ const MaterialsList = () => {
 
               { /* Edit Material Modal */}
                 {showEditModal && (
-                <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowEditModal(false)}>
-                  <div 
-                  className={cn(
-                    "p-6 rounded-xl max-w-md w-full mx-4",
-                    theme === "dark" ? "bg-gray-800" : "bg-white",
-                    "shadow-xl"
-                  )} 
-                  onClick={e => e.stopPropagation()}
-                  >
-                  <div className="flex items-center justify-center mb-4 text-blue-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" viewBox="0 0 20 20" fill="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                  </div>
-                  
-                  <h3 className={cn(
-                    "text-xl font-bold mb-2 text-center",
-                    theme === "dark" ? "text-white" : "text-gray-800"
-                  )}>
-                    Edit Material Name
-                  </h3>
-                  
-                  <p className={cn(
-                    "mb-6 text-center",
-                    theme === "dark" ? "text-gray-300" : "text-gray-600"
-                  )}>
-                    Enter a new name for the material:
-                  </p>
-                  
-                  <input
-                    type="text"
-                    value={newFileName}
-                    onChange={(e) => setNewFileName(e.target.value)}
-                    className={cn(
-                    "w-full p-2 rounded border mb-6",
-                    theme === "dark"
-                      ? "bg-gray-700 border-gray-600 text-white"
-                      : "bg-white border-gray-300 text-gray-800"
-                    )}
-                    onClick={(e) => e.stopPropagation()}
-                  />
-                  
-                  <div className="flex justify-center gap-3">
-                    <button
-                    onClick={() => setShowEditModal(false)}
-                    className="btn-secondary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
-                    >
-                    Cancel
-                    </button>
-                    <button
-                    onClick={confirmEdit}
-                    className="btn-primary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
-                    >
-                    Save
-                    </button>
-                  </div>
-                  </div>
-                </div>
+                  <EditMaterialModal
+                  isOpen={showEditModal}
+                  onClose={() => setShowEditModal(false)}
+                  onConfirm={confirmEdit}
+                  newFileName={newFileName}
+                  setNewFileName={setNewFileName}
+                  theme={theme}
+                />
                 )}
 
 
@@ -875,7 +825,7 @@ const MaterialsList = () => {
                       onClick={confirmDeleteSelected}
                       className={cn("px-3 py-1 rounded-md text-sm font-medium", theme === "dark" ? "bg-red-600 hover:bg-red-700 text-white" : "bg-red-500 hover:bg-red-700 text-white")}
                     >
-                      Delete Selected ({selectedMaterials.length})
+                      {t("deleteSelected")} ({selectedMaterials.length})
                     </button>
                   </div>
                 )}
@@ -990,7 +940,7 @@ const MaterialsList = () => {
                 </div>
               ) : (
                 <div className="text-center py-8 text-neutral-500 dark:text-neutral-400">
-                  No materials found. Add material to one of your <Link href="/classrooms" className="text-blue-500 hover:underline">classrooms</Link> and come back later ;)
+                  {t("noMaterialsFound")}
                 </div>
               )}
             </div>
@@ -1006,23 +956,23 @@ const MaterialsList = () => {
                     "text-xl font-bold mb-4",
                     theme === "dark" ? "text-white" : "text-gray-800"
                   )}>
-                    Confirm Deletion
+                    {t("confirmDeletion")}
                   </h3>
                   <p className="mb-6 text-neutral-600 dark:text-neutral-300">
-                    Are you sure you want to delete the selected materials?
+                    {t("deleteSelectedConfirmation")}
                   </p>
                   <div className="flex justify-end space-x-2">
                     <button
                       onClick={() => setShowDeleteSelectedModal(false)}
                       className="font-bold py-2 px-4 rounded bg-gray-300 dark:bg-gray-600 text-gray-800 dark:text-white hover:bg-gray-400 dark:hover:bg-gray-700"
                     >
-                      Cancel
+                      {t("cancel")}
                     </button>
                     <button
                       onClick={handleDeleteSelected}
                       className="font-bold py-2 px-4 rounded bg-red-500 dark:bg-red-600 text-white hover:bg-red-600 dark:hover:bg-red-700"
                     >
-                      Delete
+                      {t("delete")}
                     </button>
                   </div>
                 </div>

@@ -1,6 +1,6 @@
-'use client'
+'use client';
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import { getApiBaseUrl } from "@/lib/api";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { cn } from "@/lib/utils";
@@ -10,11 +10,14 @@ import Alert from "@/components/ui/Alert";
 const axios = require('axios');
 import { MaterialsPage } from "@/components/materials-page";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import StudentModal from "@/components/student-modal";
 
 const NAME_LIMIT = 30;
 const SURNAME_LIMIT = 30;
 
 const ClassroomPage = () => {
+  const t = useTranslations("ClassroomPage");
   const router = useRouter();
   const [activeTab, setActiveTab] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -22,10 +25,6 @@ const ClassroomPage = () => {
     }
     return 'students';
   });
-  
-  useEffect(() => {
-    localStorage.setItem('classroomActiveTab', activeTab);
-  }, [activeTab]);
 
   const { theme } = useTheme();
   const params = useParams();
@@ -34,7 +33,7 @@ const ClassroomPage = () => {
   const [studentName, setStudentName] = useState('');
   const [studentSurname, setStudentSurname] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [students, setStudents] = useState([]); // Ensure students is initialized as an array
+  const [students, setStudents] = useState([]);
   const [editMode, setEditMode] = useState(false);
   const [student, setStudent] = useState(null);
   const [alert, setAlert] = useState(null);
@@ -50,7 +49,7 @@ const ClassroomPage = () => {
 
   useEffect(() => {
     const fetchClassroom = async () => {
-      try {        
+      try {
         const response = await axios.get(`${getApiBaseUrl()}/api/classrooms/${params.id}`, {
           headers: {
             Authorization: `Token ${localStorage.getItem("authToken")}`,
@@ -58,16 +57,16 @@ const ClassroomPage = () => {
         });
         setClassroom(response.data);
       } catch (err) {
-        showAlert('error', "Failed to fetch classroom");
+        showAlert('error', t("alerts.fetchClassroomError"));
       }
     };
     fetchClassroom();
-  }, [params.id]);
+  }, [params.id, t]);
 
   useEffect(() => {
     const fetchStudents = async () => {
       if (!params.id) return;
-      
+
       try {
         const response = await axios.get(`${getApiBaseUrl()}/api/students/`, {
           params: {
@@ -79,12 +78,12 @@ const ClassroomPage = () => {
         });
         setStudents(response.data);
       } catch (err) {
-        showAlert('error', "Failed to fetch students");
+        showAlert('error', t("alerts.fetchStudentsError"));
       }
     };
-    
+
     fetchStudents();
-  }, [params.id]);
+  }, [params.id, t]);
 
   const handleDelete = async (student) => {
     try {
@@ -94,9 +93,9 @@ const ClassroomPage = () => {
         }
       });
       setStudents(prevStudents => prevStudents.filter(s => s.id !== student.id));
-      showAlert('success', "Student deleted successfully");
+      showAlert('success', t("alerts.deleteStudentSuccess"));
     } catch (error) {
-      showAlert('error', "Error deleting student");
+      showAlert('error', t("alerts.deleteStudentError"));
     }
   };
 
@@ -114,18 +113,18 @@ const ClassroomPage = () => {
         }
       });
       setStudents(prevStudents => prevStudents.filter(s => s.id !== studentToDelete.id));
-      showAlert('success', "Student deleted successfully");
+      showAlert('success', t("alerts.deleteStudentSuccess"));
     } catch (error) {
-      showAlert('error', "Error deleting student");
+      showAlert('error', t("alerts.deleteStudentError"));
     } finally {
       setShowDeleteModal(false);
       setStudentToDelete(null);
     }
   };
 
-  const handleEdit = async (e) => {
+  const handleEdit = async () => {
     setIsSubmitting(true);
-    
+
     try {
       await axios.put(`${getApiBaseUrl()}/api/students/${student.id}/`, {
         name: studentName,
@@ -143,14 +142,14 @@ const ClassroomPage = () => {
       setStudentSurname('');
       setEditMode(false);
       setStudents(prevStudents => {
-        const updatedStudents = prevStudents.map(s => 
+        const updatedStudents = prevStudents.map(s =>
           s.id === student.id ? { ...s, name: studentName, surname: studentSurname } : s
         );
         return updatedStudents;
       });
-      showAlert('success', "Student updated successfully");
+      showAlert('success', t("alerts.editStudentSuccess"));
     } catch (error) {
-      showAlert('error', "Failed to edit student");
+      showAlert('error', t("alerts.editStudentError"));
     } finally {
       setIsSubmitting(false);
     }
@@ -176,9 +175,9 @@ const ClassroomPage = () => {
       setShowModal(false);
       setStudentName('');
       setStudentSurname('');
-      showAlert('success', "Student added successfully");
+      showAlert('success', t("alerts.addStudentSuccess"));
     } catch (error) {
-      showAlert('error', "Failed to add student");
+      showAlert('error', t("alerts.addStudentError"));
     } finally {
       setIsSubmitting(false);
     }
@@ -187,14 +186,14 @@ const ClassroomPage = () => {
   const handleNameChange = (value) => {
     setStudentName(value);
     if (value.length > NAME_LIMIT) {
-      showAlert('warning', `Name exceeds the limit of ${NAME_LIMIT} characters.`);
+      showAlert('warning', t("alerts.nameLimitExceeded", { limit: NAME_LIMIT }));
     }
   };
 
   const handleSurnameChange = (value) => {
     setStudentSurname(value);
     if (value.length > SURNAME_LIMIT) {
-      showAlert('warning', `Surname exceeds the limit of ${SURNAME_LIMIT} characters.`);
+      showAlert('warning', t("alerts.surnameLimitExceeded", { limit: SURNAME_LIMIT }));
     }
   };
 
@@ -220,10 +219,10 @@ const ClassroomPage = () => {
       setStudents((prevStudents) =>
         prevStudents.filter((student) => !selectedStudents.includes(student.id))
       );
-      showAlert('success', "Selected students deleted successfully");
+      showAlert('success', t("alerts.deleteSelectedSuccess"));
       setSelectedStudents([]);
     } catch (error) {
-      showAlert('error', "Error deleting selected students");
+      showAlert('error', t("alerts.deleteSelectedError"));
     }
   };
 
@@ -245,10 +244,10 @@ const ClassroomPage = () => {
       setStudents((prevStudents) =>
         prevStudents.filter((student) => !selectedStudents.includes(student.id))
       );
-      showAlert('success', "Selected students deleted successfully");
+      showAlert('success', t("alerts.deleteSelectedSuccess"));
       setSelectedStudents([]);
     } catch (error) {
-      showAlert('error', "Error deleting selected students");
+      showAlert('error', t("alerts.deleteSelectedError"));
     } finally {
       setShowDeleteSelectedModal(false);
     }
@@ -264,10 +263,10 @@ const ClassroomPage = () => {
         <div className="flex px-6 z-900 relative">
           {/* Back to Classrooms Button */}
           <button
-            onClick={() => router.push("/classrooms")}
+            onClick={() => router.push(`/${locale}/classrooms`)}
             className="btn btn-md btn-secondary absolute left-4 text-xs sm:text-sm md:text-base px-2 sm:px-3 md:px-4 py-1 sm:py-2 md:py-3"
           >
-            &larr; Back to Classrooms
+            &larr; {t("backToClassrooms")}
           </button>
 
           {/* Classroom Title and Details */}
@@ -335,7 +334,7 @@ const ClassroomPage = () => {
           )}
           onClick={() => setActiveTab('students')}
             >
-          Students
+          {t("students")}
             </button>
             <button
           className={cn("px-8 py-3 transition-colors rounded-full font-medium",
@@ -349,7 +348,7 @@ const ClassroomPage = () => {
           )}
           onClick={() => setActiveTab('materials')}
             >
-          Materials
+          {t("materials")}
             </button>
           </div>
         </div>
@@ -363,7 +362,7 @@ const ClassroomPage = () => {
               <h2 className={cn("text-2xl font-bold", 
                 theme === "dark" ? "text-white" : "text-gray-800")} 
                 style={{ fontFamily: "'Poppins', sans-serif" }}>
-                Students
+                {t("students")}
               </h2>
               {selectedStudents.length > 0 && (
                 <div className="ml-4">
@@ -374,7 +373,7 @@ const ClassroomPage = () => {
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
-                    Delete ({selectedStudents.length})
+                    {t("delete")} ({selectedStudents.length})
                   </button>
                 </div>
               )}
@@ -465,13 +464,13 @@ const ClassroomPage = () => {
                   style={{ height: "200px" }}
                 >
                   <p className="text-lg font-semibold mb-4">
-                    No students found in this classroom.
+                    {t("noStudents")}
                   </p>
                   <button
                     onClick={() => setShowModal(true)}
                     className="btn btn-md btn-accent"
                     >
-                    Add your first student
+                    {t("addFirstStudent")}
                   </button>
                 </div>
               )}
@@ -485,134 +484,31 @@ const ClassroomPage = () => {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                 </svg>
-                Add Student
+                {t("addStudent")}
               </button>
               </div>
             )}
 
             { /* Student Modal */ }
             {showModal && (
-              <div
-                className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
-                onClick={() => setShowModal(false)}
-              >
-                <div
-                  className={cn(
-                    "p-6 rounded-xl max-w-md w-full mx-4",
-                    theme === "dark" ? "bg-gray-800" : "bg-white",
-                    "shadow-xl"
-                  )}
-                  onClick={(e) => e.stopPropagation()}
-                >
-                  <div className="flex items-center justify-center mb-4 text-[rgb(25,65,166)]">
-                  {editMode ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" viewBox="0 0 20 20" fill="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                    </svg>
-                    ) : (
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        className="h-12 w-12"
-                        viewBox="0 0 24 24"
-                        fill="currentColor"
-                      >
-                        <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                      </svg>
-                    )}
-                  </div>
+              <StudentModal
+                isOpen={showModal}
+                onClose={() => {
+                  setShowModal(false);
+                  setEditMode(false);
+                }}
+                onSubmit={editMode ? handleEdit : handleSubmit}
+                editMode={editMode}
+                studentName={studentName}
+                studentSurname={studentSurname}
+                handleNameChange={handleNameChange}
+                handleSurnameChange={handleSurnameChange}
+                isSubmitting={isSubmitting}
+                theme={theme}
+              />
+            )}
 
-                  <h3
-                    className={cn(
-                      "text-xl font-bold mb-4 text-center",
-                      theme === "dark" ? "text-white" : "text-gray-800"
-                    )}
-                    style={{ fontFamily: "'Poppins', sans-serif" }}
-                  >
-                    {editMode ? "Edit Student" : "Add New Student"}
-                  </h3>
-                  <form
-                    onSubmit={(e) => {
-                      e.preventDefault();
-                      if (editMode) {
-                        handleEdit(e);
-                      } else {
-                        handleSubmit(e);
-                      }
-                    }}
-                    >
-                    <div className="mb-4">
-                      <label
-                      className={cn(
-                        "block text-sm font-bold mb-2",
-                        theme === "dark" ? "text-gray-300" : "text-gray-700"
-                      )}
-                      >
-                      Name
-                      </label>
-                      <input
-                      type="text"
-                      value={studentName}
-                      onChange={(e) => handleNameChange(e.target.value)}
-                      className={cn(
-                        "shadow appearance-none border rounded-md w-full py-2 px-3 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500",
-                        theme === "dark"
-                        ? "bg-gray-700 border-gray-600 text-white"
-                        : "bg-white border-gray-300 text-gray-700"
-                      )}
-                      required
-                      />
-                    </div>
-                    <div className="mb-6">
-                      <label
-                      className={cn(
-                        "block text-sm font-bold mb-2",
-                        theme === "dark" ? "text-gray-300" : "text-gray-700"
-                      )}
-                      >
-                      Surname
-                      </label>
-                      <input
-                      type="text"
-                      value={studentSurname}
-                      onChange={(e) => handleSurnameChange(e.target.value)}
-                      className={cn(
-                        "shadow appearance-none border rounded-md w-full py-2 px-3 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500",
-                        theme === "dark"
-                        ? "bg-gray-700 border-gray-600 text-white"
-                        : "bg-white border-gray-300 text-gray-700"
-                      )}
-                      required
-                      />
-                    </div>
-                    <div className="flex justify-center gap-3">
-                      <button
-                      type="button"
-                      onClick={() => {
-                        setShowModal(false);
-                        setEditMode(false);
-                      }}
-                      className="btn-secondary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
-                      >
-                      Cancel
-                      </button>
-                      <button
-                      type="submit"
-                      disabled={isSubmitting}
-                      className="btn-success py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
-                      >
-                      {isSubmitting
-                        ? "Processing..."
-                        : editMode
-                        ? "Save Changes"
-                        : "Add Student"}
-                      </button>
-                    </div>
-                    </form>
-                  </div>
-                  </div>
-                )}
-
-                {/* Delete Confirmation Modal */}
+              {/* Delete Confirmation Modal */}
             {showDeleteModal && (
               <div
                 className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -647,7 +543,7 @@ const ClassroomPage = () => {
                       theme === "dark" ? "text-white" : "text-gray-800"
                     )}
                   >
-                    Confirm Deletion
+                    {t("confirmDelete")}
                   </h3>
 
                   <p
@@ -656,7 +552,7 @@ const ClassroomPage = () => {
                       theme === "dark" ? "text-gray-300" : "text-gray-600"
                     )}
                   >
-                    Are you sure you want to delete{" "}
+                    {t("confirmDeleteDescription")}{" "}
                     <span className="font-semibold">
                       {studentToDelete?.name} {studentToDelete?.surname}
                     </span>
@@ -668,13 +564,13 @@ const ClassroomPage = () => {
                       onClick={() => setShowDeleteModal(false)}
                       className="btn-secondary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
                     >
-                      Cancel
+                      {t("cancel")}
                     </button>
                     <button
                       onClick={handleConfirmDelete}
                       className="btn-danger py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
                     >
-                      Delete
+                      {t("delete")}
                     </button>
                   </div>
                 </div>
@@ -688,23 +584,23 @@ const ClassroomPage = () => {
                   theme === "dark" ? "bg-gray-800 border-gray-700" : "bg-white border-gray-200")}>
                   <h3 className={cn("text-xl font-bold mb-4", 
                     theme === "dark" ? "text-white" : "text-gray-800")}>
-                    Confirm Deletion
+                    {t("confirmDelete")}
                   </h3>
                   <p className={cn("mb-6", theme === "dark" ? "text-gray-300" : "text-gray-700")}>
-                    Are you sure you want to delete the selected students? ({selectedStudents.length})
+                    {t("deleteSelectedDescription")} ({selectedStudents.length})
                   </p>
                   <div className="flex justify-end space-x-3">
                     <button
                       onClick={() => setShowDeleteSelectedModal(false)}
                       className="btn btn-md btn-secondary"
                     >
-                      Cancel
+                      t{("cancel")}
                     </button>
                     <button
                       onClick={handleConfirmDeleteSelected}
                       className="btn btn-md btn-danger"
                     >
-                      Delete
+                      {t("delete")}
                     </button>
                   </div>
                 </div>
@@ -718,7 +614,7 @@ const ClassroomPage = () => {
             <h2 className={cn("text-2xl font-bold mb-6", 
               theme === "dark" ? "text-white" : "text-gray-800")} 
               style={{ fontFamily: "'Poppins', sans-serif" }}>
-              Materials
+              {t("materials")}
             </h2>
             <MaterialsPage classroomId={params.id} />
           </div>

@@ -527,7 +527,7 @@
       "title": "Completa tu perfil",
       "fields": {
         "region": {
-          "label": "Región / Comunidad Autónoma",
+          "label": "Región",
           "placeholder": "Selecciona una comunidad"
         },
         "city": {
@@ -655,6 +655,389 @@
         "allFieldsRequired": "¡Todos los campos son obligatorios!",
         "success": "¡Centro creado con éxito!",
         "error": "Error al crear el centro. Por favor, inténtalo de nuevo."
+      }
+    },
+
+
+    "TermsPage": {
+      "header": {
+        "title": "MAESTRE - Información Legal",
+        "description": "Bienvenido a nuestra sección de información legal. Aquí encontrarás todos los documentos y políticas necesarios que rigen el uso de nuestra plataforma. Por favor, revísalos cuidadosamente para entender tus derechos y responsabilidades."
+      },
+      "terms": {
+        "cookies": "Política de Cookies",
+        "privacy": "Política de Privacidad",
+        "termsOfUse": "Términos de Uso",
+        "licenses": "Licencias",
+        "document": "Documento"
+      },
+      "alerts": {
+        "fetchTermsError": "No se pudieron cargar los términos. Por favor, inténtalo de nuevo más tarde.",
+        "checkAdminError": "Error al verificar el estado de administrador.",
+        "deleteSuccess": "Término eliminado con éxito.",
+        "deleteError": "Error al eliminar el término. Por favor, inténtalo de nuevo más tarde.",
+        "fetchContentError": "Error al obtener el contenido del archivo.",
+        "addSuccess": "Nuevo término añadido con éxito.",
+        "addError": "Error al añadir un nuevo término. Por favor, inténtalo de nuevo más tarde.",
+        "tagError": "Error en la etiqueta: {{error}}",
+        "contentError": "Error en el contenido: {{error}}",
+        "pdfContentError": "Error en el contenido del PDF: {{error}}",
+        "versionError": "Error en la versión: {{error}}",
+        "nameError": "Error en el nombre: {{error}}",
+        "noPdf": "No existe un PDF para este documento.",
+        "noMd": "Por favor, sube un archivo markdown (.md)",
+        "failedToOpenPdf": "No se pudo abrir el documento en una nueva pestaña. Por favor, verifica la configuración de tu navegador.",
+        "termTypeError": "Selecciona un tipo de término válido.",
+        "noVersion": "Por favor, introduce un número de versión."
+      },
+      "buttons": {
+        "addNewTerm": "Agregar Nuevo Término",
+        "viewFullDocument": "Ver documento completo",
+        "openDocument": "Abrir documento",
+        "cancel": "Cancelar",
+        "save": "Guardar",
+        "delete": "Eliminar"
+      },
+      "messages": {
+        "allTermsCreated": "Todos los tipos de términos ya han sido creados. No puedes agregar más términos."
+      },
+      "loading": {
+        "title": "Cargando...",
+        "description": "Por favor espera mientras cargamos el contenido."
+      },
+      "noTerms": {
+        "title": "Términos No Disponibles",
+        "description": "Los términos y condiciones no pudieron cargarse en este momento. Esto puede deberse a:",
+        "reason1": "Los términos están siendo actualizados",
+        "reason2": "Necesitas iniciar sesión para acceder a esta información",
+        "reason3": "Hay un problema temporal con el servidor",
+        "contactSupport": "Si necesitas acceder a esta información, por favor inicia sesión o contacta a nuestro equipo de soporte."
+      },
+      "additionalInfo": {
+        "agreements": "Estos acuerdos se aplican a todos los usuarios que acceden a la plataforma, ya sea a través de navegadores web o aplicaciones móviles.",
+        "modifications": "Nos reservamos el derecho de modificar estos acuerdos en función de cambios legislativos o necesidades operativas.",
+        "governance": "Este acuerdo será regido e interpretado de acuerdo con la legislación aplicable.",
+        "acceptance": "El uso de la plataforma implica la aceptación total de todas las condiciones aquí establecidas."
+      },
+      "addForm": {
+        "title": "Agregar Nuevo Término",
+        "termTypeLabel": "Tipo de Término",
+        "selectTermType": "Selecciona un tipo de término",
+        "markdownContentLabel": "Contenido Markdown",
+        "uploadMarkdown": "Arrastra y suelta un archivo .md aquí, o haz clic para seleccionarlo",
+        "pdfContentLabel": "Contenido PDF",
+        "uploadPdf": "Arrastra y suelta un archivo .pdf aquí, o haz clic para seleccionarlo",
+        "uploadedFile": "Archivo subido",
+        "versionLabel": "Versión",
+        "versionPlaceholder": "Ej. 'v1.0'",
+        "availableTermTypes": {
+          "termsOfUse": "Términos de Uso",
+          "privacyPolicy": "Política de Privacidad",
+          "cookiePolicy": "Política de Cookies",
+          "licenses": "Licencias"
+        }
+      },
+      "footer": {
+        "lastUpdated": "Última actualización: ",
+        "contactSupport": "Si tienes preguntas sobre nuestros términos o no puedes acceder a ellos, por favor contáctanos."
+      },
+      "deleteModal": {
+        "title": "Confirmar Eliminación",
+        "description": "¿Estás seguro de que deseas eliminar este documento? Esta acción no se puede deshacer."
+      }
+    },
+
+
+    "CreateSchoolPage": {
+      "header": {
+        "title": "Crea tu centro educativo",
+        "subtitle": "Para que otros docentes se unan",
+        "logoAlt": "Logo de MAESTRE"
+      },
+      "alerts": {
+        "mustSignUp": "Debes registrarte para crear un centro educativo.",
+        "success": "¡Centro educativo creado con éxito!",
+        "failure": "Error al crear el centro educativo.",
+        "networkError": "Ocurrió un error de red."
+      }
+    },
+
+
+    "SignUpPage": {
+      "welcomeMessage": "Bienvenido a",
+      "createAccount": "Crea tu cuenta",
+      "logoAlt": "Logo de MAESTRE",
+      "videoCaption": "Maestrito está aquí para ayudarte en tus clases",
+      "videoAutoplayError": "Reproducción automática de video impedida",
+      "alerts": {
+        "usernameTooLong": "El nombre de usuario no puede exceder los 30 caracteres",
+        "emailTooLong": "El correo electrónico no puede exceder los 255 caracteres",
+        "nameTooLong": "El nombre no puede exceder los 30 caracteres",
+        "surnameTooLong": "El apellido no puede exceder los 30 caracteres",
+        "passwordTooLong": "La contraseña no puede exceder los 128 caracteres",
+        "passwordTooShort": "La contraseña debe tener al menos 8 caracteres",
+        "passwordUppercase": "La contraseña debe contener al menos una letra mayúscula",
+        "passwordLowercase": "La contraseña debe contener al menos una letra minúscula",
+        "passwordNumber": "La contraseña debe contener al menos un número",
+        "passwordSpecialCharacter": "La contraseña debe contener al menos un carácter especial",
+        "passwordNoWhitespace": "La contraseña no puede contener espacios en blanco al principio o al final",
+        "signupSuccess": "Cuenta creada con éxito",
+        "signupFailure": "Error al registrarse",
+        "networkError": "Ocurrió un error de red"
+      }
+    },
+
+
+    "SignInPage": {
+      "welcomeBack": "Bienvenido de nuevo",
+      "to": "a",
+      "logoAlt": "Logo de MAESTRE",
+      "videoCaption": "Maestrito está aquí para ayudarte en tus clases",
+      "videoAutoplayError": "Reproducción automática de video impedida",
+      "alerts": {
+        "emailOrUsernameTooLong": "El correo o nombre de usuario no puede exceder los 255 caracteres",
+        "passwordTooLong": "La contraseña no puede exceder los 128 caracteres",
+        "passwordTooShort": "La contraseña debe tener al menos 8 caracteres",
+        "passwordUppercase": "La contraseña debe contener al menos una letra mayúscula",
+        "passwordLowercase": "La contraseña debe contener al menos una letra minúscula",
+        "passwordNumber": "La contraseña debe contener al menos un número",
+        "passwordSpecialCharacter": "La contraseña debe contener al menos un carácter especial",
+        "signinSuccess": "Inicio de sesión exitoso",
+        "signinFailure": "Error al iniciar sesión",
+        "networkError": "Ocurrió un error de red"
+      }
+    },
+
+
+    "ProfileEditPage": {
+      "header": {
+        "logoAlt": "Logo de MAESTRE",
+        "greeting": "Hola",
+        "subtitle": "Consulta y edita tu perfil y datos"
+      },
+      "sections": {
+        "personalInfo": "Información Personal",
+        "schoolInfo": "Información del Centro Educativo"
+      },
+      "buttons": {
+        "deleteAccount": "Eliminar Cuenta",
+        "cancel": "Cancelar",
+        "signOut": "Cerrar Sesión",
+        "editProfile": "Editar Perfil",
+        "completeProfile": "Completar Perfil"
+      },
+      "alerts": {
+        "signoutSuccess": "Has cerrado sesión correctamente.",
+        "signoutError": "Error durante el proceso de cierre de sesión.",
+        "signoutApiError": "Error de API durante el cierre de sesión.",
+        "fetchSchoolsError": "Error al obtener los centros educativos.",
+        "fetchSchoolError": "Error al obtener el centro educativo.",
+        "passwordMismatch": "Las contraseñas no coinciden.",
+        "invalidEmail": "Formato de correo electrónico no válido.",
+        "updateSuccess": "Perfil actualizado con éxito.",
+        "updateError": "Error al actualizar el perfil.",
+        "deleteSuccess": "Cuenta eliminada con éxito.",
+        "deleteError": "Error al eliminar la cuenta.",
+        "usernameMismatch": "El nombre de usuario no coincide. Eliminación de cuenta cancelada."
+      },
+      "fields": {
+        "username": "Nombre de Usuario",
+        "email": "Correo Electrónico",
+        "name": "Nombre",
+        "surname": "Apellido",
+        "oldPassword": "Contraseña Antigua",
+        "newPassword": "Nueva Contraseña",
+        "confirmPassword": "Confirmar Contraseña",
+        "city": "Ciudad",
+        "school": "Centro Educativo"
+      },
+      "modals": {
+        "deleteAccount": {
+          "title": "Eliminar Cuenta",
+          "message": "¿Estás seguro de que deseas eliminar tu cuenta? Esta acción no se puede deshacer.",
+          "confirmation": "Escribe tu nombre de usuario para confirmar",
+          "placeholder": "Nombre de Usuario"
+        }
+      }
+    },
+
+
+    "ProfileCompletePage": {
+      "header": {
+        "logoAlt": "Logo de MAESTRE",
+        "title": "Completa tu perfil",
+        "subtitle": "Para disfrutar plenamente de MAESTRE"
+      },
+      "alerts": {
+        "usernameTooLong": "El nombre de usuario no puede exceder los 30 caracteres.",
+        "emailTooLong": "El correo electrónico no puede exceder los 255 caracteres.",
+        "allFieldsRequired": "Todos los campos son obligatorios.",
+        "fetchSchoolsError": "Error al obtener los centros educativos. Por favor, inténtalo de nuevo más tarde.",
+        "updateSuccess": "Perfil actualizado con éxito.",
+        "updateError": "Error al actualizar: {error}"
+      },
+      "defaultName": "Nombre Predeterminado",
+      "defaultSurname": "Apellido Predeterminado"
+    },
+
+
+    "ClassroomsPage": {
+      "header": {
+        "title": "Mis Clases",
+        "subtitle": "Gestiona tus clases"
+      },
+      "noClasses": "No se encontraron clases",
+      "createClassButton": "Crear Nueva Clase +",
+      "openClassButton": "Abrir Clase",
+      "editButton": "Editar →",
+      "courseLabel": "Curso",
+      "yearLabel": "Año",
+      "imageAlt": "Imagen de la clase {name}",
+      "alerts": {
+        "fetchError": "No se pudieron obtener las clases. Por favor, inténtalo de nuevo más tarde."
+      }
+    },
+
+
+    "ClassroomEditPage": {
+      "header": {
+        "title": "Editar Clase",
+        "subtitle": "Actualiza la información de tu clase a continuación"
+      },
+      "alerts": {
+        "nameTooLong": "El nombre no debe exceder los 30 caracteres.",
+        "courseTooLong": "El curso académico no debe exceder los 30 caracteres.",
+        "descriptionTooLong": "La descripción no debe exceder los 255 caracteres.",
+        "descriptionEmpty": "La descripción no debe estar vacía.",
+        "invalidYearFormat": "El año académico debe tener el formato 'AAAA-AAAA'.",
+        "fetchStagesError": "Error al obtener las etapas educativas.",
+        "networkError": "Ocurrió un error de red.",
+        "fetchClassroomError": "Error al obtener los datos de la clase.",
+        "missingClassroomData": "Faltan datos de la clase.",
+        "updateSuccess": "Clase actualizada con éxito.",
+        "updateError": "Error al actualizar los datos de la clase.",
+        "deleteSuccess": "Clase eliminada con éxito.",
+        "deleteError": "Error al eliminar la clase.",
+        "nameMismatch": "El nombre de la clase no coincide. Eliminación cancelada."
+      },
+      "deleteModal": {
+        "title": "Eliminar Clase",
+        "description": "¿Estás seguro de que deseas eliminar {name}? Esta acción no se puede deshacer.",
+        "placeholder": "Introduce el nombre de la clase ({name})",
+        "cancel": "Cancelar",
+        "delete": "Eliminar"
+      }
+    },
+
+
+    "ClassroomCreatePage": {
+      "header": {
+        "title": "Crear una Nueva Clase",
+        "subtitle": "Configura tu aula de MAESTRE",
+        "logoAlt": "Logo de MAESTRE"
+      },
+      "alerts": {
+        "authTokenMissing": "Falta el token de autenticación. Redirigiendo al registro.",
+        "fetchStagesError": "Error al obtener las etapas educativas. Por favor, inténtalo de nuevo más tarde.",
+        "networkError": "Error de red al obtener las etapas educativas.",
+        "success": "¡Clase creada con éxito!",
+        "creationFailed": "Error al crear la clase. Por favor, inténtalo de nuevo."
+      }
+    },
+
+
+    "ClassroomPage": {
+      "backToClassrooms": "Volver a las Clases",
+      "unnamedClassroom": "Clase Sin Nombre",
+      "studentsTab": "Estudiantes",
+      "materialsTab": "Materiales",
+      "studentsTitle": "Estudiantes",
+      "materialsTitle": "Materiales",
+      "cancel": "Cancelar",
+      "deleteSelected": "Eliminar ({count})",
+      "deleteSelectedDescription": "¿Estás seguro de que deseas eliminar los estudiantes seleccionados?",
+      "confirmDelete": "Confirmar eliminación",
+      "confirmDeleteDescription": "¿Estás seguro de que deseas eliminar ",
+      "delete": "Eliminar",
+      "students": "Estudiantes",
+      "materials": "Materiales",
+      "addStudent": "Añadir Estudiante",
+      "addFirstStudent": "¡Añade tu primer estudiante!",
+      "noStudents": "No se encontraron estudiantes en esta clase.",
+      "alerts": {
+        "fetchClassroomError": "Error al obtener los datos de la clase.",
+        "fetchStudentsError": "Error al obtener los estudiantes.",
+        "deleteStudentSuccess": "Estudiante eliminado con éxito.",
+        "deleteStudentError": "Error al eliminar el estudiante.",
+        "editStudentSuccess": "Estudiante actualizado con éxito.",
+        "editStudentError": "Error al actualizar el estudiante.",
+        "addStudentSuccess": "Estudiante añadido con éxito.",
+        "addStudentError": "Error al añadir el estudiante.",
+        "deleteSelectedSuccess": "Estudiantes seleccionados eliminados con éxito.",
+        "deleteSelectedError": "Error al eliminar los estudiantes seleccionados.",
+        "nameLimitExceeded": "El nombre supera el límite de {limit} caracteres.",
+        "surnameLimitExceeded": "El apellido supera el límite de {limit} caracteres."
+      }
+    },
+
+
+    "StudentModal": {
+      "editStudent": "Editar estudiante",
+      "addStudent": "Añadir  estudiante",
+      "nameLabel": "Nombre",
+      "surnameLabel": "Apellido",
+      "cancelButton": "Cancelar",
+      "saveChanges": "Guardar cambios",
+      "processing": "Procesando..."
+    },
+
+
+    "EditMaterialModal": {
+      "editMaterialName": "Editar Nombre del Material",
+      "editMaterialNameDescription": "Introduce un nuevo nombre para el material:",
+      "cancel": "Cancelar",
+      "save": "Guardar"
+    },
+
+
+    "MaterialPage": {
+      "header": {
+        "title": "Mis Materiales",
+        "subtitle": "Consulta todos tus materiales subidos de un vistazo."
+      },
+      "createMaterial": "Añadir Nuevo Material",
+      "searchPlaceholder": "Buscar materiales...",
+      "filterByTags": "Filtrar por Etiquetas:",
+      "enterDeleteMode": "Entrar en Modo de Eliminación",
+      "exitDeleteMode": "Salir del Modo de Eliminación",
+      "noMaterialsFound": "No se encontraron materiales.",
+      "filterByClassroom": "Filtrar por Clase:",
+      "deleteMaterial": "Eliminar Material",
+      "deleteMaterialConfirmation": "¿Estás seguro de que deseas eliminar",
+      "cancel": "Cancelar",
+      "delete": "Eliminar",
+      "manageTags": "Gestionar Etiquetas de",
+      "selectOrCreateTags": "Selecciona o crea etiquetas para asociarlas con este material.",
+      "createTag": "Crear Nueva Etiqueta",
+      "saveChanges": "Guardar Cambios",
+      "alerts": {
+        "createdSuccess": "¡Material creado con correctamente!",
+        "deleteSelectedSuccess": "Materiales seleccionados eliminados correctamente.",
+        "deleteSelectedError": "Error al eliminar los materiales seleccionados. Por favor, inténtalo de nuevo.",
+        "editSuccess": "Nombre del material actualizado con éxito.",
+        "editError": "Error al actualizar el nombre del material. Por favor, inténtalo de nuevo.",
+        "deleteSuccess": "Material eliminado con éxito.",
+        "deleteError": "Error al eliminar el material. Por favor, inténtalo de nuevo.",
+        "fetchMaterialsError": "Error al obtener los materiales. Por favor, inténtalo de nuevo más tarde.",
+        "fetchTagsError": "Error al obtener las etiquetas. Por favor, inténtalo de nuevo más tarde.",
+        "fetchClassroomsError": "Error al obtener las clases. Por favor, inténtalo de nuevo más tarde.",
+        "tagCreateSuccess": "Etiqueta creada correctamente.",
+        "tagLimit": "Has alcanzado el límite máximo de 15 etiquetas.",
+        "tagCreateError": "Error al crear la etiqueta. Por favor, inténtalo de nuevo.",
+        "tagUpdateSuccess": "Etiquetas actualizadas correctamente.",
+        "tagUpdateError": "Error al actualizar las etiquetas. Por favor, inténtalo de nuevo.",
+        "tagDeleteSuccess": "Etiqueta eliminada correctamente.",
+        "tagDeleteError": "Error al eliminar la etiqueta. Por favor, inténtalo de nuevo."
       }
     }
 }

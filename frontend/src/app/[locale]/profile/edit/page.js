@@ -20,11 +20,12 @@ import {
   IconSchool,
   IconTrash,
 } from "@tabler/icons-react";
+import { useTranslations } from "next-intl";
 
-
-const ProfileEdit = () => {
+const ProfileEdit = (params) => {
   const router = useRouter();
   const { theme } = useTheme();
+  const t = useTranslations("ProfileEditPage"); // Use translations for this page
   const [user, setUser] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [isClient, setIsClient] = useState(false);
@@ -40,7 +41,7 @@ const ProfileEdit = () => {
     confirmPassword: "",
     oldPassword: "",
   });
-  const [alert, setAlert] = useState(null); // State for managing alerts
+  const [alert, setAlert] = useState(null);
   const [isProfileCompleted, setIsProfileCompleted] = useState(null);
   const [schools, setSchools] = useState([]);
   const [city, setCity] = useState("");
@@ -48,63 +49,55 @@ const ProfileEdit = () => {
   const [usernameInput, setUsernameInput] = useState("");
   const searchParams = useSearchParams();
   const [isDeleteAccountModalOpen, setDeleteAccountModalOpen] = useState(false);
+  const locale = params?.locale || "es";
 
-  // Function to close the delete account modal
   const closeDeleteAccountModal = () => {
     setDeleteAccountModalOpen(false);
-    setUsernameInput(""); // Clear the username input when closing the modal
+    setUsernameInput("");
   };
 
-    const handleSignout = async () => {
-      try {
-        const token = localStorage.getItem('authToken');
-        
-        if (token) {
-          try {
-            // Change the Authorization header format to match what your backend expects
-            await axios.post(`${getApiBaseUrl()}/api/users/signout/`, {}, {
-              headers: {
-                'Authorization': `Token ${token}`  // Changed from Bearer to Token
-              }
-            });
-          } catch (apiError) {
-            console.error('API error during signout:', apiError);
-            // Continue with local logout even if API call fails
-          }
+  const handleSignout = async () => {
+    try {
+      const token = localStorage.getItem("authToken");
+
+      if (token) {
+        try {
+          await axios.post(`${getApiBaseUrl()}/api/users/signout/`, {}, {
+            headers: {
+              Authorization: `Token ${token}`,
+            },
+          });
+        } catch (apiError) {
+          console.error(t("alerts.signoutApiError"), apiError);
         }
-        
-        // Always clear local storage and state
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('user');
-        setUser(null);
-        
-        // Show success alert
-        setAlert({ type: "success", message: "You have successfully logged out." });
-  
-        // Redirect to home page after a short delay
-        setTimeout(() => {
-          setAlert(null); // Clear the alert after a few seconds
-          router.push("/");
-        }, 3000);
-        
-      } catch (error) {
-        console.error('Error during signout process:', error);
-        
-        // Ensure we still clear data even if there's an error
-        localStorage.removeItem('authToken');
-        localStorage.removeItem('user');
-        setUser(null);
-        
-        setTimeout(() => {
-          router.push("/");
-        }, 100);
       }
-    };
-  
+
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("user");
+      setUser(null);
+
+      setAlert({ type: "success", message: t("alerts.signoutSuccess") });
+
+      setTimeout(() => {
+        setAlert(null);
+        router.push("/");
+      }, 3000);
+    } catch (error) {
+      console.error(t("alerts.signoutError"), error);
+
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("user");
+      setUser(null);
+
+      setTimeout(() => {
+        router.push("/");
+      }, 100);
+    }
+  };
 
   const showAlert = (type, message) => {
     setAlert({ type, message });
-    setTimeout(() => setAlert(null), 5000); // Auto-dismiss after 5 seconds
+    setTimeout(() => setAlert(null), 5000);
   };
 
   useEffect(() => {
@@ -134,7 +127,7 @@ const ProfileEdit = () => {
         school: parsedUser.school || "",
       }));
     } else {
-      router.push("/profile/signin");
+      router.push(`/${locale}/profile/signin`);
     }
   }, [router]);
 
@@ -151,14 +144,14 @@ const ProfileEdit = () => {
         );
         setSchools(response.data);
       } catch (err) {
-        showAlert("error", "Failed to fetch schools");
+        showAlert("error", t("alerts.fetchSchoolsError"));
       }
     };
 
     if (formData.city) {
       getSchools();
     }
-  }, [formData.city]);
+  }, [formData.city, t]);
 
   useEffect(() => {
     const getSchoolById = async () => {
@@ -173,27 +166,23 @@ const ProfileEdit = () => {
         );
         setSchool(response.data);
       } catch (err) {
-        showAlert("error", "Failed to fetch school");
+        showAlert("error", t("alerts.fetchSchoolError"));
       }
     };
 
     if (formData.school) {
       getSchoolById();
     }
-  }, [formData.school]);
+  }, [formData.school, t]);
 
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
-  
-    // Update the form data without triggering warnings
     setFormData((prevData) => ({ ...prevData, [name]: value || "" }));
-  
-    // Handle city updates separately
     if (name === "city") {
       setCity(value);
     }
   }, []);
-  
+
   const handleBlur = useCallback((e) => {
     const { name, value } = e.target;
   
@@ -221,7 +210,6 @@ const ProfileEdit = () => {
       }
     }
   }, []);
-  
 
   const handleUpdate = useCallback(async () => {
     const updatePayload = {
@@ -233,21 +221,21 @@ const ProfileEdit = () => {
       city: formData.city,
       school: formData.school,
     };
-  
+
     if (formData.password && formData.oldPassword) {
       if (formData.password !== formData.confirmPassword) {
-        showAlert("error", "Passwords do not match");
+        showAlert("error", t("alerts.passwordMismatch"));
         return;
       }
       updatePayload.password = formData.password;
       updatePayload.oldPassword = formData.oldPassword;
     }
-  
+
     if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      showAlert("error", "Invalid email format");
+      showAlert("error", t("alerts.invalidEmail"));
       return;
     }
-    
+
     try {
       const response = await axios.put(
         `${getApiBaseUrl()}/api/users/${user.id}/update/`,
@@ -258,31 +246,30 @@ const ProfileEdit = () => {
           },
         }
       );
-  
+
       const userToStore = {
         ...response.data,
         password: undefined,
         oldPassword: undefined,
         confirmPassword: undefined,
       };
-  
+
       localStorage.setItem("user", JSON.stringify(userToStore));
       setUser(userToStore);
-  
+
       setFormData((prev) => ({
         ...prev,
         password: "",
         confirmPassword: "",
         oldPassword: "",
       }));
-  
+
       setEditMode(false);
-      showAlert("success", "Profile updated successfully");
+      showAlert("success", t("alerts.updateSuccess"));
     } catch (err) {
-      showAlert("error", err.response?.data?.message || "Update failed");
+      showAlert("error", err.response?.data?.message || t("alerts.updateError"));
     }
-  }, [formData, user?.id]);
-  
+  }, [formData, user?.id, t]);
 
   const handleDelete = useCallback(async () => {
     if (usernameInput === user.username) {
@@ -297,15 +284,15 @@ const ProfileEdit = () => {
         );
         localStorage.removeItem("authToken");
         localStorage.removeItem("user");
-        router.push("/profile/signin");
-        showAlert("success", "Account deleted successfully");
+        router.push(`/${locale}/profile/signin`);
+        showAlert("success", t("alerts.deleteSuccess"));
       } catch (err) {
-        showAlert("error", "Delete failed");
+        showAlert("error", t("alerts.deleteError"));
       }
     } else {
-      showAlert("error", "Username does not match. Account deletion cancelled.");
+      showAlert("error", t("alerts.usernameMismatch"));
     }
-  }, [router, user?.id, user?.username, usernameInput]);
+  }, [router, user?.id, user?.username, usernameInput, t]);
 
   const openDeleteModal = () => {
     setDeleteAccountModalOpen(true);
@@ -332,74 +319,74 @@ const ProfileEdit = () => {
 
   if (!isClient) return null;
 
-
   return (
     <div className="min-h-screen w-screen bg-gradient-to-br from-blue-500/10 to-purple-500/5">
       {/* Content container with max width for wider screens */}
-      <div className="relative mx-auto w-full">
-        {/* Floating alert */}
+      <div className="relative w-full flex flex-col items-center py-12">
+      {/* Floating alert */}
         {alert && (
           <div className="fixed top-4 right-4 z-50 max-w-md">
             <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />
           </div>
         )}
-      
-        <div className="relative w-full flex-1 flex flex-col items-center py-12">
-          {/* Header Section with Logo */}
-          <div className="w-full max-w-4xl flex items-center mb-8 justify-center md:justify-start space-x-6">
-            <img
-              src={theme === "dark" ? "/static/logos/maestre_logo_white_transparent.webp" : "/static/logos/maestre_logo_blue_transparent.webp"}
-              alt="MAESTRE Logo"
-              className="w-20 h-20 drop-shadow-lg"
-            />
-            <div className="text-center md:text-left">
-              <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-                Hello{" "}
+
+        <div className="w-full flex items-center mb-8 justify-center space-x-6">
+        {/* Header Section with Logo */}
+              <div className="w-full max-w-4xl flex flex-col items-center mb-8 justify-center space-y-4">
+              <img
+                src={theme === "dark" ? "/static/logos/maestre_logo_white_transparent.webp" : "/static/logos/maestre_logo_blue_transparent.webp"}
+                alt={t("header.logoAlt")}
+                className="w-20 h-20 drop-shadow-lg"
+              />
+              <div className="text-center">
+                <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                {t("header.greeting")}{" "}
                 <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
                   {user ? user.name : ""}
                 </span>{" "}
                 !
-              </h1>
-              <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-                See and edit your profile and data
-              </p>
+                </h1>
+                <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                {t("header.subtitle")}
+                </p>
+              </div>
+              </div>
             </div>
-          </div>
-  
-          <div className="w-full max-w-4xl">
-            {editMode ? (
-              memoizedForm
-            ) : (
-              <div className={cn(
+
+              <div className="w-full max-w-4xl">
+              {editMode ? (
+                memoizedForm
+              ) : (
+                <div className={cn(
                 "bg-opacity-30 backdrop-filter backdrop-blur-lg",
                 "rounded-xl shadow-xl p-8",
                 "w-full",
                 theme === "dark"
                   ? "bg-gray-800 border border-gray-700"
                   : "bg-white border border-gray-100"
-              )}>
+                )}>
                 <style jsx global>{`
                   @import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
                   select {
-                    appearance: none;
-                    background: ${theme === "dark" ? "#333" : "#fff"};
-                    color: ${theme === "dark" ? "#fff" : "#000"};
-                    border: 1px solid ${theme === "dark" ? "#555" : "#ccc"};
-                    padding: 0.5rem;
-                    border-radius: 0.375rem;
-                    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+                  appearance: none;
+                  background: ${theme === "dark" ? "#333" : "#fff"};
+                  color: ${theme === "dark" ? "#fff" : "#000"};
+                  border: 1px solid ${theme === "dark" ? "#555" : "#ccc"};
+                  padding: 0.5rem;
+                  border-radius: 0.375rem;
+                  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
                   }
                   select:focus {
-                    outline: none;
-                    border-color: ${theme === "dark" ? "#888" : "#007bff"};
-                    box-shadow: 0 0 0 3px ${theme === "dark" ? "rgba(136, 136, 136, 0.5)" : "rgba(0, 123, 255, 0.25)"};
+                  outline: none;
+                  border-color: ${theme === "dark" ? "#888" : "#007bff"};
+                  box-shadow: 0 0 0 3px ${theme === "dark" ? "rgba(136, 136, 136, 0.5)" : "rgba(0, 123, 255, 0.25)"};
                   }
                   option {
-                    background: ${theme === "dark" ? "#333" : "#fff"};
-                    color: ${theme === "dark" ? "#fff" : "#000"};
+                  background: ${theme === "dark" ? "#333" : "#fff"};
+                  color: ${theme === "dark" ? "#fff" : "#000"};
                   }`}
                 </style>
-  
+          
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
                   {/* Personal Information - now spans more columns on larger screens */}
                   <div className={cn(
@@ -408,14 +395,14 @@ const ProfileEdit = () => {
                   )}>
                     <h3 className={`text-xl font-bold mb-6 ${theme === "dark" ? "text-white" : "text-gray-800"}`}
                       style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-                      Personal Information
+                      {t("sections.personalInfo")}
                     </h3>
                     
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <LabelInputContainer className="mb-4">
                         <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
                           <IconUser className="mr-2 h-5 w-5 text-blue-500" />
-                          <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Username</span>
+                          <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>{t("fields.username")}</span>
                         </Label>
                         <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
                           {user?.username}
@@ -425,7 +412,7 @@ const ProfileEdit = () => {
                       <LabelInputContainer className="mb-4">
                         <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
                           <IconMail className="mr-2 h-5 w-5 text-green-500" />
-                          <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Email Address</span>
+                          <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>{t("fields.email")}</span>
                         </Label>
                         <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
                           {user?.email}
@@ -435,7 +422,7 @@ const ProfileEdit = () => {
                       <LabelInputContainer className="mb-4">
                         <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
                           <IconIdBadge className="mr-2 h-5 w-5 text-purple-500" />
-                          <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Name</span>
+                          <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>{t("fields.name")}</span>
                         </Label>
                         <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
                           {user?.name}
@@ -445,7 +432,7 @@ const ProfileEdit = () => {
                       <LabelInputContainer className="mb-4">
                         <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
                           <IconEdit className="mr-2 h-5 w-5 text-amber-500" />
-                          <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>Surname</span>
+                          <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>{t("fields.surname")}</span>
                         </Label>
                         <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
                           {user?.surname}
@@ -462,13 +449,13 @@ const ProfileEdit = () => {
                     )}>
                       <h3 className={`text-xl font-bold mb-6 ${theme === "dark" ? "text-white" : "text-gray-800"}`}
                         style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-                        School Information
+                        {t("sections.schoolInfo")}
                       </h3>
                       
                       <LabelInputContainer className="mb-4">
                         <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
                           <IconMapPin className="mr-2 h-5 w-5 text-red-500" />
-                          <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>City</span>
+                          <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>{t("fields.city")}</span>
                         </Label>
                         <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
                           {user?.city}
@@ -478,7 +465,7 @@ const ProfileEdit = () => {
                       <LabelInputContainer className="mb-4">
                         <Label className={`flex items-center ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
                           <IconSchool className="mr-2 h-5 w-5 text-purple-500" />
-                          <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>School</span>
+                          <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>{t("fields.school")}</span>
                         </Label>
                         <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
                           {school?.name}
@@ -500,7 +487,7 @@ const ProfileEdit = () => {
                     style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
                   >
                     <span className="flex items-center">
-                      <span className="mr-2">Edit Profile</span>
+                      <span className="mr-2">{t("buttons.editProfile")}</span>
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                         <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
                       </svg>
@@ -510,7 +497,7 @@ const ProfileEdit = () => {
                   {/* Complete Profile Button */}
                   {isProfileCompleted === false && (
                     <button
-                      onClick={() => router.push('/profile/complete')}
+                      onClick={() => router.push(`/${locale}/profile/complete`)}
                       className={cn(
                         "btn btn-md btn-success",
                         theme === "dark" ? "dark:btn-success" : ""
@@ -518,7 +505,7 @@ const ProfileEdit = () => {
                       style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
                     >
                       <span className="flex items-center">
-                        <span className="mr-2">Complete Profile</span>
+                        <span className="mr-2">{t("buttons.completeProfile")}</span>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                           <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                         </svg>
@@ -539,7 +526,7 @@ const ProfileEdit = () => {
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                         <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
                       </svg>
-                      Delete Account
+                      {t("buttons.deleteAccount")}
                     </span>
                   </button>
                 </div>
@@ -549,89 +536,88 @@ const ProfileEdit = () => {
           
           {/* Delete Account Modal */}
           <Modal isOpen={isDeleteAccountModalOpen} onClose={closeDeleteAccountModal}>
-  <div title=" ">
-    {/* Header Section */}
-    <div className={cn("p-6", theme === "dark" ? "bg-[#f08060]" : "bg-[#f08060]")}>
-      <div className="flex items-center gap-3">
-        <div className="p-2 bg-white/20 rounded-full">
-          <IconTrash className="h-6 w-6 text-white" />
-        </div>
-        <h2 className="text-xl font-bold text-white">
-          Confirm Account Deletion
-        </h2>
-      </div>
-    </div>
+            <div title=" ">
+              {/* Header Section */}
+              <div className={cn("p-6", theme === "dark" ? "bg-[#f08060]" : "bg-[#f08060]")}>
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-white/20 rounded-full">
+                    <IconTrash className="h-6 w-6 text-white" />
+                  </div>
+                  <h2 className="text-xl font-bold text-white">
+                    {t("modals.deleteAccount.title")}
+                  </h2>
+                </div>
+              </div>
 
-    {/* Content Section */}
-      <div className="p-6">
-        <p
-        className={cn(
-          "mb-6 text-base",
-          theme === "dark" ? "text-gray-300" : "text-gray-600"
-        )}
-        >
-        Are you sure you want to delete your account? This action is irreversible, and all your data will be permanently removed.
-        </p>
-        <p
-        className={cn(
-          "mb-6 text-base",
-          theme === "dark" ? "text-gray-300" : "text-gray-600"
-        )}
-        >
-        To confirm, please type your username below:
-        </p>
-        <input
-        type="text"
-        placeholder="Enter your username"
-        value={usernameInput}
-        onChange={(e) => setUsernameInput(e.target.value)}
-        className={cn(
-          "w-full px-4 py-2 mb-6 border rounded-md",
-          theme === "dark" ? "bg-gray-800 text-white border-gray-600" : "bg-gray-100 text-black border-gray-300"
-        )}
-        />
-        <div className="flex items-center justify-between gap-3">
-        {/* Sign Out Button */}
-        <button
-          onClick={handleSignout}
-          className={cn(
-          "btn btn-md",
-          theme === "dark" ? "bg-white text-black" : "bg-black text-white"
-          )}
-        >
-          Sign Out
-        </button>
-
-        <div className="flex items-center gap-3">
-          {/* Cancel Button */}
-          <button
-            onClick={closeDeleteAccountModal}
-            className={cn(
-              "btn btn-md btn-secondary",
-              theme === "dark" ? "dark:btn-secondary" : ""
-            )}
-          >
-            Cancel
-          </button>
-
-          {/* Confirm Delete Button */}
-          <button
-            onClick={handleDelete}
-            disabled={usernameInput !== user?.username} // Disable button if username doesn't match
-            className={cn(
-              "btn btn-md btn-danger",
-              usernameInput === user?.username ? "" : "opacity-50 cursor-not-allowed",
-              theme === "dark" ? "dark:btn-danger" : ""
-            )}
-          >
-            Delete Account
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
-</Modal>
-        </div>
+              {/* Content Section */}
+                <div className="p-6">
+                  <p
+                  className={cn(
+                    "mb-6 text-base",
+                    theme === "dark" ? "text-gray-300" : "text-gray-600"
+                  )}
+                  >
+                  {t("modals.deleteAccount.message")}
+                  </p>
+                  <p
+                  className={cn(
+                    "mb-6 text-base",
+                    theme === "dark" ? "text-gray-300" : "text-gray-600"
+                  )}
+                  >
+                  {t("modals.deleteAccount.confirmation")}
+                  </p>
+                  <input
+                  type="text"
+                  placeholder={t("modals.deleteAccount.placeholder")}
+                  value={usernameInput}
+                  onChange={(e) => setUsernameInput(e.target.value)}
+                  className={cn(
+                    "w-full px-4 py-2 mb-6 border rounded-md",
+                    theme === "dark" ? "bg-gray-800 text-white border-gray-600" : "bg-gray-100 text-black border-gray-300"
+                  )}
+                  />
+                  <div className="flex items-center justify-between gap-3">
+                  {/* Sign Out Button */}
+                  <button
+                    onClick={handleSignout}
+                    className={cn(
+                    "btn btn-md",
+                    theme === "dark" ? "bg-white text-black" : "bg-black text-white"
+                    )}
+                  >
+                    {t("buttons.signOut")}
+                  </button>
+                  
+                  <div className="flex items-center gap-3">
+                    {/* Cancel Button */}
+                    <button
+                      onClick={closeDeleteAccountModal}
+                      className={cn(
+                        "btn btn-md btn-secondary",
+                        theme === "dark" ? "dark:btn-secondary" : ""
+                      )}
+                    >
+                      {t("buttons.cancel")}
+                    </button>
+                    
+                    {/* Confirm Delete Button */}
+                    <button
+                      onClick={handleDelete}
+                      disabled={usernameInput !== user?.username} // Disable button if username doesn't match
+                      className={cn(
+                        "btn btn-md btn-danger",
+                        usernameInput === user?.username ? "" : "opacity-50 cursor-not-allowed",
+                        theme === "dark" ? "dark:btn-danger" : ""
+                      )}
+                    >
+                      {t("buttons.deleteAccount")}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </Modal>
       </div>
     </div>
   );

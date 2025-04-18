@@ -120,7 +120,7 @@ export function Footer({ locale }) {
                   <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
                   </svg>
-                  <Link href={`/${locale}/terms`} legacyBehavior>
+                  <Link href={`/terms`} legacyBehavior>
                     <a className={cn(
                       "transition-colors",
                       theme === "dark" ? "text-gray-300 hover:text-white" : "text-white/90 hover:text-white"
@@ -133,7 +133,7 @@ export function Footer({ locale }) {
                   <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
                   </svg>
-                  <Link href={`/${locale}/terms`} legacyBehavior>
+                  <Link href={`/terms`} legacyBehavior>
                     <a className={cn(
                       "transition-colors",
                       theme === "dark" ? "text-gray-300 hover:text-white" : "text-white/90 hover:text-white"
@@ -146,7 +146,7 @@ export function Footer({ locale }) {
                   <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
                   </svg>
-                  <Link href={`/${locale}/terms`} legacyBehavior>
+                  <Link href={`/terms`} legacyBehavior>
                     <a className={cn(
                       "transition-colors",
                       theme === "dark" ? "text-gray-300 hover:text-white" : "text-white/90 hover:text-white"

@@ -656,5 +656,389 @@
       "success": "School created successfully!",
       "error": "Failed to create school. Please try again."
     }
-  }
+    },
+
+
+    "TermsPage": {
+      "header": {
+        "title": "MAESTRE - Legal Information",
+        "description": "Welcome to our legal information section. Here you'll find all the necessary documents and policies that govern the use of our platform. Please review them carefully to understand your rights and responsibilities."
+      },
+      "terms": {
+        "cookies": "Cookie Policy",
+        "privacy": "Privacy Policy",
+        "termsOfUse": "Terms of Use",
+        "licenses": "Licenses",
+        "document": "Document"
+      },
+      "alerts": {
+        "fetchTermsError": "Failed to load terms. Please try again later.",
+        "checkAdminError": "Error checking admin status.",
+        "deleteSuccess": "Term deleted successfully.",
+        "deleteError": "Failed to delete term. Please try again later.",
+        "fetchContentError": "Error fetching file content.",
+        "addSuccess": "New term added successfully.",
+        "addError": "Failed to add new term. Please try again later.",
+        "tagError": "Tag Error: {{error}}",
+        "contentError": "Content Error: {{error}}",
+        "pdfContentError": "PDF Content Error: {{error}}",
+        "versionError": "Version Error: {{error}}",
+        "nameError": "Name Error: {{error}}",
+        "noPdf": "No PDF exists for this document.",
+        "noMd": "Please upload a markdown (.md) file",
+        "failedToOpenPdf": "Failed to open the document in a new tab. Please check your browser settings.",
+        "termTypeError": "Please select a term type",
+        "noVersion": "Please enter a version number"
+      },
+      "buttons": {
+        "addNewTerm": "Add New Term",
+        "viewFullDocument": "View full document",
+        "openDocument": "Open document",
+        "cancel": "Cancel",
+        "save": "Save",
+        "delete": "Delete"
+      },
+      "messages": {
+        "allTermsCreated": "All term types have already been created. You cannot add more terms."
+      },
+      "loading": {
+        "title": "Loading...",
+        "description": "Please wait while we load the content.",
+        "viewFullDocument": "View full document",
+        "openDocument": "Open document"
+      },
+      "noTerms": {
+        "title": "Terms Not Available",
+        "description": "The terms and conditions could not be loaded at this time. This may be due to:",
+        "reason1": "The terms are being updated",
+        "reason2": "You need to log in to access this information",
+        "reason3": "There is a temporary issue with the server",
+        "contactSupport": "If you need access to this information, please log in or contact our support team."
+      },
+      "additionalInfo": {
+        "agreements": "These agreements apply to all users accessing the platform, whether through web browsers or mobile applications.",
+        "modifications": "We reserve the right to modify these agreements based on legislative changes or operational needs.",
+        "governance": "This agreement will be governed and interpreted in accordance with applicable law.",
+        "acceptance": "Using the platform implies full acceptance of all the conditions established herein."
+      },
+      "addForm": {
+        "title": "Add New Term",
+        "termTypeLabel": "Term Type",
+        "selectTermType": "Select a term type",
+        "markdownContentLabel": "Markdown Content",
+        "uploadMarkdown": "Drag and drop a .md file here, or click to select one",
+        "pdfContentLabel": "PDF Content",
+        "uploadPdf": "Drag and drop a .pdf file here, or click to select one",
+        "uploadedFile": "Uploaded file",
+        "versionLabel": "Version",
+        "versionPlaceholder": "E.g., 'v1.0'",
+        "availableTermTypes": {
+          "termsOfUse": "Terms of Use",
+          "privacyPolicy": "Privacy Policy",
+          "cookiePolicy": "Cookie Policy",
+          "licenses": "Licenses"
+        }
+      },
+      "footer": {
+        "lastUpdated": "Last updated: ",
+        "contactSupport": "If you have any questions about our terms or cannot access them, please contact us."
+      },
+      "deleteModal": {
+        "title": "Confirm Deletion",
+        "description": "Are you sure you want to delete this document? This action cannot be undone."
+      }
+    },
+
+
+    "CreateSchoolPage": {
+      "header": {
+        "title": "Create your school",
+        "subtitle": "For other teachers to join",
+        "logoAlt": "MAESTRE Logo"
+      },
+      "alerts": {
+        "mustSignUp": "You must sign up to create a school.",
+        "success": "School created successfully!",
+        "failure": "Failed to create school.",
+        "networkError": "Network error occurred."
+      }
+    },
+
+
+    "SignUpPage": {
+      "welcomeMessage": "Welcome to",
+      "createAccount": "Create your account",
+      "logoAlt": "MAESTRE Logo",
+      "videoCaption": "Maestrito is here to help with all your creative needs",
+      "videoAutoplayError": "Video autoplay prevented",
+      "alerts": {
+        "usernameTooLong": "Username cannot exceed 30 characters",
+        "emailTooLong": "Email cannot exceed 255 characters",
+        "nameTooLong": "First name cannot exceed 30 characters",
+        "surnameTooLong": "Last name cannot exceed 30 characters",
+        "passwordTooLong": "Password cannot exceed 128 characters",
+        "passwordTooShort": "Password must be at least 8 characters long",
+        "passwordUppercase": "Password must contain at least one uppercase letter",
+        "passwordLowercase": "Password must contain at least one lowercase letter",
+        "passwordNumber": "Password must contain at least one number",
+        "passwordSpecialCharacter": "Password must contain at least one special character",
+        "passwordNoWhitespace": "Password cannot contain leading or trailing whitespace",
+        "signupSuccess": "Account created successfully",
+        "signupFailure": "Registration failed",
+        "networkError": "Network error occurred"
+      }
+    },
+
+
+    "SignInPage": {
+      "welcomeBack": "Welcome back",
+      "to": "to",
+      "logoAlt": "MAESTRE Logo",
+      "videoCaption": "Maestrito is here to help with all your creative needs",
+      "videoAutoplayError": "Video autoplay prevented",
+      "alerts": {
+        "emailOrUsernameTooLong": "Email or username cannot exceed 255 characters",
+        "passwordTooLong": "Password cannot exceed 128 characters",
+        "passwordTooShort": "Password must be at least 8 characters long",
+        "passwordUppercase": "Password must contain at least one uppercase letter",
+        "passwordLowercase": "Password must contain at least one lowercase letter",
+        "passwordNumber": "Password must contain at least one number",
+        "passwordSpecialCharacter": "Password must contain at least one special character",
+        "signinSuccess": "Signed in successfully",
+        "signinFailure": "Login failed",
+        "networkError": "Network error occurred"
+      }
+    },
+
+
+    "ProfileEditPage": {
+      "header": {
+        "logoAlt": "MAESTRE Logo",
+        "greeting": "Hello",
+        "subtitle": "See and edit your profile and data"
+      },
+      "sections": {
+        "personalInfo": "Personal Information",
+        "schoolInfo": "School Information"
+      },
+      "buttons": {
+        "deleteAccount": "Delete Account",
+        "cancel": "Cancel",
+        "signOut": "Sign Out",
+        "editProfile": "Edit Profile",
+        "completeProfile": "Complete Profile"
+      },
+      "alerts": {
+        "signoutSuccess": "You have successfully logged out.",
+        "signoutError": "Error during signout process.",
+        "signoutApiError": "API error during signout.",
+        "fetchSchoolsError": "Failed to fetch schools.",
+        "fetchSchoolError": "Failed to fetch school.",
+        "passwordMismatch": "Passwords do not match.",
+        "invalidEmail": "Invalid email format.",
+        "updateSuccess": "Profile updated successfully.",
+        "updateError": "Failed to update profile.",
+        "deleteSuccess": "Account deleted successfully.",
+        "deleteError": "Failed to delete account.",
+        "usernameMismatch": "Username does not match. Account deletion cancelled."
+      },
+      "fields": {
+        "username": "Username",
+        "email": "Email",
+        "name": "Name",
+        "surname": "Surname",
+        "oldPassword": "Old Password",
+        "newPassword": "New Password",
+        "confirmPassword": "Confirm Password",
+        "city": "City",
+        "school": "School"
+      },
+      "modals": {
+        "deleteAccount": {
+          "title": "Delete Account",
+          "message": "Are you sure you want to delete your account? This action cannot be undone.",
+          "confirmation": "Type your username to confirm",
+          "placeholder": "Username"
+        }
+      }
+    },
+
+
+    "ProfileCompletePage": {
+      "header": {
+        "logoAlt": "MAESTRE Logo",
+        "title": "Complete your profile",
+        "subtitle": "To fully enjoy MAESTRE"
+      },
+      "alerts": {
+        "usernameTooLong": "Username cannot exceed 30 characters.",
+        "emailTooLong": "Email cannot exceed 255 characters.",
+        "allFieldsRequired": "All fields are required.",
+        "fetchSchoolsError": "Error fetching schools. Please try again later.",
+        "updateSuccess": "Profile updated successfully.",
+        "updateError": "Update failed: {error}"
+      },
+      "defaultName": "Default Name",
+      "defaultSurname": "Default Surname"
+    },
+
+
+    "ClassroomsPage": {
+      "header": {
+        "title": "My Classrooms",
+        "subtitle": "Manage your classes"
+      },
+      "noClasses": "No classes found",
+      "createClassButton": "Create New Classroom +",
+      "openClassButton": "Open Class",
+      "editButton": "Edit →",
+      "courseLabel": "Course",
+      "yearLabel": "Year",
+      "imageAlt": "Image of {name} classroom",
+      "alerts": {
+        "fetchError": "Failed to fetch classes. Please try again later."
+      }
+    },
+
+
+    "ClassroomEditPage": {
+      "header": {
+        "title": "Edit Classroom",
+        "subtitle": "Update your classroom information below"
+      },
+      "alerts": {
+        "nameTooLong": "Name must not exceed 30 characters.",
+        "courseTooLong": "Academic course must not exceed 30 characters.",
+        "descriptionTooLong": "Description must not exceed 255 characters.",
+        "descriptionEmpty": "Description must not be empty.",
+        "invalidYearFormat": "Academic Year must be in the format 'YYYY-YYYY'.",
+        "fetchStagesError": "Failed to fetch stages.",
+        "networkError": "Network error occurred.",
+        "fetchClassroomError": "Failed to fetch classroom data.",
+        "missingClassroomData": "Classroom data is missing.",
+        "updateSuccess": "Classroom updated successfully.",
+        "updateError": "Failed to update classroom data.",
+        "deleteSuccess": "Classroom deleted successfully.",
+        "deleteError": "Failed to delete classroom.",
+        "nameMismatch": "Classroom name does not match. Deletion cancelled."
+      },
+      "deleteModal": {
+        "title": "Delete Classroom",
+        "description": "Are you sure you want to delete {{name}}? This action cannot be undone.",
+        "placeholder": "Enter classroom name ({name})",
+        "cancel": "Cancel",
+        "delete": "Delete"
+      }
+    },
+
+
+    "ClassroomCreatePage": {
+      "header": {
+        "title": "Create a New Classroom",
+        "subtitle": "Set up your MAESTRE classroom",
+        "logoAlt": "MAESTRE Logo"
+      },
+      "alerts": {
+        "authTokenMissing": "Authentication token missing. Redirecting to signup.",
+        "fetchStagesError": "Failed to fetch stages. Please try again later.",
+        "networkError": "Network error occurred while fetching stages.",
+        "success": "Classroom created successfully!",
+        "creationFailed": "Failed to create classroom. Please try again."
+      }
+    },
+
+
+    "ClassroomPage": {
+      "backToClassrooms": "Back to Classrooms",
+      "unnamedClassroom": "Unnamed Classroom",
+      "studentsTab": "Students",
+      "materialsTab": "Materials",
+      "studentsTitle": "Students",
+      "materialsTitle": "Materials",
+      "cancel": "Cancel",
+      "deleteSelected": "Delete ({count})",
+      "deleteSelectedDescription": "Are you sure you want to delete the selected students?",
+      "delete": "Delete",
+      "confirmDelete": "Confirm Deletion",
+      "confirmDeleteDescription": "Are you sure you want to delete ",
+      "students": "Students",
+      "materials": "Materials",
+      "addStudent": "Add Student",
+      "addFirstStudent": "Add your first student!",
+      "noStudents": "No students found in this classroom.",
+      "alerts": {
+        "fetchClassroomError": "Failed to fetch classroom data.",
+        "fetchStudentsError": "Failed to fetch students.",
+        "deleteStudentSuccess": "Student deleted successfully.",
+        "deleteStudentError": "Error deleting student.",
+        "editStudentSuccess": "Student updated successfully.",
+        "editStudentError": "Failed to update student.",
+        "addStudentSuccess": "Student added successfully.",
+        "addStudentError": "Failed to add student.",
+        "deleteSelectedSuccess": "Selected students deleted successfully.",
+        "deleteSelectedError": "Error deleting selected students.",
+        "nameLimitExceeded": "Name exceeds the limit of {limit} characters.",
+        "surnameLimitExceeded": "Surname exceeds the limit of {limit} characters."
+      }
+    },
+
+
+    "StudentModal": {
+      "editStudent": "Edit Student",
+      "addStudent": "Add New Student",
+      "nameLabel": "Name",
+      "surnameLabel": "Surname",
+      "cancelButton": "Cancel",
+      "saveChanges": "Save Changes",
+      "processing": "Processing..."
+    },
+
+    "EditMaterialModal": {
+      "editMaterialName": "Edit Material Name",
+      "editMaterialNameDescription": "Enter a new name for the material:",
+      "cancel": "Cancel",
+      "save": "Save"
+    },
+
+
+    "MaterialPage": {
+      "header": {
+        "title": "My Materials",
+        "subtitle": "See all your uploaded materials at a glance."
+      },
+      "createMaterial": "Add New Material",
+      "searchPlaceholder": "Search materials...",
+      "filterByTags": "Filter by Tags:",
+      "enterDeleteMode": "Enter Delete Mode",
+      "exitDeleteMode": "Exit Delete Mode",
+      "noMaterialsFound": "No materials found.",
+      "filterByClassroom": "Filter by Classroom:",
+      "deleteMaterial": "Delete Material",
+      "deleteMaterialConfirmation": "Are you sure you want to delete",
+      "cancel": "Cancel",
+      "delete": "Delete",
+      "manageTags": "Manage Tags for",
+      "selectOrCreateTags": "Select or create tags to associate with this material.",
+      "createTag": "Create New Tag",
+      "saveChanges": "Save Changes",
+      "alerts": {
+        "createdSuccess": "Material created successfully.",
+        "deleteSelectedSuccess": "Selected materials deleted successfully.",
+        "deleteSelectedError": "Error deleting selected materials. Please try again.",
+        "editSuccess": "Material name updated successfully.",
+        "editError": "Failed to update material name. Please try again.",
+        "deleteSuccess": "Material deleted successfully.",
+        "deleteError": "Failed to delete material. Please try again.",
+        "fetchMaterialsError": "Failed to fetch materials. Please try again later.",
+        "fetchTagsError": "Failed to fetch tags. Please try again later.",
+        "fetchClassroomsError": "Failed to fetch classrooms. Please try again later.",
+        "tagCreateSuccess": "Tag created successfully.",
+        "tagLimit": "You have reached the maximum limit of 15 tags.",
+        "tagCreateError": "Error creating tag. Please try again.",
+        "tagUpdateSuccess": "Tags updated successfully.",
+        "tagUpdateError": "Failed to update tags. Please try again.",
+        "tagDeleteSuccess": "Tag deleted successfully.",
+        "tagDeleteError": "Failed to delete tag. Please try again."
+      }
+    }
 }

@@ -8,10 +8,12 @@ import { cn } from "@/lib/utils";
 import { useState, useEffect, useRef } from "react";
 import Alert from "@/components/ui/Alert";
 import { useMediaQuery } from "@/hooks/use-media-query";
+import { useTranslations } from "next-intl";
 
 export default function SignIn() {
   const router = useRouter();
   const { theme } = useTheme();
+  const t = useTranslations("SignInPage");
   const [alert, setAlert] = useState(null);
   const videoRef = useRef(null);
   const isLargeScreen = useMediaQuery("(min-width: 1024px)");
@@ -31,40 +33,40 @@ export default function SignIn() {
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.muted = true; // Ensure the video is muted
-      videoRef.current.play().catch(error => {
-        console.log("Video autoplay prevented:", error);
+      videoRef.current.play().catch((error) => {
+        console.log(t("videoAutoplayError"), error);
       });
     }
-  }, [isLargeScreen]);
+  }, [isLargeScreen, t]);
 
   const handleSubmit = async (formData) => {
     // Field length and uniqueness restrictions
     if (formData.emailOrUsername && formData.emailOrUsername.length > 255) {
-      showAlert("warning", "Email or username cannot exceed 255 characters");
+      showAlert("warning", t("alerts.emailOrUsernameTooLong"));
       return;
     }
     if (formData.password && formData.password.length > 128) {
-      showAlert("warning", "Password cannot exceed 128 characters");
+      showAlert("warning", t("alerts.passwordTooLong"));
       return;
     }
     if (formData.password && formData.password.length < 8) {
-      showAlert("warning", "Password must be at least 8 characters long");
+      showAlert("warning", t("alerts.passwordTooShort"));
       return;
     }
     if (formData.password && !/[A-Z]/.test(formData.password)) {
-      showAlert("warning", "Password must contain at least one uppercase letter");
+      showAlert("warning", t("alerts.passwordUppercase"));
       return;
     }
     if (formData.password && !/[a-z]/.test(formData.password)) {
-      showAlert("warning", "Password must contain at least one lowercase letter");
+      showAlert("warning", t("alerts.passwordLowercase"));
       return;
     }
     if (formData.password && !/[0-9]/.test(formData.password)) {
-      showAlert("warning", "Password must contain at least one number");
+      showAlert("warning", t("alerts.passwordNumber"));
       return;
     }
     if (formData.password && !/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
-      showAlert("warning", "Password must contain at least one special character");
+      showAlert("warning", t("alerts.passwordSpecialCharacter"));
       return;
     }
 
@@ -83,28 +85,34 @@ export default function SignIn() {
         const user = JSON.stringify(data);
         localStorage.setItem("user", user);
         router.push("/");
-        showAlert("success", "Signed in successfully");
+        showAlert("success", t("alerts.signinSuccess"));
       } else {
         const data = await response.json();
-        showAlert("error", data.detail || "Login failed");
+        showAlert("error", data.detail || t("alerts.signinFailure"));
       }
     } catch (err) {
-      showAlert("error", "Network error occurred");
+      showAlert("error", t("alerts.networkError"));
     }
   };
 
   return (
-    <div className={cn(
-      "min-h-screen flex flex-col md:flex-row",
-      "bg-gradient-to-br",
-      theme === "dark" 
-        ? "from-gray-900 via-zinc-900 to-gray-800" 
-        : "from-blue-50 via-white to-blue-100"
-    )}>
+    <div
+      className={cn(
+        "min-h-screen flex flex-col md:flex-row",
+        "bg-gradient-to-br",
+        theme === "dark"
+          ? "from-gray-900 via-zinc-900 to-gray-800"
+          : "from-blue-50 via-white to-blue-100"
+      )}
+    >
       {/* Floating alert */}
       {alert && (
         <div className="fixed top-4 right-4 z-50 max-w-md">
-          <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />
+          <Alert
+            type={alert.type}
+            message={alert.message}
+            onClose={() => setAlert(null)}
+          />
         </div>
       )}
 
@@ -123,59 +131,71 @@ export default function SignIn() {
             {/* Optional overlay for better text readability */}
             <div className="absolute inset-0 bg-black bg-opacity-20"></div>
           </div>
-          
+
           {/* Video caption/branding */}
           <div className="absolute bottom-8 left-8 z-10 max-w-lg">
             <h2 className="text-3xl font-bold text-white drop-shadow-lg">
-            Maestrito is here to help with all your creative needs
+              {t("videoCaption")}
             </h2>
           </div>
         </div>
       )}
 
       {/* Right side - Login form */}
-      <div className={cn(
-        "flex flex-col justify-center items-center p-6 md:p-12", 
-        isLargeScreen ? "lg:w-1/2" : "w-full"
-      )}>
+      <div
+        className={cn(
+          "flex flex-col justify-center items-center p-6 md:p-12",
+          isLargeScreen ? "lg:w-1/2" : "w-full"
+        )}
+      >
         <div className="w-full max-w-xl">
-
-          <div className={cn(
-            "flex items-center mb-8",
-            isLargeScreen ? "justify-start space-x-6" : "justify-center space-x-4"
-          )}>
-            <img 
-              src={theme === "dark" ? "/static/logos/maestre_logo_white_transparent.webp" : "/static/logos/maestre_logo_blue_transparent.webp"} 
-              alt="MAESTRE Logo" 
+          <div
+            className={cn(
+              "flex items-center mb-8",
+              isLargeScreen ? "justify-start space-x-6" : "justify-center space-x-4"
+            )}
+          >
+            <img
+              src={
+                theme === "dark"
+                  ? "/static/logos/maestre_logo_white_transparent.webp"
+                  : "/static/logos/maestre_logo_blue_transparent.webp"
+              }
+              alt={t("logoAlt")}
               className="w-28 h-28 drop-shadow-lg"
             />
-            <div className={cn(
-              isLargeScreen ? "text-left" : "text-center"
-            )}>
+            <div className={cn(isLargeScreen ? "text-left" : "text-center")}>
               <h1
                 className={cn(
                   "text-4xl font-extrabold",
                   theme === "dark" ? "text-white" : "text-gray-800"
                 )}
               >
-                Welcome back
+                {t("welcomeBack")}
               </h1>
-              <p className={cn(
-                "text-xl mt-2",
-                theme === "dark" ? "text-gray-300" : "text-gray-600"
-              )}>
-                to <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>MAESTRE</span>
+              <p
+                className={cn(
+                  "text-xl mt-2",
+                  theme === "dark" ? "text-gray-300" : "text-gray-600"
+                )}
+              >
+                {t("to")}{" "}
+                <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+                  MAESTRE
+                </span>
               </p>
             </div>
           </div>
-          <div className={cn(
-            "bg-opacity-30 backdrop-filter backdrop-blur-lg",
-            "rounded-xl shadow-xl p-8",
-            "w-full",
-            theme === "dark" 
-              ? "bg-gray-800 border border-gray-700" 
-              : "bg-white border border-gray-100"
-          )}>
+          <div
+            className={cn(
+              "bg-opacity-30 backdrop-filter backdrop-blur-lg",
+              "rounded-xl shadow-xl p-8",
+              "w-full",
+              theme === "dark"
+                ? "bg-gray-800 border border-gray-700"
+                : "bg-white border border-gray-100"
+            )}
+          >
             <SigninForm onSubmit={handleSubmit} />
           </div>
         </div>
