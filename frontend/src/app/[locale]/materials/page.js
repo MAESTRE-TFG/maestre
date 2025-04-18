@@ -509,7 +509,7 @@ const MaterialsList = () => {
                           <button
                             onClick={() => handleDeleteTag(tag.id)}
                             className="p-2 rounded-lg bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 transition-colors"
-                            title="Delete Tag"
+                            title={t("deleteTag")}
                           >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
@@ -795,7 +795,7 @@ const MaterialsList = () => {
                         disabled={isSubmitting}
                         className="btn-primary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
                       >
-                        {isSubmitting ? 'Creating...' : t("createTag")}
+                        {isSubmitting ? t("creating") : t("createTag")}
                       </button>
                       </div>
                     </form>
@@ -823,20 +823,20 @@ const MaterialsList = () => {
                   <div className="ml-4">
                     <button
                       onClick={confirmDeleteSelected}
-                      className={cn("px-3 py-1 rounded-md text-sm font-medium", theme === "dark" ? "bg-red-600 hover:bg-red-700 text-white" : "bg-red-500 hover:bg-red-700 text-white")}
+                      className="btn btn-sm btn-danger"
                     >
-                      {t("deleteSelected")} ({selectedMaterials.length})
+                      {t("delete")} ({selectedMaterials.length})
                     </button>
                   </div>
                 )}
               </div>
               {filteredMaterials.length > 0 ? (
-                <div className="relative w-full max-w-xl mx-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {filteredMaterials.map((material) => (
                     <div
                       key={material.id}
                       className={cn(
-                        "relative overflow-hidden z-40 bg-white dark:bg-neutral-900 flex flex-col items-start justify-start md:h-24 p-4 mt-4 w-full mx-auto rounded-md",
+                        "relative overflow-hidden z-40 bg-white dark:bg-neutral-900 flex flex-col items-start justify-start p-4 rounded-md",
                         "shadow-sm",
                         theme === "dark" ? "border border-neutral-800" : "border border-gray-200"
                       )}
@@ -868,7 +868,7 @@ const MaterialsList = () => {
                               setShowEditTagsModal(true);
                             }}
                             className="p-2 rounded-lg bg-yellow-100 dark:bg-yellow-900 hover:bg-yellow-200 dark:hover:bg-yellow-800 transition-colors"
-                            title="Manage Tags"
+                            title={t("editTag")}
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-yellow-600 dark:text-yellow-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" />
@@ -880,7 +880,7 @@ const MaterialsList = () => {
                               handleEdit(material);
                             }}
                             className="p-2 rounded-lg bg-blue-100 dark:bg-blue-900 hover:bg-blue-200 dark:hover:bg-blue-800 transition-colors"
-                            title="Edit Name"
+                            title={t("editName")}
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-600 dark:text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -896,7 +896,7 @@ const MaterialsList = () => {
                                 window.open(fileUrl, '_blank');
                               }}
                               className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
-                              title="Download File"
+                              title={t("downloadFile")}
                             >
                               <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-600 dark:text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
@@ -909,7 +909,7 @@ const MaterialsList = () => {
                               handleDelete(material);
                             }}
                             className="p-2 rounded-lg bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 transition-colors"
-                            title="Delete Material"
+                            title={t("deleteMaterial")}
                           >
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-600 dark:text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />

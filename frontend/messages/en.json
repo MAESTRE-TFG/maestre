@@ -1021,6 +1021,11 @@
       "selectOrCreateTags": "Select or create tags to associate with this material.",
       "createTag": "Create New Tag",
       "saveChanges": "Save Changes",
+      "deleteTag": "Delete Tag",
+      "editTag": "Manage Tags",
+      "editName": "Edit Name",
+      "downloadFile": "Download File",
+      "creating": "Creating...",
       "alerts": {
         "createdSuccess": "Material created successfully.",
         "deleteSelectedSuccess": "Selected materials deleted successfully.",
