@@ -978,5 +978,72 @@
       "tagDeleteSuccess": "Etiqueta eliminada correctamente.",
       "tagDeleteError": "Erro ao eliminar a etiqueta. Por favor, téntao de novo."
     }
+  },
+
+  "ToolsPage": {
+    "pageTitle": "Ferramentas de IA",
+    "pageSubtitle": "Escolle unha das nosas ferramentas automatizadas e comeza a crear!",
+    "quickAccess": "Acceso Rápido",
+    "loading": "Cargando...",
+    "authModal": {
+      "title": "Autenticación Requirida",
+      "description": "Necesitas iniciar sesión para acceder a esta ferramenta. Crea unha conta para desbloquear todas as funcións.",
+      "cancelButton": "Cancelar",
+      "createAccountButton": "Crear Conta",
+      "signInButton": "Iniciar Sesión"
+    },
+    "profileModal": {
+      "title": "Completa o Teu Perfil",
+      "description": "Necesitamos algúns detalles máis antes de que poidas acceder a esta ferramenta. A información do teu perfil axúdanos a personalizar a túa experiencia.",
+      "cancelButton": "Cancelar",
+      "completeProfileButton": "Completar Perfil"
+    },
+    "categories": {
+      "assessment": "Avaliación",
+      "organization": "Organización", 
+      "language": "Idioma"
+    },
+    "tools": {
+      "exams": {
+        "title": "Crea Exames Atractivos",
+        "content": "Crea exames completos co noso intuitivo creador de exames. Características incluídas:",
+        "features": [
+          "Múltiples tipos de preguntas",
+          "Cualificación automática",
+          "Regras de puntuación personalizadas",
+          "Xestión de banco de preguntas"
+        ]
+      },
+      "tests": {
+        "title": "Xera Tests Eficientemente",
+        "content": "Axiliza o teu proceso de creación de tests con asistencia impulsada por IA:",
+        "features": [
+          "Preguntas xeradas por IA",
+          "Axuste intelixente de dificultade",
+          "Xeración baseada en temas",
+          "Ensamblaxe instantánea de tests"
+        ]
+      },
+      "planner": {
+        "title": "Planifica as túas Clases",
+        "content": "Mantente organizado coas nosas completas ferramentas de planificación:",
+        "features": [
+          "Horarios visuais de clase",
+          "Mapeo curricular",
+          "Asignación de recursos",
+          "Seguimento de progreso"
+        ]
+      },
+      "translator": {
+        "title": "Traduce Materiais",
+        "content": "Rompe as barreiras do idioma na túa aula:",
+        "features": [
+          "Tradución en tempo real",
+          "Soporte multilingüe",
+          "Conciencia do contexto educativo",
+          "Tradución de documentos"
+        ]
+      }
+    }
   }
 }

@@ -978,5 +978,73 @@
       "tagDeleteSuccess": "Etiketa behar bezala ezabatua.",
       "tagDeleteError": "Errorea etiketa ezabatuz. Mesedez, saiatu berriro."
     }
+  },
+
+
+  "ToolsPage": {
+    "pageTitle": "AI tresnak",
+    "pageSubtitle": "Aukeratu gure tresna automatizatuetako bat eta hasi sortzen!",
+    "quickAccess": "Sarbide azkarra",
+    "loading": "Kargatzen...",
+    "authModal": {
+      "title": "Beharrezko autentikazioa",
+      "description": "Tresna honetara sartzeko saioa hasi behar duzu. Sortu kontu bat funtzio guztiak desblokeatzeko.",
+      "cancelButton": "Utzi",
+      "createAccountButton": "Sortu kontua",
+      "signInButton": "Hasi saioa"
+    },
+    "profileModal": {
+      "title": "Osatu zure profila",
+      "description": "Xehetasun gehiago behar ditugu tresna honetara sartu aurretik. Zure profilaren informazioak zure esperientzia pertsonalizatzen laguntzen digu.",
+      "cancelButton": "Utzi",
+      "completeProfileButton": "Osatu profila"
+    },
+    "categories": {
+      "assessment": "Ebaluazioa",
+      "organization": "Antolaketa",
+      "language": "Hizkuntza"
+    },
+    "tools": {
+      "exams": {
+        "title": "Sortu azterketa erakargarriak",
+        "content": "Sortu azterketa osoak gure azterketa sortzaile intuitiboarekin. Ezaugarriak barne:",
+        "features": [
+          "Galdera mota anitzak",
+          "Kalifikazio automatikoa",
+          "Puntuazio arau pertsonalizatuak",
+          "Galdera bankuaren kudeaketa"
+        ]
+      },
+      "tests": {
+        "title": "Sortu testak eraginkortasunez",
+        "content": "Bizkortu zure test sortzeko prozesua AI laguntza bidez:",
+        "features": [
+          "AIk sortutako galderak",
+          "Zailtasunaren doikuntza adimenduna",
+          "Gaietan oinarritutako sorkuntza",
+          "Testen muntaketa berehalakoa"
+        ]
+      },
+      "planner": {
+        "title": "Planifikatu zure klaseak",
+        "content": "Mantendu antolatuta gure plangintza tresna osoekin:",
+        "features": [
+          "Klaseko ordutegi bisualak",
+          "Curriculum mapaketa",
+          "Baliabideen esleipena",
+          "Aurrerapenaren jarraipena"
+        ]
+      },
+      "translator": {
+        "title": "Itzuli materialak",
+        "content": "Hautsi hizkuntza-oztopoak zure ikasgelan:",
+        "features": [
+          "Denbora errealeko itzulpena",
+          "Hizkuntza anitzeko euskarria",
+          "Hezkuntza testuinguruaren kontzientzia",
+          "Dokumentuen itzulpena"
+        ]
+      }
+    }
   }
 }

@@ -122,17 +122,17 @@ const Home = ({ params }) => {
 
   const features = [
     {
-      icon: <IconSchool className="w-12 h-12" style={{color: 'rgb(25,65,166)'}} />,
+      icon: <IconSchool className="w-12 h-12" />,
       title: t('feature_title_1'),
       description: t('feature_description_1')
     },
     {
-      icon: <IconBooks className="w-12 h-12" style={{color: 'rgb(25,65,166)'}} />,
+      icon: <IconBooks className="w-12 h-12" />,
       title: t('feature_title_2'),
       description: t('feature_description_2')
     },
     {
-      icon: <IconSparkles className="w-12 h-12" style={{color: 'rgb(25,65,166)'}} />,
+      icon: <IconSparkles className="w-12 h-12" />,
       title: t('feature_title_3'),
       description: t('feature_description_3')
     }
@@ -144,8 +144,6 @@ const Home = ({ params }) => {
   const accentColor = theme === 'dark' ? 'text-blue-400' : 'text-blue-600';
   const sectionBgColor = theme === 'dark' ? 'bg-neutral-900' : 'bg-gray-50';
   const highlightColor = theme === 'dark' ? 'bg-blue-900/20' : 'bg-blue-100/50';
-  const subtleBgColor = theme === 'dark' ? 'bg-neutral-800' : 'bg-gray-100';
-  const borderColor = theme === 'dark' ? 'border-neutral-700' : 'border-gray-200';
   const hoverColor = theme === 'dark' ? 'hover:text-white' : 'hover:text-black';
 
   const fadeIn = {
@@ -307,24 +305,24 @@ const Home = ({ params }) => {
           whileInView="visible"
           viewport={{ once: true, amount: 0.3 }}
           variants={staggerContainer}
-          className="grid grid-cols-1 md:grid-cols-3 gap-12 max-w-6xl mx-auto"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto"
         >
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
               variants={fadeIn}
-              className={`p-8 rounded-3xl ${highlightColor} backdrop-blur-sm flex flex-col items-center text-center`}
+              className={`p-8 rounded-3xl ${highlightColor} backdrop-blur-sm flex flex-col items-center text-center h-full`}
             >
               <motion.div 
                 initial={{ scale: 0.8, opacity: 0 }}
                 whileInView={{ scale: 1, opacity: 1 }}
                 transition={{ delay: index * 0.1 + 0.3, duration: 0.5 }}
-                className={`mb-6 ${accentColor}`}
+                className={theme == "dark" ? "text-blue-300" : "text-[rgb(25,65,166)]"}
               >
                 {feature.icon}
               </motion.div>
               <h3 className={`text-2xl font-semibold mb-4 ${textColor}`}>{feature.title}</h3>
-              <p className={`${subtleTextColor}`}>{feature.description}</p>
+              <p className={`${subtleTextColor} w-full`}>{feature.description}</p>
             </motion.div>
           ))}
         </motion.div>
@@ -385,10 +383,14 @@ const Home = ({ params }) => {
               ref={videoRef}
               className="w-full h-full object-cover"
               poster="/static/video-poster.jpg"
-              controls
               muted
+              playsInline
               preload="none" // Don't preload video data
               loading="lazy"
+              style={{ 
+                pointerEvents: 'none',
+                userSelect: 'none'
+              }}
             >
               <source src="/static/demo_1.mp4" type="video/mp4" />
               {t('demo_video_unsupported')}
@@ -554,7 +556,7 @@ const Home = ({ params }) => {
                   <p className={`${accentColor} font-medium mb-4`}>
                     {member.role}
                   </p>
-                  <p className={`${subtleTextColor} mb-6 leading-relaxed`}>
+                  <p className={`${subtleTextColor} mb-6 leading-relaxed hidden lg:block`}>
                     {member.bio}
                   </p>
                   <div className="flex gap-6">

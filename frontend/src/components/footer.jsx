@@ -5,7 +5,7 @@ import { useTheme } from "@/components/theme-provider";
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { cn } from "@/lib/utils";
-import LocalSwitcher from '@/components/ui/local-switcher';
+import { LocaleSwitcher } from '@/components/ui/local-switcher';
 
 export function Footer({ locale }) {
   const { theme } = useTheme();
@@ -224,7 +224,7 @@ export function Footer({ locale }) {
                 )}>
                   {t('footer_language')}
                 </p>
-                  <LocalSwitcher currentLocale={locale} />
+                  <LocaleSwitcher />
               </div>
             </div>
           </div>

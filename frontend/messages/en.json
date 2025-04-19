@@ -1045,5 +1045,73 @@
         "tagDeleteSuccess": "Tag deleted successfully.",
         "tagDeleteError": "Failed to delete tag. Please try again."
       }
+    },
+
+
+    "ToolsPage": {
+      "pageTitle": "AI Tools",
+      "pageSubtitle": "Choose one of our automated tools and start creating!",
+      "quickAccess": "Quick Access",
+      "loading": "Loading...",
+      "authModal": {
+        "title": "Authentication Required",
+        "description": "You need to be logged in to access this tool. Create an account to unlock all features.",
+        "cancelButton": "Cancel",
+        "createAccountButton": "Create Account",
+        "signInButton": "Sign In"
+      },
+      "profileModal": {
+        "title": "Complete Your Profile",
+        "description": "We need a few more details before you can access this tool. Your profile information helps us personalize your experience.",
+        "cancelButton": "Cancel",
+        "completeProfileButton": "Complete Profile"
+      },
+      "categories": {
+        "assessment": "Assessment",
+        "organization": "Organization",
+        "language": "Language"
+      },
+      "tools": {
+        "exams": {
+          "title": "Create Engaging Exams",
+          "content": "Create comprehensive exams with our intuitive exam maker. Features include:",
+          "features": [
+            "Multiple question types",
+            "Automatic grading",
+            "Custom scoring rules",
+            "Question bank management"
+          ]
+        },
+        "tests": {
+          "title": "Generate Tests Efficiently",
+          "content": "Streamline your test creation process with AI-powered assistance:",
+          "features": [
+            "AI-generated questions",
+            "Smart difficulty adjustment",
+            "Topic-based generation",
+            "Instant test assembly"
+          ]
+        },
+        "planner": {
+          "title": "Plan Your Classes",
+          "content": "Stay organized with our comprehensive planning tools:",
+          "features": [
+            "Visual class schedules",
+            "Curriculum mapping",
+            "Resource allocation",
+            "Progress tracking"
+          ]
+        },
+        "translator": {
+          "title": "Translate Materials",
+          "content": "Break language barriers in your classroom:",
+          "features": [
+            "Real-time translation",
+            "Multi-language support",
+            "Educational context awareness",
+            "Document translation"
+          ]
+        }
+      }
     }
 }

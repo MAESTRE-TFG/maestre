@@ -29,9 +29,9 @@
       
       "team_title": "Conoce a nuestro equipo",
       "team_description": "Las mentes detrás de la innovadora plataforma educativa de Maestre",
-      "team_member_bio_1": "Liderando el desarrollo frontend y el diseño de experiencia de usuario para las herramientas educativas de Maestre",
+      "team_member_bio_1": "Liderando el desarrollo frontend y el diseño de experiencia de usuario para Maestre",
       "team_member_bio_2": "Dirigiendo la arquitectura técnica y el desarrollo backend de la innovadora plataforma educativa de Maestre",
-      "team_member_role_1": "Ingeniero de Software, Gerente de Proyecto",
+      "team_member_role_1": "Ingeniero de Software, Proyect Manager",
       "team_member_role_2": "Ingeniero de Software, Analista",
 
       "testimonial_text": "Maestre ha transformado completamente mi forma de dar clases. Puedo planear clases atractivas en minutos cuando antes me llevaba horas",
@@ -1043,6 +1043,73 @@
         "tagUpdateError": "Error al actualizar las etiquetas. Por favor, inténtalo de nuevo.",
         "tagDeleteSuccess": "Etiqueta eliminada correctamente.",
         "tagDeleteError": "Error al eliminar la etiqueta. Por favor, inténtalo de nuevo."
+      }
+    },
+
+    "ToolsPage": {
+      "pageTitle": "Herramientas de IA",
+      "pageSubtitle": "¡Elige una de nuestras herramientas automatizadas y comienza a crear!",
+      "quickAccess": "Acceso Rápido",
+      "loading": "Cargando...",
+      "authModal": {
+        "title": "Autenticación Requerida",
+        "description": "Necesitas iniciar sesión para acceder a esta herramienta. Crea una cuenta para desbloquear todas las funciones.",
+        "cancelButton": "Cancelar",
+        "createAccountButton": "Crear Cuenta",
+        "signInButton": "Iniciar Sesión"
+      },
+      "profileModal": {
+        "title": "Completa Tu Perfil",
+        "description": "Necesitamos algunos detalles más antes de que puedas acceder a esta herramienta. La información de tu perfil nos ayuda a personalizar tu experiencia.",
+        "cancelButton": "Cancelar",
+        "completeProfileButton": "Completar Perfil"
+      },
+      "categories": {
+        "assessment": "Evaluación",
+        "organization": "Organización",
+        "language": "Idioma"
+      },
+      "tools": {
+        "exams": {
+          "title": "Crea Exámenes Atractivos",
+          "content": "Crea exámenes completos con nuestro intuitivo creador de exámenes. Características incluidas:",
+          "features": [
+            "Múltiples tipos de preguntas",
+            "Calificación automática",
+            "Reglas de puntuación personalizadas",
+            "Gestión de banco de preguntas"
+          ]
+        },
+        "tests": {
+          "title": "Genera Tests Eficientemente",
+          "content": "Agiliza tu proceso de creación de tests con asistencia impulsada por IA:",
+          "features": [
+            "Preguntas generadas por IA",
+            "Ajuste inteligente de dificultad",
+            "Generación basada en temas",
+            "Ensamblaje instantáneo de tests"
+          ]
+        },
+        "planner": {
+          "title": "Planifica tus Clases",
+          "content": "Mantente organizado con nuestras completas herramientas de planificación:",
+          "features": [
+            "Horarios visuales de clase",
+            "Mapeo curricular",
+            "Asignación de recursos",
+            "Seguimiento de progreso"
+          ]
+        },
+        "translator": {
+          "title": "Traduce Materiales",
+          "content": "Rompe las barreras del idioma en tu aula:",
+          "features": [
+            "Traducción en tiempo real",
+            "Soporte multilingüe",
+            "Conciencia del contexto educativo",
+            "Traducción de documentos"
+          ]
+        }
       }
     }
 }
