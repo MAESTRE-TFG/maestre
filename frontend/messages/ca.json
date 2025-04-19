@@ -42,7 +42,7 @@
     "stay_up_to_date_description": "Rep les darreres novetats, recursos i actualitzacions de les eines educatives de Maestre",
     "email_placeholder": "Introduïu el vostre correu electrònic",
     "subscribe_button": "Subscriure",
-    
+
     "footer_about": "Sobre nosaltres",
     "footer_legal": "Legítim",
     "footer_terms": "Condicions del servei",
@@ -55,6 +55,7 @@
     "footer_planner": "Planificador de classes",
     "footer_copyright": "© 2025 Mestre. Sota la llicència MIT.",
     "footer_language": "Idioma:",
+    "footer_language_text": "Seleccioneu un idioma",
 
     "tool_category_assessment": "Valoració",
     "tool_category_organization": "Organització",

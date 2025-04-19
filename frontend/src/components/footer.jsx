@@ -5,7 +5,7 @@ import { useTheme } from "@/components/theme-provider";
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { cn } from "@/lib/utils";
-import { LocalSwitcher } from '@/components/ui/local-switcher';
+import LocalSwitcher from '@/components/ui/local-switcher';
 
 export function Footer({ locale }) {
   const { theme } = useTheme();
@@ -218,12 +218,12 @@ export function Footer({ locale }) {
               
               {/* Language selector */}
               <div className="mt-8 flex items-center justify-center md:justify-start">
-                <p className={cn(
+                {/* <p className={cn(
                   "mr-4",
                   theme === "dark" ? "text-gray-300" : "text-white/90"
                 )}>
                   {t('footer_language')}
-                </p>
+                </p> */}
                 <LocalSwitcher currentLocale={locale} />
               </div>
             </div>
