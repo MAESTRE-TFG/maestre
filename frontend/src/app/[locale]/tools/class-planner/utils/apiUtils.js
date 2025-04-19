@@ -2,15 +2,16 @@ import axios from "axios";
 import { getApiBaseUrl } from "@/lib/api";
 import { getLLMApiUrl } from "@/lib/api";
 
+
 // Upload PDF to classroom
-export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token, showAlert) => {
+export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token, addAlert) => {
   if (!classroomId) {
-    showAlert("error", "Missing classroom");
+    addAlert("error", "Missing classroom");
     return false;
   }
 
   if (!pdfBlob || !(pdfBlob instanceof Blob)) {
-    showAlert("error", "Failed to save PDF: Unknown error");
+    addAlert("error", "Invalid PDF data");
     return false;
   }
 
@@ -21,7 +22,7 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
 
   try {
     if (!token) {
-      showAlert("error", "Failed to fetch classrooms");
+      addAlert("error", "Authentication required");
       return false;
     }
 
@@ -32,7 +33,7 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
       },
     });
 
-    showAlert("success", "PDF saved successfully");
+    addAlert("success", "PDF uploaded successfully");
     return true;
   } catch (error) {
     if (error.response) {
@@ -40,32 +41,30 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
         const errorMsg =
           error.response.data && error.response.data.error
             ? error.response.data.error
-            : "Failed to save PDF: Unknown error";
-        showAlert("error", errorMsg);
+            : "Unknown error occurred";
+        addAlert("error", errorMsg);
       } else if (error.response.status === 401) {
-        showAlert("error", "Failed to fetch classrooms");
+        addAlert("error", "Authentication required");
       } else {
-        showAlert("error", `Failed to save PDF: ${error.response.status} - ${error.response.statusText}`);
+        addAlert("error", `${error.response.status} - ${error.response.statusText}`);
       }
     } else if (error.request) {
-      showAlert("error", "Failed to fetch materials");
+      addAlert("error", "Network error. Please check your connection.");
     } else {
-      showAlert("error", `Failed to save PDF: ${error.message}`);
+      addAlert("error", error.message);
     }
     return false;
   }
 };
 
 // Process uploaded file
-export const processUploadedFile = async (file, token, showAlert) => {
+export const processUploadedFile = async (file, token) => {
   if (!file.name.toLowerCase().endsWith(".docx")) {
-    showAlert("error", "Unsupported file type");
-    return null;
+    addAlert("error", "Only DOCX files are supported");
   }
 
   if (file.size > 5 * 1024 * 1024) {
-    showAlert("error", "File processed successfully");
-    return null;
+    addAlert("error", "File size exceeds 5MB limit");
   }
 
   const formData = new FormData();
@@ -84,27 +83,29 @@ export const processUploadedFile = async (file, token, showAlert) => {
     );
 
     if (response.data && response.data.text) {
-      showAlert("success", "File processed successfully");
       return {
         name: file.name,
         content: response.data.text,
         id: Date.now(),
       };
     } else {
-      showAlert("error", "Failed to fetch materials");
-      return null;
+      addAlert("error", "Failed to process file");
     }
   } catch (error) {
-    showAlert("error", "Failed to fetch materials");
-    return null;
+    if (error.response) {
+      addAlert("error", "Server error while processing file");
+    } else if (error.request) {
+      addAlert("error", "Network error. Please check your connection.");
+    } else {
+      addAlert("error", error.message);
+    }
   }
 };
 
 // Process material from classroom
-export const processMaterialFromClassroom = async (material, token, showAlert) => {
+export const processMaterialFromClassroom = async (material, token) => {
   if (!material.file.toLowerCase().endsWith(".docx")) {
-    showAlert("error", "Unsupported file type");
-    return null;
+    addAlert("error", "Only DOCX files are supported");
   }
 
   try {
@@ -122,7 +123,6 @@ export const processMaterialFromClassroom = async (material, token, showAlert) =
     );
 
     if (response.data && response.data.text) {
-      showAlert("success", "Material processed successfully");
       return {
         name: material.name,
         content: response.data.text,
@@ -131,17 +131,21 @@ export const processMaterialFromClassroom = async (material, token, showAlert) =
         materialId: material.id,
       };
     } else {
-      showAlert("error", "Failed to fetch materials");
-      return null;
+      addAlert("error", "Failed to process material");
     }
   } catch (error) {
-    showAlert("error", "Failed to fetch materials");
-    return null;
+    if (error.response) {
+      addAlert("error", "Server error while processing material");
+    } else if (error.request) {
+      addAlert("error", "Network error. Please check your connection.");
+    } else {
+      addAlert("error", error.message);
+    }
   }
 };
 
-// Generate exam using Ollama
-export const generateExam = async (prompt, model = "llama3.2:3b", showAlert) => {
+// Generate plan using Ollama
+export const generatePlan = async (prompt, model = "llama3.2:3b") => {
   try {
     const response = await axios.post(`${getLLMApiUrl()}/api/generate`, {
       model: model,
@@ -151,14 +155,20 @@ export const generateExam = async (prompt, model = "llama3.2:3b", showAlert) => 
     });
 
     if (response.data && response.data.response) {
-      showAlert("success", "Exam generated successfully");
-      return response.data.response;
+      // Return an object with a plan property instead of the raw response
+      return {
+        plan: response.data.response
+      };
     } else {
-      showAlert("error", "Failed to generate exam");
-      return null;
+      addAlert("error", "Failed to generate lesson plan");
     }
   } catch (error) {
-    showAlert("error", "Failed to generate exam");
-    return null;
+    if (error.response) {
+      addAlert("error", "Server error while generating plan");
+    } else if (error.request) {
+      addAlert("error", "Network error. Please check your connection.");
+    } else {
+      addAlert("error", error.message);
+    }
   }
 };
