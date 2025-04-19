@@ -120,7 +120,13 @@ const PlanResultModal = ({
         <div className="flex-1 overflow-auto p-6">
           {activeTab === "plan" ? (
             <div className={`prose max-w-none ${theme === "dark" ? "prose-invert" : ""}`}>
-              <div dangerouslySetInnerHTML={{ __html: planResult.plan.replace(/\n/g, '<br />') }} />
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: planResult.plan
+                    ? planResult.plan.replace(/\n/g, '<br />')
+                    : t("planResultModal.noPlanAvailable")
+                }}
+              />
             </div>
           ) : (
             <div className="space-y-4">

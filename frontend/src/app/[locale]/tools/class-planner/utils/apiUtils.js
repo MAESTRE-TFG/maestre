@@ -1,5 +1,7 @@
 import axios from "axios";
 import { getApiBaseUrl } from "@/lib/api";
+import { getLLMApiUrl } from "@/lib/api";
+
 
 // Upload PDF to classroom
 export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token) => {
@@ -65,7 +67,7 @@ export const processUploadedFile = async (file, token) => {
 
   try {
     const response = await axios.post(
-      `${getApiBaseUrl()}:8000/api/materials/extract-text/`,
+      `${getApiBaseUrl()}/api/materials/extract-text/`,
       formData,
       {
         headers: {
@@ -140,7 +142,8 @@ export const processMaterialFromClassroom = async (material, token) => {
 // Generate plan using Ollama
 export const generatePlan = async (prompt, model = "llama3.2:3b") => {
   try {
-    const response = await axios.post(`${getApiBaseUrl()}:11434/api/generate`, {
+    // Correct the URL by using only one port number
+    const response = await axios.post(`${getLLMApiUrl()}/api/generate`, {
       model: model,
       prompt: prompt,
       stream: false,

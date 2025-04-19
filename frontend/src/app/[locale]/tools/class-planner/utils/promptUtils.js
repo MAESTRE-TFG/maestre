@@ -1,13 +1,18 @@
+// Import or define the translation function
+import { useTranslations } from "next-intl";
+
 /**
  * Build a prompt for generating a lesson plan
  * @param {Object} formData - Form data for the plan
  * @param {Array} classrooms - Available classrooms
  * @param {string} materialContent - Content from uploaded materials
  * @param {Object} user - User information
- * @param {Function} t - Translation function
  * @returns {string} Generated prompt
  */
-export const buildPlannerPrompt = (formData, classrooms, materialContent, user, t) => {
+export const buildPlannerPrompt = (formData, classrooms, materialContent, user) => {
+  // Remove the translation function
+  // const t = useTranslations("LessonPlanner");
+
   // Find the selected classroom
   const selectedClassroom = classrooms.find(
     (c) => c.id.toString() === formData.classroom.toString()
@@ -22,43 +27,43 @@ export const buildPlannerPrompt = (formData, classrooms, materialContent, user, 
   // Determine playfulness level description
   let playfulnessDescription = "";
   if (formData.playfulnessLevel <= 25) {
-    playfulnessDescription = t("prompts.playfulness.veryStructured");
+    playfulnessDescription = "Enfoque muy estructurado con actividades formales";
   } else if (formData.playfulnessLevel <= 50) {
-    playfulnessDescription = t("prompts.playfulness.structured");
+    playfulnessDescription = "Enfoque estructurado con algunos elementos interactivos";
   } else if (formData.playfulnessLevel <= 75) {
-    playfulnessDescription = t("prompts.playfulness.balanced");
+    playfulnessDescription = "Mezcla equilibrada de actividades estructuradas e interactivas";
   } else {
-    playfulnessDescription = t("prompts.playfulness.veryPlayful");
+    playfulnessDescription = "Enfoque muy lúdico con actividades altamente interactivas";
   }
 
   // Build the prompt
-  let prompt = `${t("prompts.intro")}
+  let prompt = `Crea un plan de clases detallado basado en la siguiente información:
 
-${t("prompts.teacherInfo")}:
-- ${t("prompts.teacherName")}: ${user.first_name || ""} ${user.last_name || ""}
-- ${t("prompts.teacherEmail")}: ${user.email || ""}
+Información del Docente:
+- Nombre del Docente: ${user.first_name || ""} ${user.last_name || ""}
+- Email del Docente: ${user.email || ""}
 
-${t("prompts.classroomInfo")}:
-- ${t("prompts.classroomName")}: ${classroomName}
-- ${t("prompts.academicCourse")}: ${academicCourse}
-- ${t("prompts.educationLevel")}: ${educationLevel}
-- ${t("prompts.studentCount")}: ${studentCount}
+Información del Aula:
+- Nombre del Aula: ${classroomName}
+- Curso Académico: ${academicCourse}
+- Nivel Educativo: ${educationLevel}
+- Número de Estudiantes: ${studentCount}
 
-${t("prompts.planDetails")}:
-- ${t("prompts.subject")}: ${formData.subject}
-- ${t("prompts.theme")}: ${formData.theme}
-- ${t("prompts.numLessons")}: ${formData.numLessons}
-- ${t("prompts.playfulnessLevel")}: ${formData.playfulnessLevel}/100 (${playfulnessDescription})
+Detalles del Plan:
+- Asignatura: ${formData.subject}
+- Tema: ${formData.theme}
+- Número de clases: ${formData.numLessons}
+- Nivel de Ludificación: ${formData.playfulnessLevel}/100 (${playfulnessDescription})
 
-${formData.additionalInfo ? `${t("prompts.additionalInfo")}: ${formData.additionalInfo}` : ""}`;
+${formData.additionalInfo ? `Información Adicional: ${formData.additionalInfo}` : ""}`;
 
   // Add material content if available
   if (materialContent) {
-    prompt += `\n\n${t("prompts.materialContent")}:\n${materialContent}`;
+    prompt += `\n\nContenido del Material de Referencia:\n${materialContent}`;
   }
 
   // Add final instructions
-  prompt += `\n\n${t("prompts.finalInstructions")}`;
+  prompt += `\n\nPor favor, crea un plan de clases detallado que incluya objetivos, materiales necesarios, actividades y estrategias de evaluación para cada lección. El plan debe ser apropiado para el nivel educativo e incorporar métodos de enseñanza atractivos.`;
 
   return prompt;
 };

@@ -1256,6 +1256,35 @@
         "balanced": "Mezcla equilibrada de actividades estructuradas y lúdicas",
         "veryPlayful": "Enfoque muy lúdico con juegos y actividades creativas"
       }
+    },
+    "planResultModal": {
+      "defaultTitle": "Plan de clases",
+      "noPlanAvailable": "No hay plan disponible",
+      "copySuccess": "¡Copiado al portapapeles!",
+      "copyError": "Error al copiar al portapapeles",
+      "downloadSuccess": "¡PDF descargado con éxito!",
+      "downloadError": "Error al descargar el PDF",
+      "uploadSuccess": "¡Guardado en el aula con éxito!",
+      "uploadError": "Error al guardar en el aula",
+      "tabs": {
+        "plan": "Plan",
+        "metadata": "Metadatos"
+      },
+      "metadata": {
+        "subject": "Asignatura",
+        "theme": "Tema",
+        "numLessons": "Número de clases",
+        "playfulnessLevel": "Nivel de Ludificación",
+        "generatedWith": "Generado con"
+      },
+      "buttons": {
+        "copy": "Copiar al Portapapeles",
+        "copying": "Copiando...",
+        "download": "Descargar PDF",
+        "downloading": "Descargando...",
+        "uploadToClassroom": "Guardar en el Aula",
+        "uploading": "Guardando..."
+      }
     }
   },
 

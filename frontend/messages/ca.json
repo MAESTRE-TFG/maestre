@@ -1256,6 +1256,35 @@
         "balanced": "Barreja equilibrada d'activitats estructurades i lúdiques",
         "veryPlayful": "Enfocament molt lúdic amb jocs i activitats creatives"
       }
+    },
+    "planResultModal": {
+      "defaultTitle": "Pla de Lliçó",
+      "noPlanAvailable": "No hi ha cap pla disponible",
+      "copySuccess": "Copiat al porta-retalls!",
+      "copyError": "Error en copiar al porta-retalls",
+      "downloadSuccess": "PDF descarregat amb èxit!",
+      "downloadError": "Error en descarregar el PDF",
+      "uploadSuccess": "Guardat a l'aula amb èxit!",
+      "uploadError": "Error en guardar a l'aula",
+      "tabs": {
+        "plan": "Pla",
+        "metadata": "Metadades"
+      },
+      "metadata": {
+        "subject": "Assignatura",
+        "theme": "Tema",
+        "numLessons": "Nombre de Lliçons",
+        "playfulnessLevel": "Nivell de Joc",
+        "generatedWith": "Generat amb"
+      },
+      "buttons": {
+        "copy": "Copiar al Porta-retalls",
+        "copying": "Copiant...",
+        "download": "Descarregar PDF",
+        "downloading": "Descarregant...",
+        "uploadToClassroom": "Guardar a l'Aula",
+        "uploading": "Guardant..."
+      }
     }
   },
 

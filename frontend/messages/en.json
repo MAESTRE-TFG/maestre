@@ -1258,6 +1258,35 @@
           "balanced": "Balanced mix of structured and playful activities",
           "veryPlayful": "Very playful approach with games and creative activities"
         }
+      },
+      "planResultModal": {
+        "defaultTitle": "Lesson Plan",
+        "noPlanAvailable": "No plan available",
+        "copySuccess": "Copied to clipboard!",
+        "copyError": "Error copying to clipboard",
+        "downloadSuccess": "PDF downloaded successfully!",
+        "downloadError": "Error downloading PDF",
+        "uploadSuccess": "Saved to classroom successfully!",
+        "uploadError": "Error saving to classroom",
+        "tabs": {
+          "plan": "Plan",
+          "metadata": "Metadata"
+        },
+        "metadata": {
+          "subject": "Subject",
+          "theme": "Theme",
+          "numLessons": "Number of Lessons",
+          "playfulnessLevel": "Playfulness Level",
+          "generatedWith": "Generated With"
+        },
+        "buttons": {
+          "copy": "Copy to Clipboard",
+          "copying": "Copying...",
+          "download": "Download PDF",
+          "downloading": "Downloading...",
+          "uploadToClassroom": "Save to Classroom",
+          "uploading": "Saving..."
+        }
       }
     },
 

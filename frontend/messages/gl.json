@@ -1190,6 +1190,35 @@
         "balanced": "Mestura equilibrada de actividades estruturadas e lúdicas",
         "veryPlayful": "Enfoque moi lúdico con xogos e actividades creativas"
       }
+    },
+    "planResultModal": {
+      "defaultTitle": "Plan de Lección",
+      "noPlanAvailable": "Non hai plan dispoñible",
+      "copySuccess": "Copiado ao portapapeis!",
+      "copyError": "Erro ao copiar ao portapapeis",
+      "downloadSuccess": "PDF descargado con éxito!",
+      "downloadError": "Erro ao descargar o PDF",
+      "uploadSuccess": "Gardado na aula con éxito!",
+      "uploadError": "Erro ao gardar na aula",
+      "tabs": {
+        "plan": "Plan",
+        "metadata": "Metadatos"
+      },
+      "metadata": {
+        "subject": "Materia",
+        "theme": "Tema",
+        "numLessons": "Número de Leccións",
+        "playfulnessLevel": "Nivel de Xogo",
+        "generatedWith": "Xerado con"
+      },
+      "buttons": {
+        "copy": "Copiar ao Portapapeis",
+        "copying": "Copiando...",
+        "download": "Descargar PDF",
+        "downloading": "Descargando...",
+        "uploadToClassroom": "Gardar na Aula",
+        "uploading": "Gardando..."
+      }
     }
   },
 

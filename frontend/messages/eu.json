@@ -1191,6 +1191,35 @@
         "balanced": "Jarduera egituratuak eta jolaserako jardueren arteko nahasketa orekatua",
         "veryPlayful": "Oso jolaserako ikuspegia jokoekin eta jarduera sortzaileekin"
       }
+    },
+    "planResultModal": {
+      "defaultTitle": "Ikasgai Plana",
+      "noPlanAvailable": "Ez dago planik eskuragarri",
+      "copySuccess": "Arbelera kopiatuta!",
+      "copyError": "Errorea kopiatzean",
+      "downloadSuccess": "PDF-a arrakastaz deskargatu da!",
+      "downloadError": "Errorea PDF-a deskargatzean",
+      "uploadSuccess": "Gela arrakastaz gordeta!",
+      "uploadError": "Errorea gela gordetzean",
+      "tabs": {
+        "plan": "Plana",
+        "metadata": "Metadatuak"
+      },
+      "metadata": {
+        "subject": "Gaia",
+        "theme": "Gai",
+        "numLessons": "Ikasgai Kopurua",
+        "playfulnessLevel": "Jolasgarritasun Maila",
+        "generatedWith": "Sortuta"
+      },
+      "buttons": {
+        "copy": "Kopiatu Arbelera",
+        "copying": "Kopiatzen...",
+        "download": "Deskargatu PDF",
+        "downloading": "Deskargatzen...",
+        "uploadToClassroom": "Gorde Gelan",
+        "uploading": "Gordetzen..."
+      }
     }
   },
 
