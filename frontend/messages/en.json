@@ -1068,6 +1068,12 @@
         "cancelButton": "Cancel",
         "completeProfileButton": "Complete Profile"
       },
+      "noClassroomModal": {
+        "no_classroom_modal_title": "No Classrooms Found",
+        "no_classroom_modal_description": "To access this tool, you need to have a classroom. Create one now.",
+        "back_to_tools": "Back to Tools",
+        "go_to_classrooms": "Go to Classrooms"
+      },
       "categories": {
         "assessment": "Assessment",
         "organization": "Organization",
@@ -1113,6 +1119,144 @@
             "Educational context awareness",
             "Document translation"
           ]
+        }
+      }
+    },
+
+
+    "LessonPlanner": {
+      "header": {
+        "title": "Lesson Planner",
+        "subtitle": "Create customized lesson plans with AI assistance",
+        "featureTitle": "AI-Powered Lesson Plans",
+        "featureDescription": "Create professional lesson plans in seconds using our advanced AI technology. Perfect for teachers who want to save time while creating high-quality educational content.",
+        "teacherImageAlt": "Teacher"
+      },
+      "alerts": {
+        "fetchClassroomsError": "Failed to fetch classrooms. Please try again later.",
+        "fetchMaterialsError": "Failed to fetch materials. Please try again later.",
+        "fileProcessedSuccess": "File processed successfully!",
+        "unsupportedFileType": "Only DOCX files are supported for lesson plan generation.",
+        "materialProcessedSuccess": "Material processed successfully!",
+        "missingSubject": "Please enter a subject.",
+        "missingClassroom": "Please select a classroom.",
+        "missingTheme": "Please enter a theme.",
+        "planGeneratedSuccess": "Lesson plan generated successfully!",
+        "planGenerationFailed": "Error generating lesson plan",
+        "pdfSavedSuccess": "PDF saved to classroom materials successfully!",
+        "pdfDownloadedSuccess": "PDF downloaded successfully!",
+        "pdfSaveFailed": "Error saving PDF: {error}",
+        "pdfDownloadFailed": "Error downloading PDF: {error}"
+      },
+      "fields": {
+        "subject": {
+          "label": "Subject",
+          "placeholder": "e.g., Mathematics, Science, History"
+        },
+        "theme": {
+          "label": "Theme or Topic",
+          "placeholder": "e.g., Fractions, Photosynthesis, World War II"
+        },
+        "planName": {
+          "label": "Plan Name",
+          "placeholder": "e.g., Fractions Unit Plan"
+        },
+        "classroom": {
+          "label": "Classroom",
+          "placeholder": "Select a classroom"
+        },
+        "numLessons": {
+          "label": "Number of Lessons",
+          "placeholder": "1-10"
+        },
+        "playfulnessLevel": {
+          "label": "Playfulness Level",
+          "veryStructured": "Very Structured",
+          "structured": "Structured",
+          "balanced": "Balanced",
+          "playful": "Playful",
+          "veryPlayful": "Very Playful"
+        },
+        "llmModel": {
+          "label": "AI Model",
+          "placeholder": "Select an AI model"
+        },
+        "additionalInfo": {
+          "label": "Additional Information",
+          "placeholder": "Add any specific requirements, student needs, or teaching preferences"
+        }
+      },
+      "buttons": {
+        "generatePlan": "Generate Lesson Plan",
+        "generating": "Generating...",
+        "uploadFile": "Upload File",
+        "browseClassroomMaterials": "Browse Classroom Materials"
+      },
+      "fileUpload": {
+        "title": "Upload Materials",
+        "description": "Upload a file or select from your classroom materials to help generate a more relevant lesson plan",
+        "dragDrop": "Drag and drop files here or click to browse",
+        "supportedFormats": "Supported format: DOCX",
+        "uploadedFiles": "Uploaded Files",
+        "processing": "Processing file..."
+      },
+      "materialsModal": {
+        "title": "Select Classroom Material",
+        "searchPlaceholder": "Search materials...",
+        "noMaterials": "No materials found",
+        "close": "Close"
+      },
+      "planResultModal": {
+        "defaultTitle": "Lesson Plan",
+        "tabs": {
+          "plan": "Plan",
+          "metadata": "Metadata"
+        },
+        "metadata": {
+          "subject": "Subject",
+          "theme": "Theme",
+          "numLessons": "Number of Lessons",
+          "playfulnessLevel": "Playfulness Level",
+          "generatedWith": "Generated with"
+        },
+        "buttons": {
+          "copy": "Copy to Clipboard",
+          "copying": "Copying...",
+          "download": "Download PDF",
+          "downloading": "Downloading...",
+          "uploadToClassroom": "Save to Classroom",
+          "uploading": "Saving..."
+        },
+        "copySuccess": "Copied to clipboard!",
+        "copyError": "Failed to copy to clipboard",
+        "downloadSuccess": "PDF downloaded successfully!",
+        "downloadError": "Failed to download PDF",
+        "uploadSuccess": "Saved to classroom successfully!",
+        "uploadError": "Failed to save to classroom"
+      },
+      "prompts": {
+        "intro": "Create a detailed lesson plan based on the following information:",
+        "teacherInfo": "Teacher Information",
+        "teacherName": "Teacher Name",
+        "teacherEmail": "Teacher Email",
+        "classroomInfo": "Classroom Information",
+        "classroomName": "Classroom Name",
+        "academicCourse": "Academic Course",
+        "educationLevel": "Education Level",
+        "studentCount": "Number of Students",
+        "planDetails": "Plan Details",
+        "subject": "Subject",
+        "theme": "Theme",
+        "numLessons": "Number of Lessons",
+        "playfulnessLevel": "Playfulness Level",
+        "additionalInfo": "Additional Information",
+        "materialContent": "Reference Material Content",
+        "finalInstructions": "Please create a detailed lesson plan that includes objectives, materials needed, activities, and assessment strategies for each lesson. The plan should be appropriate for the education level and incorporate engaging teaching methods.",
+        "playfulness": {
+          "veryStructured": "Very structured approach with formal activities",
+          "structured": "Structured approach with some interactive elements",
+          "balanced": "Balanced mix of structured and playful activities",
+          "veryPlayful": "Very playful approach with games and creative activities"
         }
       }
     },

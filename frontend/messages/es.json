@@ -244,8 +244,8 @@
     "defaultExamName": "Examen",
     "materialsModal": {
       "title": "Seleccionar Material del Aula",
-      "noMaterials": "No se encontraron materiales en tus aulas.",
-      "uploadPrompt": "Primero sube materiales a tus aulas."
+      "noMaterials": "No se encontraron materiales en tus clases.",
+      "uploadPrompt": "Primero sube materiales a tus clases."
     },
     "pdf": {
       "title": "Examen",
@@ -1066,6 +1066,12 @@
       "cancelButton": "Cancelar",
       "completeProfileButton": "Completar Perfil"
     },
+    "noClassroomModal": {
+      "no_classroom_modal_title": "No hay clases disponibles",
+      "no_classroom_modal_description": "Actualmente no tienes clases asociadas a tu cuenta. Por favor, crea o únete a un aula para continuar.",
+      "back_to_tools": "Volver a Herramientas",
+      "go_to_classrooms": "Ir a tus clases"
+    },
     "categories": {
       "assessment": "Evaluación",
       "organization": "Organización",
@@ -1111,6 +1117,144 @@
           "Conciencia del contexto educativo",
           "Traducción de documentos"
         ]
+      }
+    }
+  },
+
+
+  "LessonPlanner": {
+    "header": {
+      "title": "Planificador de clases",
+      "subtitle": "Crea planes de clases personalizados con asistencia de IA",
+      "featureTitle": "Planes de clases Impulsados por IA",
+      "featureDescription": "Crea planes de clases profesionales en segundos utilizando nuestra avanzada tecnología de IA. Perfecto para docentes que desean ahorrar tiempo mientras crean contenido educativo de alta calidad.",
+      "teacherImageAlt": "Docente"
+    },
+    "alerts": {
+      "fetchClassroomsError": "No se pudieron obtener las clases. Por favor, inténtalo de nuevo más tarde.",
+      "fetchMaterialsError": "No se pudieron obtener los materiales. Por favor, inténtalo de nuevo más tarde.",
+      "fileProcessedSuccess": "¡Archivo procesado con éxito!",
+      "unsupportedFileType": "Solo se admiten archivos DOCX para la generación de planes de clases.",
+      "materialProcessedSuccess": "¡Material procesado con éxito!",
+      "missingSubject": "Por favor, introduce una asignatura.",
+      "missingClassroom": "Por favor, selecciona una clase.",
+      "missingTheme": "Por favor, introduce un tema.",
+      "planGeneratedSuccess": "¡Plan de clases generado con éxito!",
+      "planGenerationFailed": "Error al generar el plan de clases",
+      "pdfSavedSuccess": "¡PDF guardado en los materiales de clase con éxito!",
+      "pdfDownloadedSuccess": "¡PDF descargado con éxito!",
+      "pdfSaveFailed": "Error al guardar el PDF: {error}",
+      "pdfDownloadFailed": "Error al descargar el PDF: {error}"
+    },
+    "fields": {
+      "subject": {
+        "label": "Asignatura",
+        "placeholder": "ej., Matemáticas, Ciencias, Historia"
+      },
+      "theme": {
+        "label": "Tema o Tópico",
+        "placeholder": "ej., Fracciones, Fotosíntesis, Segunda Guerra Mundial"
+      },
+      "planName": {
+        "label": "Nombre del Plan",
+        "placeholder": "ej., Plan de Unidad de Fracciones"
+      },
+      "classroom": {
+        "label": "Aula",
+        "placeholder": "Selecciona un aula"
+      },
+      "numLessons": {
+        "label": "Número de clases",
+        "placeholder": "1-10"
+      },
+      "playfulnessLevel": {
+        "label": "Nivel de Ludificación",
+        "veryStructured": "Muy Estructurado",
+        "structured": "Estructurado",
+        "balanced": "Equilibrado",
+        "playful": "Lúdico",
+        "veryPlayful": "Muy Lúdico"
+      },
+      "llmModel": {
+        "label": "Modelo de IA",
+        "placeholder": "Selecciona un modelo de IA"
+      },
+      "additionalInfo": {
+        "label": "Información Adicional",
+        "placeholder": "Añade requisitos específicos, necesidades de los estudiantes o preferencias de enseñanza"
+      }
+    },
+    "buttons": {
+      "generatePlan": "Generar plan de clases",
+      "generating": "Generando...",
+      "uploadFile": "Subir Archivo",
+      "browseClassroomMaterials": "Explorar Materiales del Aula"
+    },
+    "fileUpload": {
+      "title": "Subir Materiales",
+      "description": "Sube un archivo o selecciona de tus materiales de clase para ayudar a generar un plan de clases más relevante",
+      "dragDrop": "Arrastra y suelta archivos aquí o haz clic para explorar",
+      "supportedFormats": "Formato soportado: DOCX",
+      "uploadedFiles": "Archivos Subidos",
+      "processing": "Procesando archivo..."
+    },
+    "materialsModal": {
+      "title": "Seleccionar Material de Clase",
+      "searchPlaceholder": "Buscar materiales...",
+      "noMaterials": "No se encontraron materiales",
+      "close": "Cerrar"
+    },
+    "planResultModal": {
+      "defaultTitle": "Plan de clases",
+      "tabs": {
+        "plan": "Plan",
+        "metadata": "Metadatos"
+      },
+      "metadata": {
+        "subject": "Asignatura",
+        "theme": "Tema",
+        "numLessons": "Número de clases",
+        "playfulnessLevel": "Nivel de Ludificación",
+        "generatedWith": "Generado con"
+      },
+      "buttons": {
+        "copy": "Copiar al Portapapeles",
+        "copying": "Copiando...",
+        "download": "Descargar PDF",
+        "downloading": "Descargando...",
+        "uploadToClassroom": "Guardar en el Aula",
+        "uploading": "Guardando..."
+      },
+      "copySuccess": "¡Copiado al portapapeles!",
+      "copyError": "Error al copiar al portapapeles",
+      "downloadSuccess": "¡PDF descargado con éxito!",
+      "downloadError": "Error al descargar el PDF",
+      "uploadSuccess": "¡Guardado en el aula con éxito!",
+      "uploadError": "Error al guardar en el aula"
+    },
+    "prompts": {
+      "intro": "Crea un plan de clases detallado basado en la siguiente información:",
+      "teacherInfo": "Información del Docente",
+      "teacherName": "Nombre del Docente",
+      "teacherEmail": "Email del Docente",
+      "classroomInfo": "Información del Aula",
+      "classroomName": "Nombre del Aula",
+      "academicCourse": "Curso Académico",
+      "educationLevel": "Nivel Educativo",
+      "studentCount": "Número de Estudiantes",
+      "planDetails": "Detalles del Plan",
+      "subject": "Asignatura",
+      "theme": "Tema",
+      "numLessons": "Número de clases",
+      "playfulnessLevel": "Nivel de Ludificación",
+      "additionalInfo": "Información Adicional",
+      "materialContent": "Contenido del Material de Referencia",
+      "finalInstructions": "Por favor, crea un plan de clases detallado que incluya objetivos, materiales necesarios, actividades y estrategias de evaluación para cada lección. El plan debe ser apropiado para el nivel educativo e incorporar métodos de enseñanza atractivos.",
+      "playfulness": {
+        "veryStructured": "Enfoque muy estructurado con actividades formales",
+        "structured": "Enfoque estructurado con algunos elementos interactivos",
+        "balanced": "Mezcla equilibrada de actividades estructuradas y lúdicas",
+        "veryPlayful": "Enfoque muy lúdico con juegos y actividades creativas"
       }
     }
   },

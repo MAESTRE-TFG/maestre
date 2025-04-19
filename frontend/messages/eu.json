@@ -1001,6 +1001,12 @@
       "cancelButton": "Utzi",
       "completeProfileButton": "Osatu profila"
     },
+    "noClassroomModal": {
+      "no_classroom_modal_title": "Ez dago eskuragarri gelarik",
+      "no_classroom_modal_description": "Gaur egun ez duzu zure kontuarekin lotutako gelarik. Mesedez, sortu edo batu gela batera jarraitzeko.",
+      "back_to_tools": "Itzuli Tresnetara",
+      "go_to_classrooms": "Joan Gelak"
+    },
     "categories": {
       "assessment": "Ebaluazioa",
       "organization": "Antolaketa",
@@ -1046,6 +1052,144 @@
           "Hezkuntza testuinguruaren kontzientzia",
           "Dokumentuen itzulpena"
         ]
+      }
+    }
+  },
+
+
+  "LessonPlanner": {
+    "header": {
+      "title": "Ikasgai Planifikatzailea",
+      "subtitle": "Sortu ikasgai plan pertsonalizatuak AI laguntzarekin",
+      "featureTitle": "AI-k bultzatutako Ikasgai Planak",
+      "featureDescription": "Sortu ikasgai plan profesionalak segundotan gure AI teknologia aurreratua erabiliz. Ezin hobea denbora aurreztu nahi duten irakasleentzat kalitatezko hezkuntza edukia sortzen duten bitartean.",
+      "teacherImageAlt": "Irakaslea"
+    },
+    "alerts": {
+      "fetchClassroomsError": "Ezin izan dira ikasgelak eskuratu. Mesedez, saiatu berriro geroago.",
+      "fetchMaterialsError": "Ezin izan dira materialak eskuratu. Mesedez, saiatu berriro geroago.",
+      "fileProcessedSuccess": "Fitxategia arrakastaz prozesatua!",
+      "unsupportedFileType": "DOCX fitxategiak bakarrik onartzen dira ikasgai planak sortzeko.",
+      "materialProcessedSuccess": "Materiala arrakastaz prozesatua!",
+      "missingSubject": "Mesedez, sartu ikasgai bat.",
+      "missingClassroom": "Mesedez, aukeratu ikasgela bat.",
+      "missingTheme": "Mesedez, sartu gai bat.",
+      "planGeneratedSuccess": "Ikasgai plana arrakastaz sortua!",
+      "planGenerationFailed": "Errorea ikasgai plana sortzean",
+      "pdfSavedSuccess": "PDF-a arrakastaz gorde da ikasgelako materialetan!",
+      "pdfDownloadedSuccess": "PDF-a arrakastaz deskargatu da!",
+      "pdfSaveFailed": "Errorea PDF-a gordetzean: {error}",
+      "pdfDownloadFailed": "Errorea PDF-a deskargatzean: {error}"
+    },
+    "fields": {
+      "subject": {
+        "label": "Ikasgaia",
+        "placeholder": "adib., Matematika, Zientziak, Historia"
+      },
+      "theme": {
+        "label": "Gaia edo Topikoa",
+        "placeholder": "adib., Zatikiak, Fotosintesia, Bigarren Mundu Gerra"
+      },
+      "planName": {
+        "label": "Planaren Izena",
+        "placeholder": "adib., Zatikien Unitate Plana"
+      },
+      "classroom": {
+        "label": "Ikasgela",
+        "placeholder": "Aukeratu ikasgela bat"
+      },
+      "numLessons": {
+        "label": "Ikasgai Kopurua",
+        "placeholder": "1-10"
+      },
+      "playfulnessLevel": {
+        "label": "Jolasen Maila",
+        "veryStructured": "Oso Egituratua",
+        "structured": "Egituratua",
+        "balanced": "Orekatua",
+        "playful": "Jolaserako",
+        "veryPlayful": "Oso Jolaserako"
+      },
+      "llmModel": {
+        "label": "AI Eredua",
+        "placeholder": "Aukeratu AI eredu bat"
+      },
+      "additionalInfo": {
+        "label": "Informazio Gehigarria",
+        "placeholder": "Gehitu baldintza espezifikoak, ikasleen beharrak edo irakaskuntza lehentasunak"
+      }
+    },
+    "buttons": {
+      "generatePlan": "Sortu Ikasgai Plana",
+      "generating": "Sortzen...",
+      "uploadFile": "Igo Fitxategia",
+      "browseClassroomMaterials": "Arakatu Ikasgelako Materialak"
+    },
+    "fileUpload": {
+      "title": "Igo Materialak",
+      "description": "Igo fitxategi bat edo aukeratu zure ikasgelako materialetatik ikasgai plan egokiagoa sortzen laguntzeko",
+      "dragDrop": "Arrastatu eta jaregin fitxategiak hemen edo egin klik arakatzeko",
+      "supportedFormats": "Onartutako formatua: DOCX",
+      "uploadedFiles": "Igotako Fitxategiak",
+      "processing": "Fitxategia prozesatzen..."
+    },
+    "materialsModal": {
+      "title": "Aukeratu Ikasgelako Materiala",
+      "searchPlaceholder": "Bilatu materialak...",
+      "noMaterials": "Ez da materialik aurkitu",
+      "close": "Itxi"
+    },
+    "planResultModal": {
+      "defaultTitle": "Ikasgai Plana",
+      "tabs": {
+        "plan": "Plana",
+        "metadata": "Metadatuak"
+      },
+      "metadata": {
+        "subject": "Ikasgaia",
+        "theme": "Gaia",
+        "numLessons": "Ikasgai Kopurua",
+        "playfulnessLevel": "Jolasen Maila",
+        "generatedWith": "Honekin sortua"
+      },
+      "buttons": {
+        "copy": "Kopiatu Arbelera",
+        "copying": "Kopiatzen...",
+        "download": "Deskargatu PDF",
+        "downloading": "Deskargatzen...",
+        "uploadToClassroom": "Gorde Ikasgelan",
+        "uploading": "Gordetzen..."
+      },
+      "copySuccess": "Arbelera kopiatua!",
+      "copyError": "Errorea arbelera kopiatzean",
+      "downloadSuccess": "PDF-a arrakastaz deskargatu da!",
+      "downloadError": "Errorea PDF-a deskargatzean",
+      "uploadSuccess": "Arrakastaz gorde da ikasgelan!",
+      "uploadError": "Errorea ikasgelan gordetzean"
+    },
+    "prompts": {
+      "intro": "Sortu ikasgai plan zehatza ondorengo informazioan oinarrituta:",
+      "teacherInfo": "Irakaslearen Informazioa",
+      "teacherName": "Irakaslearen Izena",
+      "teacherEmail": "Irakaslearen Emaila",
+      "classroomInfo": "Ikasgelaren Informazioa",
+      "classroomName": "Ikasgelaren Izena",
+      "academicCourse": "Ikasturte Akademikoa",
+      "educationLevel": "Hezkuntza Maila",
+      "studentCount": "Ikasle Kopurua",
+      "planDetails": "Planaren Xehetasunak",
+      "subject": "Ikasgaia",
+      "theme": "Gaia",
+      "numLessons": "Ikasgai Kopurua",
+      "playfulnessLevel": "Jolasen Maila",
+      "additionalInfo": "Informazio Gehigarria",
+      "materialContent": "Erreferentziazko Materialaren Edukia",
+      "finalInstructions": "Mesedez, sortu ikasgai plan zehatza non helburuak, beharrezko materialak, jarduerak eta ebaluazio estrategiak ikasgai bakoitzerako barne hartzen diren. Plana hezkuntza mailarako egokia izan behar da eta irakaskuntza metodo erakargarriak barneratu behar ditu.",
+      "playfulness": {
+        "veryStructured": "Oso ikuspegi egituratua jarduera formalekin",
+        "structured": "Ikuspegi egituratua elementu interaktibo batzuekin",
+        "balanced": "Jarduera egituratuak eta jolaserako jardueren arteko nahasketa orekatua",
+        "veryPlayful": "Oso jolaserako ikuspegia jokoekin eta jarduera sortzaileekin"
       }
     }
   },

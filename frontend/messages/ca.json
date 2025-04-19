@@ -1066,6 +1066,12 @@
       "cancelButton": "Cancel·lar",
       "completeProfileButton": "Perfil complet"
     },
+    "noClassroomModal": {
+      "no_classroom_modal_title": "No hi ha aules disponibles",
+      "no_classroom_modal_description": "Actualment no tens aules associades al teu compte. Si us plau, crea o uneix-te a una aula per continuar.",
+      "back_to_tools": "Tornar a Eines",
+      "go_to_classrooms": "Anar a Aules"
+    },
     "categories": {
       "assessment": "Avaluació",
       "organization": "Organització",
@@ -1111,6 +1117,144 @@
           "Consciència del context educatiu",
           "Traducció de documents"
         ]
+      }
+    }
+  },
+
+
+  "LessonPlanner": {
+    "header": {
+      "title": "Planificador de Lliçons",
+      "subtitle": "Crea plans de lliçons personalitzats amb assistència d'IA",
+      "featureTitle": "Plans de Lliçons Impulsats per IA",
+      "featureDescription": "Crea plans de lliçons professionals en segons utilitzant la nostra avançada tecnologia d'IA. Perfecte per a docents que volen estalviar temps mentre creen contingut educatiu d'alta qualitat.",
+      "teacherImageAlt": "Docent"
+    },
+    "alerts": {
+      "fetchClassroomsError": "No s'han pogut obtenir les classes. Si us plau, torna-ho a provar més tard.",
+      "fetchMaterialsError": "No s'han pogut obtenir els materials. Si us plau, torna-ho a provar més tard.",
+      "fileProcessedSuccess": "Arxiu processat amb èxit!",
+      "unsupportedFileType": "Només s'admeten arxius DOCX per a la generació de plans de lliçons.",
+      "materialProcessedSuccess": "Material processat amb èxit!",
+      "missingSubject": "Si us plau, introdueix una assignatura.",
+      "missingClassroom": "Si us plau, selecciona una classe.",
+      "missingTheme": "Si us plau, introdueix un tema.",
+      "planGeneratedSuccess": "Pla de lliçons generat amb èxit!",
+      "planGenerationFailed": "Error en generar el pla de lliçons",
+      "pdfSavedSuccess": "PDF desat als materials de classe amb èxit!",
+      "pdfDownloadedSuccess": "PDF descarregat amb èxit!",
+      "pdfSaveFailed": "Error en desar el PDF: {error}",
+      "pdfDownloadFailed": "Error en descarregar el PDF: {error}"
+    },
+    "fields": {
+      "subject": {
+        "label": "Assignatura",
+        "placeholder": "p. ex., Matemàtiques, Ciències, Història"
+      },
+      "theme": {
+        "label": "Tema o Tòpic",
+        "placeholder": "p. ex., Fraccions, Fotosíntesi, Segona Guerra Mundial"
+      },
+      "planName": {
+        "label": "Nom del Pla",
+        "placeholder": "p. ex., Pla d'Unitat de Fraccions"
+      },
+      "classroom": {
+        "label": "Aula",
+        "placeholder": "Selecciona una aula"
+      },
+      "numLessons": {
+        "label": "Nombre de Lliçons",
+        "placeholder": "1-10"
+      },
+      "playfulnessLevel": {
+        "label": "Nivell de Ludificació",
+        "veryStructured": "Molt Estructurat",
+        "structured": "Estructurat",
+        "balanced": "Equilibrat",
+        "playful": "Lúdic",
+        "veryPlayful": "Molt Lúdic"
+      },
+      "llmModel": {
+        "label": "Model d'IA",
+        "placeholder": "Selecciona un model d'IA"
+      },
+      "additionalInfo": {
+        "label": "Informació Addicional",
+        "placeholder": "Afegeix requisits específics, necessitats dels estudiants o preferències d'ensenyament"
+      }
+    },
+    "buttons": {
+      "generatePlan": "Generar Pla de Lliçons",
+      "generating": "Generant...",
+      "uploadFile": "Pujar Arxiu",
+      "browseClassroomMaterials": "Explorar Materials de l'Aula"
+    },
+    "fileUpload": {
+      "title": "Pujar Materials",
+      "description": "Puja un arxiu o selecciona dels teus materials de classe per ajudar a generar un pla de lliçons més rellevant",
+      "dragDrop": "Arrossega i deixa anar arxius aquí o fes clic per explorar",
+      "supportedFormats": "Format suportat: DOCX",
+      "uploadedFiles": "Arxius Pujats",
+      "processing": "Processant arxiu..."
+    },
+    "materialsModal": {
+      "title": "Seleccionar Material de Classe",
+      "searchPlaceholder": "Cercar materials...",
+      "noMaterials": "No s'han trobat materials",
+      "close": "Tancar"
+    },
+    "planResultModal": {
+      "defaultTitle": "Pla de Lliçons",
+      "tabs": {
+        "plan": "Pla",
+        "metadata": "Metadades"
+      },
+      "metadata": {
+        "subject": "Assignatura",
+        "theme": "Tema",
+        "numLessons": "Nombre de Lliçons",
+        "playfulnessLevel": "Nivell de Ludificació",
+        "generatedWith": "Generat amb"
+      },
+      "buttons": {
+        "copy": "Copiar al Portapapers",
+        "copying": "Copiant...",
+        "download": "Descarregar PDF",
+        "downloading": "Descarregant...",
+        "uploadToClassroom": "Desar a l'Aula",
+        "uploading": "Desant..."
+      },
+      "copySuccess": "Copiat al portapapers!",
+      "copyError": "Error en copiar al portapapers",
+      "downloadSuccess": "PDF descarregat amb èxit!",
+      "downloadError": "Error en descarregar el PDF",
+      "uploadSuccess": "Desat a l'aula amb èxit!",
+      "uploadError": "Error en desar a l'aula"
+    },
+    "prompts": {
+      "intro": "Crea un pla de lliçons detallat basat en la següent informació:",
+      "teacherInfo": "Informació del Docent",
+      "teacherName": "Nom del Docent",
+      "teacherEmail": "Email del Docent",
+      "classroomInfo": "Informació de l'Aula",
+      "classroomName": "Nom de l'Aula",
+      "academicCourse": "Curs Acadèmic",
+      "educationLevel": "Nivell Educatiu",
+      "studentCount": "Nombre d'Estudiants",
+      "planDetails": "Detalls del Pla",
+      "subject": "Assignatura",
+      "theme": "Tema",
+      "numLessons": "Nombre de Lliçons",
+      "playfulnessLevel": "Nivell de Ludificació",
+      "additionalInfo": "Informació Addicional",
+      "materialContent": "Contingut del Material de Referència",
+      "finalInstructions": "Si us plau, crea un pla de lliçons detallat que inclogui objectius, materials necessaris, activitats i estratègies d'avaluació per a cada lliçó. El pla ha de ser apropiat per al nivell educatiu i incorporar mètodes d'ensenyament atractius.",
+      "playfulness": {
+        "veryStructured": "Enfocament molt estructurat amb activitats formals",
+        "structured": "Enfocament estructurat amb alguns elements interactius",
+        "balanced": "Barreja equilibrada d'activitats estructurades i lúdiques",
+        "veryPlayful": "Enfocament molt lúdic amb jocs i activitats creatives"
       }
     }
   },
