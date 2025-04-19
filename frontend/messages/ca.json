@@ -1016,6 +1016,8 @@
     "filterByClassroom": "Filtre per classe:",
     "deleteMaterial": "Eliminar el material",
     "deleteMaterialConfirmation": "Esteu segur que voleu eliminar",
+    "deleteSelectedConfirmation": "Esteu segur que voleu eliminar els materials seleccionats?",
+    "confirmDeletion": "Confirmeu l'eliminació",
     "cancel": "Cancel·lar",
     "delete": "Eliminar",
     "manageTags": "Gestionar les etiquetes de",

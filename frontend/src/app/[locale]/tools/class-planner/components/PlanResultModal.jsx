@@ -34,14 +34,27 @@ const PlanResultModal = ({
   const handleDownloadPDF = async () => {
     setIsDownloading(true);
     try {
-      // This would be implemented in a real application
-      // For now, we'll just simulate success
-      setTimeout(() => {
-        addAlert("success", t("planResultModal.downloadSuccess"));
-        setIsDownloading(false);
-      }, 1000);
+      // Ensure generatePDF is implemented to return a valid URL
+      const pdfUrl = await generatePDF(planResult.plan);
+  
+      if (!pdfUrl) {
+        throw new Error("Failed to generate PDF");
+      }
+  
+      // Create a temporary link element
+      const link = document.createElement('a');
+      link.href = pdfUrl;
+      link.setAttribute('download', 'lesson-plan.pdf');
+  
+      // Append to the body, click and remove the link
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+  
+      addAlert("success", t("planResultModal.downloadSuccess"));
     } catch (error) {
       addAlert("error", t("planResultModal.downloadError"));
+    } finally {
       setIsDownloading(false);
     }
   };
@@ -182,13 +195,7 @@ const PlanResultModal = ({
           <button
             onClick={handleCopyToClipboard}
             disabled={isCopying}
-            className={cn(
-              "px-4 py-2 rounded-md text-sm font-medium flex items-center",
-              theme === "dark" 
-                ? "bg-gray-700 text-white hover:bg-gray-600" 
-                : "bg-gray-200 text-gray-800 hover:bg-gray-300",
-              isCopying && "opacity-70 cursor-not-allowed"
-            )}
+            className="btn btn-secondary btn-sm flex items-center"
           >
             {isCopying ? (
               <>
@@ -211,13 +218,7 @@ const PlanResultModal = ({
           <button
             onClick={handleDownloadPDF}
             disabled={isDownloading}
-            className={cn(
-              "px-4 py-2 rounded-md text-sm font-medium flex items-center",
-              theme === "dark" 
-                ? "bg-indigo-600 text-white hover:bg-indigo-700" 
-                : "bg-indigo-600 text-white hover:bg-indigo-700",
-              isDownloading && "opacity-70 cursor-not-allowed"
-            )}
+            className="btn btn-primary btn-sm flex items-center"
           >
             {isDownloading ? (
               <>
@@ -240,13 +241,7 @@ const PlanResultModal = ({
           <button
             onClick={handleUploadToClassroom}
             disabled={isUploading}
-            className={cn(
-              "px-4 py-2 rounded-md text-sm font-medium flex items-center",
-              theme === "dark" 
-                ? "bg-green-600 text-white hover:bg-green-700" 
-                : "bg-green-600 text-white hover:bg-green-700",
-              isUploading && "opacity-70 cursor-not-allowed"
-            )}
+            className="btn btn-success btn-sm flex items-center"
           >
             {isUploading ? (
               <>

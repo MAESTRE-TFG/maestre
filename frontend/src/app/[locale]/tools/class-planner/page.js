@@ -215,9 +215,14 @@ const LessonPlanner = ({ params }) => {
       const token = localStorage.getItem("authToken");
       const result = await generatePlan(prompt, formData.llmModel);
 
-      setPlanResult(result);
-      setShowModal(true);
-      addAlert("success", t("alerts.planGeneratedSuccess"));
+      // Ensure planResult is set correctly
+      if (result && result.plan) {
+        setPlanResult(result);
+        setShowModal(true);
+        addAlert("success", t("alerts.planGeneratedSuccess"));
+      } else {
+        throw new Error(t("alerts.planGenerationFailed"));
+      }
     } catch (error) {
       addAlert("error", `${t("alerts.planGenerationFailed")}: ${error.message}`);
     } finally {

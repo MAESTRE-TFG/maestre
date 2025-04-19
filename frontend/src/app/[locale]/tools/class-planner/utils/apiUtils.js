@@ -4,13 +4,15 @@ import { getLLMApiUrl } from "@/lib/api";
 
 
 // Upload PDF to classroom
-export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token) => {
+export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token, addAlert) => {
   if (!classroomId) {
-    throw new Error("Missing classroom");
+    addAlert("error", "Missing classroom");
+    return false;
   }
 
   if (!pdfBlob || !(pdfBlob instanceof Blob)) {
-    throw new Error("Invalid PDF data");
+    addAlert("error", "Invalid PDF data");
+    return false;
   }
 
   const formData = new FormData();
@@ -20,7 +22,8 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
 
   try {
     if (!token) {
-      throw new Error("Authentication required");
+      addAlert("error", "Authentication required");
+      return false;
     }
 
     await axios.post(`${getApiBaseUrl()}/api/materials/`, formData, {
@@ -30,6 +33,7 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
       },
     });
 
+    addAlert("success", "PDF uploaded successfully");
     return true;
   } catch (error) {
     if (error.response) {
@@ -38,28 +42,29 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
           error.response.data && error.response.data.error
             ? error.response.data.error
             : "Unknown error occurred";
-        throw new Error(errorMsg);
+        addAlert("error", errorMsg);
       } else if (error.response.status === 401) {
-        throw new Error("Authentication required");
+        addAlert("error", "Authentication required");
       } else {
-        throw new Error(`${error.response.status} - ${error.response.statusText}`);
+        addAlert("error", `${error.response.status} - ${error.response.statusText}`);
       }
     } else if (error.request) {
-      throw new Error("Network error. Please check your connection.");
+      addAlert("error", "Network error. Please check your connection.");
     } else {
-      throw new Error(error.message);
+      addAlert("error", error.message);
     }
+    return false;
   }
 };
 
 // Process uploaded file
 export const processUploadedFile = async (file, token) => {
   if (!file.name.toLowerCase().endsWith(".docx")) {
-    throw new Error("Only DOCX files are supported");
+    addAlert("error", "Only DOCX files are supported");
   }
 
   if (file.size > 5 * 1024 * 1024) {
-    throw new Error("File size exceeds 5MB limit");
+    addAlert("error", "File size exceeds 5MB limit");
   }
 
   const formData = new FormData();
@@ -84,15 +89,15 @@ export const processUploadedFile = async (file, token) => {
         id: Date.now(),
       };
     } else {
-      throw new Error("Failed to process file");
+      addAlert("error", "Failed to process file");
     }
   } catch (error) {
     if (error.response) {
-      throw new Error("Server error while processing file");
+      addAlert("error", "Server error while processing file");
     } else if (error.request) {
-      throw new Error("Network error. Please check your connection.");
+      addAlert("error", "Network error. Please check your connection.");
     } else {
-      throw new Error(error.message);
+      addAlert("error", error.message);
     }
   }
 };
@@ -100,7 +105,7 @@ export const processUploadedFile = async (file, token) => {
 // Process material from classroom
 export const processMaterialFromClassroom = async (material, token) => {
   if (!material.file.toLowerCase().endsWith(".docx")) {
-    throw new Error("Only DOCX files are supported");
+    addAlert("error", "Only DOCX files are supported");
   }
 
   try {
@@ -126,15 +131,15 @@ export const processMaterialFromClassroom = async (material, token) => {
         materialId: material.id,
       };
     } else {
-      throw new Error("Failed to process material");
+      addAlert("error", "Failed to process material");
     }
   } catch (error) {
     if (error.response) {
-      throw new Error("Server error while processing material");
+      addAlert("error", "Server error while processing material");
     } else if (error.request) {
-      throw new Error("Network error. Please check your connection.");
+      addAlert("error", "Network error. Please check your connection.");
     } else {
-      throw new Error(error.message);
+      addAlert("error", error.message);
     }
   }
 };
@@ -142,7 +147,6 @@ export const processMaterialFromClassroom = async (material, token) => {
 // Generate plan using Ollama
 export const generatePlan = async (prompt, model = "llama3.2:3b") => {
   try {
-    // Correct the URL by using only one port number
     const response = await axios.post(`${getLLMApiUrl()}/api/generate`, {
       model: model,
       prompt: prompt,
@@ -151,17 +155,20 @@ export const generatePlan = async (prompt, model = "llama3.2:3b") => {
     });
 
     if (response.data && response.data.response) {
-      return response.data.response;
+      // Return an object with a plan property instead of the raw response
+      return {
+        plan: response.data.response
+      };
     } else {
-      throw new Error("Failed to generate lesson plan");
+      addAlert("error", "Failed to generate lesson plan");
     }
   } catch (error) {
     if (error.response) {
-      throw new Error("Server error while generating plan");
+      addAlert("error", "Server error while generating plan");
     } else if (error.request) {
-      throw new Error("Network error. Please check your connection.");
+      addAlert("error", "Network error. Please check your connection.");
     } else {
-      throw new Error(error.message);
+      addAlert("error", error.message);
     }
   }
 };

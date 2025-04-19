@@ -1,15 +1,16 @@
 import axios from "axios";
 import { getApiBaseUrl } from "@/lib/api";
+import { getLLMApiUrl } from "@/lib/api";
 
 // Upload PDF to classroom
-export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token, showAlert, t) => {
+export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token, showAlert) => {
   if (!classroomId) {
-    showAlert("error", t("ExamMaker.alerts.missingClassroom"));
+    showAlert("error", "Missing classroom");
     return false;
   }
 
   if (!pdfBlob || !(pdfBlob instanceof Blob)) {
-    showAlert("error", t("ExamMaker.alerts.pdfSaveFailed", { error: t("ExamMaker.alerts.unknownError") })); 
+    showAlert("error", "Failed to save PDF: Unknown error");
     return false;
   }
 
@@ -20,7 +21,7 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
 
   try {
     if (!token) {
-      showAlert("error", t("ExamMaker.alerts.fetchClassroomsError"));
+      showAlert("error", "Failed to fetch classrooms");
       return false;
     }
 
@@ -31,7 +32,7 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
       },
     });
 
-    showAlert("success", t("ExamMaker.alerts.pdfSavedSuccess"));
+    showAlert("success", "PDF saved successfully");
     return true;
   } catch (error) {
     if (error.response) {
@@ -39,31 +40,31 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
         const errorMsg =
           error.response.data && error.response.data.error
             ? error.response.data.error
-            : t("ExamMaker.alerts.pdfSaveFailed", { error: t("ExamMaker.alerts.unknownError") });
+            : "Failed to save PDF: Unknown error";
         showAlert("error", errorMsg);
       } else if (error.response.status === 401) {
-        showAlert("error", t("ExamMaker.alerts.fetchClassroomsError"));
+        showAlert("error", "Failed to fetch classrooms");
       } else {
-        showAlert("error", t("ExamMaker.alerts.pdfSaveFailed", { error: `${error.response.status} - ${error.response.statusText}` }));
+        showAlert("error", `Failed to save PDF: ${error.response.status} - ${error.response.statusText}`);
       }
     } else if (error.request) {
-      showAlert("error", t("ExamMaker.alerts.fetchMaterialsError"));
+      showAlert("error", "Failed to fetch materials");
     } else {
-      showAlert("error", t("ExamMaker.alerts.pdfSaveFailed", { error: error.message }));
+      showAlert("error", `Failed to save PDF: ${error.message}`);
     }
     return false;
   }
 };
 
 // Process uploaded file
-export const processUploadedFile = async (file, token, showAlert, t) => {
+export const processUploadedFile = async (file, token, showAlert) => {
   if (!file.name.toLowerCase().endsWith(".docx")) {
-    showAlert("error", t("ExamMaker.alerts.unsupportedFileType"));
+    showAlert("error", "Unsupported file type");
     return null;
   }
 
   if (file.size > 5 * 1024 * 1024) {
-    showAlert("error", t("ExamMaker.alerts.fileProcessedSuccess"));
+    showAlert("error", "File processed successfully");
     return null;
   }
 
@@ -72,7 +73,7 @@ export const processUploadedFile = async (file, token, showAlert, t) => {
 
   try {
     const response = await axios.post(
-      `${getApiBaseUrl()}:8000/api/materials/extract-text/`,
+      `${getApiBaseUrl()}/api/materials/extract-text/`,
       formData,
       {
         headers: {
@@ -83,32 +84,26 @@ export const processUploadedFile = async (file, token, showAlert, t) => {
     );
 
     if (response.data && response.data.text) {
-      showAlert("success", t("ExamMaker.alerts.fileProcessedSuccess"));
+      showAlert("success", "File processed successfully");
       return {
         name: file.name,
         content: response.data.text,
         id: Date.now(),
       };
     } else {
-      showAlert("error", t("ExamMaker.alerts.fetchMaterialsError"));
+      showAlert("error", "Failed to fetch materials");
       return null;
     }
   } catch (error) {
-    if (error.response) {
-      showAlert("error", t("ExamMaker.alerts.fetchMaterialsError"));
-    } else if (error.request) {
-      showAlert("error", t("ExamMaker.alerts.fetchMaterialsError"));
-    } else {
-      showAlert("error", t("ExamMaker.alerts.fetchMaterialsError"));
-    }
+    showAlert("error", "Failed to fetch materials");
     return null;
   }
 };
 
 // Process material from classroom
-export const processMaterialFromClassroom = async (material, token, showAlert, t) => {
+export const processMaterialFromClassroom = async (material, token, showAlert) => {
   if (!material.file.toLowerCase().endsWith(".docx")) {
-    showAlert("error", t("ExamMaker.alerts.unsupportedFileType"));
+    showAlert("error", "Unsupported file type");
     return null;
   }
 
@@ -127,7 +122,7 @@ export const processMaterialFromClassroom = async (material, token, showAlert, t
     );
 
     if (response.data && response.data.text) {
-      showAlert("success", t("ExamMaker.alerts.materialProcessedSuccess"));
+      showAlert("success", "Material processed successfully");
       return {
         name: material.name,
         content: response.data.text,
@@ -136,25 +131,19 @@ export const processMaterialFromClassroom = async (material, token, showAlert, t
         materialId: material.id,
       };
     } else {
-      showAlert("error", t("ExamMaker.alerts.fetchMaterialsError"));
+      showAlert("error", "Failed to fetch materials");
       return null;
     }
   } catch (error) {
-    if (error.response) {
-      showAlert("error", t("ExamMaker.alerts.fetchMaterialsError")); 
-    } else if (error.request) {
-      showAlert("error", t("ExamMaker.alerts.fetchMaterialsError")); 
-    } else {
-      showAlert("error", t("ExamMaker.alerts.fetchMaterialsError")); 
-    }
+    showAlert("error", "Failed to fetch materials");
     return null;
   }
 };
 
 // Generate exam using Ollama
-export const generateExam = async (prompt, model = "llama3.2:3b", showAlert, t) => {
+export const generateExam = async (prompt, model = "llama3.2:3b", showAlert) => {
   try {
-    const response = await axios.post(`${getApiBaseUrl()}:11434/api/generate`, {
+    const response = await axios.post(`${getLLMApiUrl()}/api/generate`, {
       model: model,
       prompt: prompt,
       stream: false,
@@ -162,20 +151,14 @@ export const generateExam = async (prompt, model = "llama3.2:3b", showAlert, t) 
     });
 
     if (response.data && response.data.response) {
-      showAlert("success", t("ExamMaker.alerts.examGeneratedSuccess")); 
+      showAlert("success", "Exam generated successfully");
       return response.data.response;
     } else {
-      showAlert("error", t("ExamMaker.alerts.examGenerationFailed")); 
+      showAlert("error", "Failed to generate exam");
       return null;
     }
   } catch (error) {
-    if (error.response) {
-      showAlert("error", t("ExamMaker.alerts.examGenerationFailed")); 
-    } else if (error.request) {
-      showAlert("error", t("ExamMaker.alerts.examGenerationFailed")); 
-    } else {
-      showAlert("error", t("ExamMaker.alerts.examGenerationFailed")); 
-    }
+    showAlert("error", "Failed to generate exam");
     return null;
   }
 };

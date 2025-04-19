@@ -950,6 +950,8 @@
     "filterByClassroom": "Klasearen arabera iragazi:",
     "deleteMaterial": "Ezabatu materiala",
     "deleteMaterialConfirmation": "Ziur ezabatu nahi duzula?",
+    "deleteSelectedConfirmation": "Ziur al zaude hautatutako materialak ezabatu nahi dituzula?",
+    "confirmDeletion": "Berretsi ezabatzea",
     "cancel": "Indargabetu",
     "delete": "Ezabatu",
     "manageTags": "Kudeatu etiketak",

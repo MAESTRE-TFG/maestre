@@ -53,6 +53,16 @@ const ExamMaker = ({ params }) => {
   const fileContentsRef = useRef("");
   const [showNoClassroomModal, setShowNoClassroomModal] = useState(false);
 
+
+  // Move addAlert inside the component so it can access t
+  const addAlert = (type, message) => {
+    const id = Date.now();
+    setAlerts(prev => [...prev, { id, type, message }]);
+    setTimeout(() => {
+      setAlerts(prev => prev.filter(alert => alert.id !== id));
+    }, 5000);
+  };
+
   // Fetch classrooms on component mount
   useEffect(() => {
     const token = localStorage.getItem("authToken");
@@ -119,14 +129,6 @@ const ExamMaker = ({ params }) => {
     }
   }, [classrooms, t]);
 
-  const addAlert = (type, message) => {
-    const id = Date.now();
-    setAlerts(prev => [...prev, { id, type, message }]);
-    setTimeout(() => {
-      setAlerts(prev => prev.filter(alert => alert.id !== id));
-    }, 5000);
-  };
-
   // Form change handler
   const handleChange = e => {
     const { name, value, type } = e.target;
@@ -145,7 +147,7 @@ const ExamMaker = ({ params }) => {
 
     try {
       const token = localStorage.getItem("authToken");
-      const processedFile = await processUploadedFile(file, token);
+      const processedFile = await processUploadedFile(file, token, t);
 
       setUploadedFiles([processedFile]);
       fileContentsRef.current = processedFile.content;
@@ -170,7 +172,7 @@ const ExamMaker = ({ params }) => {
 
     try {
       const token = localStorage.getItem("authToken");
-      const processedMaterial = await processMaterialFromClassroom(material, token);
+      const processedMaterial = await processMaterialFromClassroom(material, token, t);
 
       setUploadedFiles([processedMaterial]);
       fileContentsRef.current = processedMaterial.content;
@@ -208,11 +210,11 @@ const ExamMaker = ({ params }) => {
       const user = userString ? JSON.parse(userString) : {};
 
       // Build the prompt using the utility function
-      const prompt = buildExamPrompt(formData, classrooms, fileContentsRef.current, user);
+      const prompt = buildExamPrompt(formData, classrooms, fileContentsRef.current, user, t);
 
       // Generate the exam
       const token = localStorage.getItem("authToken");
-      const result = await generateExam(prompt, formData.llmModel);
+      const result = await generateExam(prompt, formData.llmModel, t);
 
       setExamResult(result);
       setShowModal(true);

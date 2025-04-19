@@ -950,6 +950,8 @@
     "filterByClassroom": "Filtro por clase:",
     "deleteMaterial": "Eliminar material",
     "deleteMaterialConfirmation": "Estás seguro de que queres eliminar",
+    "deleteSelectedConfirmation": "Estás seguro de que queres eliminar os materiais seleccionados?",
+    "confirmDeletion": "Confirmar a eliminación",
     "cancel": "Cancelar",
     "delete": "Eliminar",
     "manageTags": "Xestionar etiquetas de",

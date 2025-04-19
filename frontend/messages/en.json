@@ -1017,6 +1017,8 @@
       "filterByClassroom": "Filter by Classroom:",
       "deleteMaterial": "Delete Material",
       "deleteMaterialConfirmation": "Are you sure you want to delete",
+      "deleteSelectedConfirmation": "Are you sure you want to delete the selected materials?",
+      "confirmDeletion": "Confirm Deletion",
       "cancel": "Cancel",
       "delete": "Delete",
       "manageTags": "Manage Tags for",

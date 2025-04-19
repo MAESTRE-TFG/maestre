@@ -1016,6 +1016,8 @@
     "filterByClassroom": "Filtrar por Clase:",
     "deleteMaterial": "Eliminar Material",
     "deleteMaterialConfirmation": "¿Estás seguro de que deseas eliminar",
+    "deleteSelectedConfirmation": "¿Estás seguro de que deseas eliminar los materiales seleccionados?",
+    "confirmDeletion": "Confirmar Eliminación",
     "cancel": "Cancelar",
     "delete": "Eliminar",
     "manageTags": "Gestionar etiquetas de",
@@ -1193,8 +1195,8 @@
     "fileUpload": {
       "title": "Subir Materiales",
       "description": "Sube un archivo o selecciona de tus materiales de clase para ayudar a generar un plan de clases más relevante",
-      "dragDrop": "Arrastra y suelta archivos aquí o haz clic para explorar",
-      "supportedFormats": "Formato soportado: DOCX",
+      "dragDrop": "Arrastra y suelta archivos aquí en formato DOCX",
+      "supportedFormats": "",
       "uploadedFiles": "Archivos Subidos",
       "processing": "Procesando archivo..."
     },

@@ -1,6 +1,3 @@
-// Import or define the translation function
-import { useTranslations } from "next-intl";
-
 /**
  * Build a prompt for generating a lesson plan
  * @param {Object} formData - Form data for the plan
