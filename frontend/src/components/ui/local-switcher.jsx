@@ -49,9 +49,9 @@ export default function LocalSwitcher({ locale }) {
   const localeInfo = {
     en: { name: "English", flag: "🇬🇧" },
     es: { name: "Español", flag: "🇪🇸" },
-    gl: { name: "Galego", flag: "🏴󠁥󠁳󠁧" },
-    ca: { name: "Català", flag: "🏴󠁥󠁳󠁣󠁴󠁿" },
-    eu: { name: "Euskara", flag: "🏴󠁥󠁳󠁰󠁶󠁿" }
+    // gl: { name: "Galego", flag: "🏴󠁥󠁳󠁧" },
+    // ca: { name: "Català", flag: "🏴󠁥󠁳󠁣󠁴󠁿" },
+    // eu: { name: "Euskara", flag: "🏴󠁥󠁳󠁰󠁶󠁿" }
   };
 
   console.log(locale);

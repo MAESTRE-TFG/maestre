@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { getApiBaseUrl } from "@/lib/api";
 import { useState, useEffect, useMemo, useCallback } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
@@ -30,6 +30,8 @@ const ClassroomEdit = () => {
   const searchParams = useSearchParams();
   const [userSchool, setUserSchool] = useState(null);
   const [userStages, setUserStages] = useState(null);
+  const params = useParams();
+  const locale = params.locale || "es";
 
   const showAlert = (type, message) => {
     setAlert({ type, message });
@@ -187,11 +189,11 @@ const ClassroomEdit = () => {
       );
       setClassroom(response.data);
       showAlert("success", t("alerts.updateSuccess"));
-      router.push("/classrooms");
+      router.push(`/${locale}/classrooms`);
     } catch (err) {
       showAlert("error", t("alerts.updateError"));
     }
-  }, [formData, classroom?.id, router, t]);
+  }, [formData, classroom?.id, router, t, locale]);
 
   const handleDelete = useCallback(async () => {
     if (!classroom) {
@@ -209,14 +211,14 @@ const ClassroomEdit = () => {
           }
         );
         showAlert("success", t("alerts.deleteSuccess"));
-        router.push("/classrooms");
+        router.push(`/${locale}/classrooms`);
       } catch (err) {
         showAlert("error", t("alerts.deleteError"));
       }
     } else {
       showAlert("error", t("alerts.nameMismatch"));
     }
-  }, [router, classroom?.id, nameInput, t]);
+  }, [router, classroom?.id, nameInput, t, locale]);
 
   const openDeleteModal = () => {
     setIsDeleteModalOpen(true);
@@ -351,7 +353,10 @@ const ClassroomEdit = () => {
                 {t("deleteModal.cancel")}
               </button>
               <button
-                onClick={handleDelete}
+                onClick={() => {
+                  handleDelete();
+                  router.push(`/${locale}/classrooms`);
+                }}
                 className="btn-danger py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
               >
                 {t("deleteModal.delete")}

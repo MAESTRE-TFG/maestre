@@ -13,11 +13,20 @@ import {
   IconTrash,
 } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
+import { useParams } from "next/navigation";
 
 export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDeleteModal, educationalStages }) {
   const { theme } = useTheme();
   const router = useRouter();
   const t = useTranslations("ClassroomEditForm");
+  const params = useParams();
+  const locale = params.locale || "es";
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    await handleUpdate();
+    router.push(`/${locale}/classrooms`);
+  };
 
   return (
     <div
@@ -51,13 +60,7 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
         }
       `}</style>
 
-      <form
-        className="my-4"
-        onSubmit={(e) => {
-          e.preventDefault();
-          handleUpdate();
-        }}
-      >
+      <form className="my-4" onSubmit={handleSubmit}>
         <div className="flex flex-col md:flex-row gap-6 mb-8">
           <div className="flex-1 md:w-2/5 border border-gray-300 rounded-md p-4">
             <h3

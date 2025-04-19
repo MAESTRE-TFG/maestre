@@ -64,7 +64,7 @@ const ProfileEdit = ( params ) => {
       }));
       setCity(parsedFormData.city);
     }
-  }, [router, t]);
+  }, [router, t, locale]);
 
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
@@ -141,7 +141,7 @@ const ProfileEdit = ( params ) => {
   const handleCreateSchool = useCallback(() => {
     localStorage.setItem("formData", JSON.stringify(formData));
     router.push(`/${locale}/schools/new`);
-  }, [formData, router]);
+  }, [formData, router, locale]);
 
   if (!isClient) return null;
 

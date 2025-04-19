@@ -41,6 +41,7 @@ const ClassroomPage = () => {
   const [studentToDelete, setStudentToDelete] = useState(null);
   const [selectedStudents, setSelectedStudents] = useState([]);
   const [showDeleteSelectedModal, setShowDeleteSelectedModal] = useState(false);
+  const locale = params.locale || 'es';
 
   const showAlert = (type, message) => {
     setAlert({ type, message });

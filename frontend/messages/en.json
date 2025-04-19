@@ -102,7 +102,7 @@
       "title": "Maestre Translator",
       "subtitle": "Translate text between multiple languages",
       "feature_title": "AI-Powered Translation",
-      "feature_description": "Translate text between multiple languages with our advanced AI technology. Perfect for teachers who need to communicate with students and parents in different languages.",
+      "feature_description": "Translate text between multiple languages with our advanced translation technology. Perfect for teachers who need to communicate with students and parents in different languages.",
       "error": {
         "emptyText": "Please enter text to translate",
         "textTooLong": "Text exceeds 5000 character limit",

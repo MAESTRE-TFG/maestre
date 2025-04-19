@@ -90,7 +90,7 @@
     "title": "Tradutor Maestre",
     "subtitle": "Traducir texto entre varios idiomas",
     "feature_title": "Tradución impulsada por AI",
-    "feature_description": "Traducir texto entre varios idiomas coa nosa tecnoloxía AI avanzada. Perfecto para profesores que necesitan comunicarse con estudantes e pais en diferentes idiomas.",
+    "feature_description": "Traduce texto entre varios idiomas coa nosa tecnoloxía de tradución avanzada. Perfecto para profesores que necesitan comunicarse con estudantes e pais en diferentes idiomas.",
     "error": {
       "emptyText": "Introduza o texto para traducir",
       "textTooLong": "O texto supera o límite de 5000 caracteres",
