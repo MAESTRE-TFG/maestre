@@ -12,10 +12,12 @@ import {
   IconCalendar,
   IconFileDescription,
 } from "@tabler/icons-react";
+import { useTranslations } from "next-intl"; // Import the translation hook
 
 export const CreateClassroomForm = ({ onSubmit, educationalStages }) => {
   const { theme } = useTheme();
   const router = useRouter();
+  const t = useTranslations("ClassroomCreateForm"); // Use translations for this component
   const [formData, setFormData] = useState({
     name: "",
     academic_course: "",
@@ -34,43 +36,47 @@ export const CreateClassroomForm = ({ onSubmit, educationalStages }) => {
 
     // Validate name
     if (!formData.name.trim()) {
-      setAlert({ type: "warning", message: "Name is required and cannot be empty." });
+      setAlert({ type: "warning", message: t("alerts.nameRequired") });
       return;
     }
     if (formData.name.length > 30) {
-      setAlert({ type: "warning", message: "Name cannot exceed 30 characters." });
+      setAlert({ type: "warning", message: t("alerts.nameTooLong") });
       return;
     }
 
     // Validate description
     if (!formData.description.trim()) {
-      setAlert({ type: "warning", message: "Description is required and cannot be empty." });
+      setAlert({ type: "warning", message: t("alerts.descriptionRequired") });
       return;
     }
     if (formData.description.length > 255) {
-      setAlert({ type: "warning", message: "Description cannot exceed 255 characters." });
+      setAlert({ type: "warning", message: t("alerts.descriptionTooLong") });
       return;
     }
 
     // Validate academic year
     const yearPattern = /^\d{4}-\d{4}$/;
     if (!yearPattern.test(formData.academic_year)) {
-      setAlert({ type: "warning", message: "Academic Year must be in the format 'YYYY-YYYY'." });
+      setAlert({ type: "warning", message: t("alerts.invalidAcademicYear") });
       return;
     }
 
     try {
       await onSubmit(formData);
-      setAlert({ type: "success", message: "Classroom created successfully!" });
+      setAlert({ type: "success", message: t("alerts.success") });
     } catch (err) {
-      const errorMsg = err.message || "An error occurred while submitting the form.";
+      const errorMsg = err.message || t("alerts.error");
       setAlert({ type: "error", message: errorMsg });
     }
   };
 
   return (
-    <div className={cn("max-w-4xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", 
-      theme === "dark" ? "bg-black" : "bg-white")}>
+    <div
+      className={cn(
+        "max-w-4xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input",
+        theme === "dark" ? "bg-black" : "bg-white"
+      )}
+    >
       {alert && (
         <Alert
           type={alert.type}
@@ -78,8 +84,8 @@ export const CreateClassroomForm = ({ onSubmit, educationalStages }) => {
           onClose={() => setAlert(null)}
         />
       )}
-      <style jsx global>{
-        `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
+      <style jsx global>{`
+        @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
         select {
           appearance: none;
           background: ${theme === "dark" ? "#333" : "#fff"};
@@ -92,14 +98,17 @@ export const CreateClassroomForm = ({ onSubmit, educationalStages }) => {
         select:focus {
           outline: none;
           border-color: ${theme === "dark" ? "#888" : "#007bff"};
-          box-shadow: 0 0 0 3px ${theme === "dark" ? "rgba(136, 136, 136, 0.5)" : "rgba(0, 123, 255, 0.25)"};
+          box-shadow: 0 0 0 3px
+            ${theme === "dark"
+              ? "rgba(136, 136, 136, 0.5)"
+              : "rgba(0, 123, 255, 0.25)"};
         }
         option {
           background: ${theme === "dark" ? "#333" : "#fff"};
           color: ${theme === "dark" ? "#fff" : "#000"};
-        }`
-      }</style>
-      
+        }
+      `}</style>
+
       <form className="my-4" onSubmit={handleSubmit}>
         <div className="flex flex-col md:flex-row gap-6 mb-8">
           <div className="flex-1 md:w-1/2 border border-gray-300 rounded-md p-4">
@@ -110,9 +119,9 @@ export const CreateClassroomForm = ({ onSubmit, educationalStages }) => {
               )}
               style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             >
-              Classroom Information
+              {t("sections.information.title")} 
             </h3>
-            
+
             <div className="flex flex-col gap-6">
               <LabelInputContainer className="flex-1">
                 <Label
@@ -121,12 +130,12 @@ export const CreateClassroomForm = ({ onSubmit, educationalStages }) => {
                   htmlFor="name"
                 >
                   <IconSchool className="mr-2 h-5 w-5 text-blue-500" />
-                  Classroom Name
+                  {t("fields.name.label")} 
                 </Label>
                 <Input
                   id="name"
                   name="name"
-                  placeholder="Applied Maths 1º ESO"
+                  placeholder={t("fields.name.placeholder")} 
                   type="text"
                   required
                   value={formData.name}
@@ -141,7 +150,7 @@ export const CreateClassroomForm = ({ onSubmit, educationalStages }) => {
                   htmlFor="academic_course"
                 >
                   <IconBook className="mr-2 h-5 w-5 text-purple-500" />
-                  Academic Course
+                  {t("fields.academicCourse.label")} 
                 </Label>
                 <select
                   id="academic_course"
@@ -156,11 +165,15 @@ export const CreateClassroomForm = ({ onSubmit, educationalStages }) => {
                       : "bg-white border-gray-300 text-black"
                   )}
                 >
-                  <option value="" disabled>Select Academic Course</option>
+                  <option value="" disabled>
+                    {t("fields.academicCourse.placeholder")} 
+                  </option>
                   {educationalStages.map((stage) => (
                     <optgroup key={stage.stage} label={stage.stage}>
                       {stage.courses.map((course) => (
-                        <option key={course} value={course}>{course}</option>
+                        <option key={course} value={course}>
+                          {course}
+                        </option>
                       ))}
                     </optgroup>
                   ))}
@@ -174,12 +187,12 @@ export const CreateClassroomForm = ({ onSubmit, educationalStages }) => {
                   htmlFor="academic_year"
                 >
                   <IconCalendar className="mr-2 h-5 w-5 text-green-500" />
-                  Academic Year
+                  {t("fields.academicYear.label")} 
                 </Label>
                 <Input
                   id="academic_year"
                   name="academic_year"
-                  placeholder="YYYY-YYYY"
+                  placeholder={t("fields.academicYear.placeholder")} 
                   type="text"
                   required
                   value={formData.academic_year}
@@ -188,7 +201,7 @@ export const CreateClassroomForm = ({ onSubmit, educationalStages }) => {
               </LabelInputContainer>
             </div>
           </div>
-          
+
           <div className="flex-1 md:w-1/2 border border-gray-300 rounded-md p-4">
             <h3
               className={cn(
@@ -197,9 +210,9 @@ export const CreateClassroomForm = ({ onSubmit, educationalStages }) => {
               )}
               style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             >
-              Classroom Description
+              {t("sections.description.title")} 
             </h3>
-            
+
             <LabelInputContainer className="mb-4">
               <Label
                 className="flex items-center"
@@ -207,12 +220,12 @@ export const CreateClassroomForm = ({ onSubmit, educationalStages }) => {
                 htmlFor="description"
               >
                 <IconFileDescription className="mr-2 h-5 w-5 text-amber-500" />
-                Description
+                {t("fields.description.label")} 
               </Label>
               <textarea
                 id="description"
                 name="description"
-                placeholder="Describe your classroom"
+                placeholder={t("fields.description.placeholder")} 
                 value={formData.description}
                 onChange={handleChange}
                 rows="5"
@@ -226,18 +239,18 @@ export const CreateClassroomForm = ({ onSubmit, educationalStages }) => {
             </LabelInputContainer>
           </div>
         </div>
-        
+
         <div className="flex flex-col sm:flex-row gap-4 mt-8">
           <button
             className="btn btn-secondary py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center w-full mx-auto max-w-sm"
             onClick={() => router.back()}
           >
-             &larr; Cancel
+            &larr; {t("buttons.cancel")} 
           </button>
           <button
             className="btn btn-success py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center w-full mx-auto max-w-sm"
           >
-            Create Classroom
+            {t("buttons.create")} &rarr; 
           </button>
         </div>
       </form>

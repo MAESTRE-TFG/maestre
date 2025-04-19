@@ -3,8 +3,78 @@ import React from "react";
 import { Carousel, Card } from "@/components/ui/apple-cards-carousel";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
+import { useTranslations } from 'next-intl';
 
 export function CardCarrousell() {
+  const t = useTranslations('HomePage');
+  
+  const data = [
+    {
+      category: t('tool_category_assessment'),
+      title: t('tool_title_exams'),
+      src: "/static/tools/exam_maker.webp",
+      page: "exam-maker",
+      sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+      content: <CardContent>
+        {t('tool_content_exams')}
+        <ul className="list-disc ml-6 mt-4">
+          <li>{t('tool_feature_exams_1')}</li>
+          <li>{t('tool_feature_exams_2')}</li>
+          <li>{t('tool_feature_exams_3')}</li>
+          <li>{t('tool_feature_exams_4')}</li>
+        </ul>
+      </CardContent>
+    },
+    {
+      category: t('tool_category_assessment'),
+      title: t('tool_title_tests'),
+      src: "/static/tools/test_maker.webp",
+      page: "test-maker",
+      sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+      content: <CardContent>
+        {t('tool_content_tests')}
+        <ul className="list-disc ml-6 mt-4">
+          <li>{t('tool_feature_tests_1')}</li>
+          <li>{t('tool_feature_tests_2')}</li>
+          <li>{t('tool_feature_tests_3')}</li>
+          <li>{t('tool_feature_tests_4')}</li>
+        </ul>
+      </CardContent>
+    },
+    {
+      category: t('tool_category_organization'),
+      title: t('tool_title_planner'),
+      src: "/static/tools/planner.webp",
+      page: "class-planner",
+      sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+      content: <CardContent>
+        {t('tool_content_planner')}
+        <ul className="list-disc ml-6 mt-4">
+          <li>{t('tool_feature_planner_1')}</li>
+          <li>{t('tool_feature_planner_2')}</li>
+          <li>{t('tool_feature_planner_3')}</li>
+          <li>{t('tool_feature_planner_4')}</li>
+        </ul>
+      </CardContent>
+    },
+    {
+      category: t('tool_category_language'),
+      title: t('tool_title_translator'),
+      src: "/static/tools/translator.webp",
+      page: "translator",
+      sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+      content: <CardContent>
+        {t('tool_content_translator')}
+        <ul className="list-disc ml-6 mt-4">
+          <li>{t('tool_feature_translator_1')}</li>
+          <li>{t('tool_feature_translator_2')}</li>
+          <li>{t('tool_feature_translator_3')}</li>
+          <li>{t('tool_feature_translator_4')}</li>
+        </ul>
+      </CardContent>
+    }
+  ];
+
   const cards = data.map((card, index) => (
     <Card key={card.src} card={card} index={index} />
   ));
@@ -34,70 +104,3 @@ const CardContent = ({ children }) => {
     </div>
   );
 };
-
-const data = [
-  {
-    category: "Assessment",
-    title: "Create Engaging Exams",
-    src: "/static/tools/exam_maker.webp",
-    page: "exam-maker",
-    sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
-    content: <CardContent>
-      Create comprehensive exams with our intuitive exam maker. Features include:
-      <ul className="list-disc ml-6 mt-4">
-        <li>Multiple question types</li>
-        <li>Automatic grading</li>
-        <li>Custom scoring rules</li>
-        <li>Question bank management</li>
-      </ul>
-    </CardContent>
-  },
-  {
-    category: "Assessment",
-    title: "Generate Tests Efficiently",
-    src: "/static/tools/test_maker.webp",
-    page: "test-maker",
-    sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
-    content: <CardContent>
-      Streamline your test creation process with AI-powered assistance:
-      <ul className="list-disc ml-6 mt-4">
-        <li>AI-generated questions</li>
-        <li>Smart difficulty adjustment</li>
-        <li>Topic-based generation</li>
-        <li>Instant test assembly</li>
-      </ul>
-    </CardContent>
-  },
-  {
-    category: "Organization",
-    title: "Plan Your Classes",
-    src: "/static/tools/planner.webp",
-    page: "class-planner",
-    sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
-    content: <CardContent>
-      Stay organized with our comprehensive planning tools:
-      <ul className="list-disc ml-6 mt-4">
-        <li>Visual class schedules</li>
-        <li>Curriculum mapping</li>
-        <li>Resource allocation</li>
-        <li>Progress tracking</li>
-      </ul>
-    </CardContent>
-  },
-  {
-    category: "Language",
-    title: "Translate Materials",
-    src: "/static/tools/translator.webp",
-    page: "translator",
-    sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
-    content: <CardContent>
-      Break language barriers in your classroom:
-      <ul className="list-disc ml-6 mt-4">
-        <li>Real-time translation</li>
-        <li>Multi-language support</li>
-        <li>Educational context awareness</li>
-        <li>Document translation</li>
-      </ul>
-    </CardContent>
-  }
-];

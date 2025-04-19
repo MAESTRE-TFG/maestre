@@ -14,34 +14,42 @@ import {
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
-import axios from 'axios';
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { Modal } from "@/components/ui/modal";
-import Alert from "@/components/ui/Alert"; // Import the Alert component
+import Alert from "@/components/ui/Alert";
+import { useTranslations } from "next-intl";
 
-export function SidebarDemo({ ContentComponent }) {
+export function SidebarDemo({ ContentComponent, params }) {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
+  const t = useTranslations("Sidebar");
+  const [locale, setLocale] = useState("es");
   const [user, setUser] = useState(null);
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const [alert, setAlert] = useState(null);
 
+  useEffect(() => {
+    async function fetchParams() {
+      const resolvedParams = await params;
+      setLocale(resolvedParams?.locale || "es");
+    }
+    fetchParams();
+  }, [params]);
+
   const openLogoutModal = () => setLogoutModalOpen(true);
   const closeLogoutModal = () => setLogoutModalOpen(false);
-  
-  // Improved user data handling
+
   useEffect(() => {
     const checkUserData = () => {
       try {
         const storedUser = localStorage.getItem("user");
         const token = localStorage.getItem("authToken");
-        
-        // Only set user if both user data and token exist
+
         if (storedUser && token) {
           setUser(JSON.parse(storedUser));
         } else {
-          // Clear user state if either is missing
           setUser(null);
         }
       } catch (error) {
@@ -49,86 +57,79 @@ export function SidebarDemo({ ContentComponent }) {
         setUser(null);
       }
     };
-    
-    // Check on initial load
+
     checkUserData();
-    
-    // Add storage event listener to handle changes from other tabs
+
     const handleStorageChange = (e) => {
       if (e.key === "user" || e.key === "authToken") {
         checkUserData();
       }
     };
-    
+
     window.addEventListener("storage", handleStorageChange);
-    
+
     return () => {
       window.removeEventListener("storage", handleStorageChange);
     };
   }, []);
 
   const handleSignout = async () => {
-    console.log('Signing out...');
     try {
-      const token = localStorage.getItem('authToken');
-      
+      const token = localStorage.getItem("authToken");
+
       if (token) {
         try {
-          // Change the Authorization header format to match what your backend expects
-          await axios.post(`${getApiBaseUrl()}/api/users/signout/`, {}, {
-            headers: {
-              'Authorization': `Token ${token}`  // Changed from Bearer to Token
+          await axios.post(
+            `${getApiBaseUrl()}/api/users/signout/`,
+            {},
+            {
+              headers: {
+                Authorization: `Token ${token}`,
+              },
             }
-          });
-          console.log('Successfully called signout API');
+          );
         } catch (apiError) {
-          console.error('API error during signout:', apiError);
-          // Continue with local logout even if API call fails
+          console.error("API error during signout:", apiError);
         }
       }
-      
-      // Always clear local storage and state
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('user');
-      setUser(null);
-      closeLogoutModal();
-      
-      // Show success alert
-      setAlert({ type: "success", message: "You have successfully logged out." });
 
-      // Redirect to home page after a short delay
-      setTimeout(() => {
-        setAlert(null); // Clear the alert after a few seconds
-        router.push("/");
-      }, 3000);
-      
-    } catch (error) {
-      console.error('Error during signout process:', error);
-      
-      // Ensure we still clear data even if there's an error
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('user');
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("user");
       setUser(null);
       closeLogoutModal();
-      
+
+      setAlert({ type: "success", message: t("alerts.logoutSuccess") });
+
       setTimeout(() => {
-        router.push("/");
+        setAlert(null);
+        router.push(`/${locale}/`);
+      }, 3000);
+    } catch (error) {
+      console.error("Error during signout process:", error);
+
+      localStorage.removeItem("authToken");
+      localStorage.removeItem("user");
+      setUser(null);
+      closeLogoutModal();
+
+      setTimeout(() => {
+        router.push(`/${locale}/`);
       }, 100);
     }
   };
 
   const handleProfileClick = () => {
     if (!user) {
-      router.push("/profile/signin");
+      router.push(`/${locale}/profile/signin`);
     } else {
-      router.push("/profile/edit");
+      router.push(`/${locale}/profile/edit`);
     }
   };
 
   const links = [
     {
-      label: "Home",
-      href: "/",
+      label: t("links.home"),
+      href: `/${locale}/`,
       icon: (
         <IconHome
           className={cn(
@@ -139,8 +140,8 @@ export function SidebarDemo({ ContentComponent }) {
       ),
     },
     {
-      label: "Create",
-      href: "/tools",
+      label: t("links.create"),
+      href: `/${locale}/tools`,
       icon: (
         <IconPlus
           className={cn(
@@ -151,8 +152,8 @@ export function SidebarDemo({ ContentComponent }) {
       ),
     },
     {
-      label: "My Classes",
-      href: user ? "/classrooms" : "/profile/signin",
+      label: t("links.myClasses"),
+      href: user ? `/${locale}/classrooms` : `/${locale}/profile/signin`,
       icon: (
         <IconSchool
           className={cn(
@@ -163,8 +164,8 @@ export function SidebarDemo({ ContentComponent }) {
       ),
     },
     {
-      label: "My Materials",
-      href: user ? "/materials" : "/profile/signin",
+      label: t("links.myMaterials"),
+      href: user ? `/${locale}/materials` : `/${locale}/profile/signin`,
       icon: (
         <IconBooks
           className={cn(
@@ -175,8 +176,8 @@ export function SidebarDemo({ ContentComponent }) {
       ),
     },
     {
-      label: user ? user.name : "Sign in",
-      href: user ? "/profile/edit" : "/profile/signin",
+      label: user ? user.name : t("links.signin"),
+      href: user ? `/${locale}/profile/edit` : `/${locale}/profile/signin`,
       icon: (
         <IconUser
           className={cn(
@@ -187,7 +188,7 @@ export function SidebarDemo({ ContentComponent }) {
       ),
       onClick: handleProfileClick,
     },
-  ].filter(Boolean); // Filter out any false values (e.g., if user is not authenticated)
+  ].filter(Boolean);
 
   const [open, setOpen] = useState(false);
   return (
@@ -200,7 +201,6 @@ export function SidebarDemo({ ContentComponent }) {
           : "bg-gray-200 border-neutral-300"
       )}
     >
-      {/* Display the alert */}
       {alert && (
         <Alert
           type={alert.type}
@@ -214,8 +214,8 @@ export function SidebarDemo({ ContentComponent }) {
           className={cn(
             "justify-between gap-10",
             theme === "dark"
-              ? "bg-gradient-to-b from-neutral-800 via-neutral-800 to-[#b0c4de] z-50" // Adjusted gradient for less saturation
-              : "bg-gradient-to-b from-gray-200 via-gray-200 to-[#e0eaf4] z-50" // Adjusted gradient for less saturation
+              ? "bg-gradient-to-b from-neutral-800 via-neutral-800 to-[#b0c4de] z-50"
+              : "bg-gradient-to-b from-gray-200 via-gray-200 to-[#e0eaf4] z-50"
           )}
           style={{
             backgroundSize: "100% 200%",
@@ -234,10 +234,10 @@ export function SidebarDemo({ ContentComponent }) {
                     onClick={() => setOpen(false)}
                   />
                 </div>
-                <Logo />
+                <Logo locale={locale} />
               </>
             ) : (
-              <LogoIcon />
+              <LogoIcon locale={locale} />
             )}
             <div className="mt-8 flex flex-col gap-2 z-50">
               {links.map((link, idx) => (
@@ -248,7 +248,7 @@ export function SidebarDemo({ ContentComponent }) {
           <div className="flex flex-col gap-2 z-50">
             <SidebarLink
               link={{
-                label: "Theme",
+                label: t("links.theme"),
                 href: "#",
                 icon: (
                   <ThemeSwitch
@@ -261,7 +261,7 @@ export function SidebarDemo({ ContentComponent }) {
             {user && (
               <SidebarLink
                 link={{
-                  label: "Sign out",
+                  label: t("links.signout"),
                   href: "#",
                   icon: (
                     <IconArrowLeft
@@ -283,15 +283,13 @@ export function SidebarDemo({ ContentComponent }) {
       </div>
       <Modal isOpen={isLogoutModalOpen} onClose={closeLogoutModal}>
         <div title=" ">
-          <div className={cn("p-6", theme === "dark" ? "bg-[#f08060]" : "bg-[#f08060]")}> {/* Adjusted for less saturation */}
+          <div className={cn("p-6", theme === "dark" ? "bg-[#f08060]" : "bg-[#f08060]")}>
             <div className="flex items-center gap-3">
               <div className="p-2 bg-white/20 rounded-full">
                 <IconArrowLeft className="h-6 w-6 text-white" />
               </div>
-              <h2
-                className="text-xl font-bold text-white"
-              >
-                Confirm Logout
+              <h2 className="text-xl font-bold text-white">
+                {t("logoutModal.title")}
               </h2>
             </div>
           </div>
@@ -302,7 +300,7 @@ export function SidebarDemo({ ContentComponent }) {
                 theme === "dark" ? "text-gray-300" : "text-gray-600"
               )}
             >
-              Are you sure you want to log out? You will need to sign in again to access your account.
+              {t("logoutModal.description")}
             </p>
             <div className="flex items-center justify-end gap-3">
               <button
@@ -312,7 +310,7 @@ export function SidebarDemo({ ContentComponent }) {
                   theme === "dark" ? "dark:btn-secondary" : ""
                 )}
               >
-                Cancel
+                {t("logoutModal.cancelButton")}
               </button>
               <button
                 onClick={handleSignout}
@@ -321,7 +319,7 @@ export function SidebarDemo({ ContentComponent }) {
                   theme === "dark" ? "dark:btn-danger" : ""
                 )}
               >
-                Logout
+                {t("logoutModal.logoutButton")}
               </button>
             </div>
           </div>
@@ -330,18 +328,19 @@ export function SidebarDemo({ ContentComponent }) {
     </div>
   );
 }
-export const Logo = () => {
+
+export const Logo = ({ locale }) => {
   const { theme } = useTheme();
   const router = useRouter();
-  const [open, setOpen] = useState(false); // Access sidebar state
+  const [open, setOpen] = useState(false);
 
   return (
     <div
       className={cn(
         "font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-50 cursor-pointer",
-        open ? "text-lg" : "text-sm" // Adjust text size based on sidebar state
+        open ? "text-lg" : "text-sm"
       )}
-      onClick={() => router.push("/")} // Redirect to home page
+      onClick={() => router.push(`/${locale}/`)}
     >
       <img
         src={theme === "dark" ? "/static/logos/maestre_logo_white_transparent.webp" : "/static/logos/maestre_logo_blue_transparent.webp"}
@@ -379,13 +378,13 @@ export const Logo = () => {
   );
 };
 
-export const LogoIcon = () => {
+export const LogoIcon = ({ locale }) => {
   const { theme } = useTheme();
   const router = useRouter();
   return (
     <div
       className="font-normal flex space-x-2 items-center text-sm text-black py-1 relative z-50 cursor-pointer"
-      onClick={() => router.push("/")} // Redirect to home page
+      onClick={() => router.push(`/${locale}/`)}
     >
       <img
         src={theme === "dark" ? "/static/logos/maestre_logo_white_transparent.webp" : "/static/logos/maestre_logo_blue_transparent.webp"}

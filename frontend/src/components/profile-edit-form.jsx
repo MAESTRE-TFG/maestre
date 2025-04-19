@@ -17,6 +17,7 @@ import {
   IconEye,
   IconEyeOff,
 } from "@tabler/icons-react";
+import { useTranslations } from "next-intl";
 
 const COMUNIDADES = [
   "Andalucía",
@@ -39,9 +40,19 @@ const COMUNIDADES = [
   "Melilla",
 ];
 
-export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCancel, schools, isProfileComplete, authToken }) {
+export function ProfileEditForm({
+  formData,
+  handleChange,
+  handleUpdate,
+  handleCancel,
+  schools,
+  isProfileComplete,
+  params,
+}) {
   const { theme } = useTheme();
   const router = useRouter();
+  const t = useTranslations("ProfileEditForm"); // Use translations for this component
+  const locale = params?.locale || 'es';
 
   // State to toggle password visibility
   const [showNewPassword, setShowNewPassword] = React.useState(false);
@@ -56,9 +67,14 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
   };
 
   return (
-    <div className={cn("max-w-4xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input", theme === "dark" ? "bg-black" : "bg-white")}>
-      <style jsx global>{
-        `@import url('https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap');
+    <div
+      className={cn(
+        "max-w-4xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input",
+        theme === "dark" ? "bg-black" : "bg-white"
+      )}
+    >
+      <style jsx global>{`
+        @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
         select {
           appearance: none;
           background: ${theme === "dark" ? "#333" : "#fff"};
@@ -71,14 +87,23 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
         select:focus {
           outline: none;
           border-color: ${theme === "dark" ? "#888" : "#007bff"};
-          box-shadow: 0 0 0 3px ${theme === "dark" ? "rgba(136, 136, 136, 0.5)" : "rgba(0, 123, 255, 0.25)"};
+          box-shadow: 0 0 0 3px
+            ${theme === "dark"
+              ? "rgba(136, 136, 136, 0.5)"
+              : "rgba(0, 123, 255, 0.25)"};
         }
         option {
           background: ${theme === "dark" ? "#333" : "#fff"};
           color: ${theme === "dark" ? "#fff" : "#000"};
-        }`
-      }</style>
-      <form className="my-1" onSubmit={(e) => { e.preventDefault(); handleUpdate(); }}>
+        }
+      `}</style>
+      <form
+        className="my-1"
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleUpdate();
+        }}
+      >
         <div className="flex flex-col md:flex-row gap-6 mb-8">
           <div className="flex-1 md:w-1/2 border border-gray-300 rounded-md p-4">
             {/* Personal Information Section */}
@@ -88,16 +113,19 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                 <LabelInputContainer className="flex-1">
                   <Label
                     className="flex items-center"
-                    style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }}
+                    style={{
+                      fontFamily: "'Alfa Slab One', sans-serif",
+                      fontSize: "1rem",
+                    }}
                     htmlFor="username"
                   >
                     <IconUser className="mr-2 h-5 w-5 text-blue-500" />
-                    Username
+                    {t("fields.username.label")} 
                   </Label>
                   <Input
                     id="username"
                     name="username"
-                    placeholder="Username"
+                    placeholder={t("fields.username.placeholder")} // Internationalized
                     type="text"
                     required
                     value={formData.username || ""}
@@ -108,16 +136,19 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                 <LabelInputContainer className="flex-1">
                   <Label
                     className="flex items-center"
-                    style={{ fontFamily: "'Alfa Slab One', sans-serif", fontSize: "1rem" }}
+                    style={{
+                      fontFamily: "'Alfa Slab One', sans-serif",
+                      fontSize: "1rem",
+                    }}
                     htmlFor="email"
                   >
                     <IconMail className="mr-2 h-5 w-5 text-green-500" />
-                    Email
+                    {t("fields.email.label")} 
                   </Label>
                   <Input
                     id="email"
                     name="email"
-                    placeholder="Email"
+                    placeholder={t("fields.email.placeholder")} // Internationalized
                     type="email"
                     required
                     value={formData.email || ""}
@@ -135,12 +166,12 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                     htmlFor="name"
                   >
                     <IconIdBadge className="mr-2 h-5 w-5 text-purple-500" />
-                    Name
+                    {t("fields.name.label")} 
                   </Label>
                   <Input
                     id="name"
                     name="name"
-                    placeholder="Name"
+                    placeholder={t("fields.name.placeholder")} // Internationalized
                     type="text"
                     required
                     value={formData.name || ""}
@@ -155,12 +186,12 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                     htmlFor="surname"
                   >
                     <IconEdit className="mr-2 h-5 w-5 text-amber-500" />
-                    Surname
+                    {t("fields.surname.label")} 
                   </Label>
                   <Input
                     id="surname"
                     name="surname"
-                    placeholder="Surname"
+                    placeholder={t("fields.surname.placeholder")} // Internationalized
                     type="text"
                     required
                     value={formData.surname || ""}
@@ -171,7 +202,7 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
             </div>
             <br />
 
-            {/* Title after password inputs */}
+            {/* Password Section */}
             <h3
               className={cn(
                 "text-lg font-bold mt-4",
@@ -179,7 +210,7 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
               )}
               style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             >
-              Want to change your password?
+              {t("password.changeTitle")} 
             </h3>
             <p
               className={cn(
@@ -187,11 +218,9 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                 theme === "dark" ? "text-gray-400" : "text-gray-600"
               )}
             >
-              Fill in the fields above to update your password.
+              {t("password.changeDescription")} 
             </p>
             <br />
-            
-            {/* Password Section */}
             <LabelInputContainer className="flex-1">
               <Label
                 className="flex items-center"
@@ -199,12 +228,12 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                 htmlFor="oldPassword"
               >
                 <IconLock className="mr-2 h-5 w-5 text-red-500" />
-                Confirm Old Password
+                {t("fields.oldPassword.label")} 
               </Label>
               <Input
                 id="oldPassword"
                 name="oldPassword"
-                placeholder="Old Password"
+                placeholder={t("fields.oldPassword.placeholder")} // Internationalized
                 type="password"
                 value={formData.oldPassword || ""}
                 onChange={handleChange}
@@ -219,12 +248,12 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                   htmlFor="password"
                 >
                   <IconLock className="mr-2 h-5 w-5 text-red-500" />
-                  New Password
+                  {t("fields.newPassword.label")} 
                 </Label>
                 <Input
                   id="password"
                   name="password"
-                  placeholder="New Password"
+                  placeholder={t("fields.newPassword.placeholder")} // Internationalized
                   type={showNewPassword ? "text" : "password"}
                   value={formData.password || ""}
                   onChange={handleChange}
@@ -248,12 +277,12 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                   htmlFor="confirmPassword"
                 >
                   <IconLock className="mr-2 h-5 w-5 text-red-500" />
-                  Confirm Password
+                  {t("fields.confirmPassword.label")} 
                 </Label>
                 <Input
                   id="confirmPassword"
                   name="confirmPassword"
-                  placeholder="Confirm Password"
+                  placeholder={t("fields.confirmPassword.placeholder")} // Internationalized
                   type={showConfirmPassword ? "text" : "password"}
                   value={formData.confirmPassword || ""}
                   onChange={handleChange}
@@ -276,13 +305,13 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
             <div className="flex-1 md:w-1/2 border border-gray-300 rounded-md p-4">
               {/* Location Section */}
               <LabelInputContainer className="mb-4">
-                <Label 
+                <Label
                   className="flex items-center"
-                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }} 
+                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
                   htmlFor="region"
                 >
                   <IconWorld className="mr-2 h-5 w-5 text-blue-500" />
-                  Region
+                  {t("fields.region.label")} 
                 </Label>
                 <select
                   id="region"
@@ -294,7 +323,7 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                   disabled={!isProfileComplete}
                 >
                   <option value="" disabled>
-                    Select a community
+                    {t("fields.region.placeholder")} 
                   </option>
                   {COMUNIDADES.map((comunidad) => (
                     <option key={comunidad} value={comunidad}>
@@ -305,25 +334,34 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
               </LabelInputContainer>
 
               <LabelInputContainer className="mb-4">
-                <Label 
+                <Label
                   className="flex items-center"
-                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }} 
+                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
                   htmlFor="city"
                 >
                   <IconMapPin className="mr-2 h-5 w-5 text-green-500" />
-                  City
+                  {t("fields.city.label")} 
                 </Label>
-                <Input id="city" name="city" placeholder="Sevilla" type="text" required value={formData.city || ""} onChange={handleChange} disabled={!isProfileComplete} />
+                <Input
+                  id="city"
+                  name="city"
+                  placeholder={t("fields.city.placeholder")} // Internationalized
+                  type="text"
+                  required
+                  value={formData.city || ""}
+                  onChange={handleChange}
+                  disabled={!isProfileComplete}
+                />
               </LabelInputContainer>
 
               <LabelInputContainer className="mb-5">
-                <Label 
+                <Label
                   className="flex items-center"
-                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }} 
+                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
                   htmlFor="school"
                 >
                   <IconSchool className="mr-2 h-5 w-5 text-purple-500" />
-                  School
+                  {t("fields.school.label")} 
                 </Label>
                 <select
                   id="school"
@@ -335,7 +373,7 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                   disabled={!isProfileComplete}
                 >
                   <option value="" disabled>
-                    Select a school
+                    {t("fields.school.placeholder")} 
                   </option>
                   {schools.map((school) => (
                     <option key={school.id} value={school.id}>
@@ -344,19 +382,25 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
                   ))}
                 </select>
               </LabelInputContainer>
-              <p style={{ fontFamily: "'Alfa Slab One', sans-serif" }} className={cn("text-sm mb-2", theme === "dark" ? "text-white" : "text-black")}>
-                ¿Can't find your school?
+              <p
+                style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                className={cn(
+                  "text-sm mb-2",
+                  theme === "dark" ? "text-white" : "text-black"
+                )}
+              >
+                {t("fields.school.notFound")} 
               </p>
               {/* Button to create a new school */}
               <button
-                onClick={() => router.push("/schools/new")}
+                onClick={() => router.push(`/${locale}/schools/new`)}
                 className={cn(
                   "btn btn-md btn-secondary w-full",
                   theme === "dark" ? "dark:btn-primary" : ""
                 )}
                 type="button"
               >
-                Create one &rarr;
+                {t("fields.school.createButton")} &rarr; 
               </button>
             </div>
           )}
@@ -371,7 +415,7 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
             type="button"
             onClick={handleCancel}
           >
-            &larr; Cancel
+            &larr; {t("buttons.cancel")} 
           </button>
           <button
             className={cn(
@@ -380,25 +424,21 @@ export function ProfileEditForm({ formData, handleChange, handleUpdate, handleCa
             )}
             type="submit"
           >
-            Update &rarr;
+            {t("buttons.update")} &rarr; 
           </button>
         </div>
       </form>
-
     </div>
   );
 }
 
-const LabelInputContainer = ({
-  children,
-  className
-}) => {
+const LabelInputContainer = ({ children, className }) => {
   return (
     <div className={cn("flex flex-col space-y-2 w-full", className)}>
-      {React.Children.map(children, child => {
+      {React.Children.map(children, (child) => {
         if (child.type === Label) {
           return React.cloneElement(child, {
-            style: { ...child.props.style, fontSize: "1.25rem" }
+            style: { ...child.props.style, fontSize: "0.875rem" }, // Adjusted font size to make labels smaller
           });
         }
         return child;

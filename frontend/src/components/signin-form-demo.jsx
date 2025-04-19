@@ -4,15 +4,19 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
-import { IconUser, IconLock, IconEye, IconEyeOff } from "@tabler/icons-react"; // Import necessary icons
+import { IconUser, IconLock, IconEye, IconEyeOff } from "@tabler/icons-react";
+import { useTranslations } from "next-intl";
 
-export function SigninForm({ onSubmit }) {
+export function SigninForm({ onSubmit, params }) {
   const { theme } = useTheme();
+  const locale = params?.locale || 'es';
+
+  const t = useTranslations("SigninForm");
   const [formData, setFormData] = React.useState({
     emailOrUsername: "",
     password: ""
   });
-  const [showPassword, setShowPassword] = React.useState(false); // State to toggle password visibility
+  const [showPassword, setShowPassword] = React.useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,12 +57,12 @@ export function SigninForm({ onSubmit }) {
                 theme === "dark" ? "text-cyan-400" : "text-[rgb(25,65,166)]"
               )}
             />{" "}
-            Email or Username
+            {t("fields.emailOrUsername.label")}
           </Label>
           <Input
             id="emailOrUsername"
             name="emailOrUsername"
-            placeholder="email@example.com or username"
+            placeholder={t("fields.emailOrUsername.placeholder")}
             type="text"
             required
             value={formData.emailOrUsername}
@@ -81,12 +85,12 @@ export function SigninForm({ onSubmit }) {
                 theme === "dark" ? "text-cyan-400" : "text-[rgb(25,65,166)]"
               )}
             />{" "}
-            Password
+            {t("fields.password.label")}
           </Label>
           <Input
             id="password"
             name="password"
-            placeholder="••••••••"
+            placeholder={t("fields.password.placeholder")}
             type={showPassword ? "text" : "password"}
             required
             value={formData.password}
@@ -127,23 +131,23 @@ export function SigninForm({ onSubmit }) {
           )}
           type="submit"
         >
-          Sign in &rarr;
+          {t("buttons.signin")} &rarr;
         </button>
 
         <div className="bg-gradient-to-r from-transparent via-neutral-300 dark:via-neutral-700 to-transparent my-4 h-[1px] w-full" />
 
         <div className="text-center mt-2">
           <p className={cn(theme === "dark" ? "text-white" : "text-black")}>
-            Don't have an account?
+            {t("noAccount")}
           </p>
           <button
             className={cn(
               "btn btn-md btn-success w-full mt-2",
               theme === "dark" ? "dark:btn-success" : ""
             )}
-            onClick={() => (window.location.href = "/profile/signup")}
+            onClick={() => (window.location.href = `/${locale}/profile/signup`)}
           >
-            Sign up
+            {t("buttons.signup")}
           </button>
         </div>
       </form>
@@ -151,12 +155,6 @@ export function SigninForm({ onSubmit }) {
   );
 }
 
-const BottomGradient = () => {
-  return (<>
-    <span className="group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0 bg-gradient-to-r from-transparent via-cyan-500 to-transparent" />
-    <span className="group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10 bg-gradient-to-r from-transparent via-indigo-500 to-transparent" />
-  </>);
-};
 
 const LabelInputContainer = ({
   children,

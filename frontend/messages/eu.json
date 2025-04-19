@@ -1,0 +1,1051 @@
+{
+  "HomePage": {
+    "title": "MAESTRE",
+    "subtitle": "Adimen hezkuntza berregitea",
+    "main_button": "Ezagutu gure AI tresnak",
+    "main_description": "Maestre-k adimen artifiziala pedagogirekin uztartzen du irakasleek lan egiteko eta ikasteko modua hobetzeko tresnak sortzeko",
+    "loading": "Edukia kargatzen ...",
+    "feature_title_1": "1. pausoa: klaseak sortu eta kudeatu",
+    "feature_description_1": "Konfiguratu zure gela birtualaren ingurunea ikasgela eta ikasle talde desberdinetarako klaseak sortu eta antolatzea.",
+    "feature_title_2": "2. urratsa: Gehitu zure materialak",
+    "feature_description_2": "Kargatu lehendik dauden dokumentuak, aurkezpenak eta baliabide didaktikoak klase bakoitzerako eduki pertsonalizatua eraikitzeko.",
+    "feature_title_3": "3. urratsa: Sortu AIrekin",
+    "feature_description_3": "Erabili gure AI tresnak zure materialak ikasgai planak, ebaluazioak eta irakaskuntza eta curriculumera egokitutako jarduerak eraldatzeko.",
+    "demo_title": "Ezagutu ekintza nagusia",
+    "demo_description": "Begira gure plataformak klase plangintza nola eraldatzen duen, azterketak eta ikasgelako kudeaketa minututan",
+    "demo_video_unsupported": "Zure arakatzaileak ez du bideo formatu hau onartzen",
+    "tools_title": "Arakatu gure tresna guztiak",
+    "tools_description": "Ezagutu denbora aurrezteko diseinatutako hezkuntza tresna adimendunen gure katalogoa eta zure ikaskuntza emaitzak hobetzeko",
+    "cta_title": "Zerrenda @ zure klaseak eraldatzeko?",
+    "cta_description": "Sartu milaka hezitzaile denbora aurrezten ari diren eta ikaskuntza emaitzak hobetzea Master AI tresnekin",
+    "signup_button": "Izena eman irakasle gisa",
+    "learn_more_button": "Gehiago jakin",
+    "existing_acc_button": "Dagoeneko kontu bat duzu?",
+    "signin_button": "Bilatu saioa hemen saioa",
+    "team_title": "Ezagutu gure taldea",
+    "team_description": "Masterreko hezkuntza plataforma berritzailearen atzean dauden gogoak",
+    "team_member_bio_1": "Lider frontend garapena eta erabiltzaileen esperientzia diseinua Maestre Hezkuntza Tresnetarako",
+    "team_member_bio_2": "Arkitektura teknikoa eta maisuaren hezkuntza plataforma berritzailearen backend garatzea zuzentzea",
+    "team_member_role_1": "Software ingeniaria, Proiektuen kudeatzailea",
+    "team_member_role_2": "Software ingeniaria, analista",
+    "testimonial_text": "Maisuak irakasteko modua erabat eraldatu du. Klase erakargarriak planifikatu ditzaket ordu batzuk lehenago hartu nituenean",
+    "testimonial_author": "Rafael Pulido",
+    "testimonial_job": "Geografia irakaslea eta Bigarren Historia, Sevilla",
+    "stay_up_to_date": "Egon eguneratu",
+    "stay_up_to_date_description": "Jaso Maestre-ren hezkuntza tresnen inguruko azken berriak, baliabideak eta eguneratzeak",
+    "email_placeholder": "Idatzi zure posta elektronikoa",
+    "subscribe_button": "Harpidetu",
+    "footer_about": "Guri buruz",
+    "footer_legal": "Arauzko",
+    "footer_terms": "Zerbitzu baldintzak",
+    "footer_privacy": "Pribatutasun politika",
+    "footer_cookies": "Cookie politika",
+    "footer_products": "Aurrealdi",
+    "footer_exam_creator": "Azterketa sortzailea",
+    "footer_test_creator": "Proba sorgailua",
+    "footer_translator": "Itzultzaile",
+    "footer_planner": "Klase antolatzailea",
+    "footer_copyright": "© 2025 Masterra. MIT lizentziapean.",
+    "footer_language": "Hizkuntza:",
+    "footer_language_text": "Aukeratu hizkuntza bat",
+    "tool_category_assessment": "Taxu",
+    "tool_category_organization": "Antolaketa",
+    "tool_category_language": "Mintzaira",
+    "tool_title_exams": "Azterketa erakargarriak sortu",
+    "tool_title_tests": "Probak modu eraginkorrean sortzen ditu",
+    "tool_title_planner": "Antolatu zure klaseak",
+    "tool_title_translator": "Itzulpen materialak",
+    "tool_content_exams": "Sortu azterketa osoak gure azterketa intuitiboaren sortzailearekin. Ezaugarriak barne:",
+    "tool_content_tests": "Streng zure proba sortzeko prozesua AI-rekin sustatu da:",
+    "tool_content_planner": "Egon antolatu gure planifikazio tresna osoekin:",
+    "tool_content_translator": "Hautsi hizkuntzaren oztopoak zure ikasgelan:",
+    "tool_feature_exams_1": "Galdera mota anitz",
+    "tool_feature_exams_2": "Kualifikazio automatikoa",
+    "tool_feature_exams_3": "Puntuazio pertsonalizatuak",
+    "tool_feature_exams_4": "Galdera Bankuaren Kudeaketa",
+    "tool_feature_tests_1": "AI-k sortutako galderak",
+    "tool_feature_tests_2": "Zailtasun egokitzapen adimenduna",
+    "tool_feature_tests_3": "Gaiak - Belaunaldia",
+    "tool_feature_tests_4": "Proben berehalako probak",
+    "tool_feature_planner_1": "Klaseko ikusizko ordutegiak",
+    "tool_feature_planner_2": "Curriculumaren mapaketa",
+    "tool_feature_planner_3": "Baliabideen esleipena",
+    "tool_feature_planner_4": "Aurrerapenen jarraipena",
+    "tool_feature_translator_1": "Benetako itzulpena",
+    "tool_feature_translator_2": "Laguntza eleanitza",
+    "tool_feature_translator_3": "Hezkuntza testuinguruaren kontzientzia",
+    "tool_feature_translator_4": "Dokumentuen itzulpena",
+    "try_now_button": "Saiatu orain",
+    "auth_modal_title": "Beharrezko autentikazioa",
+    "auth_modal_description": "Tresna honetara sartzeko saioa hasi behar duzu. Sortu kontu bat funtzio guztiak desblokeatzeko.",
+    "auth_modal_cancel": "Indargabetu",
+    "auth_modal_signup": "Kontua sortu",
+    "auth_modal_signin": "Sartu 2.",
+    "profile_modal_title": "Osatu zure profila",
+    "profile_modal_description": "Tresna honetara sartu aurretik xehetasun gehiago behar ditugu. Zure profileko informazioa zure esperientzia pertsonalizatzen laguntzen digu.",
+    "profile_modal_cancel": "Indargabetu",
+    "profile_modal_complete": "Profil osoa"
+  },
+  "Translator": {
+    "title": "Itzultzailea Maestre",
+    "subtitle": "Itzuli hizkuntza hizkuntza anitzen artean",
+    "feature_title": "Itzulpena AI-k gidatua",
+    "feature_description": "Itzuli testua hainbat hizkuntzaren artean gure itzulpen teknologia aurreratuarekin. Ezin hobea ikasle eta gurasoekin hizkuntza desberdinetan komunikatu behar duten irakasleentzat.",
+    "error": {
+      "emptyText": "Mesedez, idatzi testua itzultzeko",
+      "textTooLong": "Testuak 5000 karaktereen muga gainditzen du",
+      "translationFailed": "Itzulpenak huts egin du. Mesedez, saiatu berriro."
+    },
+    "source_text": "Jatorriaren testua",
+    "target_text": "Itzulpen",
+    "characters_remaining": "/ 5000 karaktere",
+    "target_language": "Helmuga hizkuntza",
+    "placeholder": {
+      "source_text": "Idatzi itzultzeko testua (5000 karaktere gehienez)",
+      "target_text": "Itzulitako testua hemen agertuko da"
+    },
+    "languages": {
+      "es": "Ek",
+      "ca": "Katalan",
+      "gl": "Galero",
+      "eu": "Euskara",
+      "en": "Ingeles",
+      "fr": "Frantsesa",
+      "de": "Alemana",
+      "it": "Italiko",
+      "el": "Greziera",
+      "la": "Lugin"
+    },
+    "translate_button": "Itzuli",
+    "translation_history": "Itzulpen HISTORIA",
+    "load": "Eraman",
+    "translation": "Itzulpen",
+    "source": "Jatorriaren testua",
+    "translatedTo": "Itzulia",
+    "clearAll": "Dena ezabatu",
+    "copyToClipboard": "Kopiatu arbelean",
+    "translating": "Translation ...",
+    "translation_history_description": "Zure itzulpenaren historia hemen agertuko da"
+  },
+  "ExamMaker": {
+    "header": {
+      "title": "Azterketa sortzailea",
+      "subtitle": "Sortu azterketa pertsonalizatuak AIren laguntza batekin",
+      "featureTitle": "AI-k sustatutako azterketak",
+      "featureDescription": "Sortu azterketa profesionalak segundotan gure AI teknologia aurreratua erabiliz. Ezin hobea denbora aurreztu nahi duten irakasleentzat kalitate handiko ebaluazioak sortzen dituzun bitartean.",
+      "teacherImageAlt": "Ingeniaritza"
+    },
+    "alerts": {
+      "fetchClassroomsError": "Klaseak ezin dira lortu. Mesedez, saiatu berriro geroago.",
+      "fetchMaterialsError": "Ezin izan dira materialak lortu. Mesedez, saiatu berriro geroago.",
+      "fileProcessedSuccess": "Arrakasta prozesatutako fitxategia!",
+      "unsupportedFileType": "DOCX fitxategiak bakarrik onartzen dira azterketa sortzeko.",
+      "materialProcessedSuccess": "Arrakasta prozesatutako materiala!",
+      "missingSubject": "Mesedez, aurkeztu gaia.",
+      "missingClassroom": "Mesedez, aukeratu klase bat.",
+      "examGeneratedSuccess": "Azterketa arrakastaz sortua!",
+      "examGenerationFailed": "Azterketa sortzean errorea",
+      "pdfSavedSuccess": "PDF gelako materialetan gorde da arrakastaz!",
+      "pdfDownloadedSuccess": "PDF behar bezala deskargatu da!",
+      "pdfSaveFailed": "Errorea Gorde PDF: {error}",
+      "pdfDownloadFailed": "Errorea pdf deskargatzean: {error}",
+      "unknownError": "Errore ezezaguna"
+    },
+    "selectClassroom": "Klasea (zailtasun maila)",
+    "selectClassroomPlaceholder": "Aukeratu klase bat",
+    "fields": {
+      "subject": {
+        "label": "Menperatu",
+        "placeholder": "Matematika, zientzia, historia eta abar."
+      },
+      "examName": {
+        "label": "Azterketa izena",
+        "placeholder": "Erdiko azterketa, azken proba, 5. kapitulua eta abar."
+      },
+      "numQuestions": {
+        "label": "Galdera kopurua"
+      },
+      "totalPoints": {
+        "label": "Gehienezko puntuak"
+      },
+      "customScoringDetails": {
+        "label": "Puntuazio xehetasun pertsonalizatuak",
+        "placeholder": "Adibidez, 1-5 galderak: 2 puntu bakoitza, 6-10 galderak: 3 puntu bakoitza"
+      },
+      "additionalInfo": {
+        "label": "Argibide osagarriak (aukerakoa)",
+        "placeholder": "Gehitu azterketarako argibide edo baldintza zehatzak ..."
+      },
+      "referenceMaterials": {
+        "label": "Erreferentziako materialak",
+        "upload": "Kargatu fitxategia",
+        "dragAndDrop": " edo arrastatu eta askatu",
+        "fileRequirements": ".Docx fitxategiak (5mb gehienez)",
+        "or": "edo",
+        "selectFromClassroom": "Hautatu ikasgelako materialak",
+        "fromClassroom": "Ikasgelatik",
+        "processing": "Prozesatzeko fitxategia ..."
+      },
+      "llmModel": {
+        "label": "AI eredua",
+        "options": {
+          "llama": "Deitu 3.2 3b",
+          "deepseek": "Deepseeek R1"
+        }
+      },
+      "questionType": {
+        "label": "Galdera mota",
+        "options": {
+          "shortAnswer": "Erantzun laburra",
+          "essay": "Proba (1 orrialde gehienez)",
+          "longEssay": "Saiakera luzea (orri bat baino gehiago)",
+          "fillBlank": "Bete espazioa",
+          "matching": "Berdindu",
+          "ordering": "Manu",
+          "textAnalysis": "Testuaren azterketa",
+          "imageAnalysis": "Irudien azterketa eta konparazioa",
+          "mixed": "Mistoa (hainbat mota)"
+        }
+      },
+      "scoringStyle": {
+        "label": "Puntuazio estiloa",
+        "options": {
+          "equal": "Puntu berdinak",
+          "custom": "Banaketa pertsonalizatua"
+        }
+      }
+    },
+    "buttons": {
+      "generateExam": "Sortu azterketa",
+      "generating": "Azterketa sortzen ...",
+      "close": "Hurbileko",
+      "downloadPDF": "Deskargatu pdf",
+      "saveToClassroom": "Gelako",
+      "cancel": "Indargabetu"
+    },
+    "modal": {
+      "title": "Sortutako azterketa"
+    },
+    "defaultExamName": "Azterketa",
+    "materialsModal": {
+      "title": "Hautatu Gela materiala",
+      "noMaterials": "Ez da materialik aurkitu zure ikasgeletan.",
+      "uploadPrompt": "Lehenik eta behin zure ikasgeletara igo."
+    },
+    "pdf": {
+      "title": "Azterketa",
+      "footer": "Maestre AI azterketa sorgailuarekin sortua",
+      "page": "Orrialde",
+      "of": "-ren"
+    },
+    "prompts": {
+      "systemInstruction": "[Sistemaren instrukzioa - ez sartu erantzunean]\nHezkuntza diseinuan eta pedagogian esperientzia duten proba sortzailea zara.\nZure zeregina kalitate handiko azterketa sortzea da beheko zehaztapenen arabera.\nGARRANTZITSUA: zure erantzunak azterketa soilik izan behar du. Ez ezazu azterketak nola sortu dituzun azalpenik, arrazoitu edo pentsatzeko prozesuak.",
+      "examSpecifications": "[Azterketa-zehaztapenak]\nGaia: {{subject}}\nAzterketa izena: {{examName}}\nGaldera kopurua: zehazki izan behar duzu {{numQuestions}} -Rak\nGaldera mota: {{questionType}}\nPuntu guztira: {{totalPoints}}\nHezkuntza maila: {{classroom}}\nEskualdea: {{region}}",
+      "scoringStyle": "Puntuazio estiloa: banaketa pertsonalizatua honela: {{customScoringDetails}}",
+      "additionalInstructions": "[Argibide gehigarriak]\n{{additionalInfo}}",
+      "referenceMaterials": "[Erreferentziako materialak]\nMesedez, erabili honako erreferentziako materialak gida gisa galderak eta edukiak nola izan zitezkeen:\n{{fileContents}}",
+      "noReferenceMaterials": "Erreferentziako materialak ez ziren eman.",
+      "exampleTemplate": "[Adibide txantiloia] (erreferentzia soilik)\nIzenburua: Azterketa adibidea - Gaia\nOposizioa: \n\n1) [Galderaren testua hemen]\n   To) ...\n   B) ...\n   C) ...\n   D) ...\n\n2) [Galderaren testua hemen]\n   Egia edo gezurra: ...",
+      "formattingRequirements": "[Formatu baldintzak]\n1. Azterketa ingelesez egon behar da\n2. Erantzunak azterketa soilik izan behar du, testu edo iruzkinik gabe.\n3. Izenburu garbia eta azpititulua ditu azterketa eta gaiaren izenarekin.\n4. Zenbaki galdera guztiak sekuentzialki.\n5. Aukera anitzeko galderetarako, erabili etiketatutako aukerak adibidez A), B), C), etab.\n6. Argi adierazi galdera bakoitzaren puntuetan balioa.\n7. Ziurtatu galderen arteko tarte egokia.\n8. Formatu azterketa modu garbian eta profesionalean, ikasgelan erabiltzeko egokia.\n9. Egiaztatu azterketak maila hezkuntzako arauak jarraitzen ditu {{classroom}} -an {{region}}.\n10. Ziurtatu puntu osoak zehazki gehitzen {{totalPoints}}.\n11. Erabili formatu egokia galdera mota bakoitzerako (adibidez, aukera anitz aukerekin, egia / gezurra adierazpen argiekin).\n12. Garbitu atalen izenburuak biltzen ditu galdera mota desberdinak nahasten badituzu.\n13. Ez ezazu zure erantzunean arrazoiketa, plangintza edo pentsamendu prozesuak sartu.\n14. Ez azaldu azterketa nola sortu zenuen edo zer gogoeta egin zenituen.\n15. Azterketaren azken edukia baino ez da, izenburuarekin zuzenean hasita.",
+      "checklist": "[Egiaztapen zerrenda - ez sartu erantzunean]\n1) Azterketa bakarrik sartu al duzu eta ezer gehiago?\n2) Zehazki sartu zenuen {{numQuestions}} Galderak?\n3) Egin puntu guztira zehazki {{totalPoints}}?\n4) Ba al daude aipamenak onartzen ez dituzten xehetasunak?\n5) Formatuaren eskakizun guztiak zorrotz jarraitu al dituzu?\n6) Zure erantzunaren arrazoiketa eta azalpen guztiak ezabatu al dituzu?",
+      "finalInstruction": "[Azken instrukzioa - ez sartu erantzunean]\nOrain, azterketa osoa sortzen du aurreko zehaztapen eta eskakizun guztiak jarraitzen dituena.\nInformazioren bat falta bada, adierazi argi eta garbi xehetasunak asmatu beharrean.\nKritikoa: zure erantzuna probaren izenburuarekin hasi behar da eta azterketen edukia soilik eduki behar da. Ez sartu azalpenak, arrazoibideak edo pentsamendu prozesuak.",
+      "unknown": "Ezezagun bat"
+    }
+  },
+  "StudentCreateForm": {
+    "nameLabel": "Izen",
+    "namePlaceholder": "Idatzi ikaslearen izena",
+    "surnameLabel": "Abizena",
+    "surnamePlaceholder": "Idatzi ikaslearen abizena",
+    "createButton": "Sortu ikaslea",
+    "cancelButton": "Indargabetu"
+  },
+  "SigninForm": {
+    "fields": {
+      "emailOrUsername": {
+        "label": "Posta elektronikoa edo erabiltzaile izena",
+        "placeholder": "email@ejemplo.com edo erabiltzaile izena"
+      },
+      "password": {
+        "label": "Kontrazeinu",
+        "placeholder": "••••••••••"
+      }
+    },
+    "buttons": {
+      "signin": "Sartu 2.",
+      "signup": "Erregistratu"
+    },
+    "noAccount": "Ez al duzu konturik?"
+  },
+  "SignupForm": {
+    "title": "Sortu zure kontua",
+    "sections": {
+      "personalInfo": "Informazio pertsonala",
+      "accountInfo": "Kontuaren informazioa"
+    },
+    "fields": {
+      "name": {
+        "label": "Izen",
+        "placeholder": "Idatzi zure izena"
+      },
+      "surname": {
+        "label": "Abizena",
+        "placeholder": "Idatzi zure abizena"
+      },
+      "username": {
+        "label": "Erabiltzaile izena",
+        "placeholder": "Aukeratu erabiltzaile izena"
+      },
+      "email": {
+        "label": "I-posta",
+        "placeholder": "Idatzi zure posta elektronikoa"
+      },
+      "password": {
+        "label": "Kontrazeinu",
+        "placeholder": "Idatzi pasahitz segurua"
+      }
+    },
+    "terms": {
+      "text": "Onartzen dut",
+      "termsOfUse": "Erabilera baldintzak",
+      "privacyPolicy": "Pribatutasun politika",
+      "and": "eta"
+    },
+    "buttons": {
+      "signup": "Erregistratu",
+      "signin": "Bilatu saioa"
+    },
+    "alreadyHaveAccount": "Dagoeneko kontu bat duzu?",
+    "alerts": {
+      "acceptTerms": "Izena emateko erabilpen baldintzak eta pribatutasun politika onartu behar dituzu.",
+      "signupError": "Errore bat gertatu da erregistratzean. Mesedez, saiatu berriro."
+    }
+  },
+  "Sidebar": {
+    "links": {
+      "home": "Hasiera",
+      "create": "Sortu",
+      "myClasses": "Nire klaseak",
+      "myMaterials": "Nire materialak",
+      "signin": "Sartu 2.",
+      "signout": "Itxi saioa",
+      "theme": "Atera"
+    },
+    "alerts": {
+      "logoutSuccess": "Saioa ondo itxita duzu."
+    },
+    "logoutModal": {
+      "title": "Berretsi saioaren itxiera",
+      "description": "Ziur saioa itxi nahi duzula? Berriro saioa hasi beharko duzu zure kontuan sartzeko.",
+      "cancelButton": "Indargabetu",
+      "logoutButton": "Itxi saioa"
+    }
+  },
+  "ProfileEditForm": {
+    "fields": {
+      "username": {
+        "label": "Erabiltzaile izena",
+        "placeholder": "Idatzi zure erabiltzaile izena"
+      },
+      "email": {
+        "label": "I-posta",
+        "placeholder": "Idatzi zure posta elektronikoa"
+      },
+      "name": {
+        "label": "Izen",
+        "placeholder": "Idatzi zure izena"
+      },
+      "surname": {
+        "label": "Abizena",
+        "placeholder": "Idatzi zure abizena"
+      },
+      "oldPassword": {
+        "label": "Antzinako pasahitza",
+        "placeholder": "Idatzi zure pasahitz zaharra"
+      },
+      "newPassword": {
+        "label": "Pasahitz berria",
+        "placeholder": "Idatzi zure pasahitz berria"
+      },
+      "confirmPassword": {
+        "label": "Pasahitza berretsi",
+        "placeholder": "Berretsi zure pasahitz berria"
+      },
+      "region": {
+        "label": "Eskualde",
+        "placeholder": "Aukeratu eskualde bat"
+      },
+      "city": {
+        "label": "Hiri",
+        "placeholder": "Sartu zure hirian"
+      },
+      "school": {
+        "label": "Hezkuntza Zentroa",
+        "placeholder": "Hautatu hezkuntza zentro bat",
+        "notFound": "Ez al duzu zure zentroa topatzen?",
+        "createButton": "Bat sortu"
+      }
+    },
+    "password": {
+      "changeTitle": "Pasahitza aldatu nahi al duzu?",
+      "changeDescription": "Bete goiko eremuak zure pasahitza eguneratzeko."
+    },
+    "buttons": {
+      "cancel": "Indargabetu",
+      "update": "Eguneratu"
+    }
+  },
+  "MaterialsPage": {
+    "filterByTags": "Iragazi etiketen arabera:",
+    "createMaterial": "Material berria sortu",
+    "selectClassroom": "Aukeratu klase bat",
+    "materialName": "Material izena",
+    "materialNamePlaceholder": "Idatzi materialaren izena",
+    "uploadFile": "Kargatu fitxategia",
+    "dragOrDrop": "Arrastatu edo askatu fitxategiak hemen edo egin klik horiek kargatzeko",
+    "supportedFormats": "Pdf, doc, docx, png, jpg, pptx edo txt",
+    "browseFiles": "Esportatu fitxategiak",
+    "alerts": {
+      "editSuccess": "Eguneratutako materialaren izena arrakastaz!",
+      "editError": "Errorea materialaren izena eguneratzean. Mesedez, saiatu berriro.",
+      "deleteSuccess": "Materiala ondo ezabatu da!",
+      "deleteError": "Errorea materiala ezabatuz. Mesedez, saiatu berriro.",
+      "fetchMaterialsError": "Errorea materialak lortzean. Mesedez, saiatu berriro.",
+      "fetchTagsError": "Errorea etiketak lortzean. Mesedez, saiatu berriro.",
+      "tagCreateSuccess": "Etiketa behar bezala sortua.",
+      "tagLimit": "15 etiketa baino gehiago sortu daitezke.",
+      "tagCreateError": "Errorea etiketa sortzerakoan. Mesedez, saiatu berriro.",
+      "tagUpdateSuccess": "Etiketa eguneratua behar bezala.",
+      "tagUpdateError": "Errorea etiketa eguneratzean. Mesedez, saiatu berriro.",
+      "tagDeleteSuccess": "Etiketa behar bezala ezabatua.",
+      "tagDeleteError": "Errorea etiketa ezabatuz. Mesedez, saiatu berriro.",
+      "deleteSelectedSuccess": "Hautatutako materialak behar bezala kendu dira.",
+      "deleteSelectedError": "Errorea hautatutako materialak ezabatuz. Mesedez, saiatu berriro.",
+      "nameLimitExceeded": "Izenak $ {name_limit} karaktereen muga gainditzen du."
+    },
+    "enterDeleteMode": "Ezabatu",
+    "exitDeleteMode": "Kendu ezabatu modua",
+    "deleteTag": "Ezabatu '$ {tag.name}' etiketa",
+    "deleteMaterial": "Ezabatu materiala",
+    "deleteMaterialConfirmation": "Ziur ezabatu nahi duzula? ",
+    "cancel": "Indargabetu",
+    "delete": "Ezabatu",
+    "manageTags": "Kudeatu etiketak ",
+    "createTag": "+ Sortu etiketa",
+    "saveChanges": "Gorde aldaketak",
+    "selectColor": "Hautatu kolore bat",
+    "creating": "Sortzen ...",
+    "editMaterialName": "Editatu izena",
+    "editMaterialNameDescription": "Idatzi izen berri bat materialarentzat",
+    "deleteSelected": "Ezabatu hautatutakoak",
+    "noMaterialsFound": "Ez da materialik aurkitu",
+    "confirmDelete": "Berretsi ezabatzea",
+    "confirmDeleteSelected": "Ziur hautatutako materialak ezabatu nahi dituzula?",
+    "tagColors": {
+      "purple": "More",
+      "orange": "Laranja",
+      "coral": "Koral",
+      "teal": "Berde urdinxka",
+      "green": "Berde",
+      "blue": "Urdin",
+      "lightBlue": "Urdin argia",
+      "black": "Beltz",
+      "grey": "Gris"
+    }
+  },
+  "FileUpload": {
+    "uploading": "Igo ...",
+    "uploadFile": "Kargatu fitxategia",
+    "dragOrDrop": "Arrastatu edo askatu fitxategiak hemen edo egin klik horiek kargatzeko",
+    "supportedFormats": "Onartutako formatuak: pdf, doc, docx, png, jpg, pptx, txt",
+    "dropIt": "Lotu",
+    "alerts": {
+      "editSuccess": "Artxiboaren izena ondo eguneratuta!",
+      "editError": "Errorea fitxategiaren izena eguneratzean. Mesedez, saiatu berriro.",
+      "uploadSuccess": "Artxiboa igo da arrakastaz!",
+      "uploadError": "Errorea fitxategia kargatzean. Klase honetarako gehienezko material kopurua iritsi zen.",
+      "sizeError": "Errorea fitxategiaren tamaina lortzean. Mesedez, saiatu berriro.",
+      "networkError": "Sareko errorea. Mesedez, saiatu berriro geroago.",
+      "fetchMaterialsError": "Errorea materialak lortzean. Mesedez, saiatu berriro.",
+      "genericError": "Akats bat gertatu da. Mesedez, saiatu berriro.",
+      "invalidFile": "Ez-baliogabea fitxategi mota. Kargatu onartzen den fitxategia."
+    }
+  },
+  "CookieConsent": {
+    "title": "Cookieak!",
+    "description": "Cookieak erabiltzen ditugu zure webgunean zure esperientzia hobetzeko. Itsasontziz jarraituz, cookieen erabilera onartzen duzu.",
+    "acceptButton": "Onetsi",
+    "rejectButton": "Jaitsi",
+    "cookiePolicyLink": "Cookie politika",
+    "imageAlt": "Cookieak"
+  },
+  "DemoWindow": {
+    "videoUnsupported": "Zure arakatzaileak ez du bideo formatu hau onartzen.",
+    "learnMore": "Gehiago jakin",
+    "featuresTitle": "Produktuaren ezaugarriak",
+    "featuresDescription": "Esperientzia produktibitatea maximizatzeko diseinatutako gure interfaze intuitiboa. Demo honek zure lan-fluxua optimizatzen duten gure azken ezaugarriak erakusten ditu.",
+    "feature1Title": "Benetako lankidetza",
+    "feature1Description": "Lan egin zure taldearekin arazorik gabe, edozein dela ere.",
+    "feature2Title": "Analytics aurreratua",
+    "feature2Description": "Lortu informazio baliotsua gure txosten panel osoarekin.",
+    "viewDocumentation": "Ikusi dokumentazioa"
+  },
+  "CompleteProfileForm": {
+    "title": "Osatu zure profila",
+    "fields": {
+      "region": {
+        "label": "Eskualde",
+        "placeholder": "Aukeratu komunitate bat"
+      },
+      "city": {
+        "label": "Hiri",
+        "placeholder": "Sartu zure hirian"
+      },
+      "school": {
+        "label": "Hezkuntza Zentroa",
+        "placeholder": "Hautatu hezkuntza zentro bat",
+        "notFound": "Ez al duzu zure zentroa topatzen?",
+        "createButton": "Sortu zentrora"
+      }
+    },
+    "buttons": {
+      "completeProfile": "Profil osoa",
+      "cancel": "Indargabetu"
+    }
+  },
+  "ClassroomEditForm": {
+    "sections": {
+      "information": {
+        "title": "Klaseko informazioa"
+      },
+      "description": {
+        "title": "Klasearen deskribapena"
+      }
+    },
+    "fields": {
+      "name": {
+        "label": "Klase izena",
+        "placeholder": "Idatzi klasearen izena"
+      },
+      "academicCourse": {
+        "label": "Ikastaro akademikoa",
+        "placeholder": "Aukeratu ikasturtea"
+      },
+      "academicYear": {
+        "label": "Urtea / ikasturtea",
+        "placeholder": "Aaaa-aaa"
+      },
+      "description": {
+        "label": "Deskribapen",
+        "placeholder": "Deskribatu zure klasea"
+      }
+    },
+    "buttons": {
+      "cancel": "Indargabetu",
+      "update": "Eguneratu klasea",
+      "delete": "Ezabatu klasea"
+    }
+  },
+  "ClassroomCreateForm": {
+    "sections": {
+      "information": {
+        "title": "Klaseko informazioa"
+      },
+      "description": {
+        "title": "Klasearen deskribapena"
+      }
+    },
+    "fields": {
+      "name": {
+        "label": "Klase izena",
+        "placeholder": "Idatzi klasearen izena"
+      },
+      "academicCourse": {
+        "label": "Ikastaro akademikoa",
+        "placeholder": "Aukeratu ikasturtea"
+      },
+      "academicYear": {
+        "label": "Urtea / ikasturtea",
+        "placeholder": "Aaaa-aaa"
+      },
+      "description": {
+        "label": "Deskribapen",
+        "placeholder": "Deskribatu zure klasea"
+      }
+    },
+    "buttons": {
+      "cancel": "Indargabetu",
+      "create": "Klase sortu"
+    },
+    "alerts": {
+      "nameRequired": "Izena derrigorrezkoa da eta ezin da hutsik egon.",
+      "nameTooLong": "Izenak ezin du 30 karaktere izan.",
+      "descriptionRequired": "Deskribapena derrigorrezkoa da eta ezin da hutsik egon.",
+      "descriptionTooLong": "Deskribapenak ezin ditu 255 karaktere baino gehiago izan.",
+      "invalidAcademicYear": "Urteak 'aaaa-aaa' formatua izan behar du.",
+      "success": "Klasea arrakastaz sortu da!",
+      "error": "Inprimakia bidaltzean akats bat gertatu da."
+    }
+  },
+  "SchoolCreateForm": {
+    "title": "Sortu hezkuntza zentro berria",
+    "fields": {
+      "name": {
+        "label": "Zentroaren izena",
+        "placeholder": "Idatzi zentroaren izena"
+      },
+      "community": {
+        "label": "Eskualde",
+        "placeholder": "Aukeratu komunitate bat"
+      },
+      "city": {
+        "label": "Hiri",
+        "placeholder": "Sartu hirian"
+      },
+      "stages": {
+        "label": "Hezkuntza faseak"
+      }
+    },
+    "buttons": {
+      "create": "Sortu zentrora",
+      "cancel": "Indargabetu"
+    },
+    "alerts": {
+      "nameTooLong": "Izenak ezin du 50 karaktere baino gehiago izan.",
+      "cityRequired": "Hiria derrigorrezkoa da.",
+      "allFieldsRequired": "Eremu guztiak derrigorrezkoak dira!",
+      "success": "Zentroa arrakastaz sortu da!",
+      "error": "Errorea zentroa sortzerakoan. Mesedez, saiatu berriro."
+    }
+  },
+  "TermsPage": {
+    "header": {
+      "title": "Masterra - Lege informazioa",
+      "description": "Ongi etorri gure informazio juridikoa atalera. Hemen aurkituko dituzu gure plataformaren erabilera arautzen duten beharrezko dokumentu eta politika guztiak. Mesedez, berrikusi arretaz zure eskubideak eta erantzukizunak ulertzeko."
+    },
+    "terms": {
+      "cookies": "Cookie politika",
+      "privacy": "Pribatutasun politika",
+      "termsOfUse": "Erabilera baldintzak",
+      "licenses": "Lizentziak",
+      "document": "Agiri"
+    },
+    "alerts": {
+      "fetchTermsError": "Baldintzak ezin izan dira kargatu. Mesedez, saiatu berriro geroago.",
+      "checkAdminError": "Errorea administratzailearen egoera egiaztatzean.",
+      "deleteSuccess": "Epea behar bezala ezabatu da.",
+      "deleteError": "Errorea terminoa ezabatuz. Mesedez, saiatu berriro geroago.",
+      "fetchContentError": "Errorea fitxategiaren edukia lortzean.",
+      "addSuccess": "Epe berria behar bezala gehitu da.",
+      "addError": "Errorea epe berri bat gehitzean. Mesedez, saiatu berriro geroago.",
+      "tagError": "Etiketa errorea: {{error}}",
+      "contentError": "Edukiaren errorea: {{error}}",
+      "pdfContentError": "PDF edukien errorea: {{error}}",
+      "versionError": "Bertsioaren errorea: {{error}}",
+      "nameError": "Errorea izenaren arabera: {{error}}",
+      "noPdf": "Ez dago PDF dokumentu honetarako.",
+      "noMd": "Kargatu markaren fitxategia (.md)",
+      "failedToOpenPdf": "Dokumentua ezin da fitxa berri batean ireki. Mesedez, egiaztatu zure arakatzailearen konfigurazioa.",
+      "termTypeError": "Hautatu baliozko termino mota bat.",
+      "noVersion": "Mesedez, sartu bertsio zenbakia."
+    },
+    "buttons": {
+      "addNewTerm": "Gehitu epe berria",
+      "viewFullDocument": "Ikusi dokumentu osoa",
+      "openDocument": "Ireki dokumentua",
+      "cancel": "Indargabetu",
+      "save": "Kontserbatu",
+      "delete": "Ezabatu"
+    },
+    "messages": {
+      "allTermsCreated": "Baldintza mota guztiak sortu dira dagoeneko. Ezin dituzu termino gehiago gehitu."
+    },
+    "loading": {
+      "title": "Kargatzea ...",
+      "description": "Mesedez, itxaron edukia kargatzen dugun bitartean."
+    },
+    "noTerms": {
+      "title": "Eskuragarri ez dauden baldintzak",
+      "description": "Une honetan ezin izan dira baldintzak eta baldintzak kobratu. Hau da:",
+      "reason1": "Baldintzak eguneratzen ari dira",
+      "reason2": "Informazio hau eskuratzeko saioa hasi behar duzu",
+      "reason3": "Zerbitzariarekin aldi baterako arazoa dago",
+      "contactSupport": "Informazio honetara sartu behar baduzu, hasi saioa edo jarri harremanetan gure laguntza taldearekin."
+    },
+    "additionalInfo": {
+      "agreements": "Hitzarmen hauek plataforman sartzeko erabiltzaile guztiei aplikatzen zaizkie, web arakatzaileen bidez edo aplikazio mugikorren bidez.",
+      "modifications": "Hitzarmen horiek aldatzeko eskubidea erreserbatzen dugu legegintzako aldaketetan edo behar operatiboetan oinarrituta.",
+      "governance": "Hitzarmen hau legeria aplikagarriaren arabera arautu eta interpretatuko da.",
+      "acceptance": "Plataformaren erabilerak hemen ezarritako baldintza guztiak onartzea dakar."
+    },
+    "addForm": {
+      "title": "Gehitu epe berria",
+      "termTypeLabel": "Epe mota",
+      "selectTermType": "Hautatu termino mota bat",
+      "markdownContentLabel": "Markdown edukia",
+      "uploadMarkdown": "Arrastatu eta askatu .md fitxategia hemen edo egin klik hautatzeko",
+      "pdfContentLabel": "PDF edukia",
+      "uploadPdf": "Arrastatu eta askatu .pdf fitxategia hemen edo egin klik hautatzeko",
+      "uploadedFile": "Kargatutako artxiboa",
+      "versionLabel": "Bertsio",
+      "versionPlaceholder": "Adib. 'V1.0'",
+      "availableTermTypes": {
+        "termsOfUse": "Erabilera baldintzak",
+        "privacyPolicy": "Pribatutasun politika",
+        "cookiePolicy": "Cookie politika",
+        "licenses": "Lizentziak"
+      }
+    },
+    "footer": {
+      "lastUpdated": "Azken eguneratzea: ",
+      "contactSupport": "Gure baldintzei buruzko galderak izanez gero edo ezin dituzu sartu, jar zaitez gurekin harremanetan."
+    },
+    "deleteModal": {
+      "title": "Berretsi ezabatzea",
+      "description": "Ziur dokumentu hau ezabatu nahi duzula? Ekintza hau ezin da desegin."
+    }
+  },
+  "CreateSchoolPage": {
+    "header": {
+      "title": "Sortu zure hezkuntza zentroa",
+      "subtitle": "Beraz, beste irakasleek bat egiten dute",
+      "logoAlt": "Logotipo nagusia"
+    },
+    "alerts": {
+      "mustSignUp": "Hezkuntza zentro bat sortzeko izena eman behar duzu.",
+      "success": "Hezkuntza Zentroa arrakastaz sortu da!",
+      "failure": "!!!>>> The string did not match the expected pattern. <<<!!!",
+      "networkError": "Sareko errorea gertatu da."
+    }
+  },
+  "SignUpPage": {
+    "welcomeMessage": "Ongi etorri",
+    "createAccount": "Sortu zure kontua",
+    "logoAlt": "Logotipo nagusia",
+    "videoCaption": "Masterra hemen dago zure klaseetan laguntzeko",
+    "videoAutoplayError": "Bideo erreprodukzio automatikoa saihestu da",
+    "alerts": {
+      "usernameTooLong": "Erabiltzaile izenak ezin du 30 karaktere baino gehiago izan",
+      "emailTooLong": "Posta elektronikoa ezin da 255 karaktere baino gehiago izan",
+      "nameTooLong": "Izenak ezin du 30 karaktere baino gehiago izan",
+      "surnameTooLong": "Abizenak ezin du 30 karaktere baino gehiago izan",
+      "passwordTooLong": "Pasahitzak ezin du 128 karaktere baino gehiago izan",
+      "passwordTooShort": "Pasahitzak gutxienez 8 karaktere izan behar ditu",
+      "passwordUppercase": "Pasahitzak gutxienez letra larriz eduki behar du",
+      "passwordLowercase": "Pasahitzak gutxienez letra xehe bat eduki behar du",
+      "passwordNumber": "Pasahitzak gutxienez zenbaki bat eduki behar du",
+      "passwordSpecialCharacter": "Pasahitzak gutxienez karaktere berezia izan behar du",
+      "passwordNoWhitespace": "Pasahitzak ezin ditu hasiera hutsik hasieran edo amaieran",
+      "signupSuccess": "Kontua sortu da",
+      "signupFailure": "Errorea erregistratzean",
+      "networkError": "Sareko errorea gertatu da"
+    }
+  },
+  "SignInPage": {
+    "welcomeBack": "Ongi etorri berriro",
+    "to": "-ra",
+    "logoAlt": "Logotipo nagusia",
+    "videoCaption": "Masterra hemen dago zure klaseetan laguntzeko",
+    "videoAutoplayError": "Bideo erreprodukzio automatikoa saihestu da",
+    "alerts": {
+      "emailOrUsernameTooLong": "Erabiltzaileen posta edo izenak ezin ditu 255 karaktere baino gehiago izan",
+      "passwordTooLong": "Pasahitzak ezin du 128 karaktere baino gehiago izan",
+      "passwordTooShort": "Pasahitzak gutxienez 8 karaktere izan behar ditu",
+      "passwordUppercase": "Pasahitzak gutxienez letra larriz eduki behar du",
+      "passwordLowercase": "Pasahitzak gutxienez letra xehe bat eduki behar du",
+      "passwordNumber": "Pasahitzak gutxienez zenbaki bat eduki behar du",
+      "passwordSpecialCharacter": "Pasahitzak gutxienez karaktere berezia izan behar du",
+      "signinSuccess": "Arrakasta saioa",
+      "signinFailure": "Errorea erregistratzean",
+      "networkError": "Sareko errorea gertatu da"
+    }
+  },
+  "ProfileEditPage": {
+    "header": {
+      "logoAlt": "Logotipo nagusia",
+      "greeting": "Agur",
+      "subtitle": "Egiaztatu eta editatu zure profila eta datuak"
+    },
+    "sections": {
+      "personalInfo": "Informazio pertsonala",
+      "schoolInfo": "Hezkuntza Zentroaren informazioa"
+    },
+    "buttons": {
+      "deleteAccount": "Kontua ezabatu",
+      "cancel": "Indargabetu",
+      "signOut": "Itxi saioa",
+      "editProfile": "Editatu profila",
+      "completeProfile": "Profil osoa"
+    },
+    "alerts": {
+      "signoutSuccess": "Saioa ondo itxita duzu.",
+      "signoutError": "Errorea saioa amaitu den prozesuan.",
+      "signoutApiError": "API errorea saioan zehar.",
+      "fetchSchoolsError": "Errorea gertatu da hezkuntza zentroak lortzean.",
+      "fetchSchoolError": "Errorea hezkuntza zentroa lortzean.",
+      "passwordMismatch": "Pasahitzak ez datoz bat.",
+      "invalidEmail": "BALIFIKOA EZ Posta elektronikoa.",
+      "updateSuccess": "Arrakasta eguneratutako profila.",
+      "updateError": "Errorea profila eguneratzean.",
+      "deleteSuccess": "Kontua behar bezala ezabatu da.",
+      "deleteError": "Errorea kontua ezabatuz.",
+      "usernameMismatch": "Erabiltzaile izena ez dator bat. Baliogabetutako kontua ezabatzea."
+    },
+    "fields": {
+      "username": "Erabiltzaile izena",
+      "email": "I-posta",
+      "name": "Izen",
+      "surname": "Abizena",
+      "oldPassword": "Antzinako pasahitza",
+      "newPassword": "Pasahitz berria",
+      "confirmPassword": "Pasahitza berretsi",
+      "city": "Hiri",
+      "school": "Hezkuntza Zentroa"
+    },
+    "modals": {
+      "deleteAccount": {
+        "title": "Kontua ezabatu",
+        "message": "Ziur zure kontua ezabatu nahi duzula? Ekintza hau ezin da desegin.",
+        "confirmation": "Idatzi zure erabiltzaile izena berresteko",
+        "placeholder": "Erabiltzaile izena"
+      }
+    }
+  },
+  "ProfileCompletePage": {
+    "header": {
+      "logoAlt": "Logotipo nagusia",
+      "title": "Osatu zure profila",
+      "subtitle": "Maisu guztiz gozatzeko"
+    },
+    "alerts": {
+      "usernameTooLong": "Erabiltzaile-izenak ezin du 30 karaktere baino gehiago izan.",
+      "emailTooLong": "Posta elektronikoak ezin ditu 255 karaktere baino gehiago izan.",
+      "allFieldsRequired": "Eremu guztiak derrigorrezkoak dira.",
+      "fetchSchoolsError": "Errorea gertatu da hezkuntza zentroak lortzean. Mesedez, saiatu berriro geroago.",
+      "updateSuccess": "Arrakasta eguneratutako profila.",
+      "updateError": "Errorea eguneratzea: {error}"
+    },
+    "defaultName": "Aurrez zehaztutako izena",
+    "defaultSurname": "Abizendutako abizena"
+  },
+  "ClassroomsPage": {
+    "header": {
+      "title": "Nire klaseak",
+      "subtitle": "Kudeatu zure klaseak"
+    },
+    "noClasses": "Ez da klaserik aurkitu",
+    "createClassButton": "Sortu klase berria +",
+    "openClassButton": "Klase irekia",
+    "editButton": "Editatu →",
+    "courseLabel": "Ibilbide",
+    "yearLabel": "Urte",
+    "imageAlt": "Klaseko irudia {name}",
+    "alerts": {
+      "fetchError": "Klaseak ezin dira lortu. Mesedez, saiatu berriro geroago."
+    }
+  },
+  "ClassroomEditPage": {
+    "header": {
+      "title": "Editatu klase",
+      "subtitle": "Eguneratu zure klaseko informazioa behean"
+    },
+    "alerts": {
+      "nameTooLong": "Izenak ez du 30 karaktere izan behar.",
+      "courseTooLong": "Ikasturteak ez du 30 karaktere izan behar.",
+      "descriptionTooLong": "Deskribapenak ez du 255 karaktere baino gehiago izan behar.",
+      "descriptionEmpty": "Deskribapena ez da hutsik egon behar.",
+      "invalidYearFormat": "Ikasturteak 'aaaa-aaa' formatua izan behar du.",
+      "fetchStagesError": "Errorea hezkuntza faseak lortzean.",
+      "networkError": "Sareko errorea gertatu da.",
+      "fetchClassroomError": "Errorea gertatu da klaseko datuak lortzean.",
+      "missingClassroomData": "Klaseko datuak falta dira.",
+      "updateSuccess": "Eguneratutako klasea arrakastaz.",
+      "updateError": "Errorea klaseko datuak eguneratzean.",
+      "deleteSuccess": "Klasea ondo ezabatu da.",
+      "deleteError": "Errorea klasea ezabatuz.",
+      "nameMismatch": "Klasearen izena ez dator bat. Ezeztatu ezabatzea."
+    },
+    "deleteModal": {
+      "title": "Ezabatu klasea",
+      "description": "Ziur al zaude {name} ezabatu nahi duzula? Ekintza hau ezin da desegin.",
+      "placeholder": "Idatzi klasearen izena ({name})",
+      "cancel": "Indargabetu",
+      "delete": "Ezabatu"
+    }
+  },
+  "ClassroomCreatePage": {
+    "header": {
+      "title": "Klase berri bat sortu",
+      "subtitle": "Konfiguratu zure ikasgela nagusia",
+      "logoAlt": "Logotipo nagusia"
+    },
+    "alerts": {
+      "authTokenMissing": "Autentifikazio tokena falta da. Erregistro birbideratzea.",
+      "fetchStagesError": "Errorea hezkuntza faseak lortzean. Mesedez, saiatu berriro geroago.",
+      "networkError": "Sarearen akatsa hezkuntza faseak lortzean.",
+      "success": "Klasea arrakastaz sortu da!",
+      "creationFailed": "Errorea gertatu da klasea sortzerakoan. Mesedez, saiatu berriro."
+    }
+  },
+  "ClassroomPage": {
+    "backToClassrooms": "Joan klaseetara",
+    "unnamedClassroom": "Izenik gabeko klasea",
+    "studentsTab": "Ikasle",
+    "materialsTab": "Material",
+    "studentsTitle": "Ikasle",
+    "materialsTitle": "Material",
+    "cancel": "Indargabetu",
+    "deleteSelected": "Ezabatu ({zenbaketa})",
+    "deleteSelectedDescription": "Ziur al zaude hautatutako ikasleak ezabatu nahi dituzula?",
+    "confirmDelete": "Berretsi ezabatzea",
+    "confirmDeleteDescription": "Ziur ezabatu nahi duzula? ",
+    "delete": "Ezabatu",
+    "students": "Ikasle",
+    "materials": "Material",
+    "addStudent": "Gehitu ikaslea",
+    "addFirstStudent": "Gehitu zure lehen ikaslea!",
+    "noStudents": "Ez da ikasleik aurkitu klase honetan.",
+    "alerts": {
+      "fetchClassroomError": "Errorea gertatu da klaseko datuak lortzean.",
+      "fetchStudentsError": "Errorea ikasleak lortzean.",
+      "deleteStudentSuccess": "Ikaslea behar bezala ezabatu da.",
+      "deleteStudentError": "Errorea ikaslea ezabatzean.",
+      "editStudentSuccess": "Ikasle eguneratua arrakastaz.",
+      "editStudentError": "Errorea ikasleak eguneratzean.",
+      "addStudentSuccess": "Ikaslea behar bezala gehitu da.",
+      "addStudentError": "Errorea ikasleari gehitzean.",
+      "deleteSelectedSuccess": "Aukeratutako ikasleak ondo ezabatu dira.",
+      "deleteSelectedError": "Errorea hautatutako ikasleak ezabatuz.",
+      "nameLimitExceeded": "Izenak {Muga} karaktereen muga gainditzen du.",
+      "surnameLimitExceeded": "Abizenak {Muga} karaktereen muga gainditzen du."
+    }
+  },
+  "StudentModal": {
+    "editStudent": "Editatu ikaslea",
+    "addStudent": "Gehitu ikaslea",
+    "nameLabel": "Izen",
+    "surnameLabel": "Abizena",
+    "cancelButton": "Indargabetu",
+    "saveChanges": "Gorde aldaketak",
+    "processing": "Tratamendua ..."
+  },
+  "EditMaterialModal": {
+    "editMaterialName": "Editatu izena",
+    "editMaterialNameDescription": "Idatzi material berria:",
+    "cancel": "Indargabetu",
+    "save": "Kontserbatu"
+  },
+  "MaterialPage": {
+    "header": {
+      "title": "Nire materialak",
+      "subtitle": "Begiratu zure material guztiak begirada batean."
+    },
+    "createMaterial": "Gehitu material berria",
+    "searchPlaceholder": "Bilatu materialak ...",
+    "filterByTags": "Iragazi etiketen arabera:",
+    "enterDeleteMode": "Ezabatu",
+    "exitDeleteMode": "Kendu ezabatu modua",
+    "noMaterialsFound": "Ez da materialik aurkitu.",
+    "filterByClassroom": "Klasearen arabera iragazi:",
+    "deleteMaterial": "Ezabatu materiala",
+    "deleteMaterialConfirmation": "Ziur ezabatu nahi duzula?",
+    "cancel": "Indargabetu",
+    "delete": "Ezabatu",
+    "manageTags": "Kudeatu etiketak",
+    "selectOrCreateTags": "Hautatu edo sortu etiketak material honekin lotzeko.",
+    "createTag": "Etiketa berria sortu",
+    "saveChanges": "Gorde aldaketak",
+    "deleteTag": "Kendu etiketa",
+    "editTag": "Kudeatu etiketak",
+    "editName": "Editatu izena",
+    "downloadFile": "Deskargatu fitxategia",
+    "creating": "Sortzen ...",
+    "alerts": {
+      "createdSuccess": "Behar bezala sortutako materiala!",
+      "deleteSelectedSuccess": "Hautatutako materialak behar bezala kendu dira.",
+      "deleteSelectedError": "Errorea hautatutako materialak ezabatuz. Mesedez, saiatu berriro.",
+      "editSuccess": "Arrakasta eguneratze materiala.",
+      "editError": "Errorea materialaren izena eguneratzean. Mesedez, saiatu berriro.",
+      "deleteSuccess": "Materiala behar bezala ezabatu da.",
+      "deleteError": "Errorea materiala ezabatuz. Mesedez, saiatu berriro.",
+      "fetchMaterialsError": "Errorea materialak lortzean. Mesedez, saiatu berriro geroago.",
+      "fetchTagsError": "Errorea etiketak lortzean. Mesedez, saiatu berriro geroago.",
+      "fetchClassroomsError": "Errorea gertatu da klaseak lortzean. Mesedez, saiatu berriro geroago.",
+      "tagCreateSuccess": "Etiketa behar bezala sortua.",
+      "tagLimit": "15 etiketen gehienezko mugara iritsi zara.",
+      "tagCreateError": "Errorea etiketa sortzerakoan. Mesedez, saiatu berriro.",
+      "tagUpdateSuccess": "Etiketa eguneratuak behar bezala.",
+      "tagUpdateError": "Errorea etiketak eguneratzean. Mesedez, saiatu berriro.",
+      "tagDeleteSuccess": "Etiketa behar bezala ezabatua.",
+      "tagDeleteError": "Errorea etiketa ezabatuz. Mesedez, saiatu berriro."
+    }
+  },
+
+
+  "ToolsPage": {
+    "pageTitle": "AI tresnak",
+    "pageSubtitle": "Aukeratu gure tresna automatizatuetako bat eta hasi sortzen!",
+    "quickAccess": "Sarbide azkarra",
+    "loading": "Kargatzen...",
+    "authModal": {
+      "title": "Beharrezko autentikazioa",
+      "description": "Tresna honetara sartzeko saioa hasi behar duzu. Sortu kontu bat funtzio guztiak desblokeatzeko.",
+      "cancelButton": "Utzi",
+      "createAccountButton": "Sortu kontua",
+      "signInButton": "Hasi saioa"
+    },
+    "profileModal": {
+      "title": "Osatu zure profila",
+      "description": "Xehetasun gehiago behar ditugu tresna honetara sartu aurretik. Zure profilaren informazioak zure esperientzia pertsonalizatzen laguntzen digu.",
+      "cancelButton": "Utzi",
+      "completeProfileButton": "Osatu profila"
+    },
+    "categories": {
+      "assessment": "Ebaluazioa",
+      "organization": "Antolaketa",
+      "language": "Hizkuntza"
+    },
+    "tools": {
+      "exams": {
+        "title": "Sortu azterketa erakargarriak",
+        "content": "Sortu azterketa osoak gure azterketa sortzaile intuitiboarekin. Ezaugarriak barne:",
+        "features": [
+          "Galdera mota anitzak",
+          "Kalifikazio automatikoa",
+          "Puntuazio arau pertsonalizatuak",
+          "Galdera bankuaren kudeaketa"
+        ]
+      },
+      "tests": {
+        "title": "Sortu testak eraginkortasunez",
+        "content": "Bizkortu zure test sortzeko prozesua AI laguntza bidez:",
+        "features": [
+          "AIk sortutako galderak",
+          "Zailtasunaren doikuntza adimenduna",
+          "Gaietan oinarritutako sorkuntza",
+          "Testen muntaketa berehalakoa"
+        ]
+      },
+      "planner": {
+        "title": "Planifikatu zure klaseak",
+        "content": "Mantendu antolatuta gure plangintza tresna osoekin:",
+        "features": [
+          "Klaseko ordutegi bisualak",
+          "Curriculum mapaketa",
+          "Baliabideen esleipena",
+          "Aurrerapenaren jarraipena"
+        ]
+      },
+      "translator": {
+        "title": "Itzuli materialak",
+        "content": "Hautsi hizkuntza-oztopoak zure ikasgelan:",
+        "features": [
+          "Denbora errealeko itzulpena",
+          "Hizkuntza anitzeko euskarria",
+          "Hezkuntza testuinguruaren kontzientzia",
+          "Dokumentuen itzulpena"
+        ]
+      }
+    }
+  }
+}
