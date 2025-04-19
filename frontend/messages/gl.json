@@ -94,7 +94,8 @@
     "error": {
       "emptyText": "Introduza o texto para traducir",
       "textTooLong": "O texto supera o límite de 5000 caracteres",
-      "translationFailed": "A tradución fallou. Por favor, téntao de novo."
+      "translationFailed": "A tradución fallou. Por favor, téntao de novo.",
+      "authRequired": "Debes iniciar sesión para acceder a esta ferramenta"
     },
     "source_text": "Texto de orixe",
     "target_text": "Tradución",
@@ -1046,5 +1047,12 @@
         ]
       }
     }
+  },
+
+
+  "NotFound": {
+    "title": "404",
+    "message": "Ups! Parece que te aventuraches en territorio descoñecido.",
+    "returnButton": "Volver ao inicio"
   }
 }

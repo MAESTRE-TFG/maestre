@@ -94,7 +94,8 @@
     "error": {
       "emptyText": "Mesedez, idatzi testua itzultzeko",
       "textTooLong": "Testuak 5000 karaktereen muga gainditzen du",
-      "translationFailed": "Itzulpenak huts egin du. Mesedez, saiatu berriro."
+      "translationFailed": "Itzulpenak huts egin du. Mesedez, saiatu berriro.",
+      "authRequired": "Ezin duzu autentikazioa saiatu. Mesedez, saiatu berriro."
     },
     "source_text": "Jatorriaren testua",
     "target_text": "Itzulpen",
@@ -1047,5 +1048,12 @@
         ]
       }
     }
+  },
+
+
+  "NotFound": {
+    "title": "404",
+    "message": "Ups! Lurralde ezezagunean abenturatu zara.",
+    "returnButton": "Itzuli hasierara"
   }
 }

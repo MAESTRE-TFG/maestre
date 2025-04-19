@@ -106,7 +106,8 @@
       "error": {
         "emptyText": "Please enter text to translate",
         "textTooLong": "Text exceeds 5000 character limit",
-        "translationFailed": "Translation failed. Please try again."
+        "translationFailed": "Translation failed. Please try again.",
+        "authRequired": "You need to be logged in to access this tool. Create an account to unlock all features."
       },
       "source_text": "Source Text",
       "target_text": "Translation",
@@ -1114,5 +1115,12 @@
           ]
         }
       }
+    },
+
+
+    "NotFound": {
+      "title": "404",
+      "message": "Oops! Looks like you've wandered into uncharted territory.",
+      "returnButton": "Return Home"
     }
 }

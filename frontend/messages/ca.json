@@ -106,7 +106,8 @@
     "error": {
       "emptyText": "Introduïu el text per traduir",
       "textTooLong": "El text supera el límit de 5.000 caràcters",
-      "translationFailed": "La traducció ha fallat. Torneu -ho a provar."
+      "translationFailed": "La traducció ha fallat. Torneu -ho a provar.",
+      "authRequired": "Cal iniciar la sessió per accedir a aquesta eina. Creeu un compte per desbloquejar totes les funcions."
     },
     "source_text": "Text d'origen",
     "target_text": "Traducció",
@@ -1112,5 +1113,12 @@
         ]
       }
     }
+  },
+
+
+  "NotFound": {
+    "title": "404",
+    "message": "Ups! Sembla que t'has aventurat en territori desconegut.",
+    "returnButton": "Torna a l'inici"
   }
 }
