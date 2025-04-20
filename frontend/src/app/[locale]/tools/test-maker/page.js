@@ -5,25 +5,25 @@ import { useTheme } from "@/components/theme-provider";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { useRouter } from "next/navigation";
 import Alert from "@/components/ui/Alert";
-import { formatExamText, createPDFVersion } from "./utils/pdfUtils";
+import { formatExamText, createPDFVersion } from "../exam-maker/utils/pdfUtils";
 import {
   uploadPDFToClassroom,
   processUploadedFile,
   processMaterialFromClassroom,
   generateExam
-} from "./utils/apiUtils";
-import ExamForm from "./components/ExamForm";
-import MaterialsModal from "./components/MaterialsModal";
-import ExamResultModal from "./components/ExamResultModal";
+} from "../exam-maker/utils/apiUtils";
+import ExamForm from "../exam-maker/components/ExamForm";
+import MaterialsModal from "../exam-maker/components/MaterialsModal";
+import ExamResultModal from "../exam-maker/components/ExamResultModal";
 import axios from "axios";
 import Image from "next/image";
 import { IconFileText, IconBrain } from "@tabler/icons-react";
-import { buildExamPrompt } from "./utils/promptUtils";
+import { buildExamPrompt } from "../exam-maker/utils/promptUtils";
 import { getApiBaseUrl } from "@/lib/api";
 import { useTranslations } from "next-intl";
 
 const ExamMaker = ({ params }) => {
-  const t = useTranslations("ExamMaker");
+  const t = useTranslations("TestMaker");
   const { theme } = useTheme();
   const locale = params?.locale || "es";
   const router = useRouter();
@@ -114,24 +114,14 @@ const ExamMaker = ({ params }) => {
     }
   }, [classrooms, t]);
 
-  // In your addAlert function, modify it to use a more unique key
   const addAlert = (type, message) => {
-    const id = Date.now() + Math.random().toString(36).substring(2, 9);
+    const id = Date.now();
     setAlerts(prev => [...prev, { id, type, message }]);
     setTimeout(() => {
       setAlerts(prev => prev.filter(alert => alert.id !== id));
     }, 5000);
   };
-  
-  // And in your alert rendering code:
-  {alerts.map(alert => (
-    <Alert
-      key={alert.id}
-      type={alert.type}
-      message={alert.message}
-      onClose={() => setAlerts(prev => prev.filter(a => a.id !== alert.id))}
-    />
-  ))}
+
   // Form change handler
   const handleChange = e => {
     const { name, value, type } = e.target;
@@ -213,7 +203,8 @@ const ExamMaker = ({ params }) => {
       const user = userString ? JSON.parse(userString) : {};
 
       // Build the prompt using the utility function
-      const prompt = buildExamPrompt(formData, classrooms, fileContentsRef.current, user, locale);
+      // Pass locale instead of t function
+      const prompt = buildExamPrompt(formData, classrooms, fileContentsRef.current, user, t);
 
       // Generate the exam
       const token = localStorage.getItem("authToken");
@@ -223,7 +214,6 @@ const ExamMaker = ({ params }) => {
       setShowModal(true);
       addAlert("success", t("alerts.examGeneratedSuccess"));
     } catch (error) {
-      console.error("Error generating exam:", error);
       addAlert("error", `${t("alerts.examGenerationFailed")}: ${error.message}`);
     } finally {
       setIsGenerating(false);

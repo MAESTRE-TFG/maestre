@@ -1,5 +1,4 @@
 import jsPDF from "jspdf";
-import { useTranslations } from "next-intl";
 
 // Format exam text for display
 export const formatExamText = (text) => {
@@ -138,7 +137,7 @@ export const createDocumentVersion = (examText, t) => {
 };
 
 // Create a PDF version of the exam
-export const createPDFVersion = async (examText, subject = "Exam", t) => {
+export const createPDFVersion = async (examText, subject, t) => {
   const doc = new jsPDF({
     orientation: 'portrait',
     unit: 'mm',

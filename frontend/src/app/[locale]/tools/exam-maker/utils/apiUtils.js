@@ -3,13 +3,14 @@ import { getApiBaseUrl } from "@/lib/api";
 
 // Upload PDF to classroom
 export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token, showAlert, t) => {
+
   if (!classroomId) {
-    showAlert("error", t("ExamMaker.alerts.missingClassroom"));
+    showAlert("error", t("alerts.missingClassroom"));
     return false;
   }
 
   if (!pdfBlob || !(pdfBlob instanceof Blob)) {
-    showAlert("error", t("ExamMaker.alerts.pdfSaveFailed", { error: t("ExamMaker.alerts.unknownError") })); 
+    showAlert("error", t("alerts.pdfSaveFailed", { error: t("alerts.unknownError") })); 
     return false;
   }
 
@@ -20,7 +21,7 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
 
   try {
     if (!token) {
-      showAlert("error", t("ExamMaker.alerts.fetchClassroomsError"));
+      showAlert("error", t("alerts.fetchClassroomsError"));
       return false;
     }
 
@@ -31,7 +32,7 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
       },
     });
 
-    showAlert("success", t("ExamMaker.alerts.pdfSavedSuccess"));
+    showAlert("success", t("alerts.pdfSavedSuccess"));
     return true;
   } catch (error) {
     if (error.response) {
@@ -39,17 +40,17 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
         const errorMsg =
           error.response.data && error.response.data.error
             ? error.response.data.error
-            : t("ExamMaker.alerts.pdfSaveFailed", { error: t("ExamMaker.alerts.unknownError") });
+            : t("alerts.pdfSaveFailed", { error: t("alerts.unknownError") });
         showAlert("error", errorMsg);
       } else if (error.response.status === 401) {
-        showAlert("error", t("ExamMaker.alerts.fetchClassroomsError"));
+        showAlert("error", t("alerts.fetchClassroomsError"));
       } else {
-        showAlert("error", t("ExamMaker.alerts.pdfSaveFailed", { error: `${error.response.status} - ${error.response.statusText}` }));
+        showAlert("error", t("alerts.pdfSaveFailed", { error: `${error.response.status} - ${error.response.statusText}` }));
       }
     } else if (error.request) {
-      showAlert("error", t("ExamMaker.alerts.fetchMaterialsError"));
+      showAlert("error", t("alerts.fetchMaterialsError"));
     } else {
-      showAlert("error", t("ExamMaker.alerts.pdfSaveFailed", { error: error.message }));
+      showAlert("error", t("alerts.pdfSaveFailed", { error: error.message }));
     }
     return false;
   }
@@ -58,12 +59,12 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
 // Process uploaded file
 export const processUploadedFile = async (file, token, showAlert, t) => {
   if (!file.name.toLowerCase().endsWith(".docx")) {
-    showAlert("error", t("ExamMaker.alerts.unsupportedFileType"));
+    showAlert("error", t("alerts.unsupportedFileType"));
     return null;
   }
 
   if (file.size > 5 * 1024 * 1024) {
-    showAlert("error", t("ExamMaker.alerts.fileProcessedSuccess"));
+    showAlert("error", t("alerts.fileProcessedSuccess"));
     return null;
   }
 
@@ -83,23 +84,23 @@ export const processUploadedFile = async (file, token, showAlert, t) => {
     );
 
     if (response.data && response.data.text) {
-      showAlert("success", t("ExamMaker.alerts.fileProcessedSuccess"));
+      showAlert("success", t("alerts.fileProcessedSuccess"));
       return {
         name: file.name,
         content: response.data.text,
         id: Date.now(),
       };
     } else {
-      showAlert("error", t("ExamMaker.alerts.fetchMaterialsError"));
+      showAlert("error", t("alerts.fetchMaterialsError"));
       return null;
     }
   } catch (error) {
     if (error.response) {
-      showAlert("error", t("ExamMaker.alerts.fetchMaterialsError"));
+      showAlert("error", t("alerts.fetchMaterialsError"));
     } else if (error.request) {
-      showAlert("error", t("ExamMaker.alerts.fetchMaterialsError"));
+      showAlert("error", t("alerts.fetchMaterialsError"));
     } else {
-      showAlert("error", t("ExamMaker.alerts.fetchMaterialsError"));
+      showAlert("error", t("alerts.fetchMaterialsError"));
     }
     return null;
   }
@@ -108,7 +109,7 @@ export const processUploadedFile = async (file, token, showAlert, t) => {
 // Process material from classroom
 export const processMaterialFromClassroom = async (material, token, showAlert, t) => {
   if (!material.file.toLowerCase().endsWith(".docx")) {
-    showAlert("error", t("ExamMaker.alerts.unsupportedFileType"));
+    showAlert("error", t("alerts.unsupportedFileType"));
     return null;
   }
 
@@ -127,7 +128,7 @@ export const processMaterialFromClassroom = async (material, token, showAlert, t
     );
 
     if (response.data && response.data.text) {
-      showAlert("success", t("ExamMaker.alerts.materialProcessedSuccess"));
+      showAlert("success", t("alerts.materialProcessedSuccess"));
       return {
         name: material.name,
         content: response.data.text,
@@ -136,46 +137,58 @@ export const processMaterialFromClassroom = async (material, token, showAlert, t
         materialId: material.id,
       };
     } else {
-      showAlert("error", t("ExamMaker.alerts.fetchMaterialsError"));
+      showAlert("error", t("alerts.fetchMaterialsError"));
       return null;
     }
   } catch (error) {
     if (error.response) {
-      showAlert("error", t("ExamMaker.alerts.fetchMaterialsError")); 
+      showAlert("error", t("alerts.fetchMaterialsError")); 
     } else if (error.request) {
-      showAlert("error", t("ExamMaker.alerts.fetchMaterialsError")); 
+      showAlert("error", t("alerts.fetchMaterialsError")); 
     } else {
-      showAlert("error", t("ExamMaker.alerts.fetchMaterialsError")); 
+      showAlert("error", t("alerts.fetchMaterialsError")); 
     }
     return null;
   }
 };
 
 // Generate exam using Ollama
-export const generateExam = async (prompt, model = "llama3.2:3b", showAlert, t) => {
+export const generateExam = async (prompt, model, t, showAlert) => {
   try {
-    const response = await axios.post(`${getApiBaseUrl()}:11434/api/generate`, {
+    const response = await axios.post('http://localhost:11434/api/generate', {
       model: model,
       prompt: prompt,
       stream: false,
-      temperature: 0.7,
+      temperature: 0.7
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      withCredentials: false
     });
 
-    if (response.data && response.data.response) {
-      showAlert("success", t("ExamMaker.alerts.examGeneratedSuccess")); 
+    if (response.data?.response) {
+      showAlert("success", t("alerts.examGeneratedSuccess"));
       return response.data.response;
-    } else {
-      showAlert("error", t("ExamMaker.alerts.examGenerationFailed")); 
-      return null;
     }
+    showAlert("error", t("alerts.examGenerationFailed"));
+    return null;
+    
   } catch (error) {
-    if (error.response) {
-      showAlert("error", t("ExamMaker.alerts.examGenerationFailed")); 
-    } else if (error.request) {
-      showAlert("error", t("ExamMaker.alerts.examGenerationFailed")); 
+    console.error('Ollama API Error:', error);
+    let errorMessage = t("alerts.examGenerationFailed");
+    
+    if (error.code === 'ECONNREFUSED') {
+      errorMessage = "Ollama service not running. Please start Ollama first.";
+    } else if (error.response?.status === 404) {
+      errorMessage = "Ollama API endpoint not found. Check your Ollama version.";
+    } else if (error.message.includes('Network Error') || error.message.includes('CORS')) {
+      errorMessage = "CORS issue detected. Please start Ollama with: 'ollama serve --cors'";
     } else {
-      showAlert("error", t("ExamMaker.alerts.examGenerationFailed")); 
+      errorMessage = `${t("alerts.examGenerationFailed")}: ${error.message}`;
     }
+
+    showAlert("error", errorMessage);
     return null;
   }
 };

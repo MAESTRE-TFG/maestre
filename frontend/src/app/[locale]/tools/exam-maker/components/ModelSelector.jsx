@@ -6,8 +6,9 @@ const ModelSelector = ({ value, onChange, theme }) => {
   const t = useTranslations("ExamMaker");
 
   const llmModels = [
-    { value: "llama3.2:3b", label: t("fields.llmModel.options.llama") }, 
-    { value: "deepseek-r1:7b", label: t("fields.llmModel.options.deepseek") } 
+    { value: "gemma3:12b", label: "Gemma3" }, 
+    { value: "llama3.2:3b", label: "Llama3.2" }, 
+    { value: "deepseek-r1:7b", label: "DeepSeek-R1" } 
   ];
 
   return (
