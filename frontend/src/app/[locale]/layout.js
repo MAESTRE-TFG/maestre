@@ -1,7 +1,7 @@
 "use client";
 import { routing } from '@/i18n/routing';
 import { NextIntlClientProvider } from 'next-intl';
-import NotFound from './not-found';
+import NotFound from '../not-found';
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { Alfa_Slab_One } from 'next/font/google';

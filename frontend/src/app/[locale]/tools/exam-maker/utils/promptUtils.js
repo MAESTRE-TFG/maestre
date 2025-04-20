@@ -1,8 +1,8 @@
-// Build the exam generation prompt with the specific format required
-export const buildExamPrompt = (formData, classrooms, fileContents, user = {}, t) => {
+export const buildExamPrompt = (formData, classrooms, fileContents, user = {}) => {
+
   // Find the selected classroom
   const selectedClassroom = classrooms.find(c => c.id.toString() === formData.classroom.toString());
-  const academicLevel = selectedClassroom ? selectedClassroom.academic_course : t("ExamMaker.prompts.unknown");
+  const academicLevel = selectedClassroom ? selectedClassroom.academic_course : "Desconocido";
 
   // Parse data for prompt construction
   const parsedData = {
@@ -15,55 +15,61 @@ export const buildExamPrompt = (formData, classrooms, fileContents, user = {}, t
   };
 
   // 1. Start with system instruction
-  let prompt = `${t("ExamMaker.prompts.systemInstruction")}
+  let prompt = `[INSTRUCCIÓN DEL SISTEMA - NO INCLUIR EN LA RESPUESTA]
+Eres un creador de exámenes experto con años de experiencia en diseño educativo y pedagogía.
+Tu tarea es crear un examen de alta calidad según las especificaciones a continuación.
+IMPORTANTE: Tu respuesta debe contener ÚNICAMENTE el examen. NO incluyas explicaciones, razonamientos o procesos de pensamiento sobre cómo creaste el examen.
 
-${t("ExamMaker.prompts.examSpecifications", {
-    subject: parsedData.subject,
-    examName: formData.examName || t("ExamMaker.defaultExamName"),
-    numQuestions: parsedData.numQuestions,
-    questionType: parsedData.questionType,
-    totalPoints: parsedData.totalPoints,
-    classroom: parsedData.classroom,
-    region: user.region || t("ExamMaker.prompts.unknown")
-  })}`;
+[ESPECIFICACIONES DEL EXAMEN]
+ASIGNATURA: ${parsedData.subject}
+NOMBRE DEL EXAMEN: ${formData.examName || "Examen"}
+NÚMERO DE PREGUNTAS: DEBE TENER EXACTAMENTE ${parsedData.numQuestions} PREGUNTAS
+TIPO DE PREGUNTAS: ${parsedData.questionType}
+PUNTOS TOTALES: ${parsedData.totalPoints}
+NIVEL EDUCATIVO: ${parsedData.classroom}
+REGIÓN: ${user.region || "Desconocido"}`;
 
   // 2. Include scoring style if not "equal"
   if (formData.scoringStyle !== "equal") {
-    prompt += `\n${t("ExamMaker.prompts.scoringStyle", {
-      customScoringDetails: parsedData.customScoringDetails
-    })}`;
+    prompt += `\nESTILO DE PUNTUACIÓN: Distribución personalizada como sigue: ${parsedData.customScoringDetails}`;
   }
 
   // 3. Add additional instructions
   if (formData.additionalInfo) {
-    prompt += `\n\n${t("ExamMaker.prompts.additionalInstructions", {
-      additionalInfo: formData.additionalInfo
-    })}`;
+    prompt += `\n\n[INSTRUCCIONES ADICIONALES]\n${formData.additionalInfo}`;
   }
 
   // 4. Add reference materials
-  prompt += `\n\n${t("ExamMaker.prompts.referenceMaterials", {
-    fileContents: fileContents || t("ExamMaker.prompts.noReferenceMaterials")
-  })}`;
+  prompt += `\n\n[MATERIALES DE REFERENCIA]\nPor favor, utiliza los siguientes materiales de referencia como guía para cómo podrían ser las preguntas y su contenido en tu examen:\n${fileContents || "No se proporcionaron materiales de referencia."}`;
 
   // 5. Add example template
-  prompt += `\n\n${t("ExamMaker.prompts.exampleTemplate")}`;
+  prompt += `\n\n[PLANTILLA DE EJEMPLO] (SOLO PARA REFERENCIA)
+Título: Examen de Ejemplo - Asignatura
+Subtítulo: 
+
+1) [Texto de la pregunta aquí]
+   A) ...
+   B) ...
+   C) ...
+   D) ...
+
+2) [Texto de la pregunta aquí]
+   Verdadero o Falso: ...`;
 
   // 6. Add formatting requirements
-  prompt += `\n\n${t("ExamMaker.prompts.formattingRequirements", {
-    classroom: parsedData.classroom,
-    region: user.region || t("ExamMaker.prompts.unknown"),
-    totalPoints: parsedData.totalPoints
-  })}`;
+  prompt += `\n\n[REQUISITOS DE FORMATO]
+NIVEL EDUCATIVO: ${parsedData.classroom}
+REGIÓN: ${user.region || "Desconocido"}
+PUNTOS TOTALES: ${parsedData.totalPoints}`;
 
   // 7. Add checklist
-  prompt += `\n\n${t("ExamMaker.prompts.checklist", {
-    numQuestions: parsedData.numQuestions,
-    totalPoints: parsedData.totalPoints
-  })}`;
+  prompt += `\n\n[LISTA DE VERIFICACIÓN]
+NÚMERO DE PREGUNTAS: ${parsedData.numQuestions}
+PUNTOS TOTALES: ${parsedData.totalPoints}`;
 
   // 8. Final instruction
-  prompt += `\n\n${t("ExamMaker.prompts.finalInstruction")}`;
+  prompt += `\n\n[INSTRUCCIÓN FINAL]
+Por favor, asegúrate de que el examen esté completo y cumpla con todas las especificaciones antes de finalizar.`;
 
   return prompt;
 };
