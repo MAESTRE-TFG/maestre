@@ -1,5 +1,6 @@
 import axios from "axios";
 import { getApiBaseUrl } from "@/lib/api";
+import { getLLMApiUrl } from "@/lib/api";
 
 // Upload PDF to classroom
 export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token, showAlert, t) => {
@@ -57,7 +58,7 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
 };
 
 // Process uploaded file
-export const processUploadedFile = async (file, token, showAlert, t) => {
+export const processUploadedFile = async (file, token, showAlert) => {
   if (!file.name.toLowerCase().endsWith(".docx")) {
     showAlert("error", t("alerts.unsupportedFileType"));
     return null;
@@ -73,7 +74,7 @@ export const processUploadedFile = async (file, token, showAlert, t) => {
 
   try {
     const response = await axios.post(
-      `${getApiBaseUrl()}:8000/api/materials/extract-text/`,
+      `${getApiBaseUrl()}/api/materials/extract-text/`,
       formData,
       {
         headers: {
@@ -107,7 +108,7 @@ export const processUploadedFile = async (file, token, showAlert, t) => {
 };
 
 // Process material from classroom
-export const processMaterialFromClassroom = async (material, token, showAlert, t) => {
+export const processMaterialFromClassroom = async (material, token, showAlert) => {
   if (!material.file.toLowerCase().endsWith(".docx")) {
     showAlert("error", t("alerts.unsupportedFileType"));
     return null;

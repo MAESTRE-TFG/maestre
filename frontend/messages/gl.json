@@ -94,7 +94,8 @@
     "error": {
       "emptyText": "Introduza o texto para traducir",
       "textTooLong": "O texto supera o límite de 5000 caracteres",
-      "translationFailed": "A tradución fallou. Por favor, téntao de novo."
+      "translationFailed": "A tradución fallou. Por favor, téntao de novo.",
+      "authRequired": "Debes iniciar sesión para acceder a esta ferramenta"
     },
     "source_text": "Texto de orixe",
     "target_text": "Tradución",
@@ -949,6 +950,8 @@
     "filterByClassroom": "Filtro por clase:",
     "deleteMaterial": "Eliminar material",
     "deleteMaterialConfirmation": "Estás seguro de que queres eliminar",
+    "deleteSelectedConfirmation": "Estás seguro de que queres eliminar os materiais seleccionados?",
+    "confirmDeletion": "Confirmar a eliminación",
     "cancel": "Cancelar",
     "delete": "Eliminar",
     "manageTags": "Xestionar etiquetas de",
@@ -999,6 +1002,12 @@
       "cancelButton": "Cancelar",
       "completeProfileButton": "Completar Perfil"
     },
+    "noClassroomModal": {
+      "no_classroom_modal_title": "Non hai aulas dispoñibles",
+      "no_classroom_modal_description": "Actualmente non tes aulas asociadas á túa conta. Por favor, crea ou únete a unha aula para continuar.",
+      "back_to_tools": "Volver ás Ferramentas",
+      "go_to_classrooms": "Ir ás Aulas"
+    },
     "categories": {
       "assessment": "Avaliación",
       "organization": "Organización", 
@@ -1046,5 +1055,179 @@
         ]
       }
     }
+  },
+
+
+  "LessonPlanner": {
+    "header": {
+      "title": "Planificador de Leccións",
+      "subtitle": "Crea plans de leccións personalizados con asistencia de IA",
+      "featureTitle": "Plans de Leccións Impulsados por IA",
+      "featureDescription": "Crea plans de leccións profesionais en segundos utilizando a nosa avanzada tecnoloxía de IA. Perfecto para docentes que desexan aforrar tempo mentres crean contido educativo de alta calidade.",
+      "teacherImageAlt": "Docente"
+    },
+    "alerts": {
+      "fetchClassroomsError": "Non se puideron obter as clases. Por favor, téntao de novo máis tarde.",
+      "fetchMaterialsError": "Non se puideron obter os materiais. Por favor, téntao de novo máis tarde.",
+      "fileProcessedSuccess": "Arquivo procesado con éxito!",
+      "unsupportedFileType": "Só se admiten arquivos DOCX para a xeración de plans de leccións.",
+      "materialProcessedSuccess": "Material procesado con éxito!",
+      "missingSubject": "Por favor, introduce unha materia.",
+      "missingClassroom": "Por favor, selecciona unha clase.",
+      "missingTheme": "Por favor, introduce un tema.",
+      "planGeneratedSuccess": "Plan de leccións xerado con éxito!",
+      "planGenerationFailed": "Erro ao xerar o plan de leccións",
+      "pdfSavedSuccess": "PDF gardado nos materiais de clase con éxito!",
+      "pdfDownloadedSuccess": "PDF descargado con éxito!",
+      "pdfSaveFailed": "Erro ao gardar o PDF: {error}",
+      "pdfDownloadFailed": "Erro ao descargar o PDF: {error}"
+    },
+    "fields": {
+      "subject": {
+        "label": "Materia",
+        "placeholder": "ex., Matemáticas, Ciencias, Historia"
+      },
+      "theme": {
+        "label": "Tema ou Tópico",
+        "placeholder": "ex., Fraccións, Fotosíntese, Segunda Guerra Mundial"
+      },
+      "planName": {
+        "label": "Nome do Plan",
+        "placeholder": "ex., Plan de Unidade de Fraccións"
+      },
+      "classroom": {
+        "label": "Aula",
+        "placeholder": "Selecciona unha aula"
+      },
+      "numLessons": {
+        "label": "Número de Leccións",
+        "placeholder": "1-10"
+      },
+      "playfulnessLevel": {
+        "label": "Nivel de Ludificación",
+        "veryStructured": "Moi Estruturado",
+        "structured": "Estruturado",
+        "balanced": "Equilibrado",
+        "playful": "Lúdico",
+        "veryPlayful": "Moi Lúdico"
+      },
+      "llmModel": {
+        "label": "Modelo de IA",
+        "placeholder": "Selecciona un modelo de IA"
+      },
+      "additionalInfo": {
+        "label": "Información Adicional",
+        "placeholder": "Engade requisitos específicos, necesidades dos estudantes ou preferencias de ensino"
+      }
+    },
+    "buttons": {
+      "generatePlan": "Xerar Plan de Leccións",
+      "generating": "Xerando...",
+      "uploadFile": "Subir Arquivo",
+      "browseClassroomMaterials": "Explorar Materiais da Aula"
+    },
+    "fileUpload": {
+      "title": "Subir Materiais",
+      "description": "Sube un arquivo ou selecciona dos teus materiais de clase para axudar a xerar un plan de leccións máis relevante",
+      "dragDrop": "Arrastra e solta arquivos aquí ou fai clic para explorar",
+      "supportedFormats": "Formato soportado: DOCX",
+      "uploadedFiles": "Arquivos Subidos",
+      "processing": "Procesando arquivo..."
+    },
+    "materialsModal": {
+      "title": "Seleccionar Material de Clase",
+      "searchPlaceholder": "Buscar materiais...",
+      "noMaterials": "Non se atoparon materiais",
+      "close": "Pechar"
+    },
+    "planResultModal": {
+      "defaultTitle": "Plan de Leccións",
+      "tabs": {
+        "plan": "Plan",
+        "metadata": "Metadatos"
+      },
+      "metadata": {
+        "subject": "Materia",
+        "theme": "Tema",
+        "numLessons": "Número de Leccións",
+        "playfulnessLevel": "Nivel de Ludificación",
+        "generatedWith": "Xerado con"
+      },
+      "buttons": {
+        "copy": "Copiar ao Portapapeis",
+        "copying": "Copiando...",
+        "download": "Descargar PDF",
+        "downloading": "Descargando...",
+        "uploadToClassroom": "Gardar na Aula",
+        "uploading": "Gardando..."
+      },
+      "copySuccess": "Copiado ao portapapeis!",
+      "copyError": "Erro ao copiar ao portapapeis",
+      "downloadSuccess": "PDF descargado con éxito!",
+      "downloadError": "Erro ao descargar o PDF",
+      "uploadSuccess": "Gardado na aula con éxito!",
+      "uploadError": "Erro ao gardar na aula"
+    },
+    "prompts": {
+      "intro": "Crea un plan de leccións detallado baseado na seguinte información:",
+      "teacherInfo": "Información do Docente",
+      "teacherName": "Nome do Docente",
+      "teacherEmail": "Email do Docente",
+      "classroomInfo": "Información da Aula",
+      "classroomName": "Nome da Aula",
+      "academicCourse": "Curso Académico",
+      "educationLevel": "Nivel Educativo",
+      "studentCount": "Número de Estudantes",
+      "planDetails": "Detalles do Plan",
+      "subject": "Materia",
+      "theme": "Tema",
+      "numLessons": "Número de Leccións",
+      "playfulnessLevel": "Nivel de Ludificación",
+      "additionalInfo": "Información Adicional",
+      "materialContent": "Contido do Material de Referencia",
+      "finalInstructions": "Por favor, crea un plan de leccións detallado que inclúa obxectivos, materiais necesarios, actividades e estratexias de avaliación para cada lección. O plan debe ser apropiado para o nivel educativo e incorporar métodos de ensino atractivos.",
+      "playfulness": {
+        "veryStructured": "Enfoque moi estruturado con actividades formais",
+        "structured": "Enfoque estruturado con algúns elementos interactivos",
+        "balanced": "Mestura equilibrada de actividades estruturadas e lúdicas",
+        "veryPlayful": "Enfoque moi lúdico con xogos e actividades creativas"
+      }
+    },
+    "planResultModal": {
+      "defaultTitle": "Plan de Lección",
+      "noPlanAvailable": "Non hai plan dispoñible",
+      "copySuccess": "Copiado ao portapapeis!",
+      "copyError": "Erro ao copiar ao portapapeis",
+      "downloadSuccess": "PDF descargado con éxito!",
+      "downloadError": "Erro ao descargar o PDF",
+      "uploadSuccess": "Gardado na aula con éxito!",
+      "uploadError": "Erro ao gardar na aula",
+      "tabs": {
+        "plan": "Plan",
+        "metadata": "Metadatos"
+      },
+      "metadata": {
+        "subject": "Materia",
+        "theme": "Tema",
+        "numLessons": "Número de Leccións",
+        "playfulnessLevel": "Nivel de Xogo",
+        "generatedWith": "Xerado con"
+      },
+      "buttons": {
+        "copy": "Copiar ao Portapapeis",
+        "copying": "Copiando...",
+        "download": "Descargar PDF",
+        "downloading": "Descargando...",
+        "uploadToClassroom": "Gardar na Aula",
+        "uploading": "Gardando..."
+      }
+    }
+  },
+
+
+  "NotFound": {
+    "title": "404",
+    "message": "Ups! Parece que te aventuraches en territorio descoñecido.",
+    "returnButton": "Volver ao inicio"
   }
 }

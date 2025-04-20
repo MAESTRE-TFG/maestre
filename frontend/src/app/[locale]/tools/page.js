@@ -298,8 +298,9 @@ const ToolList = ( params ) => {
       </Modal>
 
       {/* Profile Completion Modal */}
+
       <Modal isOpen={showProfileModal} onClose={closeProfileModal}>
-        <div title="  ">
+        <div title=" " className="max-w-lg mx-auto w-full">
           <div className={cn("p-6", theme === "dark" ? "bg-purple-600" : "bg-purple-500")}>
             <div className="flex items-center gap-3">
               <div className="p-2 bg-white/20 rounded-full">
