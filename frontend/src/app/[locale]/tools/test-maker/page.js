@@ -12,15 +12,16 @@ import {
   processMaterialFromClassroom,
   generateExam
 } from "../exam-maker/utils/apiUtils";
-import ExamForm from "../exam-maker/components/ExamForm";
-import MaterialsModal from "../exam-maker/components/MaterialsModal";
-import ExamResultModal from "../exam-maker/components/ExamResultModal";
+import ExamForm from "../components/ExamForm";
+import MaterialsModal from "../components/MaterialsModal";
+import ExamResultModal from "../components/ExamResultModal";
 import axios from "axios";
 import Image from "next/image";
 import { IconFileText, IconBrain } from "@tabler/icons-react";
 import { buildExamPrompt } from "../exam-maker/utils/promptUtils";
 import { getApiBaseUrl } from "@/lib/api";
 import { useTranslations } from "next-intl";
+import NoClassroomModal from "../components/no-classroom-modal";
 
 const ExamMaker = ({ params }) => {
   const t = useTranslations("TestMaker");
@@ -50,6 +51,7 @@ const ExamMaker = ({ params }) => {
   const [isProcessingFile, setIsProcessingFile] = useState(false);
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const fileContentsRef = useRef("");
+  const [showNoClassroomModal, setShowNoClassroomModal] = useState(false);
 
   // Fetch classrooms on component mount
   useEffect(() => {
@@ -71,6 +73,9 @@ const ExamMaker = ({ params }) => {
 
         if (Array.isArray(response.data)) {
           setClassrooms(response.data);
+          if (response.data.length === 0) {
+            setShowNoClassroomModal(true);
+          }
         } else {
             addAlert("error", t("alerts.fetchClassroomsError"));
         }
@@ -244,6 +249,13 @@ const ExamMaker = ({ params }) => {
             />
           ))}
         </div>
+
+        {/* No Classroom Modal */}
+        <NoClassroomModal
+          isOpen={showNoClassroomModal}
+          onClose={() => setShowNoClassroomModal(false)}
+          params={params}
+        />
 
         <div className="relative w-full flex-1 flex flex-col items-center py-12">
           {/* Header Section */}

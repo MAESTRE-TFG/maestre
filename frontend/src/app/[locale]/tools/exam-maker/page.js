@@ -12,9 +12,9 @@ import {
   processMaterialFromClassroom,
   generateExam
 } from "./utils/apiUtils";
-import ExamForm from "./components/ExamForm";
-import MaterialsModal from "./components/MaterialsModal";
-import ExamResultModal from "./components/ExamResultModal";
+import ExamForm from "../components/ExamForm";
+import MaterialsModal from "../components/MaterialsModal";
+import ExamResultModal from "../components/ExamResultModal";
 import axios from "axios";
 import Image from "next/image";
 import { IconFileText, IconBrain } from "@tabler/icons-react";
@@ -56,7 +56,7 @@ const ExamMaker = ({ params }) => {
 
   // Move addAlert inside the component so it can access t
   const addAlert = (type, message) => {
-    const id = Date.now();
+    const id = Date.now() + Math.random().toString(36).substring(2, 9);
     setAlerts(prev => [...prev, { id, type, message }]);
     setTimeout(() => {
       setAlerts(prev => prev.filter(alert => alert.id !== id));
@@ -128,15 +128,6 @@ const ExamMaker = ({ params }) => {
       fetchUserMaterials();
     }
   }, [classrooms, t]);
-
-  // In your addAlert function, modify it to use a more unique key
-  const addAlert = (type, message) => {
-    const id = Date.now() + Math.random().toString(36).substring(2, 9);
-    setAlerts(prev => [...prev, { id, type, message }]);
-    setTimeout(() => {
-      setAlerts(prev => prev.filter(alert => alert.id !== id));
-    }, 5000);
-  };
   
   // And in your alert rendering code:
   {alerts.map(alert => (
