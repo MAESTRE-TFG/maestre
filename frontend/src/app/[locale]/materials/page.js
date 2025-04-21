@@ -208,7 +208,7 @@ const MaterialsList = () => {
         classroom: material.classroom || null
       })));
     } catch (error) {
-      const errorMessage = error.response?.data?.error || t("fetchMaterialsError");
+      const errorMessage = error.response?.data?.error || t("alerts.fetchMaterialsError");
       addAlert("error", errorMessage);
     } finally {
       setIsLoading(false);

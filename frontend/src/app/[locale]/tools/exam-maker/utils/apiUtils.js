@@ -10,7 +10,7 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
   }
 
   if (!pdfBlob || !(pdfBlob instanceof Blob)) {
-    showAlert("error", "Failed to save PDF: Unknown error");
+    showAlert("error", "Invalid PDF data");
     return false;
   }
 
@@ -21,7 +21,7 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
 
   try {
     if (!token) {
-      showAlert("error", "Failed to fetch classrooms");
+      showAlert("error", "Authentication required");
       return false;
     }
 
@@ -32,7 +32,7 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
       },
     });
 
-    showAlert("success", "PDF saved successfully");
+    showAlert("success", "PDF uploaded successfully");
     return true;
   } catch (error) {
     if (error.response) {
@@ -40,17 +40,17 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
         const errorMsg =
           error.response.data && error.response.data.error
             ? error.response.data.error
-            : "Failed to save PDF: Unknown error";
+            : "Unknown error occurred";
         showAlert("error", errorMsg);
       } else if (error.response.status === 401) {
-        showAlert("error", "Failed to fetch classrooms");
+        showAlert("error", "Authentication required");
       } else {
-        showAlert("error", `Failed to save PDF: ${error.response.status} - ${error.response.statusText}`);
+        showAlert("error", `${error.response.status} - ${error.response.statusText}`);
       }
     } else if (error.request) {
-      showAlert("error", "Failed to fetch materials");
+      showAlert("error", "Network error. Please check your connection.");
     } else {
-      showAlert("error", `Failed to save PDF: ${error.message}`);
+      showAlert("error", error.message);
     }
     return false;
   }
@@ -59,12 +59,12 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
 // Process uploaded file
 export const processUploadedFile = async (file, token, showAlert) => {
   if (!file.name.toLowerCase().endsWith(".docx")) {
-    showAlert("error", "Unsupported file type");
+    showAlert("error", "Only DOCX files are supported");
     return null;
   }
 
   if (file.size > 5 * 1024 * 1024) {
-    showAlert("error", "File processed successfully");
+    showAlert("error", "File size exceeds 5MB limit");
     return null;
   }
 
@@ -91,11 +91,17 @@ export const processUploadedFile = async (file, token, showAlert) => {
         id: Date.now(),
       };
     } else {
-      showAlert("error", "Failed to fetch materials");
+      showAlert("error", "Failed to process file");
       return null;
     }
   } catch (error) {
-    showAlert("error", "Failed to fetch materials");
+    if (error.response) {
+      showAlert("error", "Server error while processing file");
+    } else if (error.request) {
+      showAlert("error", "Network error. Please check your connection.");
+    } else {
+      showAlert("error", error.message);
+    }
     return null;
   }
 };
@@ -103,7 +109,7 @@ export const processUploadedFile = async (file, token, showAlert) => {
 // Process material from classroom
 export const processMaterialFromClassroom = async (material, token, showAlert) => {
   if (!material.file.toLowerCase().endsWith(".docx")) {
-    showAlert("error", "Unsupported file type");
+    showAlert("error", "Only DOCX files are supported");
     return null;
   }
 
@@ -131,34 +137,58 @@ export const processMaterialFromClassroom = async (material, token, showAlert) =
         materialId: material.id,
       };
     } else {
-      showAlert("error", "Failed to fetch materials");
+      showAlert("error", "Failed to process material");
       return null;
     }
   } catch (error) {
-    showAlert("error", "Failed to fetch materials");
+    if (error.response) {
+      showAlert("error", "Server error while processing material");
+    } else if (error.request) {
+      showAlert("error", "Network error. Please check your connection.");
+    } else {
+      showAlert("error", error.message);
+    }
     return null;
   }
 };
 
 // Generate exam using Ollama
-export const generateExam = async (prompt, model = "llama3.2:3b", showAlert) => {
+export const generateExam = async (prompt, model, showAlert) => {
   try {
     const response = await axios.post(`${getLLMApiUrl()}/api/generate`, {
       model: model,
       prompt: prompt,
       stream: false,
-      temperature: 0.7,
+      temperature: 0.7
+    }, {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      withCredentials: false
     });
 
-    if (response.data && response.data.response) {
+    if (response.data?.response) {
       showAlert("success", "Exam generated successfully");
       return response.data.response;
-    } else {
-      showAlert("error", "Failed to generate exam");
-      return null;
     }
-  } catch (error) {
     showAlert("error", "Failed to generate exam");
+    return null;
+    
+  } catch (error) {
+    console.error('Ollama API Error:', error);
+    let errorMessage = "Failed to generate exam";
+    
+    if (error.code === 'ECONNREFUSED') {
+      errorMessage = "Ollama service not running. Please start Ollama first.";
+    } else if (error.response?.status === 404) {
+      errorMessage = "Ollama API endpoint not found. Check your Ollama version.";
+    } else if (error.message.includes('Network Error') || error.message.includes('CORS')) {
+      errorMessage = "CORS issue detected. Please start Ollama with: 'ollama serve --cors'";
+    } else {
+      errorMessage = `Failed to generate exam: ${error.message}`;
+    }
+
+    showAlert("error", errorMessage);
     return null;
   }
 };

@@ -5,26 +5,26 @@ import { useTheme } from "@/components/theme-provider";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { useRouter } from "next/navigation";
 import Alert from "@/components/ui/Alert";
-import { formatExamText, createPDFVersion } from "./utils/pdfUtils";
+import { formatExamText, createPDFVersion } from "../exam-maker/utils/pdfUtils";
 import {
   uploadPDFToClassroom,
   processUploadedFile,
   processMaterialFromClassroom,
   generateExam
-} from "./utils/apiUtils";
+} from "../exam-maker/utils/apiUtils";
 import ExamForm from "../components/ExamForm";
 import MaterialsModal from "../components/MaterialsModal";
 import ExamResultModal from "../components/ExamResultModal";
 import axios from "axios";
 import Image from "next/image";
 import { IconFileText, IconBrain } from "@tabler/icons-react";
-import { buildExamPrompt } from "./utils/promptUtils";
+import { buildExamPrompt } from "../exam-maker/utils/promptUtils";
 import { getApiBaseUrl } from "@/lib/api";
 import { useTranslations } from "next-intl";
 import NoClassroomModal from "../components/no-classroom-modal";
 
 const ExamMaker = ({ params }) => {
-  const t = useTranslations("ExamMaker");
+  const t = useTranslations("TestMaker");
   const { theme } = useTheme();
   const locale = params?.locale || "es";
   const router = useRouter();
@@ -41,7 +41,8 @@ const ExamMaker = ({ params }) => {
     additionalInfo: "",
     totalPoints: 10,
     llmModel: "llama3.2:3b",
-    examName: ""
+    examName: "",
+    numAnswerOptions: 4, // Default value for answer options
   });
   const [isGenerating, setIsGenerating] = useState(false);
   const [examResult, setExamResult] = useState(null);
@@ -52,16 +53,6 @@ const ExamMaker = ({ params }) => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const fileContentsRef = useRef("");
   const [showNoClassroomModal, setShowNoClassroomModal] = useState(false);
-
-
-  // Move addAlert inside the component so it can access t
-  const addAlert = (type, message) => {
-    const id = Date.now() + Math.random().toString(36).substring(2, 9);
-    setAlerts(prev => [...prev, { id, type, message }]);
-    setTimeout(() => {
-      setAlerts(prev => prev.filter(alert => alert.id !== id));
-    }, 5000);
-  };
 
   // Fetch classrooms on component mount
   useEffect(() => {
@@ -128,23 +119,21 @@ const ExamMaker = ({ params }) => {
       fetchUserMaterials();
     }
   }, [classrooms, t]);
-  
-  // And in your alert rendering code:
-  {alerts.map(alert => (
-    <Alert
-      key={alert.id}
-      type={alert.type}
-      message={alert.message}
-      onClose={() => setAlerts(prev => prev.filter(a => a.id !== alert.id))}
-    />
-  ))}
+
+  const addAlert = (type, message) => {
+    const id = `${Date.now()}-${Math.random()}`;
+    setAlerts((prev) => [...prev, { id, type, message }]);
+    setTimeout(() => {
+      setAlerts((prev) => prev.filter((alert) => alert.id !== id));
+    }, 5000);
+  };
 
   // Form change handler
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { name, value, type } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: type === "number" ? parseInt(value) || 0 : value
+      [name]: type === "number" ? parseInt(value) || 0 : value,
     }));
   };
 
@@ -220,7 +209,8 @@ const ExamMaker = ({ params }) => {
       const user = userString ? JSON.parse(userString) : {};
 
       // Build the prompt using the utility function
-      const prompt = buildExamPrompt(formData, classrooms, fileContentsRef.current, user, locale);
+      // Pass locale instead of t function
+      const prompt = buildExamPrompt(formData, classrooms, fileContentsRef.current, user, t);
 
       // Generate the exam
       const token = localStorage.getItem("authToken");
@@ -230,7 +220,6 @@ const ExamMaker = ({ params }) => {
       setShowModal(true);
       addAlert("success", t("alerts.examGeneratedSuccess"));
     } catch (error) {
-      console.error("Error generating exam:", error);
       addAlert("error", `${t("alerts.examGenerationFailed")}: ${error.message}`);
     } finally {
       setIsGenerating(false);
@@ -307,10 +296,10 @@ const ExamMaker = ({ params }) => {
                   </p>
                 </div>
 
-                <div className="relative w-full h-[700px] -mt-16 flex items-center justify-center">
+                <div className="relative w-full h-[600px] -mt-16 flex items-center justify-center">
                   <div className="animate-float relative w-96 h-full">
                     <Image
-                      src="/static/teachers/6.webp"
+                      src="/static/teachers/4.webp"
                       alt={t("header.teacherImageAlt")}
                       layout="fill"
                       objectFit="contain"

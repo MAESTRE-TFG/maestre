@@ -141,6 +141,133 @@
     "translation_history_description": "Tu historial de traducciones aparecerá aquí"
   },
 
+  "TestMaker": {
+    "header": {
+      "title": "Generador de Tests",
+      "subtitle": "Crea tests personalizados con IA",
+      "featureTitle": "Tests Impulsados por IA",
+      "featureDescription": "Crea tests profesionales en segundos utilizando nuestra avanzada tecnología de IA. Perfecto para docentes que desean ahorrar tiempo mientras crean evaluaciones de alta calidad.",
+      "teacherImageAlt": "Docente"
+    },
+    "alerts": {
+      "fetchClassroomsError": "No se pudieron obtener las clases. Por favor, inténtalo de nuevo más tarde.",
+      "fetchMaterialsError": "No se pudieron obtener los materiales. Por favor, inténtalo de nuevo más tarde.",
+      "fileProcessedSuccess": "¡Archivo procesado con éxito!",
+      "unsupportedFileType": "Solo se admiten archivos DOCX para la generación de tests.",
+      "materialProcessedSuccess": "¡Material procesado con éxito!",
+      "missingSubject": "Por favor, introduce una asignatura.",
+      "missingClassroom": "Por favor, selecciona una clase.",
+      "examGeneratedSuccess": "Test generado con éxito!",
+      "examGenerationFailed": "Error al generar el test",
+      "pdfSavedSuccess": "¡PDF guardado en los materiales del aula con éxito!",
+      "pdfDownloadedSuccess": "¡PDF descargado con éxito!",
+      "pdfSaveFailed": "Error al guardar el PDF: {error}",
+      "pdfDownloadFailed": "Error al descargar el PDF: {error}",
+      "unknownError": "Error desconocido"
+    },
+    "selectClassroom": "Clase (Nivel de Dificultad)",
+    "selectClassroomPlaceholder": "Selecciona una clase",
+    "error": "Error generando test",
+    "success": "Test generado con éxito",
+    "fields": {
+      "subject": {
+        "label": "Asignatura",
+        "placeholder": "Matemáticas, Ciencias, Historia, etc."
+      },
+      "examName": {
+        "label": "Nombre del Test",
+        "placeholder": "Test de Mitad de Curso, Prueba Final, Quiz del Capítulo 5, etc."
+      },
+      "numQuestions": {
+        "label": "Número de Preguntas"
+      },
+      "totalPoints": {
+        "label": "Puntos Máximos"
+      },
+      "customScoringDetails": {
+        "label": "Detalles de Puntuación Personalizada",
+        "placeholder": "Ej., Preguntas 1-5: 2 puntos cada una, Preguntas 6-10: 3 puntos cada una"
+      },
+      "additionalInfo": {
+        "label": "Instrucciones Adicionales (Opcional)",
+        "placeholder": "Añade instrucciones o requisitos específicos para el test..."
+      },
+      "referenceMaterials": {
+        "label": "Materiales de Referencia",
+        "upload": "Sube un archivo",
+        "dragAndDrop": " o arrastra y suelta",
+        "fileRequirements": "Solo archivos .docx (máx. 5MB)",
+        "or": "o",
+        "selectFromClassroom": "Seleccionar de Materiales del Aula",
+        "fromClassroom": "Desde el Aula",
+        "processing": "Procesando archivo..."
+      },
+      "llmModel": {
+        "label": "Modelo de IA",
+        "options": {
+          "llama": "Llama 3.2 3B",
+          "deepseek": "DeepSeek R1"
+        }
+      },
+      "questionType": {
+        "label": "Tipo de Pregunta",
+        "options": {
+          "multipleChoice": "Opción múltiple",
+          "singleChoice": "Opción simple",
+          "orderingChoice": "Ordenamiento",
+          "mixed":"Mixto (Varios Tipos)"
+        }
+      },
+      "scoringStyle": {
+        "label": "Estilo de Puntuación",
+        "options": {
+          "equal": "Puntos Iguales",
+          "custom": "Distribución Personalizada"
+        }
+      }
+    },
+    "buttons": {
+      "generateExam": "Generar Test",
+      "generating": "Generando Test...",
+      "close": "Cerrar",
+      "downloadPDF": "Descargar PDF",
+      "saveToClassroom": "Guardar en el Aula",
+      "cancel": "Cancelar"
+    },
+    "modal": {
+      "title": "Test Generado"
+    },
+    "defaultExamName": "Test",
+    "materialsModal": {
+      "title": "Seleccionar Material del Aula",
+      "noMaterials": "No se encontraron materiales en tus aulas.",
+      "uploadPrompt": "Primero sube materiales a tus aulas."
+    },
+    "pdf": {
+      "title": "Test",
+      "footer": "Generado con el Generador de Test de Maestre AI",
+      "page": "Página",
+      "of": "de"
+    },
+    "prompts": {
+      "systemInstruction": "[INSTRUCCIÓN DEL SISTEMA - NO INCLUIR EN LA RESPUESTA]\nEres un creador de tests experto con años de experiencia en diseño educativo y pedagogía.\nTu tarea es crear un test de alta calidad según las especificaciones a continuación.\nIMPORTANTE: Tu respuesta debe contener ÚNICAMENTE el test. NO incluyas explicaciones, razonamientos o procesos de pensamiento sobre cómo creaste el test.",
+      "examSpecifications": "[ESPECIFICACIONES DEL TEST]\nASIGNATURA: {{subject}}\nNOMBRE DEL TEST: {{examName}}\nNÚMERO DE PREGUNTAS: DEBE TENER EXACTAMENTE {{numQuestions}} PREGUNTAS\nTIPO DE PREGUNTAS: {{questionType}}\nPUNTOS TOTALES: {{totalPoints}}\nNIVEL EDUCATIVO: {{classroom}}\nREGIÓN: {{region}}",
+      "scoringStyle": "ESTILO DE PUNTUACIÓN: Distribución personalizada como sigue: {{customScoringDetails}}",
+      "additionalInstructions": "[INSTRUCCIONES ADICIONALES]\n{{additionalInfo}}",
+      "referenceMaterials": "[MATERIALES DE REFERENCIA]\nPor favor, utiliza los siguientes materiales de referencia como guía para cómo podrían ser las preguntas y su contenido en tu test:\n{{fileContents}}",
+      "noReferenceMaterials": "No se proporcionaron materiales de referencia.",
+      "exampleTemplate": "[PLANTILLA DE EJEMPLO] (SOLO PARA REFERENCIA)\nTítulo: Test de Ejemplo - Asignatura\nSubtítulo: \n\n1) [Texto de la pregunta aquí]\n   A) ...\n   B) ...\n   C) ...\n   D) ...\n\n2) [Texto de la pregunta aquí]\n   Verdadero o Falso: ...",
+      "formattingRequirements": "[REQUISITOS DE FORMATO]\n1. El test DEBE estar en inglés\n2. La respuesta DEBE contener ÚNICAMENTE el test, sin texto adicional ni comentarios.\n3. Incluye un título y subtítulo claros con el nombre del test y la asignatura.\n4. Numera todas las preguntas de forma secuencial.\n5. Para preguntas de opción múltiple, usa opciones etiquetadas como A), B), C), etc.\n6. Indica claramente el valor en puntos de cada pregunta.\n7. Asegúrate de un espaciado adecuado entre las preguntas.\n8. Formatea el test de manera limpia y profesional, adecuado para uso en el aula.\n9. Asegúrate de que el test siga los estándares educativos para el nivel {{classroom}} en {{region}}.\n10. Asegúrate de que los puntos totales sumen exactamente {{totalPoints}}.\n11. Usa un formato adecuado para cada tipo de pregunta (por ejemplo, opción múltiple con opciones, verdadero/falso con declaraciones claras).\n12. Incluye encabezados claros de sección si mezclas diferentes tipos de preguntas.\n13. NO incluyas razonamientos, planificación o procesos de pensamiento en tu respuesta.\n14. NO expliques cómo creaste el test ni qué consideraciones tomaste.\n15. SOLO incluye el contenido final del test, comenzando directamente con el título.",
+      "checklist": "[LISTA DE VERIFICACIÓN - NO INCLUIR EN LA RESPUESTA]\n1) ¿Incluiste solo el test y nada más?\n2) ¿Incluiste exactamente {{numQuestions}} preguntas?\n3) ¿Los puntos totales suman exactamente {{totalPoints}}?\n4) ¿Hay detalles que no están respaldados por las referencias?\n5) ¿Seguiste estrictamente todos los requisitos de formato?\n6) ¿Eliminaste TODO razonamiento y explicaciones de tu respuesta?",
+      "finalInstruction": "[INSTRUCCIÓN FINAL - NO INCLUIR EN LA RESPUESTA]\nAhora, produce un test completo siguiendo todas las especificaciones y requisitos anteriores.\nSi falta alguna información, indícalo claramente en lugar de inventar detalles.\nCRÍTICO: Tu respuesta debe comenzar con el título del test y contener ÚNICAMENTE el contenido del test. NO incluyas explicaciones, razonamientos o procesos de pensamiento.",
+      "unknown": "Desconocido"
+    },
+    "AnswerOptionsSelector": {
+      "label": "Número de opciones por pregunta",
+      "helperText": "Escolle un número entre 3 e 10."
+    }
+  },
+
 
   "ExamMaker": {
     "header": {
@@ -194,7 +321,7 @@
       "referenceMaterials": {
         "label": "Materiales de Referencia",
         "upload": "Sube un archivo",
-        "dragAndDrop": " o arrastra y suelta",
+        "dragAndDrop": "o arrastra y suelta",
         "fileRequirements": "Solo archivos .docx (máx. 5MB)",
         "or": "o",
         "selectFromClassroom": "Seleccionar de Materiales del Aula",
@@ -432,6 +559,7 @@
     "dragOrDrop": "Arrastra o suelta tus archivos aquí o haz clic para subirlos",
     "supportedFormats": "PDF, DOC, DOCX, PNG, JPG, PPTX o TXT",
     "browseFiles": "Exportar archivos",
+    "removeFile": "Eliminar archivo",
     "alerts": {
       "editSuccess": "¡Nombre del material actualizado con éxito!",
       "editError": "Error al actualizar el nombre del material. Por favor, inténtalo de nuevo.",

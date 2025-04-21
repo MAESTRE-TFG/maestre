@@ -4,6 +4,7 @@ import { useTranslations } from "next-intl";
 
 const QuestionTypeSelector = ({ value, onChange, theme }) => {
   const t = useTranslations("ExamMaker");
+  const t2 = useTranslations("TestMaker");
 
   const questionTypes = [
     { value: "short_answer", label: t("fields.questionType.options.shortAnswer") }, 
@@ -15,6 +16,13 @@ const QuestionTypeSelector = ({ value, onChange, theme }) => {
     { value: "text_analysis", label: t("fields.questionType.options.textAnalysis") }, 
     { value: "image_analysis", label: t("fields.questionType.options.imageAnalysis") }, 
     { value: "mixed", label: t("fields.questionType.options.mixed") } 
+  ];
+
+  const testQuestionTypes = [
+    { value: "multiple_choice", label: t2("fields.questionType.options.multipleChoice") },
+    { value: "single_choice", label: t2("fields.questionType.options.singleChoice") },
+    { value: "ordering_choice", label: t2("fields.questionType.options.orderingChoice") },
+    { value: "mixed_choice", label: t2("fields.questionType.options.mixed") }
   ];
 
   return (
@@ -34,11 +42,18 @@ const QuestionTypeSelector = ({ value, onChange, theme }) => {
           onChange={onChange}
           className="appearance-none"
         >
-          {questionTypes.map(type => (
-            <option key={type.value} value={type.value}>
-              {type.label}
-            </option>
-          ))}
+          {window.location.pathname.includes('test-maker') 
+            ? testQuestionTypes.map(type => (
+                <option key={type.value} value={type.value}>
+                  {type.label}
+                </option>
+              ))
+            : questionTypes.map(type => (
+                <option key={type.value} value={type.value}>
+                  {type.label}
+                </option>
+              ))
+          }
         </select>
         <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3">
           <svg xmlns="http://www.w3.org/2000/svg" className={`h-4 w-4 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">

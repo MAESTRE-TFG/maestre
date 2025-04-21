@@ -9,14 +9,14 @@ const ExamResultModal = ({
   createPDFVersion, 
   uploadPDFToClassroom, 
   formData,
-  addAlert 
+  addAlert
 }) => {
   const { theme } = useTheme();
   const t = useTranslations("ExamMaker");
 
   const handleSavePDF = async () => {
     try {
-      const doc = await createPDFVersion(examResult);
+      const doc = await createPDFVersion(examResult, formData.subject, t);
       const pdfBlob = doc.output('blob');
       
       // Create a filename based on subject and exam name, limited to 30 characters
@@ -28,7 +28,7 @@ const ExamResultModal = ({
       }
       
       const token = localStorage.getItem('authToken');
-      const success = await uploadPDFToClassroom(pdfBlob, formData.classroom, fileName, token);
+      const success = await uploadPDFToClassroom(pdfBlob, formData.classroom, fileName, token, addAlert, t);
       
       if (success) {
         addAlert("success", t("alerts.pdfSavedSuccess"));
@@ -40,7 +40,7 @@ const ExamResultModal = ({
 
   const handleDownloadPDF = async () => {
     try {
-      const doc = await createPDFVersion(examResult);
+      const doc = await createPDFVersion(examResult, formData.subject, t);
       let fileName = `${formData.subject || t("defaultExamName")}.pdf`.replace(/\s+/g, '_');
       
       if (fileName.length > 30) {
