@@ -3,15 +3,14 @@ import { getApiBaseUrl } from "@/lib/api";
 import { getLLMApiUrl } from "@/lib/api";
 
 // Upload PDF to classroom
-export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token, showAlert, t) => {
-
+export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token, showAlert) => {
   if (!classroomId) {
-    showAlert("error", t("alerts.missingClassroom"));
+    showAlert("error", "Missing classroom");
     return false;
   }
 
   if (!pdfBlob || !(pdfBlob instanceof Blob)) {
-    showAlert("error", t("alerts.pdfSaveFailed", { error: t("alerts.unknownError") })); 
+    showAlert("error", "Invalid PDF data");
     return false;
   }
 
@@ -22,7 +21,7 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
 
   try {
     if (!token) {
-      showAlert("error", t("alerts.fetchClassroomsError"));
+      showAlert("error", "Authentication required");
       return false;
     }
 
@@ -33,7 +32,7 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
       },
     });
 
-    showAlert("success", t("alerts.pdfSavedSuccess"));
+    showAlert("success", "PDF uploaded successfully");
     return true;
   } catch (error) {
     if (error.response) {
@@ -41,17 +40,17 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
         const errorMsg =
           error.response.data && error.response.data.error
             ? error.response.data.error
-            : t("alerts.pdfSaveFailed", { error: t("alerts.unknownError") });
+            : "Unknown error occurred";
         showAlert("error", errorMsg);
       } else if (error.response.status === 401) {
-        showAlert("error", t("alerts.fetchClassroomsError"));
+        showAlert("error", "Authentication required");
       } else {
-        showAlert("error", t("alerts.pdfSaveFailed", { error: `${error.response.status} - ${error.response.statusText}` }));
+        showAlert("error", `${error.response.status} - ${error.response.statusText}`);
       }
     } else if (error.request) {
-      showAlert("error", t("alerts.fetchMaterialsError"));
+      showAlert("error", "Network error. Please check your connection.");
     } else {
-      showAlert("error", t("alerts.pdfSaveFailed", { error: error.message }));
+      showAlert("error", error.message);
     }
     return false;
   }
@@ -60,12 +59,12 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
 // Process uploaded file
 export const processUploadedFile = async (file, token, showAlert) => {
   if (!file.name.toLowerCase().endsWith(".docx")) {
-    showAlert("error", t("alerts.unsupportedFileType"));
+    showAlert("error", "Only DOCX files are supported");
     return null;
   }
 
   if (file.size > 5 * 1024 * 1024) {
-    showAlert("error", t("alerts.fileProcessedSuccess"));
+    showAlert("error", "File size exceeds 5MB limit");
     return null;
   }
 
@@ -85,23 +84,23 @@ export const processUploadedFile = async (file, token, showAlert) => {
     );
 
     if (response.data && response.data.text) {
-      showAlert("success", t("alerts.fileProcessedSuccess"));
+      showAlert("success", "File processed successfully");
       return {
         name: file.name,
         content: response.data.text,
         id: Date.now(),
       };
     } else {
-      showAlert("error", t("alerts.fetchMaterialsError"));
+      showAlert("error", "Failed to process file");
       return null;
     }
   } catch (error) {
     if (error.response) {
-      showAlert("error", t("alerts.fetchMaterialsError"));
+      showAlert("error", "Server error while processing file");
     } else if (error.request) {
-      showAlert("error", t("alerts.fetchMaterialsError"));
+      showAlert("error", "Network error. Please check your connection.");
     } else {
-      showAlert("error", t("alerts.fetchMaterialsError"));
+      showAlert("error", error.message);
     }
     return null;
   }
@@ -110,7 +109,7 @@ export const processUploadedFile = async (file, token, showAlert) => {
 // Process material from classroom
 export const processMaterialFromClassroom = async (material, token, showAlert) => {
   if (!material.file.toLowerCase().endsWith(".docx")) {
-    showAlert("error", t("alerts.unsupportedFileType"));
+    showAlert("error", "Only DOCX files are supported");
     return null;
   }
 
@@ -129,7 +128,7 @@ export const processMaterialFromClassroom = async (material, token, showAlert) =
     );
 
     if (response.data && response.data.text) {
-      showAlert("success", t("alerts.materialProcessedSuccess"));
+      showAlert("success", "Material processed successfully");
       return {
         name: material.name,
         content: response.data.text,
@@ -138,25 +137,25 @@ export const processMaterialFromClassroom = async (material, token, showAlert) =
         materialId: material.id,
       };
     } else {
-      showAlert("error", t("alerts.fetchMaterialsError"));
+      showAlert("error", "Failed to process material");
       return null;
     }
   } catch (error) {
     if (error.response) {
-      showAlert("error", t("alerts.fetchMaterialsError")); 
+      showAlert("error", "Server error while processing material");
     } else if (error.request) {
-      showAlert("error", t("alerts.fetchMaterialsError")); 
+      showAlert("error", "Network error. Please check your connection.");
     } else {
-      showAlert("error", t("alerts.fetchMaterialsError")); 
+      showAlert("error", error.message);
     }
     return null;
   }
 };
 
 // Generate exam using Ollama
-export const generateExam = async (prompt, model, t, showAlert) => {
+export const generateExam = async (prompt, model, showAlert) => {
   try {
-    const response = await axios.post('http://localhost:11434/api/generate', {
+    const response = await axios.post(`${getLLMApiUrl()}/api/generate`, {
       model: model,
       prompt: prompt,
       stream: false,
@@ -169,15 +168,15 @@ export const generateExam = async (prompt, model, t, showAlert) => {
     });
 
     if (response.data?.response) {
-      showAlert("success", t("alerts.examGeneratedSuccess"));
+      showAlert("success", "Exam generated successfully");
       return response.data.response;
     }
-    showAlert("error", t("alerts.examGenerationFailed"));
+    showAlert("error", "Failed to generate exam");
     return null;
     
   } catch (error) {
     console.error('Ollama API Error:', error);
-    let errorMessage = t("alerts.examGenerationFailed");
+    let errorMessage = "Failed to generate exam";
     
     if (error.code === 'ECONNREFUSED') {
       errorMessage = "Ollama service not running. Please start Ollama first.";
@@ -186,7 +185,7 @@ export const generateExam = async (prompt, model, t, showAlert) => {
     } else if (error.message.includes('Network Error') || error.message.includes('CORS')) {
       errorMessage = "CORS issue detected. Please start Ollama with: 'ollama serve --cors'";
     } else {
-      errorMessage = `${t("alerts.examGenerationFailed")}: ${error.message}`;
+      errorMessage = `Failed to generate exam: ${error.message}`;
     }
 
     showAlert("error", errorMessage);

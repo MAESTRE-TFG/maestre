@@ -282,6 +282,8 @@
     },
     "selectClassroom": "Gela (Zailtasun Maila)",
     "selectClassroomPlaceholder": "Aukeratu gela bat",
+    "error": "Errorea ez datu",
+    "success": "Arrakasta!",
     "fields": {
       "subject": {
         "label": "Ikasgaia",

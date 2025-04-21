@@ -295,6 +295,8 @@
       },
       "selectClassroom": "Classroom (Difficulty Level)",
       "selectClassroomPlaceholder": "Select a classroom",
+      "error": "Error generating the test",
+      "success": "Test generated successfully!",
       "fields": {
         "subject": {
           "label": "Subject",

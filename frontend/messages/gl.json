@@ -280,6 +280,8 @@
     },
     "selectClassroom": "Clase (Nivel de Dificultade)",
     "selectClassroomPlaceholder": "Selecciona unha clase",
+    "error": "Produciuse un erro ao enviar o formulario.",
+    "success": "¡Formulario enviado con éxito!",
     "fields": {
       "subject": {
         "label": "Materia",

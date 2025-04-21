@@ -167,6 +167,8 @@
     },
     "selectClassroom": "Clase (Nivel de Dificultad)",
     "selectClassroomPlaceholder": "Selecciona una clase",
+    "error": "Error generando test",
+    "success": "Test generado con éxito",
     "fields": {
       "subject": {
         "label": "Asignatura",
