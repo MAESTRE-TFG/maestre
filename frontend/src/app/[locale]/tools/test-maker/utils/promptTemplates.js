@@ -12,6 +12,7 @@ QUESTION TYPE: ${parsedData.questionType}
 TOTAL POINTS: ${parsedData.totalPoints}
 EDUCATION LEVEL: ${parsedData.classroom}
 REGION: ${user.region || "Unknown"}`,
+    answerOptions: (parsedData) => `Each question should have ${parsedData.numAnswerOptions} answer options.`,
     scoringStyle: (parsedData) => `SCORING STYLE: Custom distribution as follows: ${parsedData.customScoringDetails}`,
     additionalInstructions: (formData) => `[ADDITIONAL INSTRUCTIONS]
 ${formData.additionalInfo}`,
@@ -77,6 +78,7 @@ TIPO DE PREGUNTA: ${parsedData.questionType}
 PUNTOS TOTALES: ${parsedData.totalPoints}
 NIVEL EDUCATIVO: ${parsedData.classroom}
 REGIÓN: ${user.region || "Desconocida"}`,
+    answerOptions: (parsedData) => `Cada pregunta debe tener ${parsedData.numAnswerOptions} opciones de respuesta.`,
     scoringStyle: (parsedData) => `ESTILO DE PUNTUACIÓN: Distribución personalizada de la siguiente manera: ${parsedData.customScoringDetails}`,
     additionalInstructions: (formData) => `[INSTRUCCIONES ADICIONALES]
 ${formData.additionalInfo}`,

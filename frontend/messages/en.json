@@ -269,6 +269,132 @@
     },
 
 
+    "TestMaker": {
+      "header": {
+        "title": "Test Generator",
+        "subtitle": "Create personalized tests with AI",
+        "featureTitle": "AI-Powered Tests",
+        "featureDescription": "Create professional tests in seconds using our advanced AI technology. Perfect for teachers who want to save time while creating high-quality assessments.",
+        "teacherImageAlt": "Teacher"
+      },
+      "alerts": {
+        "fetchClassroomsError": "Failed to fetch classrooms. Please try again later.",
+        "fetchMaterialsError": "Failed to fetch materials. Please try again later.",
+        "fileProcessedSuccess": "File processed successfully!",
+        "unsupportedFileType": "Only DOCX files are supported for test generation.",
+        "materialProcessedSuccess": "Material processed successfully!",
+        "missingSubject": "Please enter a subject.",
+        "missingClassroom": "Please select a classroom.",
+        "examGeneratedSuccess": "Test generated successfully!",
+        "examGenerationFailed": "Error generating the test",
+        "pdfSavedSuccess": "PDF saved to classroom materials successfully!",
+        "pdfDownloadedSuccess": "PDF downloaded successfully!",
+        "pdfSaveFailed": "Error saving the PDF: {error}",
+        "pdfDownloadFailed": "Error downloading the PDF: {error}",
+        "unknownError": "Unknown error"
+      },
+      "selectClassroom": "Classroom (Difficulty Level)",
+      "selectClassroomPlaceholder": "Select a classroom",
+      "fields": {
+        "subject": {
+          "label": "Subject",
+          "placeholder": "Mathematics, Science, History, etc."
+        },
+        "examName": {
+          "label": "Test Name",
+          "placeholder": "Midterm Test, Final Exam, Chapter 5 Quiz, etc."
+        },
+        "numQuestions": {
+          "label": "Number of Questions"
+        },
+        "totalPoints": {
+          "label": "Maximum Points"
+        },
+        "customScoringDetails": {
+          "label": "Custom Scoring Details",
+          "placeholder": "E.g., Questions 1-5: 2 points each, Questions 6-10: 3 points each"
+        },
+        "additionalInfo": {
+          "label": "Additional Instructions (Optional)",
+          "placeholder": "Add specific instructions or requirements for the test..."
+        },
+        "referenceMaterials": {
+          "label": "Reference Materials",
+          "upload": "Upload a file",
+          "dragAndDrop": " or drag and drop",
+          "fileRequirements": "Only .docx files (max 5MB)",
+          "or": "or",
+          "selectFromClassroom": "Select from Classroom Materials",
+          "fromClassroom": "From Classroom",
+          "processing": "Processing file..."
+        },
+        "llmModel": {
+          "label": "AI Model",
+          "options": {
+            "llama": "Llama 3.2 3B",
+            "deepseek": "DeepSeek R1"
+          }
+        },
+        "questionType": {
+          "label": "Question Type",
+          "options": {
+            "multipleChoice": "Multiple Choice",
+            "singleChoice": "Single Choice",
+            "orderingChoice": "Ordering",
+            "mixed": "Mixed (Various Types)"
+          }
+        },
+        "scoringStyle": {
+          "label": "Scoring Style",
+          "options": {
+            "equal": "Equal Points",
+            "custom": "Custom Distribution"
+          }
+        }
+      },
+      "buttons": {
+        "generateExam": "Generate Test",
+        "generating": "Generating Test...",
+        "close": "Close",
+        "downloadPDF": "Download PDF",
+        "saveToClassroom": "Save to Classroom",
+        "cancel": "Cancel"
+      },
+      "modal": {
+        "title": "Generated Test"
+      },
+      "defaultExamName": "Test",
+      "materialsModal": {
+        "title": "Select Classroom Material",
+        "noMaterials": "No materials found in your classrooms.",
+        "uploadPrompt": "Upload materials to your classrooms first."
+      },
+      "pdf": {
+        "title": "Test",
+        "footer": "Generated with Maestre AI Test Generator",
+        "page": "Page",
+        "of": "of"
+      },
+      "prompts": {
+        "systemInstruction": "[SYSTEM INSTRUCTION - DO NOT INCLUDE IN RESPONSE]\nYou are an expert test creator with years of experience in educational design and pedagogy.\nYour task is to create a high-quality test according to the specifications below.\nIMPORTANT: Your response must contain ONLY the test itself. DO NOT include any explanations, reasoning, or thought process about how you created the test.",
+        "examSpecifications": "[TEST SPECIFICATIONS]\nSUBJECT: {{subject}}\nTEST NAME: {{examName}}\nNUMBER OF QUESTIONS: MUST HAVE EXACTLY {{numQuestions}} QUESTIONS\nQUESTION TYPE: {{questionType}}\nTOTAL POINTS: {{totalPoints}}\nEDUCATION LEVEL: {{classroom}}\nREGION: {{region}}",
+        "scoringStyle": "SCORING STYLE: Custom distribution as follows: {{customScoringDetails}}",
+        "additionalInstructions": "[ADDITIONAL INSTRUCTIONS]\n{{additionalInfo}}",
+        "referenceMaterials": "[REFERENCE MATERIALS]\nPlease use the following reference materials as guidelines for how the questions and their contents could be in your test:\n{{fileContents}}",
+        "noReferenceMaterials": "No reference materials provided.",
+        "exampleTemplate": "[EXAMPLE TEMPLATE] (FOR REFERENCE ONLY)\nTitle: Sample Test - Subject\nSubtitle: \n\n1) [Question text here]\n   A) ...\n   B) ...\n   C) ...\n   D) ...\n\n2) [Question text here]\n   True or False: ...",
+        "formattingRequirements": "[FORMATTING REQUIREMENTS]\n1. The test MUST be in English\n2. The reply MUST ONLY contain the test, no additional text or comments.\n3. Include a clear title and subtitle with the test name and subject.\n4. Number all questions sequentially.\n5. For multiple-choice questions, use options labeled as A), B), C), etc.\n6. Clearly indicate the point value for each question.\n7. Ensure proper spacing between questions.\n8. Format the test in a clean, professional manner suitable for classroom use.\n9. Ensure the test follows educational standards for {{classroom}} level in {{region}}.\n10. Make sure the total points add up to exactly {{totalPoints}}.\n11. Use proper formatting for each question type (e.g., multiple choice with options, true/false with clear statements).\n12. Include clear section headers if mixing different types of questions.\n13. DO NOT include any reasoning, planning, or thought process in your response.\n14. DO NOT explain how you created the test or what considerations you made.\n15. ONLY output the final test content, starting directly with the title.",
+        "checklist": "[CHECKLIST - DO NOT INCLUDE IN RESPONSE]\n1) Did you include only the test and nothing else?\n2) Did you include exactly {{numQuestions}} questions?\n3) Do the total points add up to exactly {{totalPoints}}?\n4) Are there any details that are not supported by the references?\n5) Did you follow all formatting requirements strictly?\n6) Did you remove ALL reasoning and explanations from your response?",
+        "finalInstruction": "[FINAL INSTRUCTION - DO NOT INCLUDE IN RESPONSE]\nNow, produce a complete test following all the specifications and requirements above.\nIf any information is missing, note it clearly rather than inventing details.\nCRITICAL: Your response must begin with the test title and contain ONLY the test content. DO NOT include any explanations, reasoning, or thought process.",
+        "unknown": "Unknown"
+      },
+      "AnswerOptionsSelector": {
+        "label": "Number of options per question",
+        "helperText": "Choose a number between 3 and 10."
+      }
+    },
+
+
     "StudentCreateForm": {
       "nameLabel": "Name",
       "namePlaceholder": "Enter the student's first name",
@@ -432,6 +558,7 @@
       "dragOrDrop": "Drag or drop your files here or click to upload",
       "supportedFormats": "PDF, DOC, DOCX, PNG, JPG, PPTX or TXT",
       "browseFiles": "Browse files",
+      "removeFile": "Remove file",
       "alerts": {
         "editSuccess": "Material name updated successfully!",
         "editError": "Failed to update material name. Please try again.",

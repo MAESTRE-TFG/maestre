@@ -259,6 +259,10 @@
       "checklist": "[LISTA DE VERIFICACIÓN - NO INCLUIR EN LA RESPUESTA]\n1) ¿Incluiste solo el test y nada más?\n2) ¿Incluiste exactamente {{numQuestions}} preguntas?\n3) ¿Los puntos totales suman exactamente {{totalPoints}}?\n4) ¿Hay detalles que no están respaldados por las referencias?\n5) ¿Seguiste estrictamente todos los requisitos de formato?\n6) ¿Eliminaste TODO razonamiento y explicaciones de tu respuesta?",
       "finalInstruction": "[INSTRUCCIÓN FINAL - NO INCLUIR EN LA RESPUESTA]\nAhora, produce un test completo siguiendo todas las especificaciones y requisitos anteriores.\nSi falta alguna información, indícalo claramente en lugar de inventar detalles.\nCRÍTICO: Tu respuesta debe comenzar con el título del test y contener ÚNICAMENTE el contenido del test. NO incluyas explicaciones, razonamientos o procesos de pensamiento.",
       "unknown": "Desconocido"
+    },
+    "AnswerOptionsSelector": {
+      "label": "Número de opciones por pregunta",
+      "helperText": "Escolle un número entre 3 e 10."
     }
   },
 
@@ -315,7 +319,7 @@
       "referenceMaterials": {
         "label": "Materiales de Referencia",
         "upload": "Sube un archivo",
-        "dragAndDrop": " o arrastra y suelta",
+        "dragAndDrop": "o arrastra y suelta",
         "fileRequirements": "Solo archivos .docx (máx. 5MB)",
         "or": "o",
         "selectFromClassroom": "Seleccionar de Materiales del Aula",
@@ -553,6 +557,7 @@
     "dragOrDrop": "Arrastra o suelta tus archivos aquí o haz clic para subirlos",
     "supportedFormats": "PDF, DOC, DOCX, PNG, JPG, PPTX o TXT",
     "browseFiles": "Exportar archivos",
+    "removeFile": "Eliminar archivo",
     "alerts": {
       "editSuccess": "¡Nombre del material actualizado con éxito!",
       "editError": "Error al actualizar el nombre del material. Por favor, inténtalo de nuevo.",

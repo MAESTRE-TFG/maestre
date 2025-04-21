@@ -128,6 +128,8 @@
     "translating": "Translation ...",
     "translation_history_description": "Zure itzulpenaren historia hemen agertuko da"
   },
+
+
   "ExamMaker": {
     "header": {
       "title": "Azterketa sortzailea",
@@ -253,6 +255,120 @@
       "unknown": "Ezezagun bat"
     }
   },
+
+  "TestMaker": {
+    "header": {
+      "title": "Test Sortzailea",
+      "subtitle": "Sortu test pertsonalizatuak AI laguntzarekin",
+      "featureTitle": "AI-k bultzatutako Testak",
+      "featureDescription": "Sortu test profesionalak segundotan gure AI teknologia aurreratua erabiliz. Ezin hobea denbora aurreztu nahi duten irakasleentzat kalitate handiko ebaluazioak sortzen dituzun bitartean.",
+      "teacherImageAlt": "Irakaslea"
+    },
+    "alerts": {
+      "fetchClassroomsError": "Ezin izan dira gelak eskuratu. Mesedez, saiatu berriro geroago.",
+      "fetchMaterialsError": "Ezin izan dira materialak eskuratu. Mesedez, saiatu berriro geroago.",
+      "fileProcessedSuccess": "Fitxategia arrakastaz prozesatua!",
+      "unsupportedFileType": "Testak sortzeko soilik DOCX fitxategiak onartzen dira.",
+      "materialProcessedSuccess": "Materiala arrakastaz prozesatua!",
+      "missingSubject": "Mesedez, sartu ikasgai bat.",
+      "missingClassroom": "Mesedez, aukeratu gela bat.",
+      "examGeneratedSuccess": "Testa arrakastaz sortua!",
+      "examGenerationFailed": "Errorea testa sortzean",
+      "pdfSavedSuccess": "PDF-a arrakastaz gorde da gelako materialetan!",
+      "pdfDownloadedSuccess": "PDF-a arrakastaz deskargatua!",
+      "pdfSaveFailed": "Errorea PDF-a gordetzean: {error}",
+      "pdfDownloadFailed": "Errorea PDF-a deskargatzean: {error}",
+      "unknownError": "Errore ezezaguna"
+    },
+    "selectClassroom": "Gela (Zailtasun Maila)",
+    "selectClassroomPlaceholder": "Aukeratu gela bat",
+    "fields": {
+      "subject": {
+        "label": "Ikasgaia",
+        "placeholder": "Matematika, Zientziak, Historia, etab."
+      },
+      "examName": {
+        "label": "Testaren Izena",
+        "placeholder": "Erdiko Testa, Azken Proba, 5. Kapituluko Quiz, etab."
+      },
+      "numQuestions": {
+        "label": "Galdera Kopurua"
+      },
+      "totalPoints": {
+        "label": "Puntu Gehienezkoak"
+      },
+      "customScoringDetails": {
+        "label": "Puntuazio Xehetasun Pertsonalizatuak",
+        "placeholder": "Adib., 1-5 galderak: 2 puntu bakoitza, 6-10 galderak: 3 puntu bakoitza"
+      },
+      "additionalInfo": {
+        "label": "Argibide Gehigarriak (Aukerakoa)",
+        "placeholder": "Gehitu testarako argibide edo baldintza zehatzak..."
+      },
+      "referenceMaterials": {
+        "label": "Erreferentziazko Materialak",
+        "upload": "Igo fitxategia",
+        "dragAndDrop": " edo arrastatu eta askatu",
+        "fileRequirements": "Soilik .docx fitxategiak (gehienez 5MB)",
+        "or": "edo",
+        "selectFromClassroom": "Hautatu Gelako Materialetatik",
+        "fromClassroom": "Gelatik",
+        "processing": "Fitxategia prozesatzen..."
+      },
+      "llmModel": {
+        "label": "AI Eredua",
+        "options": {
+          "llama": "Llama 3.2 3B",
+          "deepseek": "DeepSeek R1"
+        }
+      },
+      "questionType": {
+        "label": "Galdera Mota",
+        "options": {
+          "multipleChoice": "Aukera Anitz",
+          "singleChoice": "Aukera Bakarra",
+          "orderingChoice": "Ordenamendua",
+          "mixed": "Mistoa (Hainbat Mota)"
+        }
+      },
+      "scoringStyle": {
+        "label": "Puntuazio Estiloa",
+        "options": {
+          "equal": "Puntu Berdinak",
+          "custom": "Banaketa Pertsonalizatua"
+        }
+      }
+    },
+    "buttons": {
+      "generateExam": "Sortu Testa",
+      "generating": "Testa Sortzen...",
+      "close": "Itxi",
+      "downloadPDF": "Deskargatu PDF",
+      "saveToClassroom": "Gorde Gelan",
+      "cancel": "Utzi"
+    },
+    "modal": {
+      "title": "Sortutako Testa"
+    },
+    "defaultExamName": "Testa",
+    "materialsModal": {
+      "title": "Hautatu Gelako Materiala",
+      "noMaterials": "Ez da materialik aurkitu zure gelatan.",
+      "uploadPrompt": "Lehenik eta behin igo materialak zure gelara."
+    },
+    "pdf": {
+      "title": "Testa",
+      "footer": "Sortua Maestre AI Test Sortzailearekin",
+      "page": "Orrialdea",
+      "of": "-ren"
+    },
+    "AnswerOptionsSelector": {
+      "label": "Galderako aukera kopurua",
+      "helperText": "Hautatu 3 eta 10 arteko zenbaki bat."
+    }
+  },
+
+
   "StudentCreateForm": {
     "nameLabel": "Izen",
     "namePlaceholder": "Idatzi ikaslearen izena",
@@ -261,6 +377,8 @@
     "createButton": "Sortu ikaslea",
     "cancelButton": "Indargabetu"
   },
+
+
   "SigninForm": {
     "fields": {
       "emailOrUsername": {
@@ -406,6 +524,7 @@
     "dragOrDrop": "Arrastatu edo askatu fitxategiak hemen edo egin klik horiek kargatzeko",
     "supportedFormats": "Pdf, doc, docx, png, jpg, pptx edo txt",
     "browseFiles": "Esportatu fitxategiak",
+    "removeFile": "Kendu fitxategia",
     "alerts": {
       "editSuccess": "Eguneratutako materialaren izena arrakastaz!",
       "editError": "Errorea materialaren izena eguneratzean. Mesedez, saiatu berriro.",

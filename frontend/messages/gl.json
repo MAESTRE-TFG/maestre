@@ -253,6 +253,120 @@
       "unknown": "Un descoñecido"
     }
   },
+
+  "TestMaker": {
+    "header": {
+      "title": "Xerador de Tests",
+      "subtitle": "Crea tests personalizados con IA",
+      "featureTitle": "Tests Impulsados por IA",
+      "featureDescription": "Crea tests profesionais en segundos utilizando a nosa avanzada tecnoloxía de IA. Perfecto para docentes que desexan aforrar tempo mentres crean avaliacións de alta calidade.",
+      "teacherImageAlt": "Docente"
+    },
+    "alerts": {
+      "fetchClassroomsError": "Non se puideron obter as clases. Por favor, inténtao de novo máis tarde.",
+      "fetchMaterialsError": "Non se puideron obter os materiais. Por favor, inténtao de novo máis tarde.",
+      "fileProcessedSuccess": "¡Arquivo procesado con éxito!",
+      "unsupportedFileType": "Só se admiten arquivos DOCX para a xeración de tests.",
+      "materialProcessedSuccess": "¡Material procesado con éxito!",
+      "missingSubject": "Por favor, introduce unha materia.",
+      "missingClassroom": "Por favor, selecciona unha clase.",
+      "examGeneratedSuccess": "¡Test xerado con éxito!",
+      "examGenerationFailed": "Erro ao xerar o test",
+      "pdfSavedSuccess": "¡PDF gardado nos materiais da aula con éxito!",
+      "pdfDownloadedSuccess": "¡PDF descargado con éxito!",
+      "pdfSaveFailed": "Erro ao gardar o PDF: {error}",
+      "pdfDownloadFailed": "Erro ao descargar o PDF: {error}",
+      "unknownError": "Erro descoñecido"
+    },
+    "selectClassroom": "Clase (Nivel de Dificultade)",
+    "selectClassroomPlaceholder": "Selecciona unha clase",
+    "fields": {
+      "subject": {
+        "label": "Materia",
+        "placeholder": "Matemáticas, Ciencias, Historia, etc."
+      },
+      "examName": {
+        "label": "Nome do Test",
+        "placeholder": "Test de Mitade de Curso, Proba Final, Quiz do Capítulo 5, etc."
+      },
+      "numQuestions": {
+        "label": "Número de Preguntas"
+      },
+      "totalPoints": {
+        "label": "Puntos Máximos"
+      },
+      "customScoringDetails": {
+        "label": "Detalles de Puntuación Personalizada",
+        "placeholder": "Ex., Preguntas 1-5: 2 puntos cada unha, Preguntas 6-10: 3 puntos cada unha"
+      },
+      "additionalInfo": {
+        "label": "Instrucións Adicionais (Opcional)",
+        "placeholder": "Engade instrucións ou requisitos específicos para o test..."
+      },
+      "referenceMaterials": {
+        "label": "Materiais de Referencia",
+        "upload": "Sube un arquivo",
+        "dragAndDrop": " ou arrastra e solta",
+        "fileRequirements": "Só arquivos .docx (máx. 5MB)",
+        "or": "ou",
+        "selectFromClassroom": "Seleccionar de Materiais da Aula",
+        "fromClassroom": "Desde a Aula",
+        "processing": "Procesando arquivo..."
+      },
+      "llmModel": {
+        "label": "Modelo de IA",
+        "options": {
+          "llama": "Llama 3.2 3B",
+          "deepseek": "DeepSeek R1"
+        }
+      },
+      "questionType": {
+        "label": "Tipo de Pregunta",
+        "options": {
+          "multipleChoice": "Opción múltiple",
+          "singleChoice": "Opción única",
+          "orderingChoice": "Ordenamento",
+          "mixed": "Mixto (Varios Tipos)"
+        }
+      },
+      "scoringStyle": {
+        "label": "Estilo de Puntuación",
+        "options": {
+          "equal": "Puntos Iguales",
+          "custom": "Distribución Personalizada"
+        }
+      }
+    },
+    "buttons": {
+      "generateExam": "Xerar Test",
+      "generating": "Xerando Test...",
+      "close": "Pechar",
+      "downloadPDF": "Descargar PDF",
+      "saveToClassroom": "Gardar na Aula",
+      "cancel": "Cancelar"
+    },
+    "modal": {
+      "title": "Test Xerado"
+    },
+    "defaultExamName": "Test",
+    "materialsModal": {
+      "title": "Seleccionar Material da Aula",
+      "noMaterials": "Non se atoparon materiais nas túas aulas.",
+      "uploadPrompt": "Primeiro sube materiais ás túas aulas."
+    },
+    "pdf": {
+      "title": "Test",
+      "footer": "Xerado co Xerador de Test de Maestre AI",
+      "page": "Páxina",
+      "of": "de"
+    },
+    "AnswerOptionsSelector": {
+      "label": "Número de opcións por pregunta",
+      "helperText": "Escolle un número entre 3 e 10."
+    }
+  },
+
+
   "StudentCreateForm": {
     "nameLabel": "Nome",
     "namePlaceholder": "Introduza o nome do alumno",
@@ -261,6 +375,8 @@
     "createButton": "Crear estudante",
     "cancelButton": "Cancelar"
   },
+
+
   "SigninForm": {
     "fields": {
       "emailOrUsername": {
@@ -406,6 +522,7 @@
     "dragOrDrop": "Arrastre ou solte os teus ficheiros aquí ou fai clic para cargalos",
     "supportedFormats": "PDF, Doc, Docx, PNG, JPG, PPTX ou TXT",
     "browseFiles": "Exportación de ficheiros",
+    "removeFile": "Eliminar ficheiro",
     "alerts": {
       "editSuccess": "Nome do material actualizado con éxito.",
       "editError": "Erro ao actualizar o nome do material. Por favor, téntao de novo.",

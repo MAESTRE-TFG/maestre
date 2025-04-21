@@ -269,6 +269,119 @@
   },
 
 
+  "TestMaker": {
+    "header": {
+      "title": "Generador de Tests",
+      "subtitle": "Crea tests personalitzats amb IA",
+      "featureTitle": "Tests Impulsats per IA",
+      "featureDescription": "Crea tests professionals en segons utilitzant la nostra avançada tecnologia d'IA. Perfecte per a docents que volen estalviar temps mentre creen avaluacions d'alta qualitat.",
+      "teacherImageAlt": "Docent"
+    },
+    "alerts": {
+      "fetchClassroomsError": "No s'han pogut obtenir les classes. Si us plau, torna-ho a intentar més tard.",
+      "fetchMaterialsError": "No s'han pogut obtenir els materials. Si us plau, torna-ho a intentar més tard.",
+      "fileProcessedSuccess": "Fitxer processat amb èxit!",
+      "unsupportedFileType": "Només s'admeten fitxers DOCX per a la generació de tests.",
+      "materialProcessedSuccess": "Material processat amb èxit!",
+      "missingSubject": "Si us plau, introdueix una assignatura.",
+      "missingClassroom": "Si us plau, selecciona una classe.",
+      "examGeneratedSuccess": "Test generat amb èxit!",
+      "examGenerationFailed": "Error en generar el test",
+      "pdfSavedSuccess": "PDF desat als materials de l'aula amb èxit!",
+      "pdfDownloadedSuccess": "PDF descarregat amb èxit!",
+      "pdfSaveFailed": "Error en desar el PDF: {error}",
+      "pdfDownloadFailed": "Error en descarregar el PDF: {error}",
+      "unknownError": "Error desconegut"
+    },
+    "selectClassroom": "Classe (Nivell de Dificultat)",
+    "selectClassroomPlaceholder": "Selecciona una classe",
+    "fields": {
+      "subject": {
+        "label": "Assignatura",
+        "placeholder": "Matemàtiques, Ciències, Història, etc."
+      },
+      "examName": {
+        "label": "Nom del Test",
+        "placeholder": "Test de Mitja Curs, Prova Final, Quiz del Capítol 5, etc."
+      },
+      "numQuestions": {
+        "label": "Nombre de Preguntes"
+      },
+      "totalPoints": {
+        "label": "Punts Màxims"
+      },
+      "customScoringDetails": {
+        "label": "Detalls de Puntuació Personalitzada",
+        "placeholder": "Ex., Preguntes 1-5: 2 punts cadascuna, Preguntes 6-10: 3 punts cadascuna"
+      },
+      "additionalInfo": {
+        "label": "Instruccions Addicionals (Opcional)",
+        "placeholder": "Afegeix instruccions o requisits específics per al test..."
+      },
+      "referenceMaterials": {
+        "label": "Materials de Referència",
+        "upload": "Puja un fitxer",
+        "dragAndDrop": " o arrossega i deixa anar",
+        "fileRequirements": "Només fitxers .docx (màx. 5MB)",
+        "or": "o",
+        "selectFromClassroom": "Seleccionar de Materials de l'Aula",
+        "fromClassroom": "Des de l'Aula",
+        "processing": "Processant fitxer..."
+      },
+      "llmModel": {
+        "label": "Model d'IA",
+        "options": {
+          "llama": "Llama 3.2 3B",
+          "deepseek": "DeepSeek R1"
+        }
+      },
+      "questionType": {
+        "label": "Tipus de Pregunta",
+        "options": {
+          "multipleChoice": "Opció múltiple",
+          "singleChoice": "Opció única",
+          "orderingChoice": "Ordenació",
+          "mixed": "Mixt (Diversos Tipus)"
+        }
+      },
+      "scoringStyle": {
+        "label": "Estil de Puntuació",
+        "options": {
+          "equal": "Punts Iguals",
+          "custom": "Distribució Personalitzada"
+        }
+      }
+    },
+    "buttons": {
+      "generateExam": "Generar Test",
+      "generating": "Generant Test...",
+      "close": "Tancar",
+      "downloadPDF": "Descarregar PDF",
+      "saveToClassroom": "Desar a l'Aula",
+      "cancel": "Cancel·lar"
+    },
+    "modal": {
+      "title": "Test Generat"
+    },
+    "defaultExamName": "Test",
+    "materialsModal": {
+      "title": "Seleccionar Material de l'Aula",
+      "noMaterials": "No s'han trobat materials a les teves aules.",
+      "uploadPrompt": "Primer puja materials a les teves aules."
+    },
+    "pdf": {
+      "title": "Test",
+      "footer": "Generat amb el Generador de Test de Maestre AI",
+      "page": "Pàgina",
+      "of": "de"
+    },
+    "AnswerOptionsSelector": {
+      "label": "Nombre d'opcions per pregunta",
+      "helperText": "Tria un número entre 3 i 10."
+    }
+  },
+
+
   "StudentCreateForm": {
     "nameLabel": "Nom",
     "namePlaceholder": "Introduïu el nom de l'estudiant",
@@ -432,6 +545,7 @@
     "dragOrDrop": "Arrossegueu o publiqueu els fitxers aquí o feu clic per penjar -los",
     "supportedFormats": "PDF, DOC, DOCX, PNG, JPG, PPTX o TXT",
     "browseFiles": "Exporta fitxers",
+    "removeFile": "Eliminar fitxer",
     "alerts": {
       "editSuccess": "Nom del material actualitzat amb èxit.",
       "editError": "Error en actualitzar el nom del material. Torneu -ho a provar.",

@@ -12,52 +12,57 @@ export const buildExamPrompt = (formData, classrooms, fileContents, user = {}, l
     questionType: formData.questionType.replace('_', ' '),
     classroom: academicLevel,
     totalPoints: formData.totalPoints,
-    customScoringDetails: formData.customScoringDetails
+    customScoringDetails: formData.customScoringDetails,
+    numAnswerOptions: formData.numAnswerOptions, // Include the new parameter
   };
 
   // Select the appropriate language template or default to English
-  console.log("Locale:", locale);
   const templates = promptTemplates[locale] || promptTemplates.en;
 
   // Build the prompt using the templates
-  // When building the prompt:
   let prompt = `${templates.systemInstruction}
   
   ${templates.examSpecifications(parsedData, formData, user)}`;
   
+  // Add number of answer options to the prompt
+  prompt += `\nEach question should have ${parsedData.numAnswerOptions} answer options.`;
+
+  // Add answer options details
+  prompt += `\n${templates.answerOptions(parsedData)}`;
+
   // For other sections:
   if (formData.scoringStyle !== "equal") {
     prompt += `\n${templates.scoringStyle(parsedData)}`;
   }
 
-  // 3. Add additional instructions
+  // Add additional instructions
   if (formData.additionalInfo) {
     prompt += `
 
 ${templates.additionalInstructions}`;
   }
 
-  // 4. Add reference materials
+  // Add reference materials
   prompt += `
 
 ${templates.referenceMaterials}`;
 
-  // 5. Add example template
+  // Add example template
   prompt += `
 
 ${templates.exampleTemplate}`;
 
-  // 6. Add formatting requirements
+  // Add formatting requirements
   prompt += `
 
 ${templates.formattingRequirements}`;
 
-  // 7. Add checklist
+  // Add checklist
   prompt += `
 
 ${templates.checklist}`;
 
-  // 8. Final instruction
+  // Final instruction
   prompt += `
 
 ${templates.finalInstruction}`;

@@ -9,6 +9,7 @@ import ClassroomSelector from "./ClassroomSelector";
 import ScoringStyleSelector from "./ScoringStyleSelector";
 import ModelSelector from "./ModelSelector";
 import FileUploadSection from "./FileUploadSection";
+import AnswerOptionsSelector from "./AnswerOptionsSelector";
 
 const ExamForm = ({ 
   formData, 
@@ -87,6 +88,14 @@ const ExamForm = ({
             className={`focus:ring-2 focus:ring-offset-0 ${theme === 'dark' ? 'focus:ring-indigo-500/40' : 'focus:ring-indigo-500/30'}`}
           />
         </LabelInputContainer>
+
+        <AnswerOptionsSelector
+          value={formData.numAnswerOptions}
+          onChange={(value) =>
+            handleChange({ target: { name: "numAnswerOptions", value } })
+          }
+          theme={theme}
+        />
     
         <LabelInputContainer>
           <Label htmlFor="totalPoints" className="flex items-center text-sm font-medium mb-1.5">
