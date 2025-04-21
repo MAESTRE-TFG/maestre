@@ -268,6 +268,133 @@
     }
   },
 
+  "ScientificExamMaker": {
+    "header": {
+      "title": "Generador de Exámenes Científicos",
+      "subtitle": "Crea exámenes científicos personalizados con IA",
+      "featureTitle": "Exámenes científicos Impulsados por IA",
+      "featureDescription": "Crea exámenes científicos profesionales en segundos utilizando nuestra avanzada tecnología de IA. Perfecto para docentes que desean ahorrar tiempo mientras crean evaluaciones de alta calidad.",
+      "teacherImageAlt": "Docente"
+    },
+    "alerts": {
+      "examGeneratedSuccess": "¡Examen científico generado con éxito!",
+      "examGenerationFailed": "Error al generar el examen científico",
+      "missingSubject": "Por favor, introduce una asignatura",
+      "missingClassroom": "Por favor, selecciona un aula",
+      "fetchClassroomsError": "Error al obtener las aulas",
+      "fetchMaterialsError": "Error al obtener los materiales",
+      "fileProcessedSuccess": "Archivo procesado con éxito",
+      "materialProcessedSuccess": "Material procesado con éxito",
+      "unsupportedFileType": "Tipo de archivo no soportado. Por favor, sube un archivo .docx",
+      "pdfSavedSuccess": "PDF guardado en el aula con éxito",
+      "pdfSaveFailed": "Error al guardar el PDF: {error}",
+      "unknownError": "Error desconocido"
+    },
+    "fields": {
+      "subject": {
+        "label": "Asignatura",
+        "placeholder": "Matemáticas, Ciencias, Historia, etc."
+      },
+      "examName": {
+        "label": "Nombre del Test",
+        "placeholder": "Test de Mitad de Curso, Prueba Final, Quiz del Capítulo 5, etc."
+      },
+      "numQuestions": {
+        "label": "Número de Preguntas"
+      },
+      "totalPoints": {
+        "label": "Puntos Máximos"
+      },
+      "customScoringDetails": {
+        "label": "Detalles de Puntuación Personalizada",
+        "placeholder": "Ej., Preguntas 1-5: 2 puntos cada una, Preguntas 6-10: 3 puntos cada una"
+      },
+      "additionalInfo": {
+        "label": "Instrucciones Adicionales (Opcional)",
+        "placeholder": "Añade instrucciones o requisitos específicos para el test..."
+      },
+      "referenceMaterials": {
+        "label": "Materiales de Referencia",
+        "upload": "Sube un archivo",
+        "dragAndDrop": " o arrastra y suelta",
+        "fileRequirements": "Solo archivos .docx (máx. 5MB)",
+        "or": "o",
+        "selectFromClassroom": "Seleccionar de Materiales del Aula",
+        "fromClassroom": "Desde el Aula",
+        "processing": "Procesando archivo..."
+      },
+      "llmModel": {
+        "label": "Modelo de IA",
+        "options": {
+          "llama": "Llama 3.2 3B",
+          "deepseek": "DeepSeek R1"
+        }
+      },
+      "difficulty": {
+        "label": "Nivel de Dificultad",
+        "helperText": "Establece la dificultad de los problemas (1 = más fácil, 10 = más difícil). La dificultad es relativa al nivel del aula seleccionada."
+      },
+      "context": {
+        "label": "Nivel de Contexto",
+        "options": {
+          "none": "Ninguno",
+          "medium": "Medio",
+          "very_much": "Mucho"
+        }
+      },
+      "scoringStyle": {
+        "label": "Estilo de Puntuación",
+        "options": {
+          "equal": "Puntos Iguales",
+          "custom": "Distribución Personalizada"
+        }
+      }
+    },
+    "buttons": {
+      "generateExam": "Generar Examen",
+      "generating": "Generando Examen...",
+      "close": "Cerrar",
+      "downloadPDF": "Descargar PDF",
+      "saveToClassroom": "Guardar en el Aula",
+      "cancel": "Cancelar"
+    },
+    "form": {
+      "subject": "Asignatura",
+      "subjectPlaceholder": "ej., Álgebra, Física, Química",
+      "examName": "Nombre del Examen",
+      "examNamePlaceholder": "ej., Examen Parcial, Examen Final",
+      "classroom": "Aula",
+      "classroomPlaceholder": "Selecciona un aula",
+      "numQuestions": "Número de Problemas",
+      "difficulty": "Nivel de Dificultad",
+      "difficultyDescription": "Establece la dificultad de los problemas (1 = más fácil, 10 = más difícil). La dificultad es relativa al nivel del aula seleccionada.",
+      "context": "Nivel de Contexto",
+      "contextLevels": {
+        "none": "Ninguno",
+        "medium": "Medio",
+        "very_much": "Mucho"
+      },
+      "contextDescription": "Determina cuánto contexto rodea cada problema: Ninguno (ejercicios directos), Medio (problemas cortos) o Mucho (problemas extendidos con múltiples piezas de información).",
+      "totalPoints": "Puntos Totales",
+      "scoringStyle": "Estilo de Puntuación",
+      "scoringStyles": {
+        "equal": "Puntos Iguales",
+        "custom": "Distribución Personalizada"
+      },
+      "customScoringDetails": "Detalles de Puntuación Personalizada",
+      "customScoringDetailsPlaceholder": "ej., Problema 1: 3 puntos, Problema 2: 2 puntos...",
+      "additionalInfo": "Instrucciones Adicionales",
+      "additionalInfoPlaceholder": "Cualquier instrucción específica para el examen",
+      "llmModel": "Modelo de IA",
+      "generateExam": "Generar Examen Científico",
+      "generating": "Generando...",
+      "uploadFile": "Subir Material de Referencia",
+      "uploadedFiles": "Archivos Subidos",
+      "browseClassroomMaterials": "Explorar Materiales del Aula",
+      "noFilesUploaded": "No hay archivos subidos"
+    }
+  },
+
 
   "ExamMaker": {
     "header": {
