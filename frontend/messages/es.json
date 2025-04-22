@@ -1374,6 +1374,16 @@
           "Conciencia del contexto educativo",
           "Traducción de documentos"
         ]
+      },
+      "scienceExam": {
+        "title": "Ciencia en segundos",
+        "content": "Exámenes de ciencia al instante con esta herramienta de IA:",
+        "features": [
+          "Ejercicios en cuestión de segundos",
+          "Dificultad ajustable",
+          "Adaptado al aula",
+          "Guarda directamente en clase"
+        ]
       }
     }
   },

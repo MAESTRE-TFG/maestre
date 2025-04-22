@@ -13,6 +13,7 @@ const ExamResultModal = ({
 }) => {
   const { theme } = useTheme();
   const t = useTranslations("ExamMaker");
+  const isScientificExam = window.location.pathname.includes('scientific-exam-maker');
 
   const handleSavePDF = async () => {
     try {
@@ -106,7 +107,7 @@ const ExamResultModal = ({
           >
             {t("buttons.close")} 
           </button>
-          <button
+          {}<button
             onClick={handleDownloadPDF}
             className="btn btn-primary btn-sm flex items-center"
           >

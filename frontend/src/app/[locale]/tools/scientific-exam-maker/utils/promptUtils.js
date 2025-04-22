@@ -20,7 +20,7 @@ export const buildExamPrompt = (formData, classrooms, fileContents, user = {}, l
   const templates = promptTemplates[locale] || promptTemplates.en;
 
   // Build the prompt using the templates
-  let prompt = `${templates.systemInstruction}
+  let prompt = `${templates.systemInstruction(parsedData)}
   
   ${templates.examSpecifications(parsedData, formData, user)}`;
   
@@ -44,7 +44,7 @@ ${templates.referenceMaterials(fileContents)}`;
   // Add example template
   prompt += `
 
-${templates.exampleTemplate}`;
+${templates.exampleTemplate(parsedData)}`;
 
   // Add formatting requirements
   prompt += `

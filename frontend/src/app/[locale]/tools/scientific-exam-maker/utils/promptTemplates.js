@@ -1,13 +1,14 @@
 export const promptTemplates = {
     en: {
-        systemInstruction: `[SYSTEM INSTRUCTION - DO NOT INCLUDE IN RESPONSE]
-You are an expert scientific exam creator with years of experience in creating specialized problems and exercises in scientific subjects.
-Your task is to create a high-quality scientific exam EXCLUSIVELY on the SUBJECT specified in the exam specifications below.
-IMPORTANT: 
-1. Your response must contain ONLY the exam itself. DO NOT include any explanations, reasoning, or thought process about how you created the exam.
-2. You MUST create PROBLEMS and EXERCISES, not theoretical questions or memorization-based questions.
-3. The problems should require calculations, problem-solving, and application of scientific concepts.
-4. CRITICAL: Focus ONLY on the SUBJECT specified. Do NOT mix different subjects unless explicitly requested.`,
+        systemInstruction: (parsedData) => `[SYSTEM INSTRUCTION - DO NOT INCLUDE IN RESPONSE]
+You are an expert in creating ${parsedData.subject} exams for ${parsedData.classroom} level education.
+Your task: Create a high-quality exam with ${parsedData.numQuestions} calculation-based problems in ${parsedData.subject} only.
+
+CRITICAL RULES:
+1. ONLY include the exam content - no explanations or comments
+2. ONLY create problems in ${parsedData.subject} - no other subjects
+3. ALL problems must require calculations and application of concepts
+4. NO theoretical or memorization questions`,
         examSpecifications: (parsedData, formData, user) => `[EXAM SPECIFICATIONS]
 SUBJECT: ${parsedData.subject} (CRITICAL: ALL PROBLEMS MUST BE EXCLUSIVELY ON THIS SUBJECT)
 EXAM NAME: ${formData.examName || 'Scientific Exam'}
@@ -23,15 +24,57 @@ ${formData.additionalInfo}`,
         referenceMaterials: (fileContents) => `[REFERENCE MATERIALS]
 Please use the following reference materials as guidelines for how the problems and exercises could be in your exam:
 ${fileContents ? fileContents : "No reference materials provided."}`,
-        exampleTemplate: `[EXAMPLE TEMPLATE] (FOR REFERENCE ONLY)
-Title: Sample Scientific Exam - [SUBJECT]
-Subtitle: 
+        exampleTemplate: (parsedData) => {
+            // Subject-specific examples
+            const examples = {
+                "Mathematics": `Title: Mathematics Exam - Calculus
+            Subtitle: Differential Equations
 
-1) [Problem statement with all necessary information related to the SUBJECT]
-   [Space for solution/work]
+            1) [5 points] Find the general solution to the differential equation:
+               dy/dx + 2y = e^(-2x)
+               [Space for solution]
 
-2) [Exercise with relevant data and variables related to the SUBJECT]
-   [Space for calculations/solution]`,
+            2) [8 points] Solve the following integral:
+               ∫(x^2 * ln(x))dx
+               [Space for solution]`,
+
+                "Physics": `Title: Physics Exam - Mechanics
+            Subtitle: Forces and Motion
+
+            1) [5 points] A 2kg object is pushed up a frictionless inclined plane with a force of 25N. If the plane makes an angle of 30° with the horizontal, calculate the acceleration of the object.
+               [Space for solution]
+
+            2) [8 points] A pendulum of length 0.8m oscillates with a period of 1.8s. Calculate the value of gravitational acceleration at this location.
+               [Space for solution]`,
+
+                "Chemistry": `Title: Chemistry Exam - Thermodynamics
+            Subtitle: Enthalpy and Entropy
+
+            1) [5 points] Calculate the enthalpy change for the following reaction:
+               2H₂(g) + O₂(g) → 2H₂O(g)
+               Given: ΔH°f[H₂O(g)] = -241.8 kJ/mol
+               [Space for solution]
+
+            2) [8 points] A reaction has ΔH = -92.4 kJ/mol and ΔS = -184 J/(mol·K). Calculate the temperature at which this reaction becomes spontaneous.
+               [Space for solution]`
+            };
+
+            // Default to a generic example if subject not found
+            const subjectExample = examples[parsedData.subject] || 
+            `Title: Sample ${parsedData.subject} Exam
+            Subtitle: For ${parsedData.classroom} Level
+
+            1) [5 points] [${parsedData.subject}-specific problem with calculations]
+               [Space for solution]
+
+            2) [8 points] [Another ${parsedData.subject}-specific problem requiring application of concepts]
+               [Space for solution]`;
+
+            return `[EXAMPLE TEMPLATE] (FOR REFERENCE ONLY)
+            NOTE: The following is just an example format. Your exam should be in a similar format but with different problems appropriate for the subject and difficulty level. Do not copy these exact problems.
+            
+            ${subjectExample}`;
+        },
         formattingRequirements: (parsedData, user) => `[FORMATTING REQUIREMENTS]
 1. The exam MUST be in English
 2. The reply MUST ONLY contain the exam, no additional text or comments.
@@ -49,33 +92,36 @@ Subtitle:
 14. DO NOT include any reasoning, planning, or thought process in your response.
 15. DO NOT explain how you created the exam or what considerations you made.
 16. ONLY output the final exam content, starting directly with the title.`,
+        
+        // Add the missing checklist function
         checklist: (parsedData) => `[CHECKLIST - DO NOT INCLUDE IN RESPONSE]
 1) Did you include only the exam and nothing else?
-2) Did you include exactly ${parsedData.numQuestions} problems/exercises?
+2) Did you include exactly ${parsedData.numQuestions} problems?
 3) Do the total points add up to exactly ${parsedData.totalPoints}?
-4) Are all problems calculation-based or application-based rather than theoretical?
-5) Did you include all necessary information to solve each problem?
+4) Are all problems focused exclusively on ${parsedData.subject}?
+5) Are all problems calculation-based requiring application of concepts?
 6) Did you follow all formatting requirements strictly?
 7) Did you remove ALL reasoning and explanations from your response?
-8) CRITICAL CHECK: Are ALL problems EXCLUSIVELY on ${parsedData.subject}? If not, revise immediately.
 
 If any check fails, revise your answer before finalizing.`,
-        finalInstruction: (parsedData) => `[FINAL INSTRUCTION - DO NOT INCLUDE IN RESPONSE]
+
+        // Add the missing finalInstruction property
+        finalInstruction: `[FINAL INSTRUCTION - DO NOT INCLUDE IN RESPONSE]
 Now, produce a complete scientific exam following all the specifications and requirements above.
-CRITICAL: Your response must begin with the exam title and contain ONLY the exam content. DO NOT include any explanations, reasoning, or thought process.
-REMEMBER: Create PROBLEMS and EXERCISES that require calculations and application of scientific concepts, not theoretical questions.
-MOST IMPORTANT: ALL problems MUST be EXCLUSIVELY on ${parsedData.subject}. Do NOT mix different subjects.`
+If any information is missing, note it clearly rather than inventing details.
+CRITICAL: Your response must begin with the exam title and contain ONLY the exam content. DO NOT include any explanations, reasoning, or thought process.`
     },
 
     es: {
-        systemInstruction: `[INSTRUCCIÓN DEL SISTEMA - NO INCLUIR EN LA RESPUESTA]
-Eres un creador experto de exámenes científicos con años de experiencia en la creación de problemas y ejercicios especializados en materias científicas.
-Tu tarea es crear un examen científico de alta calidad EXCLUSIVAMENTE sobre la ASIGNATURA especificada en las especificaciones del examen a continuación.
-IMPORTANTE: 
-1. Tu respuesta debe contener SOLO el examen en sí. NO incluyas explicaciones, razonamientos o procesos de pensamiento sobre cómo creaste el examen.
-2. DEBES crear PROBLEMAS y EJERCICIOS, no preguntas teóricas o basadas en memorización.
-3. Los problemas deben requerir cálculos, resolución de problemas y aplicación de conceptos científicos.
-4. CRÍTICO: Enfócate ÚNICAMENTE en la ASIGNATURA especificada. NO mezcles diferentes asignaturas a menos que se solicite explícitamente.`,
+        systemInstruction: (parsedData) => `[INSTRUCCIÓN DEL SISTEMA - NO INCLUIR EN LA RESPUESTA]
+Eres un experto en crear exámenes de ${parsedData.subject} para el nivel educativo ${parsedData.classroom}.
+Tu tarea: Crear un examen de alta calidad con ${parsedData.numQuestions} problemas basados en cálculos únicamente en ${parsedData.subject}.
+
+REGLAS CRÍTICAS:
+1. SOLO incluye el contenido del examen - sin explicaciones ni comentarios
+2. SOLO crea problemas de ${parsedData.subject} - ninguna otra asignatura
+3. TODOS los problemas deben requerir cálculos y aplicación de conceptos
+4. NO preguntas teóricas o de memorización`,
         examSpecifications: (parsedData, formData, user) => `[ESPECIFICACIONES DEL EXAMEN]
 ASIGNATURA: ${parsedData.subject} (CRÍTICO: TODOS LOS PROBLEMAS DEBEN SER EXCLUSIVAMENTE SOBRE ESTA ASIGNATURA)
 NOMBRE DEL EXAMEN: ${formData.examName || 'Examen Científico'}
@@ -91,15 +137,57 @@ ${formData.additionalInfo}`,
         referenceMaterials: (fileContents) => `[MATERIALES DE REFERENCIA]
 Utiliza los siguientes materiales de referencia como guías para cómo podrían ser los problemas y ejercicios en tu examen:
 ${fileContents ? fileContents : "No se proporcionaron materiales de referencia."}`,
-        exampleTemplate: `[PLANTILLA DE EJEMPLO] (SOLO PARA REFERENCIA)
-Título: Examen Científico de Muestra - [ASIGNATURA]
-Subtítulo: 
+        exampleTemplate: (parsedData) => {
+            // Subject-specific examples in Spanish
+            const examples = {
+                "Matemáticas": `Título: Examen de Matemáticas - Cálculo
+            Subtítulo: Ecuaciones Diferenciales
 
-1) [Enunciado del problema con toda la información necesaria relacionada con la ASIGNATURA]
-   [Espacio para solución/trabajo]
+            1) [5 puntos] Encuentra la solución general de la ecuación diferencial:
+               dy/dx + 2y = e^(-2x)
+               [Espacio para solución]
 
-2) [Ejercicio con datos y variables relevantes relacionadas con la ASIGNATURA]
-   [Espacio para cálculos/solución]`,
+            2) [8 puntos] Resuelve la siguiente integral:
+               ∫(x^2 * ln(x))dx
+               [Espacio para solución]`,
+
+                "Física": `Título: Examen de Física - Mecánica
+            Subtítulo: Fuerzas y Movimiento
+
+            1) [5 puntos] Un objeto de 2kg es empujado hacia arriba por un plano inclinado sin fricción con una fuerza de 25N. Si el plano forma un ángulo de 30° con la horizontal, calcula la aceleración del objeto.
+               [Espacio para solución]
+
+            2) [8 puntos] Un péndulo de longitud 0.8m oscila con un período de 1.8s. Calcula el valor de la aceleración gravitacional en esta ubicación.
+               [Espacio para solución]`,
+
+                "Química": `Título: Examen de Química - Termodinámica
+            Subtítulo: Entalpía y Entropía
+
+            1) [5 puntos] Calcula el cambio de entalpía para la siguiente reacción:
+               2H₂(g) + O₂(g) → 2H₂O(g)
+               Dado: ΔH°f[H₂O(g)] = -241.8 kJ/mol
+               [Espacio para solución]
+
+            2) [8 puntos] Una reacción tiene ΔH = -92.4 kJ/mol y ΔS = -184 J/(mol·K). Calcula la temperatura a la que esta reacción se vuelve espontánea.
+               [Espacio para solución]`
+            };
+
+            // Default to a generic example if subject not found
+            const subjectExample = examples[parsedData.subject] || 
+            `Título: Examen de ${parsedData.subject} de Muestra
+            Subtítulo: Para Nivel ${parsedData.classroom}
+
+            1) [5 puntos] [Problema específico de ${parsedData.subject} que requiere cálculos]
+               [Espacio para solución]
+
+            2) [8 puntos] [Otro problema específico de ${parsedData.subject} que requiere aplicación de conceptos]
+               [Espacio para solución]`;
+
+            return `[PLANTILLA DE EJEMPLO] (SOLO PARA REFERENCIA)
+            NOTA: Lo siguiente es solo un formato de ejemplo. Tu examen debe tener un formato similar pero con problemas diferentes apropiados para la asignatura y el nivel de dificultad. No copies exactamente estos problemas.
+            
+            ${subjectExample}`;
+        },
         formattingRequirements: (parsedData, user) => `[REQUISITOS DE FORMATO]
 1. El examen DEBE estar completamente y únicamente en español
 2. La respuesta DEBE contener ÚNICAMENTE el examen, sin texto adicional ni comentarios.
@@ -117,21 +205,24 @@ Subtítulo:
 14. NO incluyas razonamientos, planificación o procesos de pensamiento en tu respuesta.
 15. NO expliques cómo creaste el examen ni qué consideraciones tomaste.
 16. SOLO incluye el contenido final del examen, comenzando directamente con el título.`,
+
         checklist: (parsedData) => `[LISTA DE VERIFICACIÓN - NO INCLUIR EN LA RESPUESTA]
 1) ¿Incluiste solo el examen y nada más?
-2) ¿Incluiste exactamente ${parsedData.numQuestions} problemas/ejercicios?
+2) ¿Incluiste exactamente ${parsedData.numQuestions} problemas?
 3) ¿Los puntos totales suman exactamente ${parsedData.totalPoints}?
-4) ¿Todos los problemas están basados en cálculos o aplicación en lugar de ser teóricos?
-5) ¿Incluiste toda la información necesaria para resolver cada problema?
+4) ¿Están todos los problemas enfocados exclusivamente en ${parsedData.subject}?
+5) ¿Todos los problemas requieren cálculos y aplicación de conceptos?
 6) ¿Seguiste estrictamente todos los requisitos de formato?
-7) ¿Eliminaste todos los razonamientos y explicaciones de tu respuesta?
-8) REVISIÓN CRÍTICA: ¿Todos los problemas se refieren exclusivamente a ${parsedData.subject}? De no ser así, revísalos inmediatamente.
+7) ¿Eliminaste TODOS los razonamientos y explicaciones de tu respuesta?
 
 Si alguna verificación falla, revisa tu respuesta antes de finalizar.`,
-        finalInstruction: (parsedData) => `[INSTRUCCIÓN FINAL - NO INCLUIR EN LA RESPUESTA]
-Ahora, elabore un examen científico completo siguiendo todas las especificaciones y requisitos anteriores.
-IMPORTANTE: Su respuesta debe comenzar con el título del examen y contener ÚNICAMENTE el contenido del mismo. NO incluya explicaciones, razonamientos ni procesos de pensamiento.
-RECUERDE: Cree PROBLEMAS y EJERCICIOS que requieran cálculos y la aplicación de conceptos científicos, no preguntas teóricas.
-IMPORTANTE: TODOS los problemas DEBEN ser EXCLUSIVAMENTE sobre ${parsedData.subject}. NO mezcle diferentes temas.`
-    }
+
+                // Add the missing finalInstruction property for Spanish
+                finalInstruction: `[INSTRUCCIÓN FINAL - NO INCLUIR EN LA RESPUESTA]
+Ahora, produce un examen científico completo siguiendo todas las especificaciones y requisitos anteriores.
+Si falta alguna información, anótala claramente en lugar de inventar detalles.
+CRÍTICO: Tu respuesta debe comenzar con el título del examen y contener SOLO el contenido del examen. NO incluyas explicaciones, razonamientos o procesos de pensamiento.`
+        }
 };
+
+        

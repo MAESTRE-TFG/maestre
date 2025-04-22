@@ -309,3 +309,57 @@ class DocumentViewSet(viewsets.ModelViewSet):
                 {"error": str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+    @action(detail=False, methods=['post'], url_path='convert-to-pdf')
+    def convert_to_pdf(self, request):
+        """Convert a scientific exam with formulas to PDF"""
+        exam_text = request.data.get('exam_text')
+        
+        if not exam_text:
+            return Response({'error': 'No exam text provided'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            # Create a temporary LaTeX file
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.tex') as temp_file:
+                # Write the LaTeX preamble
+                temp_file.write(b'''\\documentclass{article}
+                    \\usepackage[utf8]{inputenc}
+                    \\usepackage{amsmath}
+                    \\usepackage{amssymb}
+                    \\usepackage{tikz}
+                    \\usepackage{graphicx}
+                    \\usepackage{geometry}
+                    \\geometry{a4paper, margin=1in}
+                    \\title{Scientific Exam}
+                    \\begin{document}
+                ''')
+                
+                # Write the exam text
+                temp_file.write(exam_text.encode('utf-8'))
+                
+                # Write the LaTeX closing
+                temp_file.write(b'''\\end{document}''')
+                
+                temp_file_path = temp_file.name
+            
+            # Compile the LaTeX file to PDF
+            pdf_file_path = temp_file_path.replace('.tex', '.pdf')
+            os.system(f'pdflatex -interaction=nonstopmode -output-directory={os.path.dirname(temp_file_path)} {temp_file_path}')
+            
+            # Check if the PDF was created
+            if not os.path.exists(pdf_file_path):
+                return Response({'error': 'Failed to create PDF'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+            # Read the PDF file
+            with open(pdf_file_path, 'rb') as pdf_file:
+                pdf_content = pdf_file.read()
+            
+            # Clean up temporary files
+            os.unlink(temp_file_path)
+            os.unlink(pdf_file_path)
+            
+            # Return the PDF content
+            return Response({'pdf': pdf_content}, status=status.HTTP_200_OK)
+            
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

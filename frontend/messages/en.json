@@ -1371,6 +1371,16 @@
             "Educational context awareness",
             "Document translation"
           ]
+        },
+        "scienceExam": {
+          "title": "Science in seconds",
+          "content": "Instant science exáms with this IA tool:",
+          "features": [
+            "Exercise generation within seconds",
+            "Difficulty adjustable",
+            "Adapted to the classroom",
+            "Save directly to the classroom"
+          ]
         }
       }
     },
