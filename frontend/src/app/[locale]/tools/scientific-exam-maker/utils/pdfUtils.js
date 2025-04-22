@@ -1,151 +1,463 @@
-/**
- * Utilities for converting scientific exams to PDF format
- */
-import { jsPDF } from 'jspdf';
+import jsPDF from "jspdf";
 import 'jspdf-autotable';
-import { processExamText, processDiagrams } from './latexUtils';
 
-// Configuration for PDF generation
-const PDF_CONFIG = {
-  format: 'a4',
-  orientation: 'portrait',
-  unit: 'mm',
-  margins: {
-    top: 20,
-    right: 20,
+// Format exam text for display
+export const formatExamText = (text) => {
+  if (!text) return '';
+
+  // Create a copy of the text to work with
+  let formattedText = text;
+
+  // Define formatting rules
+  const formattingRules = [
+    // Text styling
+    {
+      pattern: /\*\*(.*?)\*\*|\*(?!\*)(.*?)(?<!\*)\*/g,
+      replacement: '<strong>$1$2</strong>'
+    },
+    {
+      pattern: /__(.*?)__|_(?!_)(.*?)(?<!_)_/g,
+      replacement: '<em>$1$2</em>'
+    },
+    {
+      pattern: /~~(.*?)~~/g,
+      replacement: '<u>$1</u>'
+    },
+
+    // Headers
+    {
+      pattern: /^# (.*?)$/gm,
+      replacement: '<h1 class="text-2xl font-bold my-4">$1</h1>'
+    },
+    {
+      pattern: /^## (.*?)$/gm,
+      replacement: '<h2 class="text-xl font-bold my-3">$1</h2>'
+    },
+    {
+      pattern: /^### (.*?)$/gm,
+      replacement: '<h3 class="text-lg font-bold my-2">$1</h3>'
+    },
+
+    // Scientific exam problem formats
+    {
+      pattern: /^(\[\d+\s+puntos\])(.*?)$/gm,
+      replacement: '<div class="my-4 question-block"><span class="font-bold text-lg">$1</span>$2</div>'
+    },
+    {
+      pattern: /^(Problema|Ejercicio)\s*(\d+)[:\.]\s*(.*?)$/gm,
+      replacement: '<div class="my-4 question-block"><span class="font-bold text-lg">$1 $2:</span> $3</div>'
+    },
+    
+    // Question formats
+    {
+      pattern: /^(Pregunta|Ejercicio|Problema)\s*(\d+)[:.]\s*(.*?)$/gm,
+      replacement: '<div class="my-4 question-block"><span class="font-bold text-lg">$1 $2:</span> $3</div>'
+    },
+    {
+      pattern: /^(Q|Question)\s*(\d+)[:\.]\s*(.*?)$/gm,
+      replacement: '<div class="my-4 question-block"><span class="font-bold text-lg">Question $2:</span> $3</div>'
+    },
+
+    // Lists and choices
+    {
+      pattern: /^(\d+)\.\s+(.*?)$/gm,
+      replacement: '<div class="ml-4 my-1 numbered-item"><span class="font-bold mr-2">$1.</span>$2</div>'
+    },
+    {
+      pattern: /^[-•]\s+(.*?)$/gm,
+      replacement: '<div class="ml-4 my-1 bullet-item">• $1</div>'
+    },
+    {
+      pattern: /^([a-z])[)\.]\s+(.*?)$/gm,
+      replacement: '<div class="ml-6 my-1 choice-item"><span class="font-semibold mr-2">$1)</span> $2</div>'
+    },
+    
+    // Scientific notation - preserve mathematical symbols
+    {
+      pattern: /\$([^$]+)\$/g,
+      replacement: '<span class="math-inline">$$$1$$</span>'
+    },
+    
+    // ASCII diagrams - preserve formatting
+    {
+      pattern: /(^[A-Z]\s*---\s*[A-Z]$)/gm,
+      replacement: '<pre class="diagram">$1</pre>'
+    },
+    
+    // Set notation
+    {
+      pattern: /\{([^}]+)\}/g,
+      replacement: '<span class="set-notation">{$1}</span>'
+    }
+  ];
+
+  // Apply all formatting rules
+  formattingRules.forEach(rule => {
+    formattedText = formattedText.replace(rule.pattern, rule.replacement);
+  });
+
+  // Handle paragraphs and line breaks
+  const paragraphs = formattedText.split(/\n\n+/);
+  formattedText = paragraphs.map(para => {
+    // Skip if already HTML
+    if (para.trim().startsWith('<')) return para;
+
+    // Process line breaks
+    const lines = para.split(/\n/);
+    return lines.length > 1
+      ? `<p class="my-2">${lines.join('<br>')}</p>`
+      : `<p class="my-2">${para}</p>`;
+  }).join('\n');
+
+  // Add wrapper div for consistent styling
+  return `<div class="exam-content">${formattedText}</div>`;
+};
+
+// Create a document-friendly version of the exam
+export const createDocumentVersion = (examText) => {
+  // Add page styling for print/document version
+  const documentStyles = `
+    <style>
+      @page {
+        size: A4;
+        margin: 2cm;
+      }
+      body {
+        font-family: 'Arial', sans-serif;
+        line-height: 1.5;
+      }
+      h1 {
+        font-size: 18pt;
+        text-align: center;
+        margin-bottom: 0.5cm;
+      }
+      h2 {
+        font-size: 14pt;
+        margin-bottom: 0.3cm;
+      }
+      .question-block {
+        margin: 0.5cm 0;
+      }
+      .choice-item {
+        margin-left: 1cm;
+      }
+      .math-inline {
+        font-family: 'Times New Roman', serif;
+        font-style: italic;
+      }
+      .diagram {
+        font-family: monospace;
+        white-space: pre;
+        margin: 0.5cm 0;
+      }
+      .set-notation {
+        font-family: 'Times New Roman', serif;
+      }
+      .footer {
+        text-align: center;
+        font-size: 9pt;
+        margin-top: 1cm;
+        color: #666;
+      }
+    </style>
+  `;
+  
+  // Create HTML document structure
+  return `<!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>Scientific Exam PDF</title>
+      ${documentStyles}
+    </head>
+    <body>
+      ${formatExamText(examText)}
+      <div class="footer">Generated by Scientific Exam Maker</div>
+    </body>
+    </html>`;
+};
+
+// Create a PDF version of the exam
+export const createPDFVersion = async (examText, subject, t) => {
+  const doc = new jsPDF({
+    orientation: 'portrait',
+    unit: 'mm',
+    format: 'a4'
+  });
+
+  // Add a title to the PDF
+  doc.setFontSize(18);
+  doc.text(`${subject} Exam`, 105, 20, { align: 'center' });
+
+  // Set font size for content
+  doc.setFontSize(12);
+
+  // Calculate available height on first page (accounting for title)
+  const pageWidth = doc.internal.pageSize.getWidth();
+  const pageHeight = doc.internal.pageSize.getHeight();
+  const margins = {
+    top: 30, // Start below the title
     bottom: 20,
-    left: 20
-  },
-  fontSize: {
-    title: 16,
-    subtitle: 14,
-    question: 12,
-    text: 10
+    left: 20,
+    right: 20
+  };
+
+  // Process the exam text to maintain structure
+  const processedText = processScientificExamText(examText);
+  
+  // Add the processed text to the PDF
+  addStructuredTextToPDF(doc, processedText, margins, pageWidth, pageHeight);
+
+  // Add footer to all pages
+  const totalPages = doc.internal.getNumberOfPages();
+  for (let i = 1; i <= totalPages; i++) {
+    doc.setPage(i);
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(
+      `${subject} Scientific Exam - Page ${i} of ${totalPages}`,
+      105,
+      pageHeight - 10,
+      { align: 'center' }
+    );
   }
+
+  return doc;
 };
 
 /**
- * Converts a scientific exam to PDF format
- * @param {string} examText - The complete exam text
- * @param {Object} options - Options for PDF generation
- * @returns {Blob} - PDF file as a Blob
+ * Check if a line is part of a graph diagram
+ * @param {string} line - The line to check
+ * @returns {boolean} - True if the line is part of a graph diagram
  */
-export const convertExamToPdf = async (examText, options = {}) => {
-  // Create a new PDF document
-  const pdf = new jsPDF({
-    orientation: options.orientation || PDF_CONFIG.orientation,
-    unit: PDF_CONFIG.unit,
-    format: PDF_CONFIG.format
-  });
+const isGraphDiagramLine = (line) => {
+  // Check for common graph diagram patterns
+  return (
+    // Edge patterns like "A---B" or "A--3--B"
+    line.match(/^[A-Z]\s*-{2,3}[0-9]*\s*[A-Z]/) ||
+    // Vertex with weight patterns like "C<------D  /  \  5  2  /"
+    line.match(/[A-Z]<-{2,}[A-Z]/) ||
+    // Vertex patterns like "\E---------F"
+    line.match(/\\[A-Z]-{2,}[A-Z]/) ||
+    // Divider lines in diagrams
+    line.match(/^-{3,}$/) ||
+    // Slashes and backslashes used in diagrams
+    line.match(/^[\/\\]+\s*$/) ||
+    // Diagram labels and weights
+    line.match(/^\s*[0-9]+\s*[0-9]*\s*$/)
+  );
+};
+
+/**
+ * Process scientific exam text to maintain structure
+ * @param {string} examText - The exam text
+ * @returns {Array} - Array of structured content objects
+ */
+const processScientificExamText = (examText) => {
+  if (!examText) return [];
   
-  // Process the exam text to convert mathematical notations to LaTeX
-  const processedText = processExamText(examText);
+  // Split the text into lines
+  const lines = examText.split('\n');
   
-  // Process diagrams in the exam text
-  const processedTextWithDiagrams = processDiagrams(processedText);
+  // Process the lines into structured content
+  const structuredContent = [];
+  let currentProblem = null;
+  let currentSection = null;
+  let inDiagram = false;
+  let diagramContent = [];
   
-  // Extract title and subtitle
-  const lines = processedTextWithDiagrams.split('\n');
-  const title = lines[0] || 'Scientific Exam';
-  const subtitle = lines[1] || '';
-  
-  // Remove title and subtitle from the text
-  const contentText = lines.slice(2).join('\n');
-  
-  // Add title and subtitle to the PDF
-  pdf.setFontSize(PDF_CONFIG.fontSize.title);
-  pdf.text(title, PDF_CONFIG.margins.left, PDF_CONFIG.margins.top);
-  
-  pdf.setFontSize(PDF_CONFIG.fontSize.subtitle);
-  pdf.text(subtitle, PDF_CONFIG.margins.left, PDF_CONFIG.margins.top + 10);
-  
-  // Split the content into questions
-  const questions = contentText.split(/(\d+\)\s+\[\d+\s+points\])/g).filter(Boolean);
-  
-  // Add questions to the PDF
-  let y = PDF_CONFIG.margins.top + 20;
-  
-  for (let i = 0; i < questions.length; i += 2) {
-    const questionHeader = questions[i] || '';
-    const questionContent = questions[i + 1] || '';
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
     
-    // Check if we need to add a new page
-    if (y > pdf.internal.pageSize.height - PDF_CONFIG.margins.bottom) {
-      pdf.addPage();
-      y = PDF_CONFIG.margins.top;
+    // Skip empty lines but preserve them in diagrams
+    if (!line.trim()) {
+      if (inDiagram) {
+        diagramContent.push('');
+      } else if (diagramContent.length > 0) {
+        // End diagram if we were in one
+        structuredContent.push({
+          type: 'diagram',
+          content: diagramContent
+        });
+        diagramContent = [];
+        inDiagram = false;
+      }
+      continue;
     }
     
-    // Add question header
-    pdf.setFontSize(PDF_CONFIG.fontSize.question);
-    pdf.text(questionHeader, PDF_CONFIG.margins.left, y);
-    y += 7;
-    
-    // Add question content
-    pdf.setFontSize(PDF_CONFIG.fontSize.text);
-    
-    // Split the content into lines to handle line breaks
-    const contentLines = questionContent.split('\n');
-    
-    for (const line of contentLines) {
-      // Check if we need to add a new page
-      if (y > pdf.internal.pageSize.height - PDF_CONFIG.margins.bottom) {
-        pdf.addPage();
-        y = PDF_CONFIG.margins.top;
+    // Check for problem headers
+    const problemMatch = line.match(/^(?:Problema|Ejercicio)\s*(\d+)[:\.]\s*(.*)/);
+    if (problemMatch || line.match(/^\[\d+\s+puntos\]/)) {
+      // End any previous diagram
+      if (diagramContent.length > 0) {
+        structuredContent.push({
+          type: 'diagram',
+          content: diagramContent
+        });
+        diagramContent = [];
+        inDiagram = false;
       }
       
-      // Add the line to the PDF
-      pdf.text(line, PDF_CONFIG.margins.left, y);
-      y += 5;
+      // Add the problem header
+      currentProblem = {
+        type: 'problem',
+        number: problemMatch ? problemMatch[1] : '',
+        title: problemMatch ? problemMatch[2] : line,
+        content: line
+      };
+      structuredContent.push(currentProblem);
+      continue;
     }
     
-    // Add some space between questions
-    y += 5;
+    // Check for subquestions
+    const subquestionMatch = line.match(/^([a-z])[)\.]\s+(.*)/);
+    if (subquestionMatch) {
+      // End any previous diagram
+      if (diagramContent.length > 0) {
+        structuredContent.push({
+          type: 'diagram',
+          content: diagramContent
+        });
+        diagramContent = [];
+        inDiagram = false;
+      }
+      
+      // Add the subquestion
+      currentSection = {
+        type: 'subquestion',
+        letter: subquestionMatch[1],
+        content: line
+      };
+      structuredContent.push(currentSection);
+      continue;
+    }
+    
+    // Check for diagram lines using the helper function
+    if (isGraphDiagramLine(line)) {
+      // Start or continue a diagram
+      inDiagram = true;
+      diagramContent.push(line);
+      continue;
+    } else if (inDiagram) {
+      // If we're in a diagram but this line doesn't match diagram patterns,
+      // check if it's a continuation or if we should end the diagram
+      
+      // If the line contains quotes (like "A---B"), it might be part of a diagram description
+      if (line.includes('"') || line.includes("'")) {
+        diagramContent.push(line);
+        continue;
+      }
+      
+      // If the next line is a diagram line, this might be part of the diagram
+      if (i + 1 < lines.length && isGraphDiagramLine(lines[i + 1])) {
+        diagramContent.push(line);
+        continue;
+      }
+      
+      // Otherwise, end the diagram
+      structuredContent.push({
+        type: 'diagram',
+        content: diagramContent
+      });
+      diagramContent = [];
+      inDiagram = false;
+      
+      // Process this line as regular text
+      structuredContent.push({
+        type: 'text',
+        content: line
+      });
+    } else {
+      // Regular text content
+      structuredContent.push({
+        type: 'text',
+        content: line
+      });
+    }
   }
   
-  // Return the PDF as a Blob
-  return pdf.output('blob');
+  // Add any remaining diagram
+  if (diagramContent.length > 0) {
+    structuredContent.push({
+      type: 'diagram',
+      content: diagramContent
+    });
+  }
+  
+  return structuredContent;
 };
 
 /**
- * Renders LaTeX formulas in the PDF
- * Note: This is a placeholder function. In a real implementation,
- * you would need to use a library that can render LaTeX in PDFs.
- * @param {jsPDF} pdf - The PDF document
- * @param {string} formula - The LaTeX formula
- * @param {number} x - X coordinate
- * @param {number} y - Y coordinate
+ * Add structured text to PDF
+ * @param {jsPDF} doc - The PDF document
+ * @param {Array} structuredContent - Array of structured content objects
+ * @param {Object} margins - Page margins
+ * @param {number} pageWidth - Page width
+ * @param {number} pageHeight - Page height
  */
-const renderLatexFormula = (pdf, formula, x, y) => {
-  // This is a placeholder for LaTeX rendering
-  // In a real implementation, you would need to:
-  // 1. Convert the LaTeX formula to an image or SVG
-  // 2. Add the image to the PDF
+const addStructuredTextToPDF = (doc, structuredContent, margins, pageWidth, pageHeight) => {
+  let yPosition = margins.top;
   
-  // For now, we'll just add the formula as text
-  pdf.text(`[LaTeX: ${formula}]`, x, y);
-};
-
-/**
- * Creates a download link for the PDF
- * @param {Blob} pdfBlob - PDF file as a Blob
- * @param {string} filename - Name of the file to download
- */
-export const downloadPdf = (pdfBlob, filename = 'scientific-exam.pdf') => {
-  // Create a URL for the Blob
-  const url = URL.createObjectURL(pdfBlob);
-  
-  // Create a download link
-  const link = document.createElement('a');
-  link.href = url;
-  link.download = filename;
-  
-  // Trigger the download
-  document.body.appendChild(link);
-  link.click();
-  
-  // Clean up
-  document.body.removeChild(link);
-  URL.revokeObjectURL(url);
+  for (const item of structuredContent) {
+    // Check if we need a new page
+    if (yPosition > pageHeight - margins.bottom - 10) {
+      doc.addPage();
+      yPosition = margins.top;
+    }
+    
+    switch (item.type) {
+      case 'problem':
+        // Add problem header with bold text
+        doc.setFont(undefined, 'bold');
+        doc.setFontSize(14);
+        doc.text(item.content, margins.left, yPosition);
+        doc.setFont(undefined, 'normal');
+        doc.setFontSize(12);
+        yPosition += 10;
+        break;
+        
+      case 'subquestion':
+        // Add subquestion with indentation
+        doc.text(item.content, margins.left + 5, yPosition);
+        yPosition += 7;
+        break;
+        
+      case 'diagram':
+        // Add diagram with monospace font
+        doc.setFont('courier', 'normal');
+        
+        // Process each line of the diagram
+        for (const line of item.content) {
+          // Skip empty lines but add space
+          if (!line.trim()) {
+            yPosition += 3;
+            continue;
+          }
+          
+          doc.text(line, margins.left + 10, yPosition);
+          yPosition += 5;
+        }
+        
+        doc.setFont(undefined, 'normal');
+        yPosition += 2; // Extra space after diagram
+        break;
+        
+      case 'text':
+        // Handle mathematical notation
+        const textWithMath = item.content.replace(/\$([^$]+)\$/g, '$1');
+        
+        // Split text to fit page width
+        const availableWidth = pageWidth - margins.left - margins.right;
+        const textLines = doc.splitTextToSize(textWithMath, availableWidth);
+        
+        // Add each line
+        for (const line of textLines) {
+          doc.text(line, margins.left, yPosition);
+          yPosition += 6;
+        }
+        break;
+    }
+  }
 };
 
 /**
@@ -155,6 +467,15 @@ export const downloadPdf = (pdfBlob, filename = 'scientific-exam.pdf') => {
  * @param {Object} options - Options for PDF generation
  */
 export const convertAndDownloadPdf = async (examText, filename = 'scientific-exam.pdf', options = {}) => {
-  const pdfBlob = await convertExamToPdf(examText, options);
-  downloadPdf(pdfBlob, filename);
+  try {
+    const doc = await createPDFVersion(examText, options.subject || 'Scientific', options.t);
+    
+    // Save the PDF
+    doc.save(filename);
+    
+    return true;
+  } catch (error) {
+    console.error('Error converting exam to PDF:', error);
+    throw error;
+  }
 };

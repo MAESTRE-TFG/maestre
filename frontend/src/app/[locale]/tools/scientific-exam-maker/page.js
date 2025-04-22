@@ -5,13 +5,13 @@ import { useTheme } from "@/components/theme-provider";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { useRouter } from "next/navigation";
 import Alert from "@/components/ui/Alert";
-import { formatExamText, createPDFVersion } from "../exam-maker/utils/pdfUtils";
+import { formatExamText, createPDFVersion } from "./utils/pdfUtils";
 import {
   uploadPDFToClassroom,
   processUploadedFile,
   processMaterialFromClassroom,
   generateExam
-} from "../exam-maker/utils/apiUtils";
+} from "./utils/apiUtils";
 import ExamForm from "../components/ExamForm";
 import MaterialsModal from "../components/MaterialsModal";
 import ExamResultModal from "../components/ExamResultModal";
