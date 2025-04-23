@@ -5,7 +5,7 @@ import { useTheme } from "@/components/theme-provider";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { useRouter } from "next/navigation";
 import Alert from "@/components/ui/Alert";
-import { formatExamText, createPDFVersion } from "./utils/pdfUtils";
+import { formatExamText, createPDFVersion, convertAndDownloadWord, uploadWordToClassroom } from "./utils/pdfUtils";
 import {
   uploadPDFToClassroom,
   processUploadedFile,
@@ -366,6 +366,8 @@ const ScientificExamMaker = ({ params }) => {
         formatExamText={formatExamText}
         createPDFVersion={createPDFVersion}
         uploadPDFToClassroom={uploadPDFToClassroom}
+        convertAndDownloadWord={convertAndDownloadWord}
+        uploadWordToClassroom={uploadWordToClassroom}
         formData={formData}
         addAlert={addAlert}
       />

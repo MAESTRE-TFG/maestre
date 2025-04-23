@@ -354,8 +354,8 @@
       "generateExam": "Generar Examen",
       "generating": "Generando Examen...",
       "close": "Cerrar",
-      "downloadPDF": "Descargar PDF",
-      "saveToClassroom": "Guardar en el Aula",
+      "downloadWord": "Descargar Word",
+      "saveWordToClassroom": "Guardar en el Aula",
       "cancel": "Cancelar"
     },
     "form": {

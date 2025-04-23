@@ -91,7 +91,13 @@ ${fileContents ? fileContents : "No reference materials provided."}`,
 13. The context level is "${parsedData.context}" - ${parsedData.context === "none" ? "create direct exercises with minimal context" : parsedData.context === "medium" ? "create problems with moderate context" : "create extended problems with rich context and multiple pieces of information"}.
 14. DO NOT include any reasoning, planning, or thought process in your response.
 15. DO NOT explain how you created the exam or what considerations you made.
-16. ONLY output the final exam content, starting directly with the title.`,
+16. ONLY output the final exam content, starting directly with the title.
+17. CRITICAL: ALL mathematical formulas, equations, and diagrams IN THE QUESTIONS MUST be created using ASCII characters only. DO NOT suggest adding images or formulas later nor answering with ASCII.
+18. For mathematical formulas in the questions, use standard ASCII notation: ^ for exponents, / for fractions, sqrt() for square roots, etc.
+19. For diagrams (like graphs, circuits, etc.) in the questions, use ASCII art with characters like |, -, +, /, \\, and letters.
+20. For chemical equations in the questions, use ASCII notation like H2O, CO2, etc. with subscripts indicated by plain numbers.
+21. For physics diagrams in the questions, use ASCII characters to represent vectors, forces, and other elements.
+22. DO NOT include placeholders like [INSERT FORMULA HERE] or [ADD DIAGRAM LATER] - all content must be complete and ready to use.`,
         
         // Add the missing checklist function
         checklist: (parsedData) => `[CHECKLIST - DO NOT INCLUDE IN RESPONSE]
@@ -109,7 +115,17 @@ If any check fails, revise your answer before finalizing.`,
         finalInstruction: `[FINAL INSTRUCTION - DO NOT INCLUDE IN RESPONSE]
 Now, produce a complete scientific exam following all the specifications and requirements above.
 If any information is missing, note it clearly rather than inventing details.
-CRITICAL: Your response must begin with the exam title and contain ONLY the exam content. DO NOT include any explanations, reasoning, or thought process.`
+CRITICAL: Your response must begin with the exam title and contain ONLY the exam content. DO NOT include any explanations, reasoning, or thought process.
+
+IMPORTANT REMINDER ABOUT FORMULAS AND DIAGRAMS:
+- ALL mathematical formulas in the questions must be in ASCII format (e.g., "x^2 + 2x - 3 = 0", "F = G*m1*m2/r^2")
+- ALL diagrams in the questions must be created with ASCII characters (e.g., use "|", "-", "+", "/", "\\", letters, etc.)
+- For graphs: Use "A---B" to show connections, "A<---B" for directed edges
+- For coordinate systems: Use "+", "-", "|" to create axes
+- For circuits: Use "-||-" for capacitors, "-/\/\/-" for resistors, etc.
+- For chemical structures: Use ASCII representations like "H-C-H" for methane
+- For vectors: Use arrows like "-->", "^", "v" to indicate direction
+- DO NOT leave any placeholders for formulas or diagrams to be added later`
     },
 
     es: {
@@ -204,7 +220,13 @@ ${fileContents ? fileContents : "No se proporcionaron materiales de referencia."
 13. El nivel de contexto es "${parsedData.context}" - ${parsedData.context === "none" ? "crea ejercicios directos con contexto mínimo" : parsedData.context === "medium" ? "crea problemas con contexto moderado" : "crea problemas extendidos con contexto rico y múltiples piezas de información"}.
 14. NO incluyas razonamientos, planificación o procesos de pensamiento en tu respuesta.
 15. NO expliques cómo creaste el examen ni qué consideraciones tomaste.
-16. SOLO incluye el contenido final del examen, comenzando directamente con el título.`,
+16. SOLO incluye el contenido final del examen, comenzando directamente con el título.
+17. CRÍTICO: TODAS las fórmulas matemáticas, ecuaciones y diagramas DE LAS PREGUNTAS DEBEN crearse utilizando ÚNICAMENTE caracteres ASCII. NO sugieras responder con ASCII ni añadir imágenes o fórmulas posteriormente.
+18. Para fórmulas matemáticas en las preguntas, usa notación ASCII estándar: ^ para exponentes, / para fracciones, sqrt() para raíces cuadradas, etc.
+19. Para diagramas (como gráficos, circuitos, etc.) en las preguntas, usa arte ASCII con caracteres como |, -, +, /, \\, y letras.
+20. Para ecuaciones químicas en las preguntas, usa notación ASCII como H2O, CO2, etc. con subíndices indicados por números simples.
+21. Para diagramas de física en las preguntas, usa caracteres ASCII para representar vectores, fuerzas y otros elementos.
+22. NO incluyas marcadores de posición como [INSERTAR FÓRMULA AQUÍ] o [AÑADIR DIAGRAMA DESPUÉS] - todo el contenido debe estar completo y listo para usar.`,
 
         checklist: (parsedData) => `[LISTA DE VERIFICACIÓN - NO INCLUIR EN LA RESPUESTA]
 1) ¿Incluiste solo el examen y nada más?
@@ -221,8 +243,18 @@ Si alguna verificación falla, revisa tu respuesta antes de finalizar.`,
                 finalInstruction: `[INSTRUCCIÓN FINAL - NO INCLUIR EN LA RESPUESTA]
 Ahora, produce un examen científico completo siguiendo todas las especificaciones y requisitos anteriores.
 Si falta alguna información, anótala claramente en lugar de inventar detalles.
-CRÍTICO: Tu respuesta debe comenzar con el título del examen y contener SOLO el contenido del examen. NO incluyas explicaciones, razonamientos o procesos de pensamiento.`
-        }
+CRÍTICO: Tu respuesta debe comenzar con el título del examen y contener SOLO el contenido del examen. NO incluyas explicaciones, razonamientos o procesos de pensamiento.
+
+RECORDATORIO IMPORTANTE SOBRE FÓRMULAS Y DIAGRAMAS:
+- TODAS las fórmulas matemáticas de las preguntas deben estar en formato ASCII (ej., "x^2 + 2x - 3 = 0", "F = G*m1*m2/r^2")
+- TODOS los diagramas de las preguntas deben crearse con caracteres ASCII (ej., usa "|", "-", "+", "/", "\\", letras, etc.)
+- Para grafos: Usa "A---B" para mostrar conexiones, "A<---B" para aristas dirigidas
+- Para sistemas de coordenadas: Usa "+", "-", "|" para crear ejes
+- Para circuitos: Usa "-||-" para condensadores, "-/\/\/-" para resistencias, etc.
+- Para estructuras químicas: Usa representaciones ASCII como "H-C-H" para metano
+- Para vectores: Usa flechas como "-->", "^", "v" para indicar dirección
+- NO dejes marcadores de posición para fórmulas o diagramas que se añadirán después`
+    }
 };
 
         

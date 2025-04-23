@@ -478,6 +478,14 @@
           }
         }
       },
+      "buttons": {
+        "generateExam": "Generate Exam",
+        "generating": "Generating Examen...",
+        "close": "Close",
+        "downloadWord": "Download Word",
+        "saveWordToClassroom": "Save in the Classroom",
+        "cancel": "Cancel"
+      },
       "form": {
         "subject": "Subject",
         "subjectPlaceholder": "e.g., Algebra, Physics, Chemistry",

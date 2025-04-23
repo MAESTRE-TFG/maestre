@@ -1,5 +1,7 @@
 import jsPDF from "jspdf";
 import 'jspdf-autotable';
+import axios from "axios";
+import { getApiBaseUrl } from "@/lib/api";
 
 // Format exam text for display
 export const formatExamText = (text) => {
@@ -477,5 +479,111 @@ export const convertAndDownloadPdf = async (examText, filename = 'scientific-exa
   } catch (error) {
     console.error('Error converting exam to PDF:', error);
     throw error;
+  }
+};
+
+/**
+ * Converts a scientific exam to Word document and downloads it
+ * @param {string} examText - The complete exam text
+ * @param {string} filename - Name of the file to download
+ * @param {Object} options - Options for Word generation
+ */
+export const convertAndDownloadWord = async (examText, filename = 'scientific-exam.docx', options = {}) => {
+  try {
+    // Create a blob with the exam text
+    const blob = new Blob([examText], { type: 'text/plain' });
+    
+    // Create form data for the API request
+    const formData = new FormData();
+    formData.append('text', examText);
+    formData.append('title', options.subject || 'Scientific Exam');
+    formData.append('format', 'docx');
+    
+    // Make the API request to convert text to Word
+    const response = await axios.post(
+      `${getApiBaseUrl()}/api/materials/convert-text-to-docx/`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Token ${options.token}`,
+        },
+        responseType: 'blob',
+      }
+    );
+    
+    // Create a download link for the Word document
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', filename);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    
+    return true;
+  } catch (error) {
+    console.error('Error converting exam to Word:', error);
+    throw error;
+  }
+};
+
+/**
+ * Uploads a scientific exam as a Word document to the classroom
+ * @param {string} examText - The complete exam text
+ * @param {string} classroomId - ID of the classroom
+ * @param {string} fileName - Name of the file
+ * @param {string} token - Authentication token
+ * @param {Function} showAlert - Function to show alerts
+ * @param {Object} t - Translation function
+ * @returns {boolean} Success status
+ */
+export const uploadWordToClassroom = async (examText, classroomId, fileName, token, showAlert, t) => {
+  if (!classroomId) {
+    showAlert("error", "Missing classroom");
+    return false;
+  }
+
+  try {
+    // Create form data for the API request
+    const formData = new FormData();
+    formData.append('text', examText);
+    formData.append('title', fileName.replace('.docx', ''));
+    formData.append('format', 'docx');
+    formData.append('classroom', classroomId);
+    
+    // Make the API request to convert text to Word and upload to classroom
+    await axios.post(
+      `${getApiBaseUrl()}/api/materials/convert-text-to-docx-and-upload/`,
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+          Authorization: `Token ${token}`,
+        },
+      }
+    );
+
+    showAlert("success", "Word document uploaded successfully");
+    return true;
+  } catch (error) {
+    if (error.response) {
+      if (error.response.status === 400) {
+        const errorMsg =
+          error.response.data && error.response.data.error
+            ? error.response.data.error
+            : "Unknown error occurred";
+        showAlert("error", errorMsg);
+      } else if (error.response.status === 401) {
+        showAlert("error", "Authentication required");
+      } else {
+        showAlert("error", `${error.response.status} - ${error.response.statusText}`);
+      }
+    } else if (error.request) {
+      showAlert("error", "Network error. Please check your connection.");
+    } else {
+      showAlert("error", error.message);
+    }
+    return false;
   }
 };
