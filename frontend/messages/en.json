@@ -1021,7 +1021,7 @@
         "subtitle": "Manage your classes"
       },
       "noClasses": "No classes found",
-      "createClassButton": "Create New Classroom +",
+      "createClassButton": "Create New Classroom",
       "openClassButton": "Open Class",
       "editButton": "Edit",
       "courseLabel": "Course",

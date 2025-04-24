@@ -134,12 +134,20 @@ const ClassroomsList = ( params ) => {
             ) : (
               <>
                 <div className="flex justify-center mb-6">
-                  <button
-                    className="btn btn-success py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center px-6"
-                    onClick={handleCreate}
-                  >
-                    {t("createClassButton")}
-                  </button>
+                    <button
+                      className={cn(
+                        "px-4 py-3 rounded-full font-medium text-white transition-all",
+                        "bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700",
+                        "shadow-md hover:shadow-lg transform hover:-translate-y-0.5",
+                        "flex items-center gap-2"
+                      )}
+                      onClick={handleCreate}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                      </svg>
+                      {t("createClassButton")}
+                    </button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">

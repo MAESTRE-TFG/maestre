@@ -1018,7 +1018,7 @@
       "subtitle": "Crea, edita y gestiona tus clases"
     },
     "noClasses": "No se encontraron clases",
-    "createClassButton": "Crear Nueva Clase +",
+    "createClassButton": "Crear Nueva Clase",
     "openClassButton": "Abrir Clase",
     "editButton": "Editar",
     "courseLabel": "Curso",
@@ -1114,7 +1114,7 @@
 
   "StudentModal": {
     "editStudent": "Editar estudiante",
-    "addStudent": "Añadir  estudiante",
+    "addStudent": "Añadir estudiante",
     "nameLabel": "Nombre",
     "surnameLabel": "Apellido",
     "cancelButton": "Cancelar",
