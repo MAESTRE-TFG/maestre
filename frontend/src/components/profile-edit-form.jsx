@@ -114,8 +114,9 @@ export function ProfileEditForm({
                   <Label
                     className="flex items-center"
                     style={{
-                      fontFamily: "'Alfa Slab One', sans-serif",
+                      fontFamily: "'DM Sans', sans-serif",
                       fontSize: "1rem",
+                      fontWeight: "bold",
                     }}
                     htmlFor="username"
                   >
@@ -137,8 +138,9 @@ export function ProfileEditForm({
                   <Label
                     className="flex items-center"
                     style={{
-                      fontFamily: "'Alfa Slab One', sans-serif",
+                      fontFamily: "'DM Sans', sans-serif",
                       fontSize: "1rem",
+                      fontWeight: "bold",
                     }}
                     htmlFor="email"
                   >
@@ -162,7 +164,10 @@ export function ProfileEditForm({
                 <LabelInputContainer className="flex-1">
                   <Label
                     className="flex items-center"
-                    style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: "1rem",
+                      fontWeight: "bold", }}
                     htmlFor="name"
                   >
                     <IconIdBadge className="mr-2 h-5 w-5 text-purple-500" />
@@ -182,7 +187,11 @@ export function ProfileEditForm({
                 <LabelInputContainer className="flex-1">
                   <Label
                     className="flex items-center"
-                    style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: "1rem",
+                      fontWeight: "bold",
+                    }}
                     htmlFor="surname"
                   >
                     <IconEdit className="mr-2 h-5 w-5 text-amber-500" />
@@ -205,10 +214,9 @@ export function ProfileEditForm({
             {/* Password Section */}
             <h3
               className={cn(
-                "text-lg font-bold mt-4",
+                "text-lg font-extrabold mt-4",
                 theme === "dark" ? "text-white" : "text-gray-800"
               )}
-              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             >
               {t("password.changeTitle")} 
             </h3>
@@ -224,7 +232,10 @@ export function ProfileEditForm({
             <LabelInputContainer className="flex-1">
               <Label
                 className="flex items-center"
-                style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: "1rem",
+                  fontWeight: "bold", }}
                 htmlFor="oldPassword"
               >
                 <IconLock className="mr-2 h-5 w-5 text-red-500" />
@@ -244,7 +255,10 @@ export function ProfileEditForm({
               <LabelInputContainer className="flex-1 relative">
                 <Label
                   className="flex items-center"
-                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: "1rem",
+                    fontWeight: "bold", }}
                   htmlFor="password"
                 >
                   <IconLock className="mr-2 h-5 w-5 text-red-500" />
@@ -273,7 +287,10 @@ export function ProfileEditForm({
               <LabelInputContainer className="flex-1 relative">
                 <Label
                   className="flex items-center"
-                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: "1rem",
+                    fontWeight: "bold", }}
                   htmlFor="confirmPassword"
                 >
                   <IconLock className="mr-2 h-5 w-5 text-red-500" />
@@ -307,7 +324,10 @@ export function ProfileEditForm({
               <LabelInputContainer className="mb-4">
                 <Label
                   className="flex items-center"
-                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: "1rem",
+                    fontWeight: "bold", }}
                   htmlFor="region"
                 >
                   <IconWorld className="mr-2 h-5 w-5 text-blue-500" />
@@ -336,7 +356,10 @@ export function ProfileEditForm({
               <LabelInputContainer className="mb-4">
                 <Label
                   className="flex items-center"
-                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: "1rem",
+                    fontWeight: "bold", }}
                   htmlFor="city"
                 >
                   <IconMapPin className="mr-2 h-5 w-5 text-green-500" />
@@ -357,7 +380,10 @@ export function ProfileEditForm({
               <LabelInputContainer className="mb-5">
                 <Label
                   className="flex items-center"
-                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: "1rem",
+                    fontWeight: "bold", }}
                   htmlFor="school"
                 >
                   <IconSchool className="mr-2 h-5 w-5 text-purple-500" />
@@ -383,7 +409,10 @@ export function ProfileEditForm({
                 </select>
               </LabelInputContainer>
               <p
-                style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: "1rem",
+                  fontWeight: "bold", }}
                 className={cn(
                   "text-sm mb-2",
                   theme === "dark" ? "text-white" : "text-black"
@@ -400,7 +429,24 @@ export function ProfileEditForm({
                 )}
                 type="button"
               >
-                {t("fields.school.createButton")} &rarr; 
+                <span className="font-bold flex items-center gap-2">
+                  {t("fields.school.createButton")}
+                  <svg 
+                    xmlns="http://www.w3.org/2000/svg" 
+                    width="20" 
+                    height="20" 
+                    viewBox="0 0 24 24" 
+                    fill="none" 
+                    stroke="currentColor" 
+                    strokeWidth="2" 
+                    strokeLinecap="round" 
+                    strokeLinejoin="round"
+                    className="transition-transform group-hover:translate-x-1"
+                  >
+                    <path d="M5 12h14"/>
+                    <path d="m12 5 7 7-7 7"/>
+                  </svg>
+                </span>
               </button>
             </div>
           )}
@@ -415,7 +461,24 @@ export function ProfileEditForm({
             type="button"
             onClick={handleCancel}
           >
-            &larr; {t("buttons.cancel")} 
+            <span className="font-bold flex items-center gap-2">
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="20" 
+                height="20" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+                className="rotate-180 transition-transform group-hover:-translate-x-1"
+              >
+                <path d="M5 12h14"/>
+                <path d="m12 5 7 7-7 7"/>
+              </svg>
+              {t("buttons.cancel")}
+            </span>
           </button>
           <button
             className={cn(
@@ -424,7 +487,24 @@ export function ProfileEditForm({
             )}
             type="submit"
           >
-            {t("buttons.update")} &rarr; 
+          <span className="font-bold flex items-center gap-2">
+            {t("buttons.update")}
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              width="20" 
+              height="20" 
+              viewBox="0 0 24 24" 
+              fill="none" 
+              stroke="currentColor" 
+              strokeWidth="2" 
+              strokeLinecap="round" 
+              strokeLinejoin="round"
+              className="transition-transform group-hover:translate-x-1"
+            >
+              <path d="M5 12h14"/>
+              <path d="m12 5 7 7-7 7"/>
+            </svg>
+          </span>
           </button>
         </div>
       </form>

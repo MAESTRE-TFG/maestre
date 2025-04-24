@@ -112,6 +112,27 @@ export default function CreateSchool( params ) {
 
               <style jsx global>{`
                 @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
+                select {
+                  appearance: none;
+                  background: ${theme === "dark" ? "#333" : "#fff"};
+                  color: ${theme === "dark" ? "#fff" : "#000"};
+                  border: 1px solid ${theme === "dark" ? "#555" : "#ccc"};
+                  padding: 0.5rem;
+                  border-radius: 0.375rem;
+                  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+                }
+                select:focus {
+                  outline: none;
+                  border-color: ${theme === "dark" ? "#888" : "#007bff"};
+                  box-shadow: 0 0 0 3px
+                    ${theme === "dark"
+                      ? "rgba(136, 136, 136, 0.5)"
+                      : "rgba(0, 123, 255, 0.25)"};
+                }
+                option {
+                  background: ${theme === "dark" ? "#333" : "#fff"};
+                  color: ${theme === "dark" ? "#fff" : "#000"};
+                }
               `}</style>
 
               <div className="w-full max-w-4xl">

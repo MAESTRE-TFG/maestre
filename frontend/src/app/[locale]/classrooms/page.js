@@ -96,16 +96,18 @@ const ClassroomsList = ( params ) => {
           </div>
         )}
 
-        <div className="relative w-full flex-1 flex flex-col items-center py-12">
-          <div className="w-full max-w-4xl flex items-center mb-8 justify-center space-x-6">
-            <IconSchool className={`w-20 h-20 drop-shadow-lg text-primary`} />
-            <div className="text-center">
-              <h1 className={`text-4xl font-extrabold mb-2 ${theme === "dark" ? "text-white" : "text-gray-800"}`}>
-                {t("header.title")}
-              </h1>
-              <p className={`text-xl ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-                {t("header.subtitle")}
-              </p>
+        <div className="relative w-full flex-1 flex flex-col items-center py-14">
+          <div className="w-full max-w-4xl flex flex-col items-center mb-8">
+            <div className="flex items-center gap-4">
+              <IconSchool className={`w-16 h-16 drop-shadow-lg text-primary`} />
+              <div className="text-center">
+                <h1 className={`text-4xl font-extrabold mb-2 ${theme === "dark" ? "text-white" : "text-gray-800"}`}>
+                  {t("header.title")}
+                </h1>
+                <p className={`text-xl ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+                  {t("header.subtitle")}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -224,6 +226,21 @@ const ClassroomsList = ( params ) => {
                               className="btn btn-secondary py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center flex-1"
                             >
                               {t("editButton")}
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="transition-transform group-hover:translate-x-1"
+                              >
+                                <path d="M5 12h14" />
+                                <path d="m12 5 7 7-7 7" />
+                              </svg>
                             </CardItem>
                           </div>
                         </div>

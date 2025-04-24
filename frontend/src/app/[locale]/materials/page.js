@@ -392,19 +392,21 @@ const MaterialsList = () => {
       />
 
       {/* Header Section */}
-      <div className="w-full max-w-6xl mx-auto text-center mb-12 flex flex-col items-center">
+      <div className="w-full max-w-6xl mx-auto text-center mb-12 flex flex-col items-center py-7">
 
-        <div className="w-full max-w-4xl flex flex-col items-center mb-8 space-y-6">
-          <IconBooks 
-            className={`w-20 h-20 drop-shadow-lg text-primary`}
-          />
-          <div className="text-center">
-            <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-              {t("header.title")}
-            </h1>
-            <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-              {t("header.subtitle")}
-            </p>
+        <div className="w-full max-w-4xl flex flex-col items-center">
+          <div className="flex items-center gap-4 mb-6">
+            <IconBooks 
+              className={`w-16 h-16 drop-shadow-lg text-primary`}
+            />
+            <div>
+              <h1 className={`text-4xl font-extrabold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                {t("header.title")}
+              </h1>
+              <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                {t("header.subtitle")}
+              </p>
+            </div>
           </div>
         </div>
 

@@ -517,11 +517,11 @@
     },
     "newPassword": {
       "label": "Nueva Contraseña",
-      "placeholder": "Introduce tu nueva contraseña"
+      "placeholder": "· · · · ·"
     },
     "confirmPassword": {
-      "label": "Confirmar Contraseña",
-      "placeholder": "Confirma tu nueva contraseña"
+      "label": "Confirmar",
+      "placeholder": "· · · · ·"
     },
     "region": {
       "label": "Región",
@@ -535,7 +535,7 @@
       "label": "Centro Educativo",
       "placeholder": "Selecciona un centro educativo",
       "notFound": "¿No encuentras tu centro?",
-      "createButton": "Crear una"
+      "createButton": "Crear uno"
     }
     },
     "password": {
@@ -977,7 +977,7 @@
       "surname": "Apellido",
       "oldPassword": "Contraseña Antigua",
       "newPassword": "Nueva Contraseña",
-      "confirmPassword": "Confirmar Contraseña",
+      "confirmPassword": "Confirmar",
       "city": "Ciudad",
       "school": "Centro Educativo"
     },
@@ -1014,12 +1014,12 @@
   "ClassroomsPage": {
     "header": {
       "title": "Mis Clases",
-      "subtitle": "Gestiona tus clases"
+      "subtitle": "Crea, edita y gestiona tus clases"
     },
     "noClasses": "No se encontraron clases",
     "createClassButton": "Crear Nueva Clase +",
     "openClassButton": "Abrir Clase",
-    "editButton": "Editar →",
+    "editButton": "Editar",
     "courseLabel": "Curso",
     "yearLabel": "Año",
     "imageAlt": "Imagen de la clase {name}",

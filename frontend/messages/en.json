@@ -518,11 +518,11 @@
         },
         "newPassword": {
           "label": "New Password",
-          "placeholder": "Enter your new password"
+          "placeholder": "· · · · ·"
         },
         "confirmPassword": {
-          "label": "Confirm Password",
-          "placeholder": "Confirm your new password"
+          "label": "Confirm",
+          "placeholder": "· · · · ·"
         },
         "region": {
           "label": "Region",
@@ -980,7 +980,7 @@
         "surname": "Surname",
         "oldPassword": "Old Password",
         "newPassword": "New Password",
-        "confirmPassword": "Confirm Password",
+        "confirmPassword": "Confirm",
         "city": "City",
         "school": "School"
       },
@@ -1022,7 +1022,7 @@
       "noClasses": "No classes found",
       "createClassButton": "Create New Classroom +",
       "openClassButton": "Open Class",
-      "editButton": "Edit →",
+      "editButton": "Edit",
       "courseLabel": "Course",
       "yearLabel": "Year",
       "imageAlt": "Image of {name} classroom",

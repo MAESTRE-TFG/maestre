@@ -129,16 +129,18 @@ const ToolList = ( params ) => {
       <div className="relative">
         { /* Header Section */ }
           <div className="w-full max-w-4xl flex flex-col items-center mb-8 space-y-6 text-center mx-auto">
-            <IconWand 
-              className={`w-20 h-20 drop-shadow-lg text-primary`}
-            />
-            <div>
-              <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-                {t("pageTitle")}
-              </h1>
-              <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-                {t("pageSubtitle")}
-              </p>
+            <div className="flex items-center gap-3">
+              <IconWand 
+                className={`w-16 h-16 drop-shadow-lg text-primary`}
+              />
+              <div>
+                <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                  {t("pageTitle")}
+                </h1>
+                <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                  {t("pageSubtitle")}
+                </p>
+              </div>
             </div>
           </div>
 

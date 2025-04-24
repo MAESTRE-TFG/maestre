@@ -159,10 +159,10 @@ const Translator = ({ params }) => {
           <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />
         )}
 
-        <div className="relative w-full flex-1 flex flex-col items-center py-12">
+        <div className="relative w-full flex-1 flex flex-col items-center py-14">
           <div className="w-full max-w-4xl flex items-center mb-8 justify-center space-x-6">
             <div className="relative">
-              <IconLanguage className="w-20 h-20 drop-shadow-lg text-primary" />
+              <IconLanguage className="w-16 h-16 drop-shadow-lg text-primary" />
               <div className="absolute -bottom-2 -right-2 bg-white dark:bg-gray-800 rounded-full p-1">
                 <IconWorld className="w-8 h-8 text-cyan-500" />
               </div>
