@@ -11,7 +11,8 @@ import {
   IconWorld,
   IconMapPin,
   IconCalendarEvent,
-} from "@tabler/icons-react"; // Import necessary icons
+} from "@tabler/icons-react";
+import { useTranslations } from "next-intl"; // Import the translation hook
 
 const COMUNIDADES = [
   "Andalucía",
@@ -46,13 +47,14 @@ const ETAPAS = [
 export function CreateSchoolForm({ onSubmit }) {
   const { theme } = useTheme();
   const router = useRouter();
+  const t = useTranslations("SchoolCreateForm"); // Use translations for this component
   const user = JSON.stringify(localStorage.getItem("user"));
   const [formData, setFormData] = React.useState({
     name: "",
     community: "",
     city: "",
     stages: [],
-    user: user || ""
+    user: user || "",
   });
   const [alert, setAlert] = useState(null);
 
@@ -80,26 +82,26 @@ export function CreateSchoolForm({ onSubmit }) {
 
     // Validate name length
     if (formDataCopy.name.length > 50) {
-      setAlert({ type: "warning", message: "Name cannot exceed 50 characters." });
+      setAlert({ type: "warning", message: t("alerts.nameTooLong") });
       return;
     }
 
     // Validate city is not null
     if (!formDataCopy.city) {
-      setAlert({ type: "warning", message: "City is required." });
+      setAlert({ type: "warning", message: t("alerts.cityRequired") });
       return;
     }
 
     formDataCopy.stages = formDataCopy.stages.join(", ");
     if (!formDataCopy.name || !formDataCopy.community || !formDataCopy.city) {
-      setAlert({ type: "warning", message: "All fields are required!" });
+      setAlert({ type: "warning", message: t("alerts.allFieldsRequired") });
       return;
     }
     try {
       onSubmit(formDataCopy);
-      setAlert({ type: "success", message: "School created successfully!" });
+      setAlert({ type: "success", message: t("alerts.success") });
     } catch (error) {
-      setAlert({ type: "error", message: "Failed to create school. Please try again." });
+      setAlert({ type: "error", message: t("alerts.error") });
     }
   };
 
@@ -117,7 +119,7 @@ export function CreateSchoolForm({ onSubmit }) {
     <div
       className={cn(
         "max-w-xl w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input",
-        theme === "dark" ? "bg-black/80 backdrop-blur-md" : "bg-white/80 backdrop-blur-md"
+        theme === "dark" ? "bg-black" : "bg-white"
       )}
     >
       {alert && (
@@ -149,37 +151,52 @@ export function CreateSchoolForm({ onSubmit }) {
         }
       `}</style>
       <form
-        className="my-8"
+        className="my-1"
         onSubmit={handleSubmit}
       >
         <h2 className={cn("text-2xl font-bold mb-6 text-center mx-auto", theme === "dark" ? "text-white" : "text-gray-800")}>
-          Create New School
+          {t("title")} {/* Internationalized */}
         </h2>
 
         {/* Name Field */}
         <LabelInputContainer className="mb-5">
-          <Label htmlFor="name" className="flex items-center gap-2">
-            <IconBuilding className="h-4 w-4 text-blue-500" />
-            Name
+          <Label 
+            htmlFor="name" 
+            className="flex items-center"
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: "1rem",
+              fontWeight: "bold",
+            }}
+          >
+            <IconBuilding className="mr-2 h-5 w-5 text-blue-500" />
+            {t("fields.name.label")} {/* Internationalized */}
           </Label>
           <Input
             id="name"
             name="name"
-            placeholder="Escuelas Profesionales"
+            placeholder={t("fields.name.placeholder")} // Internationalized
             type="text"
             required
             value={formData.name}
             onChange={handleChange}
-            className="h-10"
           />
         </LabelInputContainer>
 
-        <div className="flex flex-col md:flex-row md:gap-4 w-full">
+        <div className="flex flex-col md:flex-row gap-6 w-full">
           {/* Region Field */}
-          <LabelInputContainer className="mb-5 md:mb-0 md:w-1/2">
-            <Label htmlFor="community" className="flex items-center gap-2">
-              <IconWorld className="h-4 w-4 text-green-500" />
-              Region
+          <LabelInputContainer className="flex-1">
+            <Label 
+              htmlFor="community" 
+              className="flex items-center"
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: "1rem",
+                fontWeight: "bold",
+              }}
+            >
+              <IconWorld className="mr-2 h-5 w-5 text-green-500" />
+              {t("fields.community.label")} {/* Internationalized */}
             </Label>
             <select
               id="community"
@@ -187,10 +204,10 @@ export function CreateSchoolForm({ onSubmit }) {
               required
               value={formData.community}
               onChange={handleChange}
-              className="block w-full h-10 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             >
               <option value="" disabled>
-                Select a community
+                {t("fields.community.placeholder")} {/* Internationalized */}
               </option>
               {COMUNIDADES.map((comunidad) => (
                 <option key={comunidad} value={comunidad}>
@@ -201,29 +218,44 @@ export function CreateSchoolForm({ onSubmit }) {
           </LabelInputContainer>
 
           {/* City Field */}
-          <LabelInputContainer className="mb-5 md:w-1/2">
-            <Label htmlFor="city" className="flex items-center gap-2">
-              <IconMapPin className="h-4 w-4 text-purple-500" />
-              City
+          <LabelInputContainer className="flex-1">
+            <Label 
+              htmlFor="city" 
+              className="flex items-center"
+              style={{
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: "1rem",
+                fontWeight: "bold",
+              }}
+            >
+              <IconMapPin className="mr-2 h-5 w-5 text-purple-500" />
+              {t("fields.city.label")} {/* Internationalized */}
             </Label>
             <Input
               id="city"
               name="city"
-              placeholder="Sevilla"
+              placeholder={t("fields.city.placeholder")} // Internationalized
               type="text"
               required
               value={formData.city}
               onChange={handleChange}
-              className="h-10"
             />
           </LabelInputContainer>
         </div>
 
         {/* Stages Field */}
-        <LabelInputContainer className="mb-6">
-          <Label htmlFor="stages" className="flex items-center gap-2">
-            <IconCalendarEvent className="h-4 w-4 text-amber-500" />
-            Stages
+        <LabelInputContainer className="mb-6 mt-6">
+          <Label 
+            htmlFor="stages" 
+            className="flex items-center"
+            style={{
+              fontFamily: "'DM Sans', sans-serif",
+              fontSize: "1rem",
+              fontWeight: "bold",
+            }}
+          >
+            <IconCalendarEvent className="mr-2 h-5 w-5 text-amber-500" />
+            {t("fields.stages.label")} {/* Internationalized */}
           </Label>
           <div className="flex flex-wrap gap-2">
             {ETAPAS.map((etapa) => (
@@ -233,13 +265,13 @@ export function CreateSchoolForm({ onSubmit }) {
                 onClick={() => handleSelectStage(etapa)}
                 className={cn(
                   "px-4 py-2 rounded-lg transition-all border",
-                  theme === "dark" ? 
-                  formData.stages.includes(etapa)
-                    ? "bg-white text-dark shadow-md"
-                    : "bg-zinc-800 border-transparent text-white hover:bg-gray-100 hover:text-zinc-900"
-                  : formData.stages.includes(etapa)
-                    ? "bg-black text-white shadow-md"
-                    : "bg-white border-gray-300 text-zinc-700 hover:bg-zinc-800 hover:text-gray-100",
+                  theme === "dark"
+                    ? formData.stages.includes(etapa)
+                      ? "bg-white text-dark shadow-md"
+                      : "bg-zinc-800 border-transparent text-white hover:bg-gray-100 hover:text-zinc-900"
+                    : formData.stages.includes(etapa)
+                      ? "bg-black text-white shadow-md"
+                      : "bg-white border-gray-300 text-zinc-700 hover:bg-zinc-800 hover:text-gray-100"
                 )}
               >
                 {etapa}
@@ -248,24 +280,62 @@ export function CreateSchoolForm({ onSubmit }) {
           </div>
         </LabelInputContainer>
 
-        <div className="flex flex-col space-y-8">
-          {/* Submit Button */}
-          <button
-            className="btn btn-success py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center w-full mx-auto max-w-sm"
-            type="submit"
-          >
-            Create School &rarr;
-            <BottomGradient />
-          </button>
-
+        <div className="flex justify-center gap-4 mt-8">
           {/* Cancel Button */}
           <button
-            className="btn btn-danger py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center w-full mx-auto max-w-sm"
+            className={cn(
+              "btn btn-md btn-secondary w-1/2",
+              theme === "dark" ? "dark:btn-secondary" : ""
+            )}
             type="button"
             onClick={() => router.back()}
           >
-            &larr; Cancel
-            <BottomGradient isCancel />
+            <span className="font-bold flex items-center gap-2">
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="20" 
+                height="20" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+                className="rotate-180 transition-transform group-hover:-translate-x-1"
+              >
+                <path d="M5 12h14"/>
+                <path d="m12 5 7 7-7 7"/>
+              </svg>
+              {t("buttons.cancel")}
+            </span>
+          </button>
+          
+          {/* Submit Button */}
+          <button
+            className={cn(
+              "btn btn-md btn-success w-1/2",
+              theme === "dark" ? "dark:btn-success" : ""
+            )}
+            type="submit"
+          >
+            <span className="font-bold flex items-center gap-2">
+              {t("buttons.create")}
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="20" 
+                height="20" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+                className="transition-transform group-hover:translate-x-1"
+              >
+                <path d="M5 12h14"/>
+                <path d="m12 5 7 7-7 7"/>
+              </svg>
+            </span>
           </button>
         </div>
       </form>
@@ -273,22 +343,13 @@ export function CreateSchoolForm({ onSubmit }) {
   );
 }
 
-const BottomGradient = ({ isCancel }) => {
-  return (<>
-    <span className={cn("group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0", 
-      isCancel ? "bg-gradient-to-r from-transparent via-orange-500 to-transparent" : "bg-gradient-to-r from-transparent via-cyan-500 to-transparent")} />
-    <span className={cn("group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10", 
-      isCancel ? "bg-gradient-to-r from-transparent via-orange-500 to-transparent" : "bg-gradient-to-r from-transparent via-indigo-500 to-transparent")} />
-  </>);
-};
-
 const LabelInputContainer = ({ children, className }) => {
   return (
     <div className={cn("flex flex-col space-y-2 w-full", className)}>
-      {React.Children.map(children, child => {
+      {React.Children.map(children, (child) => {
         if (child.type === Label) {
           return React.cloneElement(child, {
-            style: { ...child.props.style, fontSize: "1.25rem" }
+            style: { ...child.props.style, fontSize: "0.875rem" }, // Adjusted font size to make labels smaller
           });
         }
         return child;

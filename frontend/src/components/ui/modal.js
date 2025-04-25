@@ -24,7 +24,7 @@ export const Modal = ({ isOpen, onClose, children, className }) => {
       <div className={`bg-white dark:bg-neutral-900 rounded-lg shadow-lg ${className}`}>
         <div className="p-4 flex justify-between items-center border-b border-gray-200 dark:border-neutral-700">
           <h2 className="text-lg font-bold" style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-            {children?.props?.title || "Modal"} {/* Add fallback title */}
+            {children?.props?.title || "Modal"}
           </h2>
           <button
             onClick={onClose}

@@ -21,22 +21,25 @@ import { useTheme } from "@/components/theme-provider";
 import { useRouter } from "next/navigation";
 import { useState as useModalState, useEffect as useModalEffect } from "react";
 import { Modal } from "@/components/ui/modal";
+import { useTranslations } from 'next-intl';
 
 export const CarouselContext = createContext({
   onCardClose: () => {},
   currentIndex: 0,
-  handleToolClick: (path) => {},
+  handleToolClick: (path) => {}
 });
 
 export const Carousel = ({
   items,
   initialScroll = 0,
-  onToolClick
+  params
 }) => {
+  const t = useTranslations('HomePage');
   const carouselRef = React.useRef(null);
   const [canScrollLeft, setCanScrollLeft] = React.useState(false);
   const [canScrollRight, setCanScrollRight] = React.useState(true);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const locale = params?.locale || 'es';
 
   useEffect(() => {
     if (carouselRef.current) {
@@ -151,18 +154,18 @@ export const Carousel = ({
   };
 
   const handleSignUp = () => {
-    router.push('/profile/signup');
+    router.push(`/${locale}/profile/signup`);
     closeAuthModal();
   };
 
   const handleSignIn = () => {
-    router.push('/profile/signin');
+    router.push(`/${locale}/profile/signin`);
     closeAuthModal();
   };
 
 
   const handleCompleteProfile = () => {
-    router.push('/profile/complete');
+    router.push(`/${locale}/profile/complete`);
     closeProfileModal();
   };
 
@@ -213,7 +216,7 @@ export const Carousel = ({
           </button>
         </div>
         
-              {/* Authentication Modal */}
+      {/* Authentication Modal */}
       <Modal isOpen={showAuthModal} onClose={closeAuthModal}>
         <div title="  ">
           <div className={cn("p-6", theme === "dark" ? "bg-[#4777da]" : "bg-[#4777da]")}>
@@ -222,13 +225,13 @@ export const Carousel = ({
                 <IconLock className="h-6 w-6 text-white" />
               </div>
               <h2 className="text-xl font-bold text-white" style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-                Authentication Required
+                {t('auth_modal_title')}
               </h2>
             </div>
           </div>
           <div className="p-6">
             <p className={cn("mb-6 text-base", theme === "dark" ? "text-gray-300" : "text-gray-600")}>
-              You need to be logged in to access this tool. Create an account to unlock all features.
+              {t('auth_modal_description')}
             </p>
             <div className="flex items-center justify-end gap-3">
               <button
@@ -238,7 +241,7 @@ export const Carousel = ({
                   theme === "dark" ? "dark:btn-secondary" : ""
                 )}
               >
-                Cancel
+                {t('auth_modal_cancel')}
               </button>
               <button
                 onClick={handleSignUp}
@@ -248,7 +251,7 @@ export const Carousel = ({
                 )}
               >
                 <IconUserCircle className="h-5 w-5" />
-                Create Account
+                {t('auth_modal_signup')}
               </button>
               <button
                 onClick={handleSignIn}
@@ -258,7 +261,7 @@ export const Carousel = ({
                 )}
               >
                 <IconUserCircle className="h-5 w-5" />
-                Sing In
+                {t('auth_modal_signin')}
               </button>
             </div>
           </div>
@@ -274,13 +277,13 @@ export const Carousel = ({
                 <IconUserCircle className="h-6 w-6 text-white" />
               </div>
               <h2 className="text-xl font-bold text-white" style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-                Complete Your Profile
+                {t('profile_modal_title')}
               </h2>
             </div>
           </div>
           <div className="p-6">
             <p className={cn("mb-6 text-base", theme === "dark" ? "text-gray-300" : "text-gray-600")}>
-              We need a few more details before you can access this tool. Your profile information helps us personalize your experience.
+              {t('profile_modal_description')}
             </p>
             <div className="flex items-center justify-end gap-3">
               <button
@@ -290,7 +293,7 @@ export const Carousel = ({
                   theme === "dark" ? "text-white hover:bg-neutral-700" : "text-gray-700 hover:bg-gray-100"
                 )}
               >
-                Cancel
+                {t('profile_modal_cancel')}
               </button>
               <button
                 onClick={handleCompleteProfile}
@@ -301,7 +304,7 @@ export const Carousel = ({
                 )}
               >
                 <IconUserCircle className="h-5 w-5" />
-                Complete Profile
+                {t('profile_modal_complete')}
               </button>
             </div>
           </div>
@@ -315,13 +318,16 @@ export const Carousel = ({
 export const Card = ({
   card,
   index,
-  layout = false
+  layout = false,
+  params
 }) => {
   const [open, setOpen] = useState(false);
   const containerRef = useRef(null);
   const { onCardClose, currentIndex, handleToolClick } = useContext(CarouselContext);
   const { theme } = useTheme();
-  
+  const t = useTranslations('HomePage');
+  const locale = params?.locale || 'es';
+
   useEffect(() => {
     function onKeyDown(event) {
       if (event.key === "Escape") {
@@ -353,7 +359,7 @@ export const Card = ({
   const handleTryNowClick = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    handleToolClick(`/tools/${card.page}`);
+    handleToolClick(`/${locale}/tools/${card.page}`);
   };
 
   return (
@@ -395,16 +401,15 @@ export const Card = ({
               <div className="py-6">{card.content}</div>
               <button
                 onClick={handleTryNowClick}
-                style={{ fontFamily: "Alfa Slab One"}}
                 className={cn(
-                  "inline-flex items-center justify-items-center rounded-full transition-all",
-                  "font-medium text-xs py-2 px-5",
-                  "border border-transparent",
+                  "px-8 py-4 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center",
                   theme === "dark" 
-                    ? "bg-white text-black hover:bg-neutral-200" 
-                    : "bg-black text-white hover:bg-neutral-800"
-                )}>
-                Try Now!
+                    ? "bg-gradient-to-r from-blue-500 to-purple-500 text-white hover:from-blue-600 hover:to-purple-600 hover:scale-105" 
+                    : "bg-gradient-to-r from-blue-600 to-purple-600 text-white hover:from-blue-700 hover:to-purple-700 hover:scale-105",
+                  "shadow-lg hover:shadow-xl"
+                )}
+              >
+                {t('try_now_button')}
               </button>
             </motion.div>
           </div>
@@ -458,7 +463,7 @@ export const BlurImage = ({
       loading="lazy"
       decoding="async"
       blurDataURL={typeof src === "string" ? src : undefined}
-      alt={alt ? alt : "Background of a beautiful view"}
+      alt={alt ? alt : "Image"}
       {...rest} />
   );
 };

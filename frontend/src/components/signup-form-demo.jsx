@@ -13,9 +13,13 @@ import {
   IconEyeOff,
 } from "@tabler/icons-react";
 import Alert from "@/components/ui/Alert";
+import { useTranslations } from "next-intl";
 
-export function SignupForm({ onSubmit, showAlert }) {
+export function SignupForm({ onSubmit, showAlert, params}) {
   const { theme } = useTheme();
+  const t = useTranslations("SignupForm");
+  const locale = params?.locale || 'es';
+
   const [formData, setFormData] = React.useState({
     name: "",
     surname: "",
@@ -48,13 +52,13 @@ export function SignupForm({ onSubmit, showAlert }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!acceptedTerms) {
-      showAlert("warning", "You must accept the Terms of Use and Privacy Policy to sign up.");
+      showAlert("warning", t("alerts.acceptTerms"));
       return;
     }
     try {
       await onSubmit(formData);
     } catch (err) {
-      showAlert("error", "An error occurred while signing up. Please try again.");
+      showAlert("error", t("alerts.signupError"));
     }
   };
 
@@ -102,7 +106,7 @@ export function SignupForm({ onSubmit, showAlert }) {
         )}
         style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
       >
-        Create Your Account
+        {t("title")}
       </h2>
 
       <form className="grid grid-cols-1 gap-6" onSubmit={handleSubmit}>
@@ -115,18 +119,18 @@ export function SignupForm({ onSubmit, showAlert }) {
               )}
               style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             >
-              Personal Information
+              {t("sections.personalInfo")}
             </legend>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <LabelInputContainer>
                 <Label htmlFor="firstname">
-            <IconIdBadge className="inline-block mr-2 text-blue-500" /> Name
+            <IconIdBadge className="inline-block mr-2 text-blue-500" /> {t("fields.name.label")} {/* Internationalized */}
                 </Label>
                 <Input
             id="firstname"
             name="name"
-            placeholder="Tyler"
+            placeholder={t("fields.name.placeholder")}
             type="text"
             required
             value={formData.name}
@@ -141,12 +145,12 @@ export function SignupForm({ onSubmit, showAlert }) {
 
               <LabelInputContainer>
                 <Label htmlFor="lastname">
-            <IconIdBadge className="inline-block mr-2 text-blue-500" /> Surname
+            <IconIdBadge className="inline-block mr-2 text-blue-500" /> {t("fields.surname.label")} {/* Internationalized */}
                 </Label>
                 <Input
             id="lastname"
             name="surname"
-            placeholder="Durden"
+            placeholder={t("fields.surname.placeholder")} // Internationalized
             type="text"
             required
             value={formData.surname}
@@ -167,18 +171,18 @@ export function SignupForm({ onSubmit, showAlert }) {
               "px-2 font-semibold",
               theme === "dark" ? "text-white" : "text-black"
             )} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-              Account Information
+              {t("sections.accountInfo")} {/* Internationalized */}
             </legend>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <LabelInputContainer>
                 <Label htmlFor="username">
-            <IconUser className="inline-block mr-2 text-green-500" /> Username
+            <IconUser className="inline-block mr-2 text-green-500" /> {t("fields.username.label")} {/* Internationalized */}
                 </Label>
                 <Input 
             id="username" 
             name="username" 
-            placeholder="superprof01" 
+            placeholder={t("fields.username.placeholder")} // Internationalized
             type="text" 
             required 
             value={formData.username} 
@@ -189,12 +193,12 @@ export function SignupForm({ onSubmit, showAlert }) {
               
               <LabelInputContainer>
                 <Label htmlFor="email">
-            <IconMail className="inline-block mr-2 text-red-500" /> Email
+            <IconMail className="inline-block mr-2 text-red-500" /> {t("fields.email.label")} {/* Internationalized */}
                 </Label>
                 <Input 
             id="email" 
             name="email" 
-            placeholder="projectmayhem@fc.com" 
+            placeholder={t("fields.email.placeholder")} // Internationalized
             type="email" 
             required 
             value={formData.email} 
@@ -205,12 +209,12 @@ export function SignupForm({ onSubmit, showAlert }) {
               
               <LabelInputContainer className="md:col-span-2 relative">
                 <Label htmlFor="password">
-            <IconLock className="inline-block mr-2 text-purple-500" /> Password
+            <IconLock className="inline-block mr-2 text-purple-500" /> {t("fields.password.label")} {/* Internationalized */}
                 </Label>
                 <Input 
             id="password" 
             name="password" 
-            placeholder="••••••••" 
+            placeholder={t("fields.password.placeholder")} // Internationalized
             type={showPassword ? "text" : "password"}
             required 
             value={formData.password} 
@@ -246,23 +250,23 @@ export function SignupForm({ onSubmit, showAlert }) {
             htmlFor="terms"
             className={cn(theme === "dark" ? "text-white" : "text-black")}
           >
-            I accept the{" "}
+            {t("terms.text")}{" "}
             <a
               href="/terms"
               target="_blank"
               rel="noopener noreferrer"
               className="underline"
             >
-              Terms of Use
+              {t("terms.termsOfUse")}
             </a>{" "}
-            and{" "}
+            {t("terms.and")}{" "}
             <a
-              href="/terms"
+              href="/privacy"
               target="_blank"
               rel="noopener noreferrer"
               className="underline"
             >
-              Privacy Policy
+              {t("terms.privacyPolicy")}
             </a>
             .
           </label>
@@ -276,7 +280,7 @@ export function SignupForm({ onSubmit, showAlert }) {
           )}
           type="submit"
         >
-          Sign up &rarr;
+          {t("buttons.signup")} &rarr;
           <BottomGradient />
         </button>
                   
@@ -286,16 +290,16 @@ export function SignupForm({ onSubmit, showAlert }) {
             style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             className={cn(theme === "dark" ? "text-white" : "text-black")}
           >
-            Already have an account?
+            {t("alreadyHaveAccount")}
           </p>
           <button
             className={cn(
               "btn btn-md btn-secondary w-full mt-2",
               theme === "dark" ? "dark:btn-secondary" : ""
             )}
-            onClick={() => (window.location.href = "/profile/signin")}
+            onClick={() => (window.location.href = `/${locale}/profile/signin`)}
           >
-            Sign in
+            {t("buttons.signin")}
             <BottomGradient />
           </button>
         </div>

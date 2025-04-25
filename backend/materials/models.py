@@ -11,7 +11,7 @@ def validate_file_limit(classroom):
 
 
 class Document(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=50)
     file = models.FileField(
         upload_to='documents/',
         validators=[

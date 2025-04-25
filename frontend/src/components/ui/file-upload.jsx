@@ -5,8 +5,8 @@ import { motion } from "framer-motion";
 import { IconUpload } from "@tabler/icons-react";
 import { useDropzone } from "react-dropzone";
 import axios from 'axios';
-import { Modal } from "@/components/ui/modal";
 import Alert from "@/components/ui/Alert";
+import { useTranslations } from "next-intl";
 
 const mainVariant = {
   initial: {
@@ -29,36 +29,15 @@ const secondaryVariant = {
   },
 };
 
-const getFileTypeFromExtension = (filename) => {
-  if (!filename) return 'Unknown';
-
-  const extension = filename.split('.').pop().toLowerCase();
-  const mimeTypes = {
-    'pdf': 'application/pdf',
-    'doc': 'application/msword',
-    'docx': 'application/word',
-    'png': 'image/png',
-    'jpg': 'image/jpeg',
-    'jpeg': 'image/jpeg',
-    'pptx': 'application/powerpoint',
-    'txt': 'text/plain',
-  };
-
-  return mimeTypes[extension] || 'Unknown';
-};
-
 export const FileUpload = ({
   onChange,
   classroomId,
   onUploadComplete
 }) => {
+  const t = useTranslations("FileUpload");
   const [files, setFiles] = useState([]);
   const fileInputRef = useRef(null);
   const [fileSizes, setFileSizes] = useState({});
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-  const [fileToDelete, setFileToDelete] = useState(null);
-  const [showErrorModal, setShowErrorModal] = useState(false);
-  const [errorMessage, setErrorMessage] = useState("");
   const [showEditModal, setShowEditModal] = useState(false);
   const [fileToEdit, setFileToEdit] = useState(null);
   const [newFileName, setNewFileName] = useState("");
@@ -67,7 +46,7 @@ export const FileUpload = ({
 
   const showAlert = (type, message) => {
     setAlert({ type, message });
-    setTimeout(() => setAlert(null), 5000); // Auto-dismiss after 5 seconds
+    setTimeout(() => setAlert(null), 5000);
   };
 
   const handleEdit = async (e, file) => {
@@ -109,9 +88,9 @@ export const FileUpload = ({
       if (updatedFileName !== newFileName) {
         setNewFileName(updatedFileName);
       }
+      showAlert("success", t("alerts.editSuccess"));
     } catch (error) {
-      console.error('Error updating file name:', error);
-      showAlert('error', 'Failed to update file name. Please try again.');
+      showAlert("error", t("alerts.editError"));
     } finally {
       setShowEditModal(false);
       setFileToEdit(null);
@@ -126,7 +105,7 @@ export const FileUpload = ({
       const size = response.headers.get('content-length');
       return size ? parseInt(size) : null;
     } catch (error) {
-      console.error('Error getting file size:', error);
+      showAlert("error", t("alerts.sizeError"));
       return null;
     }
   };
@@ -165,7 +144,7 @@ export const FileUpload = ({
         });
         setFiles(response.data);
       } catch (error) {
-        console.error('Error fetching files:', error);
+        showAlert("error", t("fetchMaterialsError"));
       }
     };
   
@@ -203,20 +182,19 @@ export const FileUpload = ({
       
       // Call the onUploadComplete callback to refresh the materials list
       onUploadComplete && onUploadComplete();
+      showAlert("success", t("alerts.uploadSuccess"));
       
     } catch (error) {
       // Error handling
       if (error.response) {
         const errorMsg = error.response.data && error.response.data.error
           ? error.response.data.error
-          : "Failed to upload file. Maximum number of materials for this class reached.";
+          : t("alerts.uploadError");
         showAlert('error', errorMsg);
       } else if (error.request) {
-        console.error('No response received:', error.request);
-        showAlert('error', "Network error. Please try again later.");
+        showAlert('error', t("alerts.networkError"));
       } else {
-        console.error('Error setting up request:', error.message);
-        showAlert('error', "An error occurred. Please try again.");
+        showAlert('error', t("alerts.genericError"));
       }
     } finally {
       setIsUploading(false);
@@ -231,8 +209,8 @@ export const FileUpload = ({
     multiple: false,
     noClick: true,
     onDrop: handleFileChange,
-    onDropRejected: (error) => {
-      console.log(error);
+    onDropRejected: () => {
+      showAlert("error", t("alerts.invalidFile"));
     },
   });
   
@@ -253,41 +231,20 @@ export const FileUpload = ({
           className="absolute inset-0 [mask-image:radial-gradient(ellipse_at_center,white,transparent)]">
           <GridPattern />
         </div>
-        <Modal
-          isOpen={showErrorModal}
-          onClose={() => setShowErrorModal(false)}
-        >
-          <div title="File Upload Error">
-            <p className="mb-6 text-neutral-600 dark:text-neutral-300">
-              {errorMessage}
-            </p>
-            <div className="flex justify-end space-x-2">
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowErrorModal(false);
-                }}
-                className="font-bold py-2 px-4 rounded bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-700"
-              >
-                OK
-              </button>
-            </div>
-          </div>
-        </Modal>
 
 
         <div className="flex flex-col items-center justify-center">
           <p
             className="relative z-20 font-sans font-bold text-neutral-700 dark:text-neutral-300 text-base">
-            {isUploading ? "Uploading..." : "Upload file"}
+            {isUploading ? t("uploading") : t("uploadFile")}
           </p>
           <p
             className="relative z-20 font-sans font-normal text-neutral-400 dark:text-neutral-400 text-base mt-2">
-            Drag or drop your files here or click to upload
+            {t("dragOrDrop")}
           </p>
           <p
             className="relative z-20 font-sans font-normal text-neutral-400 dark:text-neutral-400 text-xs mt-1 italic">
-            Supported formats: PDF, DOC, DOCX, PNG, JPG, PPTX, TXT
+            {t("supportedFormats")}
           </p>
           <div className="relative w-full mt-10 max-w-xl mx-auto">
             <motion.div
@@ -307,7 +264,7 @@ export const FileUpload = ({
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   className="text-neutral-600 flex flex-col items-center">
-                  Drop it
+                  {t("dropIt")}
                   <IconUpload className="h-4 w-4 text-neutral-600 dark:text-neutral-400" />
                 </motion.p>
               ) : (

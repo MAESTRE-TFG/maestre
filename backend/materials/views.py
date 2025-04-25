@@ -1,16 +1,19 @@
+import os
+import tempfile
+from django.conf import settings
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.decorators import action, permission_classes
+from rest_framework.decorators import action
 from classrooms.models import Classroom
 from .models import Document
 from .serializers import DocumentSerializer
-import pdfplumber
+from django.core.exceptions import ObjectDoesNotExist
 import docx
 from googletrans import Translator
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
+from rest_framework.authentication import get_authorization_header
+import io
+from django.http import HttpResponse
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
@@ -37,6 +40,9 @@ class DocumentViewSet(viewsets.ModelViewSet):
         return queryset
 
     def create(self, request, *args, **kwargs):
+        auth_header = get_authorization_header(request).decode('utf-8')
+        print(f"Authorization Header: {auth_header}")
+
         classroom_id = request.data.get('classroom')
         if classroom_id:
             try:
@@ -50,7 +56,12 @@ class DocumentViewSet(viewsets.ModelViewSet):
 
                 if classroom.documents.count() >= settings.MAX_FILES_PER_CLASSROOM:
                     return Response(
-                        {"error": f"This classroom already has the maximum number of files ({settings.MAX_FILES_PER_CLASSROOM})."},
+                        {
+                            "error": (
+                                f"This classroom already has the maximum number of files "
+                                f"({settings.MAX_FILES_PER_CLASSROOM})."
+                            )
+                        },
                         status=status.HTTP_400_BAD_REQUEST
                     )
             except ObjectDoesNotExist:
@@ -87,35 +98,35 @@ class DocumentViewSet(viewsets.ModelViewSet):
                 {'error': f"Failed to fetch user materials: {str(e)}"},  # Added detailed error message
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
-    
+
     @action(detail=False, methods=['post'], url_path='extract-text')
     def extract_text_from_uploaded_file(self, request):
         """Extract text from an uploaded DOCX file"""
         if 'file' not in request.FILES:
             return Response({'error': 'No file uploaded'}, status=400)
-        
+
         file = request.FILES['file']
-        
+
         # Check if it's a DOCX
         if not file.name.lower().endswith('.docx'):
             return Response({'error': 'Only DOCX files are supported'}, status=400)
-        
+
         try:
             # Create a temporary file
             with tempfile.NamedTemporaryFile(delete=False, suffix='.docx') as temp_file:
                 for chunk in file.chunks():
                     temp_file.write(chunk)
                 temp_file_path = temp_file.name
-            
+
             # Extract text using python-docx
             doc = docx.Document(temp_file_path)
             text = ""
-            
+
             # Extract text from paragraphs
             for para in doc.paragraphs:
                 if para.text:
                     text += para.text + "\n"
-            
+
             # Extract text from tables
             for table in doc.tables:
                 for row in table.rows:
@@ -123,12 +134,12 @@ class DocumentViewSet(viewsets.ModelViewSet):
                         text += cell.text + " "
                     text += "\n"
                 text += "\n"
-            
+
             # Clean up the temporary file
             os.unlink(temp_file_path)
-            
+
             return Response({'text': text})
-        
+
         except Exception as e:
             return Response({'error': str(e)}, status=500)
 
@@ -138,20 +149,20 @@ class DocumentViewSet(viewsets.ModelViewSet):
         try:
             # Get the material
             material = self.get_object()
-            
+
             # Check if it's a DOCX
             if not material.file.name.lower().endswith('.docx'):
                 return Response({'error': 'Only DOCX files are supported'}, status=400)
-            
+
             # Extract text using python-docx
             doc = docx.Document(material.file.path)
             text = ""
-            
+
             # Extract text from paragraphs
             for para in doc.paragraphs:
                 if para.text:
                     text += para.text + "\n"
-            
+
             # Extract text from tables
             for table in doc.tables:
                 for row in table.rows:
@@ -159,23 +170,22 @@ class DocumentViewSet(viewsets.ModelViewSet):
                         text += cell.text + " "
                     text += "\n"
                 text += "\n"
-            
+
             return Response({'text': text})
-        
+
         except Exception as e:
             return Response({'error': str(e)}, status=500)
-
 
     @action(detail=False, methods=['post'], url_path='extract-text-from-url')
     def extract_text_from_url(self, request):
         """Extract text from a DOCX file URL."""
         file_url = request.data.get('file_url')
         material_id = request.data.get('material_id')
-        
+
         if not file_url and not material_id:
-            return Response({"error": "No file URL or material ID provided"}, 
-                           status=status.HTTP_400_BAD_REQUEST)
-        
+            return Response({"error": "No file URL or material ID provided"},
+                            status=status.HTTP_400_BAD_REQUEST)
+
         try:
             # Get the document directly by ID if provided
             if material_id:
@@ -196,49 +206,49 @@ class DocumentViewSet(viewsets.ModelViewSet):
                             document_id = filename
                     else:
                         document_id = file_url
-                        
+
                     # Try to convert to integer if it's numeric
                     try:
                         document_id = int(document_id)
                     except ValueError:
                         pass
-                        
+
                     document = Document.objects.get(id=document_id)
                 except Exception as e:
-                    return Response({"error": f"Could not extract document ID from URL: {str(e)}"}, 
-                                   status=status.HTTP_400_BAD_REQUEST)
-            
+                    return Response({"error": f"Could not extract document ID from URL: {str(e)}"},
+                                    status=status.HTTP_400_BAD_REQUEST)
+
             # Check if the user has access to this document
             if document.classroom.creator != request.user:
-                return Response({"error": "You don't have permission to access this file"}, 
-                              status=status.HTTP_403_FORBIDDEN)
-            
+                return Response({"error": "You don't have permission to access this file"},
+                                status=status.HTTP_403_FORBIDDEN)
+
             # Check if it's a DOCX file
             if not document.file.name.lower().endswith('.docx'):
-                return Response({"error": "Only DOCX files are supported"}, 
-                              status=status.HTTP_400_BAD_REQUEST)
-            
+                return Response({"error": "Only DOCX files are supported"},
+                                status=status.HTTP_400_BAD_REQUEST)
+
             # Get the file path
             file_path = document.file.path
-            
+
             # Extract text from DOCX
             doc = docx.Document(file_path)
             full_text = []
-            
+
             # Extract text from paragraphs
             for para in doc.paragraphs:
                 if para.text:
                     full_text.append(para.text)
-                
+
             # Also extract text from tables
             for table in doc.tables:
                 for row in table.rows:
                     for cell in row.cells:
                         if cell.text:
                             full_text.append(cell.text)
-            
+
             return Response({"text": "\n".join(full_text)})
-        
+
         except Document.DoesNotExist:
             return Response({"error": "Document not found"}, status=status.HTTP_404_NOT_FOUND)
         except Exception as e:
@@ -248,7 +258,7 @@ class DocumentViewSet(viewsets.ModelViewSet):
     def translate_text(self, request):
         """
         Translate text from one language to another
-        
+
         Expected request body:
         {
             "text": "Text to translate",
@@ -258,32 +268,31 @@ class DocumentViewSet(viewsets.ModelViewSet):
         """
         text = request.data.get('text')
         src = request.data.get('src', 'auto')  # Default to auto-detection
-        dest = request.data.get('dest', 'en')  # Default to English
-        
+        dest = request.data.get('dest', 'es')  # Default to Spanish
+
         if not text:
             return Response(
-                {"error": "Text parameter is required"}, 
+                {"error": "Text parameter is required"},
                 status=status.HTTP_400_BAD_REQUEST
             )
-        
+
         try:
             # Use the synchronous version of the library
-            from googletrans import Translator
             translator = Translator()
-            
+
             # For newer versions of googletrans that use async
             import asyncio
-            
+
             # Create a function to run the translation in an event loop
             async def translate_async():
                 return await translator.translate(text, src=src, dest=dest)
-            
+
             # Run the async function in a new event loop
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
             result = loop.run_until_complete(translate_async())
             loop.close()
-            
+
             response_data = {
                 'original_text': text,
                 'translated_text': result.text,
@@ -291,14 +300,202 @@ class DocumentViewSet(viewsets.ModelViewSet):
                 'dest': result.dest,
                 'pronunciation': getattr(result, 'pronunciation', None)
             }
-            
+
             return Response(response_data, status=status.HTTP_200_OK)
-            
+
         except Exception as e:
             import traceback
             error_details = traceback.format_exc()
             print(f"Translation error: {error_details}")
             return Response(
-                {"error": str(e)}, 
+                {"error": str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+    @action(detail=False, methods=['post'], url_path='convert-text-to-docx')
+    def convert_text_to_docx(self, request):
+        """Convert text content to a DOCX file and return it for download"""
+        text = request.data.get('text')
+        title = request.data.get('title', 'Scientific Exam')
+        
+        if not text:
+            return Response({'error': 'No text provided'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            # Create a new DOCX document
+            doc = docx.Document()
+            
+            # Add a title
+            doc.add_heading(title, level=1)
+            
+            # Process the text content
+            paragraphs = text.split('\n\n')
+            for para in paragraphs:
+                if not para.strip():
+                    continue
+                    
+                # Check if it's a heading
+                if para.startswith('# '):
+                    doc.add_heading(para[2:], level=1)
+                elif para.startswith('## '):
+                    doc.add_heading(para[3:], level=2)
+                elif para.startswith('### '):
+                    doc.add_heading(para[4:], level=3)
+                # Check if it's a problem or exercise
+                elif para.startswith('Problema') or para.startswith('Ejercicio'):
+                    p = doc.add_paragraph()
+                    p.add_run(para).bold = True
+                # Check if it's a subquestion (a), b), etc.)
+                elif para.strip() and para.strip()[0].isalpha() and len(para.strip()) > 1 and para.strip()[1] in [')', '.']:
+                    p = doc.add_paragraph()
+                    p.add_run(para[:2]).bold = True
+                    p.add_run(para[2:])
+                else:
+                    # Handle line breaks within paragraphs
+                    lines = para.split('\n')
+                    if len(lines) > 1:
+                        # Check if this might be a diagram (ASCII art)
+                        if any('-' * 3 in line for line in lines) or any('/' in line and '\\' in line for line in lines):
+                            # Use monospaced font for diagrams
+                            p = doc.add_paragraph()
+                            for line in lines:
+                                p.add_run(line + '\n').font.name = 'Courier New'
+                        else:
+                            p = doc.add_paragraph()
+                            for i, line in enumerate(lines):
+                                if i > 0:
+                                    p.add_run('\n')
+                                p.add_run(line)
+                    else:
+                        doc.add_paragraph(para)
+            
+            # Save the document to a bytes buffer
+            docx_buffer = io.BytesIO()
+            doc.save(docx_buffer)
+            docx_buffer.seek(0)
+            
+            # Create the response with the DOCX file
+            response = HttpResponse(
+                docx_buffer.getvalue(),
+                content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            )
+            response['Content-Disposition'] = f'attachment; filename="{title.replace(" ", "_")}.docx"'
+            
+            return response
+            
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    @action(detail=False, methods=['post'], url_path='convert-text-to-docx-and-upload')
+    def convert_text_to_docx_and_upload(self, request):
+        """Convert text content to a DOCX file and upload it to a classroom"""
+        text = request.data.get('text')
+        title = request.data.get('title', 'Scientific Exam')
+        classroom_id = request.data.get('classroom')
+        
+        if not text:
+            return Response({'error': 'No text provided'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        if not classroom_id:
+            return Response({'error': 'No classroom specified'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        try:
+            # Verify classroom exists and user has permission
+            try:
+                classroom = Classroom.objects.get(id=classroom_id)
+                
+                if classroom.creator != request.user:
+                    return Response(
+                        {"error": "You don't have permission to add documents to this classroom."},
+                        status=status.HTTP_403_FORBIDDEN
+                    )
+                    
+                if classroom.documents.count() >= settings.MAX_FILES_PER_CLASSROOM:
+                    return Response(
+                        {
+                            "error": (
+                                f"This classroom already has the maximum number of files "
+                                f"({settings.MAX_FILES_PER_CLASSROOM})."
+                            )
+                        },
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+            except ObjectDoesNotExist:
+                return Response(
+                    {"error": "Classroom does not exist."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Create a new DOCX document
+            doc = docx.Document()
+            
+            # Add a title
+            doc.add_heading(title, level=1)
+            
+            # Process the text content (same as in convert_text_to_docx)
+            paragraphs = text.split('\n\n')
+            for para in paragraphs:
+                if not para.strip():
+                    continue
+                    
+                # Check if it's a heading
+                if para.startswith('# '):
+                    doc.add_heading(para[2:], level=1)
+                elif para.startswith('## '):
+                    doc.add_heading(para[3:], level=2)
+                elif para.startswith('### '):
+                    doc.add_heading(para[4:], level=3)
+                # Check if it's a problem or exercise
+                elif para.startswith('Problema') or para.startswith('Ejercicio'):
+                    p = doc.add_paragraph()
+                    p.add_run(para).bold = True
+                # Check if it's a subquestion (a), b), etc.)
+                elif para.strip() and para.strip()[0].isalpha() and len(para.strip()) > 1 and para.strip()[1] in [')', '.']:
+                    p = doc.add_paragraph()
+                    p.add_run(para[:2]).bold = True
+                    p.add_run(para[2:])
+                else:
+                    # Handle line breaks within paragraphs
+                    lines = para.split('\n')
+                    if len(lines) > 1:
+                        # Check if this might be a diagram (ASCII art)
+                        if any('-' * 3 in line for line in lines) or any('/' in line and '\\' in line for line in lines):
+                            # Use monospaced font for diagrams
+                            p = doc.add_paragraph()
+                            for line in lines:
+                                p.add_run(line + '\n').font.name = 'Courier New'
+                        else:
+                            p = doc.add_paragraph()
+                            for i, line in enumerate(lines):
+                                if i > 0:
+                                    p.add_run('\n')
+                                p.add_run(line)
+                    else:
+                        doc.add_paragraph(para)
+            
+            # Save the document to a temporary file
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.docx') as temp_file:
+                doc.save(temp_file.name)
+                temp_file_path = temp_file.name
+            
+            # Create a Document object in the database
+            filename = f"{title.replace(' ', '_')}.docx"
+            with open(temp_file_path, 'rb') as file:
+                document = Document(
+                    title=title,
+                    description=f"Generated from Scientific Exam Maker",
+                    classroom=classroom,
+                    file=None  # Will be set below
+                )
+                document.file.save(filename, file)
+                document.save()
+            
+            # Clean up the temporary file
+            os.unlink(temp_file_path)
+            
+            # Return success response with document info
+            serializer = self.get_serializer(document)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
