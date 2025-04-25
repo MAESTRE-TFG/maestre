@@ -5,7 +5,7 @@ import { useTheme } from "@/components/theme-provider";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { useRouter } from "next/navigation";
 import Alert from "@/components/ui/Alert";
-import { formatExamText, createPDFVersion } from "./utils/pdfUtils";
+import { formatExamText, createPDFVersion, convertAndDownloadWord, uploadWordToClassroom } from "./utils/pdfUtils";
 import {
   uploadPDFToClassroom,
   processUploadedFile,
@@ -17,14 +17,14 @@ import MaterialsModal from "../components/MaterialsModal";
 import ExamResultModal from "../components/ExamResultModal";
 import axios from "axios";
 import Image from "next/image";
-import { IconBook, IconBrain } from "@tabler/icons-react";
+import { IconFileText, IconBrain } from "@tabler/icons-react";
 import { buildExamPrompt } from "./utils/promptUtils";
 import { getApiBaseUrl } from "@/lib/api";
 import { useTranslations } from "next-intl";
 import NoClassroomModal from "../components/no-classroom-modal";
 
-const ExamMaker = ({ params }) => {
-  const t = useTranslations("ExamMaker");
+const ScientificExamMaker = ({ params }) => {
+  const t = useTranslations("ScientificExamMaker");
   const { theme } = useTheme();
   const locale = params?.locale || "es";
   const router = useRouter();
@@ -34,7 +34,8 @@ const ExamMaker = ({ params }) => {
   const [formData, setFormData] = useState({
     subject: "",
     numQuestions: 5,
-    questionType: "multiple_choice",
+    difficulty: 5, // Default difficulty level (1-10)
+    context: "medium", // Default context level (none, medium, very_much)
     classroom: "",
     scoringStyle: "equal",
     customScoringDetails: "",
@@ -52,7 +53,6 @@ const ExamMaker = ({ params }) => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const fileContentsRef = useRef("");
   const [showNoClassroomModal, setShowNoClassroomModal] = useState(false);
-
 
   // Move addAlert inside the component so it can access t
   const addAlert = (type, message) => {
@@ -128,16 +128,6 @@ const ExamMaker = ({ params }) => {
       fetchUserMaterials();
     }
   }, [classrooms, t]);
-  
-  // And in your alert rendering code:
-  {alerts.map(alert => (
-    <Alert
-      key={alert.id}
-      type={alert.type}
-      message={alert.message}
-      onClose={() => setAlerts(prev => prev.filter(a => a.id !== alert.id))}
-    />
-  ))}
 
   // Form change handler
   const handleChange = e => {
@@ -215,23 +205,32 @@ const ExamMaker = ({ params }) => {
         throw new Error(t("alerts.missingClassroom"));
       }
 
-      // Get user data from localStorage
+      // Get user info
       const userString = localStorage.getItem("user");
       const user = userString ? JSON.parse(userString) : {};
 
-      // Build the prompt using the utility function
-      const prompt = buildExamPrompt(formData, classrooms, fileContentsRef.current, user, locale);
+      // Build the prompt
+      const prompt = buildExamPrompt(
+        formData,
+        classrooms,
+        fileContentsRef.current,
+        user,
+        locale
+      );
 
       // Generate the exam
-      const token = localStorage.getItem("authToken");
-      const result = await generateExam(prompt, formData.llmModel, t, addAlert);
+      const generatedExam = await generateExam(
+        prompt,
+        formData.llmModel,
+        addAlert
+      );
 
-      setExamResult(result);
-      setShowModal(true);
-      addAlert("success", t("alerts.examGeneratedSuccess"));
+      if (generatedExam) {
+        setExamResult(generatedExam);
+        setShowModal(true);
+      }
     } catch (error) {
-      console.error("Error generating exam:", error);
-      addAlert("error", `${t("alerts.examGenerationFailed")}: ${error.message}`);
+      addAlert("error", error.message);
     } finally {
       setIsGenerating(false);
     }
@@ -275,7 +274,7 @@ const ExamMaker = ({ params }) => {
             <div className="relative">
               <IconBrain className="w-20 h-20 drop-shadow-lg text-primary" />
               <div className="absolute -bottom-2 -right-2 bg-white dark:bg-gray-800 rounded-full p-1">
-                <IconBook className="w-8 h-8 text-cyan-500" />
+                <IconFileText className="w-8 h-8 text-cyan-500" />
               </div>
             </div>
             <div className="text-center">
@@ -307,10 +306,10 @@ const ExamMaker = ({ params }) => {
                   </p>
                 </div>
 
-                <div className="relative w-full h-[700px] -mt-16 flex items-center justify-center">
+                <div className="relative w-full h-[600px] -mt-16 flex items-center justify-center">
                   <div className="animate-float relative w-96 h-full">
                     <Image
-                      src="/static/teachers/6.webp"
+                      src="/static/teachers/10.webp"
                       alt={t("header.teacherImageAlt")}
                       layout="fill"
                       objectFit="contain"
@@ -367,6 +366,8 @@ const ExamMaker = ({ params }) => {
         formatExamText={formatExamText}
         createPDFVersion={createPDFVersion}
         uploadPDFToClassroom={uploadPDFToClassroom}
+        convertAndDownloadWord={convertAndDownloadWord}
+        uploadWordToClassroom={uploadWordToClassroom}
         formData={formData}
         addAlert={addAlert}
       />
@@ -397,7 +398,7 @@ export default function Main() {
   return (
     <>
       <style jsx global>{styles}</style>
-      <SidebarDemo ContentComponent={ExamMaker} />
+      <SidebarDemo ContentComponent={ScientificExamMaker} />
     </>
   );
 }
