@@ -129,7 +129,7 @@ export function SidebarDemo({ ContentComponent, params }) {
   const links = [
     {
       label: t("links.home"),
-      href: `/${locale}/`,
+      href: `/`,
       icon: (
         <IconHome
           className={cn(
@@ -141,7 +141,7 @@ export function SidebarDemo({ ContentComponent, params }) {
     },
     {
       label: t("links.create"),
-      href: `/${locale}/tools`,
+      href: `/tools`,
       icon: (
         <IconPlus
           className={cn(
@@ -153,7 +153,7 @@ export function SidebarDemo({ ContentComponent, params }) {
     },
     {
       label: t("links.myClasses"),
-      href: user ? `/${locale}/classrooms` : `/${locale}/profile/signin`,
+      href: user ? `/classrooms` : `/profile/signin`,
       icon: (
         <IconSchool
           className={cn(
@@ -165,7 +165,7 @@ export function SidebarDemo({ ContentComponent, params }) {
     },
     {
       label: t("links.myMaterials"),
-      href: user ? `/${locale}/materials` : `/${locale}/profile/signin`,
+      href: user ? `/materials` : `/profile/signin`,
       icon: (
         <IconBooks
           className={cn(
@@ -177,7 +177,7 @@ export function SidebarDemo({ ContentComponent, params }) {
     },
     {
       label: user ? user.name : t("links.signin"),
-      href: user ? `/${locale}/profile/edit` : `/${locale}/profile/signin`,
+      href: user ? `/profile/edit` : `/profile/signin`,
       icon: (
         <IconUser
           className={cn(
@@ -249,7 +249,7 @@ export function SidebarDemo({ ContentComponent, params }) {
             <SidebarLink
               link={{
                 label: t("links.theme"),
-                href: "#",
+                href: "/",
                 icon: (
                   <ThemeSwitch
                     checked={theme === "dark"}
@@ -262,7 +262,7 @@ export function SidebarDemo({ ContentComponent, params }) {
               <SidebarLink
                 link={{
                   label: t("links.signout"),
-                  href: "#",
+                  href: "/",
                   icon: (
                     <IconArrowLeft
                       className={cn(

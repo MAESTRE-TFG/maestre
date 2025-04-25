@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { getApiBaseUrl } from "@/lib/api";
 import { CreateSchoolForm } from "@/components/school-create-form";
 import { useTheme } from "@/components/theme-provider";
@@ -9,13 +9,15 @@ import { SidebarDemo } from "@/components/sidebar-demo";
 import Alert from "@/components/ui/Alert";
 import { useTranslations } from "next-intl";
 
-export default function CreateSchool( params ) {
+export default function CreateSchool() {
   const router = useRouter();
   const { theme } = useTheme();
   const t = useTranslations("CreateSchoolPage");
   const [alert, setAlert] = useState(null);
   const [editMode, setEditMode] = useState(false);
-  const locale = params?.locale || "es";
+  
+  const routeParams = useParams();
+  const locale = routeParams?.locale || 'es';
 
   useEffect(() => {
     const user = localStorage.getItem("user");

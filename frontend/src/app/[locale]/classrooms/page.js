@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { getApiBaseUrl } from "@/lib/api";
 import { useState, useEffect } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
@@ -13,7 +13,7 @@ import Image from "next/image";
 import { IconSchool } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-const ClassroomsList = ( params ) => {
+const ClassroomsList = () => {
   const t = useTranslations('ClassroomsPage');
   const router = useRouter();
   const { theme } = useTheme();
@@ -21,7 +21,8 @@ const ClassroomsList = ( params ) => {
   const [isClient, setIsClient] = useState(false);
   const [alert, setAlert] = useState(null);
 
-  const locale = params?.locale || 'es';
+  const routeParams = useParams();
+  const locale = routeParams?.locale || 'es';
 
   const classroomImages = [
     "/static/classrooms/classroom_01.webp",

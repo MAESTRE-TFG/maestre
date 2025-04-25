@@ -10,6 +10,7 @@ import axios from "axios";
 import { ClassroomEditForm } from "@/components/classroom-edit-form";
 import Alert from "@/components/ui/Alert";
 import { useTranslations } from "next-intl";
+import { IconSchool } from "@tabler/icons-react";
 
 const ClassroomEdit = () => {
   const t = useTranslations("ClassroomEditPage");
@@ -73,10 +74,10 @@ const ClassroomEdit = () => {
     }
     const token = localStorage.getItem("authToken");
     if (!token) {
-      router.push("/profile/signup");
+      router.push(`/${locale}/profile/signup`);
       return;
     }
-  }, [router]);
+  }, [router, locale]);
 
   useEffect(() => {
     const fetchStages = async () => {
@@ -161,9 +162,9 @@ const ClassroomEdit = () => {
           showAlert("error", t("alerts.fetchClassroomError"));
         });
     } else {
-      router.push("/classrooms");
+      router.push(`/${locale}/classrooms`);
     }
-  }, [router, searchParams, t]);
+  }, [router, searchParams, t, locale]);
 
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
@@ -250,29 +251,34 @@ const ClassroomEdit = () => {
     <div className="min-h-screen w-screen bg-gradient-to-br from-blue-500/10 to-purple-500/5">
       {alert && <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />}
 
-      <div className="relative px-4 z-10 sm:mx-auto sm:w-full sm:max-w-full">
-        <h1
-          className={cn(
-            "mt-6 text-center text-4xl font-bold",
-            theme === "dark" ? "text-white" : "text-gray-900"
-          )}
-        >
-          {t("header.title")}{" "}
-          <span
-            className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500"
-            style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-          >
-            {classroom ? classroom.name : ""}
-          </span>
-        </h1>
-        <p
-          className={cn(
-            "mt-2 text-center text-sm",
-            theme === "dark" ? "text-gray-300" : "text-gray-600"
-          )}
-        >
-          {t("header.subtitle")}
-        </p>
+      <div className="relative w-full flex-1 flex flex-col items-center py-6">
+        <div className="flex items-center gap-2">
+          <IconSchool className={`w-16 h-16 drop-shadow-lg text-primary mr-2`} />
+          <div className="text-center">
+            <h1
+              className={cn(
+                "mt-6 text-center text-4xl font-bold",
+                theme === "dark" ? "text-white" : "text-gray-900"
+              )}
+            >
+              {t("header.title")}{" "}
+              <span
+                className="text-black"
+                style={{ fontFamily: "'DM Sans', sans-serif" }}
+              >
+                {classroom ? classroom.name : ""}
+              </span>
+            </h1>
+            <p
+              className={cn(
+                "mt-2 text-center text-sm",
+                theme === "dark" ? "text-gray-300" : "text-gray-600"
+              )}
+            >
+              {t("header.subtitle")}
+            </p>
+          </div>
+        </div>
         <style jsx global>{`
           @import url("https://fonts.googleapis.com/css2?family=Alfa+Slab+One&display=swap");
           .text-gradient {

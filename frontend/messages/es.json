@@ -1186,6 +1186,7 @@
   },
 
   "ToolsPage": {
+    "backToTools":"Volver a Herramientas",
     "pageTitle": "Herramientas de IA",
     "pageSubtitle": "¡Elige una de nuestras herramientas automatizadas y comienza a crear!",
     "quickAccess": "Acceso Rápido",

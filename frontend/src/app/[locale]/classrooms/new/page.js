@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { getApiBaseUrl } from "@/lib/api";
 import { CreateClassroomForm } from "@/components/classroom-create-form";
 import { useTheme } from "@/components/theme-provider";
@@ -8,8 +8,9 @@ import { useState, useEffect } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import Alert from "@/components/ui/Alert";
 import { useTranslations } from "next-intl";
+import { IconSchool } from "@tabler/icons-react";
 
-export default function CreateClassroom( params ) {
+export default function CreateClassroom() {
   const t = useTranslations("ClassroomCreatePage");
   const router = useRouter();
   const { theme } = useTheme();
@@ -17,7 +18,8 @@ export default function CreateClassroom( params ) {
   const [userSchool, setUserSchool] = useState(null);
   const [userStages, setUserStages] = useState(null);
 
-  const locale = params?.locale || 'es';
+  const params = useParams();
+  const locale = params.locale || "es";
 
   useEffect(() => {
     const user = localStorage.getItem("user");
@@ -129,31 +131,26 @@ export default function CreateClassroom( params ) {
             )}
 
             <div className="relative w-full flex-1 flex flex-col items-center py-12">
-              <div className="w-full max-w-4xl flex items-center mb-8 justify-center md:justify-start space-x-6">
-                <img
-                  src={
-                    theme === "dark"
-                      ? "/static/logos/maestre_logo_white_transparent.webp"
-                      : "/static/logos/maestre_logo_blue_transparent.webp"
-                  }
-                  alt={t("header.logoAlt")}
-                  className="w-20 h-20 drop-shadow-lg"
-                />
-                <div className="text-center md:text-left">
-                  <h1
-                    className={`text-4xl font-extrabold mb-2 ${
-                      theme === "dark" ? "text-white" : "text-gray-800"
-                    }`}
-                  >
-                    {t("header.title")}
-                  </h1>
-                  <p
-                    className={`text-xl ${
-                      theme === "dark" ? "text-gray-300" : "text-gray-600"
-                    }`}
-                  >
-                    {t("header.subtitle")}
-                  </p>
+              
+              <div className="w-full max-w-4xl flex items-center mb-8 justify-center">
+                <div className="flex items-center justify-center space-x-4">
+                  <IconSchool className="w-16 h-16 drop-shadow-lg text-primary" />
+                  <div className="text-center">
+                    <h1
+                      className={`text-4xl font-extrabold mb-2 ${
+                        theme === "dark" ? "text-white" : "text-gray-800"
+                      }`}
+                    >
+                      {t("header.title")}
+                    </h1>
+                    <p
+                      className={`text-xl ${
+                        theme === "dark" ? "text-gray-300" : "text-gray-600"
+                      }`}
+                    >
+                      {t("header.subtitle")}
+                    </p>
+                  </div>
                 </div>
               </div>
 

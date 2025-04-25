@@ -2,7 +2,7 @@
 import { useEffect, useState, useRef, Suspense } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { useTheme } from "@/components/theme-provider";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { IconBrandGithub, IconMail, IconChevronRight, IconSparkles, IconSchool, IconBooks } from "@tabler/icons-react";
 import { cn } from "@/lib/utils";
@@ -24,10 +24,11 @@ const PlaceholderSection = () => (
 );
 
 // Update the Home component definition
-const Home = ({ params }) => {
+const Home = () => {
   const { theme } = useTheme();
   const router = useRouter();
-  const locale = params?.locale || 'es';
+  const params = useParams();
+  const locale = params.locale || "es";
   const t = useTranslations('HomePage');
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);

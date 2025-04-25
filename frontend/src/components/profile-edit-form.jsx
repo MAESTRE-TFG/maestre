@@ -4,7 +4,7 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import {
   IconUser,
   IconMail,
@@ -52,7 +52,8 @@ export function ProfileEditForm({
   const { theme } = useTheme();
   const router = useRouter();
   const t = useTranslations("ProfileEditForm"); // Use translations for this component
-  const locale = params?.locale || 'es';
+  const routeParams = useParams();
+  const locale = routeParams?.locale || 'es';
 
   // State to toggle password visibility
   const [showNewPassword, setShowNewPassword] = React.useState(false);

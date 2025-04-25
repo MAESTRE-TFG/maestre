@@ -1189,6 +1189,7 @@
 
 
     "ToolsPage": {
+      "backToTools": "Back to Tools",
       "pageTitle": "AI Tools",
       "pageSubtitle": "Choose one of our automated tools and start creating!",
       "quickAccess": "Quick Access",

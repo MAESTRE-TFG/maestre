@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { getApiBaseUrl } from "@/lib/api";
 import { useState, useEffect, useCallback } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
@@ -10,7 +10,7 @@ import { CompleteProfileForm } from "@/components/complete-profile-form";
 import Alert from "@/components/ui/Alert";
 import { useTranslations } from "next-intl";
 
-const ProfileEdit = ( params ) => {
+const ProfileEdit = () => {
   const router = useRouter();
   const { theme } = useTheme();
   const t = useTranslations("ProfileCompletePage");
@@ -30,7 +30,8 @@ const ProfileEdit = ( params ) => {
   const [schools, setSchools] = useState([]);
   const [city, setCity] = useState("");
 
-  const locale = params?.locale || 'es';
+  const routeParams = useParams();
+  const locale = routeParams?.locale || 'es';
 
   const showAlert = (type, message) => {
     setAlert({ type, message });
@@ -133,6 +134,7 @@ const ProfileEdit = ( params ) => {
       setUser(response.data);
       setEditMode(false);
       showAlert("success", t("alerts.updateSuccess"));
+      router.push(`/${locale}/profile/edit`);
     } catch (err) {
       showAlert("error", t("alerts.updateError", { error: err.response?.data?.message || err.message }));
     }

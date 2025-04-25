@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, useParams } from "next/navigation";
 import { getApiBaseUrl } from "@/lib/api";
 import React, { useState, useEffect, useMemo, useCallback } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
@@ -22,7 +22,7 @@ import {
 } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-const ProfileEdit = (params) => {
+const ProfileEdit = () => {
   const router = useRouter();
   const { theme } = useTheme();
   const t = useTranslations("ProfileEditPage"); // Use translations for this page
@@ -49,7 +49,8 @@ const ProfileEdit = (params) => {
   const [usernameInput, setUsernameInput] = useState("");
   const searchParams = useSearchParams();
   const [isDeleteAccountModalOpen, setDeleteAccountModalOpen] = useState(false);
-  const locale = params?.locale || "es";
+  const routeParams = useParams();
+  const locale = routeParams?.locale || 'es';
 
   const closeDeleteAccountModal = () => {
     setDeleteAccountModalOpen(false);

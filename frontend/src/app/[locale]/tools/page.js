@@ -3,7 +3,7 @@
 import { SidebarDemo } from "@/components/sidebar-demo";
 import { useTheme } from "@/components/theme-provider";
 import { useState, useEffect } from "react";
-import { useRouter } from 'next/navigation';
+import { useRouter, useParams } from 'next/navigation';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { cn } from "@/lib/utils";
@@ -21,7 +21,7 @@ const CardContent = ({ children }) => {
   );
 };
 
-const ToolList = ( params ) => {
+const ToolList = () => {
   const { theme } = useTheme();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
@@ -31,7 +31,8 @@ const ToolList = ( params ) => {
   const [showProfileModal, setShowProfileModal] = useState(false);
   const baseImgFolder = '/static/tools/';
 
-  const locale = params?.locale || 'es';
+  const params = useParams();
+  const locale = params.locale || "es";
   const t = useTranslations("ToolsPage");
   const homeT = useTranslations("HomePage");
 
