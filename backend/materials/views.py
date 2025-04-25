@@ -12,6 +12,8 @@ from django.core.exceptions import ObjectDoesNotExist
 import docx
 from googletrans import Translator
 from rest_framework.authentication import get_authorization_header
+import io
+from django.http import HttpResponse
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
@@ -309,3 +311,191 @@ class DocumentViewSet(viewsets.ModelViewSet):
                 {"error": str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
             )
+
+    @action(detail=False, methods=['post'], url_path='convert-text-to-docx')
+    def convert_text_to_docx(self, request):
+        """Convert text content to a DOCX file and return it for download"""
+        text = request.data.get('text')
+        title = request.data.get('title', 'Scientific Exam')
+        
+        if not text:
+            return Response({'error': 'No text provided'}, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            # Create a new DOCX document
+            doc = docx.Document()
+            
+            # Add a title
+            doc.add_heading(title, level=1)
+            
+            # Process the text content
+            paragraphs = text.split('\n\n')
+            for para in paragraphs:
+                if not para.strip():
+                    continue
+                    
+                # Check if it's a heading
+                if para.startswith('# '):
+                    doc.add_heading(para[2:], level=1)
+                elif para.startswith('## '):
+                    doc.add_heading(para[3:], level=2)
+                elif para.startswith('### '):
+                    doc.add_heading(para[4:], level=3)
+                # Check if it's a problem or exercise
+                elif para.startswith('Problema') or para.startswith('Ejercicio'):
+                    p = doc.add_paragraph()
+                    p.add_run(para).bold = True
+                # Check if it's a subquestion (a), b), etc.)
+                elif para.strip() and para.strip()[0].isalpha() and len(para.strip()) > 1 and para.strip()[1] in [')', '.']:
+                    p = doc.add_paragraph()
+                    p.add_run(para[:2]).bold = True
+                    p.add_run(para[2:])
+                else:
+                    # Handle line breaks within paragraphs
+                    lines = para.split('\n')
+                    if len(lines) > 1:
+                        # Check if this might be a diagram (ASCII art)
+                        if any('-' * 3 in line for line in lines) or any('/' in line and '\\' in line for line in lines):
+                            # Use monospaced font for diagrams
+                            p = doc.add_paragraph()
+                            for line in lines:
+                                p.add_run(line + '\n').font.name = 'Courier New'
+                        else:
+                            p = doc.add_paragraph()
+                            for i, line in enumerate(lines):
+                                if i > 0:
+                                    p.add_run('\n')
+                                p.add_run(line)
+                    else:
+                        doc.add_paragraph(para)
+            
+            # Save the document to a bytes buffer
+            docx_buffer = io.BytesIO()
+            doc.save(docx_buffer)
+            docx_buffer.seek(0)
+            
+            # Create the response with the DOCX file
+            response = HttpResponse(
+                docx_buffer.getvalue(),
+                content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+            )
+            response['Content-Disposition'] = f'attachment; filename="{title.replace(" ", "_")}.docx"'
+            
+            return response
+            
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    @action(detail=False, methods=['post'], url_path='convert-text-to-docx-and-upload')
+    def convert_text_to_docx_and_upload(self, request):
+        """Convert text content to a DOCX file and upload it to a classroom"""
+        text = request.data.get('text')
+        title = request.data.get('title', 'Scientific Exam')
+        classroom_id = request.data.get('classroom')
+        
+        if not text:
+            return Response({'error': 'No text provided'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        if not classroom_id:
+            return Response({'error': 'No classroom specified'}, status=status.HTTP_400_BAD_REQUEST)
+            
+        try:
+            # Verify classroom exists and user has permission
+            try:
+                classroom = Classroom.objects.get(id=classroom_id)
+                
+                if classroom.creator != request.user:
+                    return Response(
+                        {"error": "You don't have permission to add documents to this classroom."},
+                        status=status.HTTP_403_FORBIDDEN
+                    )
+                    
+                if classroom.documents.count() >= settings.MAX_FILES_PER_CLASSROOM:
+                    return Response(
+                        {
+                            "error": (
+                                f"This classroom already has the maximum number of files "
+                                f"({settings.MAX_FILES_PER_CLASSROOM})."
+                            )
+                        },
+                        status=status.HTTP_400_BAD_REQUEST
+                    )
+            except ObjectDoesNotExist:
+                return Response(
+                    {"error": "Classroom does not exist."},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            
+            # Create a new DOCX document
+            doc = docx.Document()
+            
+            # Add a title
+            doc.add_heading(title, level=1)
+            
+            # Process the text content (same as in convert_text_to_docx)
+            paragraphs = text.split('\n\n')
+            for para in paragraphs:
+                if not para.strip():
+                    continue
+                    
+                # Check if it's a heading
+                if para.startswith('# '):
+                    doc.add_heading(para[2:], level=1)
+                elif para.startswith('## '):
+                    doc.add_heading(para[3:], level=2)
+                elif para.startswith('### '):
+                    doc.add_heading(para[4:], level=3)
+                # Check if it's a problem or exercise
+                elif para.startswith('Problema') or para.startswith('Ejercicio'):
+                    p = doc.add_paragraph()
+                    p.add_run(para).bold = True
+                # Check if it's a subquestion (a), b), etc.)
+                elif para.strip() and para.strip()[0].isalpha() and len(para.strip()) > 1 and para.strip()[1] in [')', '.']:
+                    p = doc.add_paragraph()
+                    p.add_run(para[:2]).bold = True
+                    p.add_run(para[2:])
+                else:
+                    # Handle line breaks within paragraphs
+                    lines = para.split('\n')
+                    if len(lines) > 1:
+                        # Check if this might be a diagram (ASCII art)
+                        if any('-' * 3 in line for line in lines) or any('/' in line and '\\' in line for line in lines):
+                            # Use monospaced font for diagrams
+                            p = doc.add_paragraph()
+                            for line in lines:
+                                p.add_run(line + '\n').font.name = 'Courier New'
+                        else:
+                            p = doc.add_paragraph()
+                            for i, line in enumerate(lines):
+                                if i > 0:
+                                    p.add_run('\n')
+                                p.add_run(line)
+                    else:
+                        doc.add_paragraph(para)
+            
+            # Save the document to a temporary file
+            with tempfile.NamedTemporaryFile(delete=False, suffix='.docx') as temp_file:
+                doc.save(temp_file.name)
+                temp_file_path = temp_file.name
+            
+            # Create a Document object in the database
+            filename = f"{title.replace(' ', '_')}.docx"
+            with open(temp_file_path, 'rb') as file:
+                document = Document(
+                    title=title,
+                    description=f"Generated from Scientific Exam Maker",
+                    classroom=classroom,
+                    file=None  # Will be set below
+                )
+                document.file.save(filename, file)
+                document.save()
+            
+            # Clean up the temporary file
+            os.unlink(temp_file_path)
+            
+            # Return success response with document info
+            serializer = self.get_serializer(document)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
