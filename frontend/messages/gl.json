@@ -42,6 +42,7 @@
     "footer_cookies": "Política de cookies",
     "footer_products": "Produtos",
     "footer_exam_creator": "Xerador de exames",
+    "footer_science_exam_creator": "Xerador de exames de ciencia",
     "footer_test_creator": "Xerador de proba",
     "footer_translator": "Tradutor",
     "footer_planner": "Planificador de clases",
@@ -75,6 +76,12 @@
     "tool_feature_translator_2": "Soporte plurilingüe",
     "tool_feature_translator_3": "Conciencia do contexto educativo",
     "tool_feature_translator_4": "Tradución de documentos",
+    "tool_title_science_exams": "Crear exames de ciencias",
+    "tool_content_science_exams": "Xera exames de ciencias personalizados con funcións especializadas:",
+    "tool_feature_science_exams_1": "Preguntas baseadas en experimentos",
+    "tool_feature_science_exams_2": "Diagramas e ilustracións científicas",
+    "tool_feature_science_exams_3": "Problemas de cálculo científico",
+    
     "try_now_button": "Proba agora",
     "auth_modal_title": "Autenticación necesaria",
     "auth_modal_description": "Debe iniciar sesión para acceder a esta ferramenta. Crea unha conta para desbloquear todas as funcións.",
@@ -365,6 +372,134 @@
     "AnswerOptionsSelector": {
       "label": "Número de opcións por pregunta",
       "helperText": "Escolle un número entre 3 e 10."
+    }
+  },
+
+  "ScientificExamMaker": {
+    "header": {
+      "title": "Xerador de exames científicos",
+      "subtitle": "Crea exames científicos personalizados con IA",
+      "featureTitle": "Exames científicos impulsados por IA",
+      "featureDescription": "Crea exames científicos profesionais en segundos usando a nosa tecnoloxía avanzada de IA. Perfecto para profesores que queren aforrar tempo mentres crean avaliacións de alta calidade.",
+      "teacherImageAlt": "Profesor"
+    },
+    "alerts": {
+      "examGeneratedSuccess": "¡Exame científico xerado con éxito!",
+      "examGenerationFailed": "Erro ao xerar o exame científico",
+      "missingSubject": "Por favor, introduce unha materia",
+      "missingClassroom": "Por favor, selecciona unha clase",
+      "fetchClassroomsError": "Erro ao obter as clases",
+      "fetchMaterialsError": "Erro ao obter os materiais",
+      "fileProcessedSuccess": "Arquivo procesado con éxito",
+      "materialProcessedSuccess": "Material procesado con éxito",
+      "unsupportedFileType": "Tipo de arquivo non compatible. Por favor, sube un arquivo .docx",
+      "pdfSavedSuccess": "PDF gardado na clase con éxito",
+      "pdfSaveFailed": "Erro ao gardar o PDF: {error}",
+      "unknownError": "Erro descoñecido"
+    },
+    "fields": {
+      "subject": {
+        "label": "Materia",
+        "placeholder": "Matemáticas, Ciencias, Historia, etc."
+      },
+      "examName": {
+        "label": "Nome do exame",
+        "placeholder": "Exame parcial, Exame final, Cuestionario do Capítulo 5, etc."
+      },
+      "numQuestions": {
+        "label": "Número de preguntas"
+      },
+      "totalPoints": {
+        "label": "Puntos máximos"
+      },
+      "customScoringDetails": {
+        "label": "Detalles de puntuación personalizada",
+        "placeholder": "Ex., Preguntas 1-5: 2 puntos cada unha, Preguntas 6-10: 3 puntos cada unha"
+      },
+      "additionalInfo": {
+        "label": "Instrucións adicionais (Opcional)",
+        "placeholder": "Engade instrucións ou requisitos específicos para o exame..."
+      },
+      "referenceMaterials": {
+        "label": "Materiais de referencia",
+        "upload": "Subir un arquivo",
+        "dragAndDrop": " ou arrastra e solta",
+        "fileRequirements": "Só arquivos .docx (máx 5MB)",
+        "or": "ou",
+        "selectFromClassroom": "Seleccionar dos materiais da clase",
+        "fromClassroom": "Desde a clase",
+        "processing": "Procesando arquivo...",
+        "invalidFormat": "O formato do arquivo non é un documento de Word (.DOCX)"
+      },
+      "llmModel": {
+        "label": "Modelo de IA",
+        "options": {
+          "llama": "Llama 3.2 3B",
+          "deepseek": "DeepSeek R1"
+        }
+      },
+      "difficulty": {
+        "label": "Nivel de dificultade",
+        "helperText": "Establece a dificultade dos problemas (1 = máis fácil, 10 = máis difícil). A dificultade é relativa ao nivel da clase seleccionada."
+      },
+      "context": {
+        "label": "Nivel de contexto",
+        "options": {
+          "none": "Ningún",
+          "medium": "Medio",
+          "very_much": "Alto"
+        }
+      },
+      "scoringStyle": {
+        "label": "Estilo de puntuación",
+        "options": {
+          "equal": "Puntos iguais",
+          "custom": "Distribución personalizada"
+        }
+      }
+    },
+    "buttons": {
+      "generateExam": "Xerar exame",
+      "generating": "Xerando exame...",
+      "close": "Pechar",
+      "downloadWord": "Descargar Word",
+      "saveWordToClassroom": "Gardar na clase",
+      "cancel": "Cancelar"
+    },
+    "form": {
+      "subject": "Materia",
+      "subjectPlaceholder": "ex., Álxebra, Física, Química",
+      "examName": "Nome do exame",
+      "examNamePlaceholder": "ex., Exame parcial, Exame final",
+      "classroom": "Clase",
+      "classroomPlaceholder": "Selecciona unha clase",
+      "numQuestions": "Número de problemas",
+      "difficulty": "Nivel de dificultade",
+      "difficultyDescription": "Establece a dificultade dos problemas (1 = máis fácil, 10 = máis difícil). A dificultade é relativa ao nivel da clase seleccionada.",
+      "context": "Nivel de contexto",
+      "contextLevels": {
+        "none": "Ningún",
+        "medium": "Medio",
+        "very_much": "Moito"
+      },
+      "contextDescription": "Determina canto contexto rodea cada problema: Ningún (exercicios directos), Medio (problemas curtos) ou Moito (problemas extensos con múltiples pezas de información).",
+      "totalPoints": "Puntos totais",
+      "scoringStyle": "Estilo de puntuación",
+      "scoringStyles": {
+        "equal": "Puntos iguais",
+        "custom": "Distribución personalizada"
+      },
+      "customScoringDetails": "Detalles de puntuación personalizada",
+      "customScoringDetailsPlaceholder": "ex., Problema 1: 3 puntos, Problema 2: 2 puntos...",
+      "additionalInfo": "Instrucións adicionais",
+      "additionalInfoPlaceholder": "Calquera instrución específica para o exame",
+      "llmModel": "Modelo de IA",
+      "generateExam": "Xerar exame científico",
+      "generating": "Xerando...",
+      "uploadFile": "Subir material de referencia",
+      "uploadedFiles": "Arquivos subidos",
+      "browseClassroomMaterials": "Explorar materiais da clase",
+      "noFilesUploaded": "Non hai arquivos subidos"
     }
   },
 

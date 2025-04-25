@@ -17,7 +17,7 @@ import MaterialsModal from "../components/MaterialsModal";
 import ExamResultModal from "../components/ExamResultModal";
 import axios from "axios";
 import Image from "next/image";
-import { IconFileText, IconBrain } from "@tabler/icons-react";
+import { IconBook, IconBrain } from "@tabler/icons-react";
 import { buildExamPrompt } from "./utils/promptUtils";
 import { getApiBaseUrl } from "@/lib/api";
 import { useTranslations } from "next-intl";
@@ -275,7 +275,7 @@ const ExamMaker = ({ params }) => {
             <div className="relative">
               <IconBrain className="w-20 h-20 drop-shadow-lg text-primary" />
               <div className="absolute -bottom-2 -right-2 bg-white dark:bg-gray-800 rounded-full p-1">
-                <IconFileText className="w-8 h-8 text-cyan-500" />
+                <IconBook className="w-8 h-8 text-cyan-500" />
               </div>
             </div>
             <div className="text-center">

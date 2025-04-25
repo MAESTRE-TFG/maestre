@@ -83,6 +83,15 @@ const ToolList = ( params ) => {
     },
     {
       category: "assessment",
+      titleKey: "tools.scienceExam.title",
+      src: "science_exam_maker_sm.webp",
+      page: "scientific-exam-maker",
+      sizes: "(max-width: 800px) 100vw, (max-width: 1050px) 50vw, 33vw",
+      contentKey: "tools.scienceExam.content",
+      featuresKey: "tools.scienceExam.features"
+    },
+    {
+      category: "assessment",
       titleKey: "tools.tests.title",
       src: "test_maker_sm.webp",
       page: "test-maker",
@@ -107,15 +116,6 @@ const ToolList = ( params ) => {
       sizes: "(max-width: 800px) 100vw, (max-width: 1050px) 50vw, 33vw",
       contentKey: "tools.translator.content",
       featuresKey: "tools.translator.features"
-    },
-    {
-      category: "assessment",
-      titleKey: "tools.scienceExam.title",
-      src: "test_maker_sm.webp",
-      page: "scientific-exam-maker",
-      sizes: "(max-width: 800px) 100vw, (max-width: 1050px) 50vw, 33vw",
-      contentKey: "tools.scienceExam.content",
-      featuresKey: "tools.scienceExam.features"
     },
     
   ];

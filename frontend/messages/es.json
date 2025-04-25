@@ -50,6 +50,7 @@
     "footer_cookies": "Política de Cookies",
     "footer_products": "Productos",
     "footer_exam_creator": "Generador de Exámenes",
+    "footer_science_exam_creator": "Generador de Exámenes de Ciencias",
     "footer_test_creator": "Generador de Tests",
     "footer_translator": "Traductor",
     "footer_planner": "Planificador de Clases",
@@ -84,6 +85,11 @@
     "tool_feature_translator_2": "Soporte multilingüe",
     "tool_feature_translator_3": "Conciencia del contexto educativo",
     "tool_feature_translator_4": "Traducción de documentos",
+    "tool_title_science_exams": "Crea Exámenes Científicos",
+    "tool_content_science_exams": "Genera exámenes científicos detallados con nuestro asistente especializado:",
+    "tool_feature_science_exams_1": "Problemas con múltiples pasos",
+    "tool_feature_science_exams_2": "Fórmulas y ecuaciones integradas",
+    "tool_feature_science_exams_3": "Diferentes dificultades",
 
     "try_now_button": "Probar Ahora",
     "auth_modal_title": "Autenticación Requerida",
@@ -200,7 +206,8 @@
         "or": "o",
         "selectFromClassroom": "Seleccionar de Materiales del Aula",
         "fromClassroom": "Desde el Aula",
-        "processing": "Procesando archivo..."
+        "processing": "Procesando archivo...",
+        "invalidFormat": "El formato del archivo no es un documento de word (.DOCX)"
       },
       "llmModel": {
         "label": "Modelo de IA",

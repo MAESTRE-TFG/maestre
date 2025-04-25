@@ -42,6 +42,7 @@
     "footer_cookies": "Cookie politika",
     "footer_products": "Aurrealdi",
     "footer_exam_creator": "Azterketa sortzailea",
+    "footer_science_exam_creator": "Azterketa sortzailea",
     "footer_test_creator": "Proba sorgailua",
     "footer_translator": "Itzultzaile",
     "footer_planner": "Klase antolatzailea",
@@ -75,6 +76,12 @@
     "tool_feature_translator_2": "Laguntza eleanitza",
     "tool_feature_translator_3": "Hezkuntza testuinguruaren kontzientzia",
     "tool_feature_translator_4": "Dokumentuen itzulpena",
+    "tool_title_science_exams": "Zientzia azterketa sortzailea",
+    "tool_content_science_exams": "Sortu zientzia azterketa zehatzak eta erakargarriak gure AI tresnekin:",
+    "tool_feature_science_exams_1": "Laborategiko praktiken ebaluazioa",
+    "tool_feature_science_exams_2": "Zientzia kontzeptuen ulermena",
+    "tool_feature_science_exams_3": "Esperimentuen diseinua",
+    
     "try_now_button": "Saiatu orain",
     "auth_modal_title": "Beharrezko autentikazioa",
     "auth_modal_description": "Tresna honetara sartzeko saioa hasi behar duzu. Sortu kontu bat funtzio guztiak desblokeatzeko.",
@@ -367,6 +374,135 @@
     "AnswerOptionsSelector": {
       "label": "Galderako aukera kopurua",
       "helperText": "Hautatu 3 eta 10 arteko zenbaki bat."
+    }
+  },
+
+
+  "ScientificExamMaker": {
+    "header": {
+      "title": "Zientzia Azterketa Sortzailea",
+      "subtitle": "Sortu zientzia azterketa pertsonalizatuak AI-rekin",
+      "featureTitle": "AI-k bultzatutako Zientzia Azterketak",
+      "featureDescription": "Sortu zientzia azterketa profesionalak segundotan gure AI teknologia aurreratua erabiliz. Ezin hobea denbora aurreztu nahi duten irakasleentzat kalitate handiko ebaluazioak sortzen dituzten bitartean.",
+      "teacherImageAlt": "Irakaslea"
+    },
+    "alerts": {
+      "examGeneratedSuccess": "Zientzia azterketa arrakastaz sortua!",
+      "examGenerationFailed": "Zientzia azterketa sortzean huts egin du",
+      "missingSubject": "Mesedez, sartu ikasgai bat",
+      "missingClassroom": "Mesedez, aukeratu gela bat",
+      "fetchClassroomsError": "Ezin izan dira gelak eskuratu",
+      "fetchMaterialsError": "Ezin izan dira materialak eskuratu",
+      "fileProcessedSuccess": "Fitxategia arrakastaz prozesatua",
+      "materialProcessedSuccess": "Materiala arrakastaz prozesatua",
+      "unsupportedFileType": "Fitxategi mota ez onartua. Mesedez, igo .docx fitxategi bat",
+      "pdfSavedSuccess": "PDF-a arrakastaz gorde da gelan",
+      "pdfSaveFailed": "PDF-a gordetzean huts egin du: {error}",
+      "unknownError": "Errore ezezaguna"
+    },
+    "fields": {
+      "subject": {
+        "label": "Ikasgaia",
+        "placeholder": "Matematika, Zientzia, Historia, etab."
+      },
+      "examName": {
+        "label": "Azterketaren Izena",
+        "placeholder": "Erdiko Azterketa, Azken Azterketa, 5. Kapituluko Testa, etab."
+      },
+      "numQuestions": {
+        "label": "Galdera Kopurua"
+      },
+      "totalPoints": {
+        "label": "Gehienezko Puntuak"
+      },
+      "customScoringDetails": {
+        "label": "Puntuazio Xehetasun Pertsonalizatuak",
+        "placeholder": "Adib., 1-5 galderak: 2 puntu bakoitza, 6-10 galderak: 3 puntu bakoitza"
+      },
+      "additionalInfo": {
+        "label": "Argibide Gehigarriak (Aukerakoa)",
+        "placeholder": "Gehitu azterketarako argibide edo baldintza zehatzak..."
+      },
+      "referenceMaterials": {
+        "label": "Erreferentziazko Materialak",
+        "upload": "Igo fitxategia",
+        "dragAndDrop": " edo arrastatu eta askatu",
+        "fileRequirements": "Soilik .docx fitxategiak (gehienez 5MB)",
+        "or": "edo",
+        "selectFromClassroom": "Hautatu Gelako Materialetatik",
+        "fromClassroom": "Gelatik",
+        "processing": "Fitxategia prozesatzen...",
+        "invalidFormat": "Fitxategi formatua ez da word dokumentu bat (.DOCX)"
+      },
+      "llmModel": {
+        "label": "AI Eredua",
+        "options": {
+          "llama": "Llama 3.2 3B",
+          "deepseek": "DeepSeek R1"
+        }
+      },
+      "difficulty": {
+        "label": "Zailtasun Maila",
+        "helperText": "Arazoen zailtasuna ezartzen du (1 = errazena, 10 = zailena). Zailtasuna hautatutako gelaren mailaren araberakoa da."
+      },
+      "context": {
+        "label": "Testuinguru Maila",
+        "options": {
+          "none": "Bat ere ez",
+          "medium": "Ertaina",
+          "very_much": "Altua"
+        }
+      },
+      "scoringStyle": {
+        "label": "Puntuazio Estiloa",
+        "options": {
+          "equal": "Puntu Berdinak",
+          "custom": "Banaketa Pertsonalizatua"
+        }
+      }
+    },
+    "buttons": {
+      "generateExam": "Sortu Azterketa",
+      "generating": "Azterketa Sortzen...",
+      "close": "Itxi",
+      "downloadWord": "Deskargatu Word",
+      "saveWordToClassroom": "Gorde Gelan",
+      "cancel": "Utzi"
+    },
+    "form": {
+      "subject": "Ikasgaia",
+      "subjectPlaceholder": "adib., Aljebra, Fisika, Kimika",
+      "examName": "Azterketaren Izena",
+      "examNamePlaceholder": "adib., Erdiko Azterketa, Azken Azterketa",
+      "classroom": "Gela",
+      "classroomPlaceholder": "Aukeratu gela bat",
+      "numQuestions": "Ariketa Kopurua",
+      "difficulty": "Zailtasun Maila",
+      "difficultyDescription": "Arazoen zailtasuna ezartzen du (1 = errazena, 10 = zailena). Zailtasuna hautatutako gelaren mailaren araberakoa da.",
+      "context": "Testuinguru Maila",
+      "contextLevels": {
+        "none": "Bat ere ez",
+        "medium": "Ertaina",
+        "very_much": "Oso Altua"
+      },
+      "contextDescription": "Ariketa bakoitzaren inguruko testuinguru kantitatea zehazten du: Bat ere ez (ariketa zuzenak), Ertaina (ariketa laburrak), edo Oso Altua (informazio anitzeko ariketa luzeak).",
+      "totalPoints": "Puntu Guztira",
+      "scoringStyle": "Puntuazio Estiloa",
+      "scoringStyles": {
+        "equal": "Puntu Berdinak",
+        "custom": "Banaketa Pertsonalizatua"
+      },
+      "customScoringDetails": "Puntuazio Xehetasun Pertsonalizatuak",
+      "customScoringDetailsPlaceholder": "adib., 1. ariketa: 3 puntu, 2. ariketa: 2 puntu...",
+      "additionalInfo": "Argibide Gehigarriak",
+      "additionalInfoPlaceholder": "Azterketarako argibide zehatzak",
+      "llmModel": "AI Eredua",
+      "generateExam": "Sortu Zientzia Azterketa",
+      "generating": "Sortzen...",
+      "uploadFile": "Igo Erreferentziazko Materiala",
+      "uploadedFiles": "Igotako Fitxategiak",
+      "browseClassroomMaterials": "Arakatu Gelako Materialak",
+      "noFilesUploaded": "Ez da fitxategirik igo"
     }
   },
 

@@ -50,6 +50,7 @@
       "footer_cookies": "Cookie Policy",      
       "footer_products": "Products",
       "footer_exam_creator": "Exam Creator",
+      "footer_science_exam_creator": "Science Exam Creator",
       "footer_test_creator": "Test Creator",
       "footer_translator": "Translator",
       "footer_planner": "Lesson Planner",
@@ -84,6 +85,11 @@
       "tool_feature_translator_2": "Multi-language support",
       "tool_feature_translator_3": "Educational context awareness",
       "tool_feature_translator_4": "Document translation",
+      "tool_title_science_exams": "Create Scientific Exams",
+      "tool_content_science_exams": "Design comprehensive scientific exams with advanced features:",
+      "tool_feature_science_exams_1": "Scientific notation support",
+      "tool_feature_science_exams_2": "Formula and equation editor",
+      "tool_feature_science_exams_3": "Lab experiment questions",
       
       "try_now_button": "Try Now",
       "auth_modal_title": "Authentication Required",
@@ -449,7 +455,8 @@
           "or": "or",
           "selectFromClassroom": "Select from Classroom Materials",
           "fromClassroom": "From Classroom",
-          "processing": "Processing file..."
+          "processing": "Processing file...",
+          "invalidFormat": "The file format is not a word document (.DOCX)"
         },
         "llmModel": {
           "label": "AI Model",

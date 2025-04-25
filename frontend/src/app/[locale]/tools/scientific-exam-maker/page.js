@@ -306,10 +306,10 @@ const ScientificExamMaker = ({ params }) => {
                   </p>
                 </div>
 
-                <div className="relative w-full h-[700px] -mt-16 flex items-center justify-center">
+                <div className="relative w-full h-[600px] -mt-16 flex items-center justify-center">
                   <div className="animate-float relative w-96 h-full">
                     <Image
-                      src="/static/teachers/6.webp"
+                      src="/static/teachers/10.webp"
                       alt={t("header.teacherImageAlt")}
                       layout="fill"
                       objectFit="contain"
