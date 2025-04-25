@@ -454,7 +454,7 @@ const ProfileEdit = () => {
                       theme === "dark" ? "bg-gray-900 bg-opacity-50" : "bg-white bg-opacity-80"
                     )}>
                       {/* Vertical divider as a pseudo-element on the left side of this container */}
-                      <div className="absolute left-[-20] top-1 bottom-1 w-px bg-gradient-to-b from-transparent via-gray-300 dark:via-gray-600 to-transparent hidden md:block"></div>
+                      <div className="absolute left-[-20px] top-1 bottom-1 w-px bg-gradient-to-b from-transparent via-gray-300 dark:via-gray-600 to-transparent hidden md:block"></div>
                       
                       <h3 className={`text-xl font-bold mb-6 ${theme === "dark" ? "text-white" : "text-gray-800"}`}>
                         {t("sections.schoolInfo")}
