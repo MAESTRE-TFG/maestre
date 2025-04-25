@@ -68,7 +68,6 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
                 "text-lg font-bold mb-4",
                 theme === "dark" ? "text-white" : "text-gray-800"
               )}
-              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             >
               {t("sections.information.title")} 
             </h3>
@@ -77,7 +76,10 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
               <LabelInputContainer className="flex-1">
                 <Label
                   className="flex items-center"
-                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: "1rem",
+                    fontWeight: "bold", }}
                   htmlFor="name"
                 >
                   <IconSchool className="mr-2 h-5 w-5 text-blue-500" />
@@ -97,7 +99,10 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
               <LabelInputContainer className="flex-1">
                 <Label
                   className="flex items-center"
-                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: "1rem",
+                    fontWeight: "bold", }}
                   htmlFor="academic_course"
                 >
                   <IconBook className="mr-2 h-5 w-5 text-purple-500" />
@@ -134,7 +139,10 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
               <LabelInputContainer className="flex-1">
                 <Label
                   className="flex items-center"
-                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: "1rem",
+                    fontWeight: "bold", }}
                   htmlFor="academic_year"
                 >
                   <IconCalendar className="mr-2 h-5 w-5 text-green-500" />
@@ -159,7 +167,6 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
                 "text-lg font-bold mb-4",
                 theme === "dark" ? "text-white" : "text-gray-800"
               )}
-              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             >
               {t("sections.description.title")} 
             </h3>
@@ -167,7 +174,10 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
             <LabelInputContainer className="mb-4">
               <Label
                 className="flex items-center"
-                style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: "1rem",
+                  fontWeight: "bold", }}
                 htmlFor="description"
               >
                 <IconFileDescription className="mr-2 h-5 w-5 text-amber-500" />
@@ -201,7 +211,24 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
             type="button"
             onClick={() => router.back()}
           >
-            &larr; {t("buttons.cancel")} 
+            <span className="font-bold flex items-center gap-2">
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="20" 
+                height="20" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+                className="rotate-180 transition-transform group-hover:-translate-x-1"
+              >
+                <path d="M5 12h14"/>
+                <path d="m12 5 7 7-7 7"/>
+              </svg>
+              {t("buttons.cancel")}
+            </span>
           </button>
           <button
             className={cn(
@@ -210,7 +237,24 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
             )}
             type="submit"
           >
-            {t("buttons.update")} &rarr; 
+            <span className="font-bold flex items-center gap-2">
+              {t("buttons.update")}
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="20" 
+                height="20" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+                className="transition-transform group-hover:translate-x-1"
+              >
+                <path d="M5 12h14"/>
+                <path d="m12 5 7 7-7 7"/>
+              </svg>
+            </span>
           </button>
         </div>
 
@@ -224,7 +268,9 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
             type="button"
             onClick={openDeleteModal}
           >
-            <IconTrash className="mr-2 h-5 w-5" /> {t("buttons.delete")} 
+            <span className="font-bold flex items-center gap-2">
+              <IconTrash className="h-5 w-5" /> {t("buttons.delete")}
+            </span>
           </button>
         </div>
       </form>
@@ -238,7 +284,7 @@ const LabelInputContainer = ({ children, className }) => {
       {React.Children.map(children, (child) => {
         if (child.type === Label) {
           return React.cloneElement(child, {
-            style: { ...child.props.style, fontSize: "1.25rem" },
+            style: { ...child.props.style, fontSize: "0.875rem" }, // Adjusted font size to make labels smaller
           });
         }
         return child;

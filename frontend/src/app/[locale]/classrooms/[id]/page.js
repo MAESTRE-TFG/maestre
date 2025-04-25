@@ -12,6 +12,7 @@ import { MaterialsPage } from "@/components/materials-page";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import StudentModal from "@/components/student-modal";
+import { IconSchool } from "@tabler/icons-react";
 
 const NAME_LIMIT = 30;
 const SURNAME_LIMIT = 30;
@@ -157,7 +158,6 @@ const ClassroomPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
     setIsSubmitting(true);
 
     try {
@@ -265,37 +265,79 @@ const ClassroomPage = () => {
           {/* Back to Classrooms Button */}
           <button
             onClick={() => router.push(`/${locale}/classrooms`)}
-            className="btn btn-md btn-secondary absolute left-4 text-xs sm:text-sm md:text-base px-2 sm:px-3 md:px-4 py-1 sm:py-2 md:py-3"
+            className={cn(
+              "absolute left-4 flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all",
+              "hover:scale-105 active:scale-95",
+              "shadow-md hover:shadow-lg",
+              theme === "dark" 
+                ? "bg-gray-800 text-gray-200 hover:bg-gray-700" 
+                : "bg-white text-gray-800 hover:bg-gray-50"
+            )}
           >
-            &larr; {t("backToClassrooms")}
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              className="h-4 w-4" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M10 19l-7-7m0 0l7-7m-7 7h18" 
+              />
+            </svg>
+            <span>{t("backToClassrooms")}</span>
           </button>
 
           {/* Classroom Title and Details */}
           <div className="flex justify-center w-full">
             {classroom ? (
               <div className="flex flex-col items-center space-y-2 max-w-2xl">
-                  <span
-                    className={cn(
-                      "text-lg font-medium",
-                      theme === "dark" ? "text-blue-300" : "text-[rgb(25,65,166)]"
-                    )}
-                  >
-                    {classroom.academic_year}
-                  </span>
-                  <h1
-                    className="text-gradient bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-500 text-4xl"
-                    style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-                  >
-                    {classroom.name || "Unnamed Classroom"}
-                  </h1>
-                  <span
-                    className={cn(
-                      "text-lg font-medium mt-1",
-                      theme === "dark" ? "text-blue-300" : "text-[rgb(25,65,166)]"
-                    )}
-                  >
-                    {classroom.academic_course}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <IconSchool className={`w-16 h-16 drop-shadow-lg text-primary mr-2`} />
+                    <h1
+                      className="text-gradient bg-clip-text text-black text-4xl"
+                      style={{ fontFamily: "'DM Sans', sans-serif", fontWeight: "bold" }}
+                    >
+                      {classroom.name || "Unnamed Classroom"}
+                    </h1>
+                  </div>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                      </svg>
+                      <span
+                        className={cn(
+                          "text-lg font-extrabold",
+                          theme === "dark" ? "text-white" : "text-black"
+                        )}
+                      >
+                        {classroom.academic_year}
+                      </span>
+                    </div>
+                    <span className={cn(
+                      "text-lg font-extrabold",
+                      theme === "dark" ? "text-white" : "text-black"
+                    )}>
+                      -
+                    </span>
+                    <div className="flex items-center gap-2">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />
+                      </svg>
+                      <span
+                        className={cn(
+                          "text-lg font-extrabold",
+                          theme === "dark" ? "text-white" : "text-black"
+                        )}
+                      >
+                        {classroom.academic_course}
+                      </span>
+                    </div>
+                  </div>
                 <p
                   className={cn(
                     "text-base text-center",

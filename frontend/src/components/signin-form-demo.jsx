@@ -9,7 +9,8 @@ import { useTranslations } from "next-intl";
 
 export function SigninForm({ onSubmit, params }) {
   const { theme } = useTheme();
-  const locale = params?.locale || 'es';
+  const locale = params.locale || "es";
+
 
   const t = useTranslations("SigninForm");
   const [formData, setFormData] = React.useState({

@@ -654,11 +654,11 @@
         },
         "newPassword": {
           "label": "New Password",
-          "placeholder": "Enter your new password"
+          "placeholder": "· · · · ·"
         },
         "confirmPassword": {
-          "label": "Confirm Password",
-          "placeholder": "Confirm your new password"
+          "label": "Confirm",
+          "placeholder": "· · · · ·"
         },
         "region": {
           "label": "Region",
@@ -691,6 +691,7 @@
       "createMaterial": "Create new material",
       "selectClassroom": "Select a classroom",
       "materialName": "Material name",
+      "materialAnnotation": "Keep file extension in the name",
       "materialNamePlaceholder": "Enter a name for the material",
       "uploadFile": "Upload file",
       "dragOrDrop": "Drag or drop your files here or click to upload",
@@ -1116,7 +1117,7 @@
         "surname": "Surname",
         "oldPassword": "Old Password",
         "newPassword": "New Password",
-        "confirmPassword": "Confirm Password",
+        "confirmPassword": "Confirm",
         "city": "City",
         "school": "School"
       },
@@ -1156,9 +1157,9 @@
         "subtitle": "Manage your classes"
       },
       "noClasses": "No classes found",
-      "createClassButton": "Create New Classroom +",
+      "createClassButton": "Create New Classroom",
       "openClassButton": "Open Class",
-      "editButton": "Edit →",
+      "editButton": "Edit",
       "courseLabel": "Course",
       "yearLabel": "Year",
       "imageAlt": "Image of {name} classroom",
@@ -1276,6 +1277,12 @@
       "createMaterial": "Add New Material",
       "searchPlaceholder": "Search materials...",
       "filterByTags": "Filter by Tags:",
+      "filters": "Filters to find your materials.",
+      "noTagsAvailable": "You don't have any tags.",
+      "addTag": "New tag",
+      "deleteMode": "Remove tags",
+      "exitDelete": "Exit",
+      "noClassroomsAvailable": "You don't have any classrooms.",
       "enterDeleteMode": "Enter Delete Mode",
       "exitDeleteMode": "Exit Delete Mode",
       "noMaterialsFound": "No materials found.",
@@ -1318,6 +1325,7 @@
 
 
     "ToolsPage": {
+      "backToTools": "Back to Tools",
       "pageTitle": "AI Tools",
       "pageSubtitle": "Choose one of our automated tools and start creating!",
       "quickAccess": "Quick Access",

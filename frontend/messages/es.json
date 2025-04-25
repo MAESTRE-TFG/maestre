@@ -651,11 +651,11 @@
     },
     "newPassword": {
       "label": "Nueva Contraseña",
-      "placeholder": "Introduce tu nueva contraseña"
+      "placeholder": "· · · · ·"
     },
     "confirmPassword": {
-      "label": "Confirmar Contraseña",
-      "placeholder": "Confirma tu nueva contraseña"
+      "label": "Confirmar",
+      "placeholder": "· · · · ·"
     },
     "region": {
       "label": "Región",
@@ -669,7 +669,7 @@
       "label": "Centro Educativo",
       "placeholder": "Selecciona un centro educativo",
       "notFound": "¿No encuentras tu centro?",
-      "createButton": "Crear una"
+      "createButton": "Crear uno"
     }
     },
     "password": {
@@ -688,6 +688,7 @@
     "createMaterial": "Crear nuevo material",
     "selectClassroom": "Selecciona una clase",
     "materialName": "Nombre del material",
+    "materialAnnotation": "Manten la extensión del archivo",
     "materialNamePlaceholder": "Introduce un nombre para el material",
     "uploadFile": "Subir archivo",
     "dragOrDrop": "Arrastra o suelta tus archivos aquí o haz clic para subirlos",
@@ -1111,7 +1112,7 @@
       "surname": "Apellido",
       "oldPassword": "Contraseña Antigua",
       "newPassword": "Nueva Contraseña",
-      "confirmPassword": "Confirmar Contraseña",
+      "confirmPassword": "Confirmar",
       "city": "Ciudad",
       "school": "Centro Educativo"
     },
@@ -1148,12 +1149,12 @@
   "ClassroomsPage": {
     "header": {
       "title": "Mis Clases",
-      "subtitle": "Gestiona tus clases"
+      "subtitle": "Crea, edita y gestiona tus clases"
     },
     "noClasses": "No se encontraron clases",
-    "createClassButton": "Crear Nueva Clase +",
+    "createClassButton": "Crear Nueva Clase",
     "openClassButton": "Abrir Clase",
-    "editButton": "Editar →",
+    "editButton": "Editar",
     "courseLabel": "Curso",
     "yearLabel": "Año",
     "imageAlt": "Imagen de la clase {name}",
@@ -1247,7 +1248,7 @@
 
   "StudentModal": {
     "editStudent": "Editar estudiante",
-    "addStudent": "Añadir  estudiante",
+    "addStudent": "Añadir estudiante",
     "nameLabel": "Nombre",
     "surnameLabel": "Apellido",
     "cancelButton": "Cancelar",
@@ -1272,6 +1273,12 @@
     "createMaterial": "Añadir Nuevo Material",
     "searchPlaceholder": "Buscar materiales...",
     "filterByTags": "Filtrar por Etiquetas:",
+    "filters": "Filtros para encontrar tus materiales.",
+    "noTagsAvailable": "No tienes ninguna etiqueta.",
+    "addTag": "Nueva etiqueta",
+    "deleteMode": "Eliminar etiquetas",
+    "exitDelete": "Salir",
+    "noClassroomsAvailable": "No tienes ninguna clase creada.",
     "enterDeleteMode": "Entrar en Modo de Eliminación",
     "exitDeleteMode": "Salir del Modo de Eliminación",
     "noMaterialsFound": "No se encontraron materiales.",
@@ -1313,6 +1320,7 @@
   },
 
   "ToolsPage": {
+    "backToTools":"Volver a Herramientas",
     "pageTitle": "Herramientas de IA",
     "pageSubtitle": "¡Elige una de nuestras herramientas automatizadas y comienza a crear!",
     "quickAccess": "Acceso Rápido",

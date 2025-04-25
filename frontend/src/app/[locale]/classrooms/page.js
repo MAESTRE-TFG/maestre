@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { getApiBaseUrl } from "@/lib/api";
 import { useState, useEffect } from "react";
 import { SidebarDemo } from "@/components/sidebar-demo";
@@ -13,7 +13,7 @@ import Image from "next/image";
 import { IconSchool } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-const ClassroomsList = ( params ) => {
+const ClassroomsList = () => {
   const t = useTranslations('ClassroomsPage');
   const router = useRouter();
   const { theme } = useTheme();
@@ -21,7 +21,8 @@ const ClassroomsList = ( params ) => {
   const [isClient, setIsClient] = useState(false);
   const [alert, setAlert] = useState(null);
 
-  const locale = params?.locale || 'es';
+  const routeParams = useParams();
+  const locale = routeParams?.locale || 'es';
 
   const classroomImages = [
     "/static/classrooms/classroom_01.webp",
@@ -96,16 +97,18 @@ const ClassroomsList = ( params ) => {
           </div>
         )}
 
-        <div className="relative w-full flex-1 flex flex-col items-center py-12">
-          <div className="w-full max-w-4xl flex items-center mb-8 justify-center space-x-6">
-            <IconSchool className={`w-20 h-20 drop-shadow-lg text-primary`} />
-            <div className="text-center">
-              <h1 className={`text-4xl font-extrabold mb-2 ${theme === "dark" ? "text-white" : "text-gray-800"}`}>
-                {t("header.title")}
-              </h1>
-              <p className={`text-xl ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-                {t("header.subtitle")}
-              </p>
+        <div className="relative w-full flex-1 flex flex-col items-center py-14">
+          <div className="w-full max-w-4xl flex flex-col items-center mb-8">
+            <div className="flex items-center gap-4">
+              <IconSchool className={`w-16 h-16 drop-shadow-lg text-primary`} />
+              <div className="text-center">
+                <h1 className={`text-4xl font-extrabold mb-2 ${theme === "dark" ? "text-white" : "text-gray-800"}`}>
+                  {t("header.title")}
+                </h1>
+                <p className={`text-xl ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+                  {t("header.subtitle")}
+                </p>
+              </div>
             </div>
           </div>
 
@@ -132,12 +135,20 @@ const ClassroomsList = ( params ) => {
             ) : (
               <>
                 <div className="flex justify-center mb-6">
-                  <button
-                    className="btn btn-success py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center px-6"
-                    onClick={handleCreate}
-                  >
-                    {t("createClassButton")}
-                  </button>
+                    <button
+                      className={cn(
+                        "px-4 py-3 rounded-full font-medium text-white transition-all",
+                        "bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700",
+                        "shadow-md hover:shadow-lg transform hover:-translate-y-0.5",
+                        "flex items-center gap-2"
+                      )}
+                      onClick={handleCreate}
+                    >
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                      </svg>
+                      {t("createClassButton")}
+                    </button>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
@@ -224,6 +235,21 @@ const ClassroomsList = ( params ) => {
                               className="btn btn-secondary py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center flex-1"
                             >
                               {t("editButton")}
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                className="transition-transform group-hover:translate-x-1"
+                              >
+                                <path d="M5 12h14" />
+                                <path d="m12 5 7 7-7 7" />
+                              </svg>
                             </CardItem>
                           </div>
                         </div>

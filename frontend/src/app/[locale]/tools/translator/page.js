@@ -1,6 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
 import { SidebarDemo } from "@/components/sidebar-demo";
@@ -10,8 +10,9 @@ import { getApiBaseUrl } from "@/lib/api";
 import { useTranslations } from "next-intl";
 import Alert from "@/components/ui/Alert";
 
-const Translator = ({ params }) => {
+const Translator = () => {
   const t = useTranslations("Translator");
+  const t2 = useTranslations("ToolsPage");
   const { theme } = useTheme();
   const router = useRouter();
   const [sourceText, setSourceText] = useState("");
@@ -22,7 +23,8 @@ const Translator = ({ params }) => {
   const [translationHistory, setTranslationHistory] = useState([]);
   const [copied, setCopied] = useState(false);
   const [isClient, setIsClient] = useState(false);
-  const locale = params?.locale || "es";
+  const params = useParams();
+  const locale = params.locale || "es";
 
   const languages = [
     { code: "es", name: t("languages.es") },
@@ -159,10 +161,37 @@ const Translator = ({ params }) => {
           <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />
         )}
 
-        <div className="relative w-full flex-1 flex flex-col items-center py-12">
+        <div className="relative w-full flex-1 flex flex-col items-center py-14">
+        <button
+            onClick={() => router.push(`/${locale}/tools`)}
+            className={cn(
+              "absolute left-4 flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all",
+              "hover:scale-105 active:scale-95",
+              "shadow-md hover:shadow-lg",
+              theme === "dark" 
+                ? "bg-gray-800 text-gray-200 hover:bg-gray-700" 
+                : "bg-white text-gray-800 hover:bg-gray-50"
+            )}
+          >
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              className="h-4 w-4" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M10 19l-7-7m0 0l7-7m-7 7h18" 
+              />
+            </svg>
+            <span>{t2("backToTools")}</span>
+          </button>
           <div className="w-full max-w-4xl flex items-center mb-8 justify-center space-x-6">
             <div className="relative">
-              <IconLanguage className="w-20 h-20 drop-shadow-lg text-primary" />
+              <IconLanguage className="w-16 h-16 drop-shadow-lg text-primary" />
               <div className="absolute -bottom-2 -right-2 bg-white dark:bg-gray-800 rounded-full p-1">
                 <IconWorld className="w-8 h-8 text-cyan-500" />
               </div>

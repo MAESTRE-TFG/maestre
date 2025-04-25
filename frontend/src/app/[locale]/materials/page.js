@@ -392,19 +392,21 @@ const MaterialsList = () => {
       />
 
       {/* Header Section */}
-      <div className="w-full max-w-6xl mx-auto text-center mb-12 flex flex-col items-center">
+      <div className="w-full max-w-6xl mx-auto text-center mb-12 flex flex-col items-center py-7">
 
-        <div className="w-full max-w-4xl flex flex-col items-center mb-8 space-y-6">
-          <IconBooks 
-            className={`w-20 h-20 drop-shadow-lg text-primary`}
-          />
-          <div className="text-center">
-            <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
-              {t("header.title")}
-            </h1>
-            <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
-              {t("header.subtitle")}
-            </p>
+        <div className="w-full max-w-4xl flex flex-col items-center">
+          <div className="flex items-center gap-4 mb-6">
+            <IconBooks 
+              className={`w-16 h-16 drop-shadow-lg text-primary`}
+            />
+            <div>
+              <h1 className={`text-4xl font-extrabold ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                {t("header.title")}
+              </h1>
+              <p className={`text-xl ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                {t("header.subtitle")}
+              </p>
+            </div>
           </div>
         </div>
 
@@ -413,7 +415,7 @@ const MaterialsList = () => {
           <div className="flex justify-center mt-6">
             <button
               className={cn(
-          "px-6 py-3 rounded-full font-medium text-white transition-all",
+          "px-4 py-3 rounded-full font-medium text-white transition-all",
           "bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700",
           "shadow-md hover:shadow-lg transform hover:-translate-y-0.5",
           "flex items-center gap-2"
@@ -443,7 +445,7 @@ const MaterialsList = () => {
         ) : (
           <>
             {/* Search Bar */}
-            <div className="relative mb-8 max-w-2xl mx-auto">
+            <div className="relative mb-8 mt-[-14] max-w-2xl mx-auto">
               <div className="relative">
                 <input
                   type="text"
@@ -466,108 +468,179 @@ const MaterialsList = () => {
               </div>
             </div>
 
-            {/* Filters Section - Tags */}
-            <div className="mb-8 flex flex-col items-center">
-              <div className="flex flex-wrap gap-3 items-center mb-4">
-                <div className="flex items-center gap-2">
-                  <span className={cn("font-medium text-lg", theme === "dark" ? "text-white" : "text-gray-800")}>
-                    {t("filterByTags")}
-                  </span>
+            {/* Improved Filters Section */}
+            <div className={cn(
+              "mb-8 rounded-xl p-6 shadow-md",
+              theme === "dark" ? "bg-gray-800/70 border border-gray-700" : "bg-white/90 border border-gray-200"
+            )}>
+              <h3 className={cn(
+                "text-xl font-bold mb-5 flex items-center",
+                theme === "dark" ? "text-white" : "text-gray-800"
+              )}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z" />
+                </svg>
+                {t("filters")}
+              </h3>
+              
+              {/* Tags Filter */}
+              <div className="mb-6">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M17.707 9.293a1 1 0 010 1.414l-7 7a1 1 0 01-1.414 0l-7-7A.997.997 0 012 10V5a3 3 0 013-3h5c.256 0 .512.098.707.293l7 7zM5 6a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+                    </svg>
+                    <span className={cn("font-medium", theme === "dark" ? "text-white" : "text-gray-800")}>
+                      {t("filterByTags")}
+                    </span>
+                  </div>
                   <button
                     onClick={() => setDeleteMode(!deleteMode)}
                     className={cn(
-                      "p-2 rounded-full transition-colors",
+                      "p-2 rounded-full transition-colors flex items-center gap-1",
                       deleteMode 
-                        ? "bg-red-500 text-white" 
+                        ? "bg-red-500 text-white hover:bg-red-600" 
                         : theme === "dark" 
                           ? "bg-gray-700 text-gray-300 hover:bg-gray-600" 
                           : "bg-gray-200 text-gray-600 hover:bg-gray-300"
                     )}
                     title={deleteMode ? t("exitDeleteMode") : t("enterDeleteMode")}
                   >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                    </svg>
+                    {deleteMode ? (
+                      <>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                        <span className="text-xs font-medium">{t("exitDelete")}</span>
+                      </>
+                    ) : (
+                      <>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                        <span className="text-xs font-medium">{t("deleteMode")}</span>
+                      </>
+                    )}
                   </button>
                 </div>
 
-                <div className="flex flex-wrap gap-2 justify-center">
-                  {tags.map(tag => (
-                    <div key={tag.id} className="flex items-center">
-                      {deleteMode ? (
-                        <div className="flex rounded-full overflow-hidden">
+                <div className={cn(
+                  "flex flex-wrap gap-2 p-3 rounded-lg",
+                  theme === "dark" ? "bg-gray-900/50" : "bg-gray-100/70"
+                )}>
+                  {tags.length > 0 ? (
+                    tags.map(tag => (
+                      <div key={tag.id} className="flex items-center">
+                        {deleteMode ? (
+                          <div className="flex rounded-full overflow-hidden shadow-sm hover:shadow transition-shadow">
+                            <button
+                              onClick={() => handleTagSelect(tag)}
+                              className={cn(
+                                "px-3 py-1.5 transition-colors font-medium text-white",
+                                selectedTags.includes(tag.name) ? "ring-2 ring-offset-1 ring-blue-300" : ""
+                              )}
+                              style={{ backgroundColor: tag.color }}
+                            >
+                              {tag.name}
+                            </button>
+                            <button
+                              onClick={() => handleDeleteTag(tag.id)}
+                              className="p-2 bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 transition-colors"
+                              title={t("deleteTag")}
+                            >
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5 text-red-600 dark:text-red-400"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M6 18L18 6M6 6l12 12"
+                                />
+                              </svg>
+                            </button>
+                          </div>
+                        ) : (
                           <button
                             onClick={() => handleTagSelect(tag)}
                             className={cn(
-                              "px-3 py-1 transition-colors font-medium text-white",
-                              selectedTags.includes(tag.name) ? "ring-2 ring-offset-1 ring-blue-300" : ""
+                              "px-3 py-1.5 rounded-full transition-all font-medium text-white shadow-sm hover:shadow",
+                              selectedTags.includes(tag.name) 
+                                ? "ring-2 ring-offset-1 ring-blue-300 transform scale-105" 
+                                : "hover:transform hover:scale-105"
                             )}
                             style={{ backgroundColor: tag.color }}
                           >
                             {tag.name}
                           </button>
-                          <button
-                            onClick={() => handleDeleteTag(tag.id)}
-                            className="p-2 rounded-lg bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 transition-colors"
-                            title={t("deleteTag")}
-                          >
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              className="h-5 w-5 text-red-600 dark:text-red-400"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              stroke="currentColor"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M6 18L18 6M6 6l12 12"
-                              />
-                            </svg>
-                          </button>
-                        </div>
-                      ) : (
-                        <button
-                          onClick={() => handleTagSelect(tag)}
-                          className={cn(
-                            "px-3 py-1 rounded-full transition-colors font-medium text-white shadow-sm",
-                            selectedTags.includes(tag.name) ? "ring-2 ring-offset-1 ring-blue-300" : ""
-                          )}
-                          style={{ backgroundColor: tag.color }}
-                        >
-                          {tag.name}
-                        </button>
-                      )}
-                    </div>
-                  ))}
+                        )}
+                      </div>
+                    ))
+                  ) : (
+                    <p className={cn("text-sm italic", theme === "dark" ? "text-gray-400" : "text-gray-500")}>
+                      {t("noTagsAvailable")}
+                    </p>
+                  )}
+                  
+                  {/* Add Tag Button */}
+                  <button
+                    onClick={() => setShowTagModal(true)}
+                    className={cn(
+                      "px-3 py-1.5 rounded-full transition-colors font-medium flex items-center gap-1",
+                      theme === "dark" 
+                        ? "bg-gray-700 text-gray-300 hover:bg-gray-600" 
+                        : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    )}
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    <span>{t("addTag")}</span>
+                  </button>
                 </div>
               </div>
 
               {/* Classrooms Filter */}
-              <div className="flex flex-wrap gap-3 items-center mb-4">
-                <div className="flex items-center gap-2">
-                  <span className={cn("font-medium text-lg", theme === "dark" ? "text-white" : "text-gray-800")}>
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 14v3m4-3v3m4-3v3M3 21h18M3 10h18M3 7l9-4 9 4M4 10h16v11H4V10z" />
+                  </svg>
+                  <span className={cn("font-medium", theme === "dark" ? "text-white" : "text-gray-800")}>
                     {t("filterByClassroom")}
                   </span>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {classrooms.map(classroom => (
-                    <button
-                      key={classroom.id}
-                      onClick={() => handleClassroomSelect(classroom)}
-                      className={cn(
-                        "px-3 py-1 rounded-full transition-colors font-medium shadow-sm",
-                        selectedClassroom?.id === classroom.id 
-                          ? "bg-blue-500 text-white" 
-                          : theme === "dark"
-                            ? "bg-gray-700 text-gray-200 hover:bg-gray-600"
-                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                      )}
-                    >
-                      {classroom.name}
-                    </button>
-                  ))}
+                
+                <div className={cn(
+                  "flex flex-wrap gap-2 p-3 rounded-lg",
+                  theme === "dark" ? "bg-gray-900/50" : "bg-gray-100/70"
+                )}>
+                  {classrooms.length > 0 ? (
+                    classrooms.map(classroom => (
+                      <button
+                        key={classroom.id}
+                        onClick={() => handleClassroomSelect(classroom)}
+                        className={cn(
+                          "px-3 py-1.5 rounded-full transition-all font-medium shadow-sm",
+                          selectedClassroom?.id === classroom.id 
+                            ? "bg-blue-500 text-white transform scale-105" 
+                            : theme === "dark"
+                              ? "bg-gray-700 text-gray-200 hover:bg-gray-600 hover:transform hover:scale-105"
+                              : "bg-gray-200 text-gray-700 hover:bg-gray-300 hover:transform hover:scale-105"
+                        )}
+                      >
+                        {classroom.name}
+                      </button>
+                    ))
+                  ) : (
+                    <p className={cn("text-sm italic", theme === "dark" ? "text-gray-400" : "text-gray-500")}>
+                      {t("noClassroomsAvailable")}
+                    </p>
+                  )}
                 </div>
               </div>
             </div>
@@ -841,26 +914,68 @@ const MaterialsList = () => {
                         theme === "dark" ? "border border-neutral-800" : "border border-gray-200"
                       )}
                     >
-                      <div className="flex justify-between w-full items-center gap-4">
-                        <div className="flex items-center gap-2">
-                          <input
-                            type="checkbox"
-                            checked={selectedMaterials.includes(material.id)}
-                            onChange={() => toggleMaterialSelection(material.id)}
-                            className="form-checkbox"
-                          />
+                      <div className="flex flex-col w-full">
+                        <div className="flex items-center gap-2 mb-4">
+                          <div
+                            onClick={() => toggleMaterialSelection(material.id)}
+                            className={`w-5 h-5 border-2 rounded cursor-pointer transition-all duration-200 flex items-center justify-center ${
+                              selectedMaterials.includes(material.id)
+                                ? 'bg-blue-500 border-blue-500'
+                                : 'border-gray-300 dark:border-gray-600'
+                            }`}
+                          >
+                            {selectedMaterials.includes(material.id) && (
+                              <svg
+                                className="w-4 h-4 text-white font-extrabold stroke-[3]"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={3}
+                                  d="M5 13l4 4L19 7"
+                                />
+                              </svg>
+                            )}
+                          </div>
                           <p
-                            className="text-base font-medium text-neutral-700 dark:text-neutral-300 cursor-pointer underline"
+                            className="text-base font-medium text-neutral-700 dark:text-neutral-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors truncate max-w-[calc(100%-30px)] flex items-center gap-2"
+                            title={material.name}
                             onClick={() => {
                               const fileUrl = material.file.startsWith('http')
                                 ? material.file
                                 : `${getApiBaseUrl()}${material.file}`;
                               window.open(fileUrl, '_blank');
                             }}>
-                            {material.name}
+                            <svg 
+                              xmlns="http://www.w3.org/2000/svg" 
+                              className="h-5 w-5 flex-shrink-0" 
+                              fill="none" 
+                              viewBox="0 0 24 24" 
+                              stroke={
+                                material.name.toLowerCase().endsWith('.pdf') ? '#FF0000' :
+                                material.name.toLowerCase().endsWith('.doc') || material.name.toLowerCase().endsWith('.docx') ? '#0000FF' :
+                                material.name.toLowerCase().endsWith('.png') || material.name.toLowerCase().endsWith('.jpg') ? '#800080' :
+                                material.name.toLowerCase().endsWith('.pptx') ? '#FFA500' :
+                                material.name.toLowerCase().endsWith('.txt') ? '#000000' :
+                                'currentColor'
+                              }
+                            >
+                              <path 
+                                strokeLinecap="round" 
+                                strokeLinejoin="round" 
+                                strokeWidth={2} 
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" 
+                              />
+                            </svg>
+                            <span className="hover:underline">
+                              {material.name}
+                            </span>
                           </p>
                         </div>
-                        <div className="flex items-center gap-2">
+                        <div className="flex items-center justify-center gap-2">
                           <button
                             onClick={() => {
                               setEditingMaterial(material);
