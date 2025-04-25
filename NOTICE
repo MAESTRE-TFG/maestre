@@ -1,0 +1,151 @@
+**Table of Contents**
+
+- [Licenses of Dependencies - MAESTRE - 0BSD](#licenses-of-dependencies---maestre---0bsd)
+- [Licenses of Dependencies - MAESTRE - Apache 2.0](#licenses-of-dependencies---maestre---apache-20)
+- [Licenses of Dependencies - MAESTRE - BSD 2-Clause](#licenses-of-dependencies---maestre---bsd-2-clause)
+- [Licenses of Dependencies - MAESTRE - BSD 3-Clause](#licenses-of-dependencies---maestre---bsd-3-clause)
+- [Licenses of Dependencies - MAESTRE - BlueOak-1.0.0](#licenses-of-dependencies---maestre---blueoak-100)
+- [Licenses of Dependencies - MAESTRE - CC-BY-3.0](#licenses-of-dependencies---maestre---cc-by-30)
+- [Licenses of Dependencies - MAESTRE - CC-BY-4.0](#licenses-of-dependencies---maestre---cc-by-40)
+- [Licenses of Dependencies - MAESTRE - CC0-1.0](#licenses-of-dependencies---maestre---cc0-10)
+- [Licenses of Dependencies - MAESTRE - ISC](#licenses-of-dependencies---maestre---isc)
+- [Licenses of Dependencies - MAESTRE - LGPL-3.0-or-later](#licenses-of-dependencies---maestre---lgpl-30-or-later)
+- [Licenses of Dependencies - MAESTRE - MIT](#licenses-of-dependencies---maestre---mit)
+- [Licenses of Dependencies - MAESTRE - MPL-2.0](#licenses-of-dependencies---maestre---mpl-20)
+- [Licenses of Dependencies - MAESTRE - MPL-2.0 OR Apache-2.0](#licenses-of-dependencies---maestre---mpl-20-or-apache-20)
+- [Licenses of Dependencies - MAESTRE - Python-2.0](#licenses-of-dependencies---maestre---python-20)
+- [Licenses of Dependencies - MAESTRE - Other / Complex](#licenses-of-dependencies---maestre---other--complex)
+- [Licenses of Dependencies - MAESTRE - Unknown](#licenses-of-dependencies---maestre---unknown)
+
+**Disclaimer: All MAESTRE dependencies are cited in `licenses.json` in detail.**
+
+---
+
+## Licenses of Dependencies - MAESTRE - 0BSD
+
+[Zero-Clause BSD License](https://opensource.org/license/0bsd)
+
+Permission to use, copy, modify, and/or distribute this software for any purpose with or without fee is hereby granted.
+
+THE SOFTWARE IS PROVIDED “AS IS” AND THE AUTHOR DISCLAIMS ALL WARRANTIES...
+
+---
+
+## Licenses of Dependencies - MAESTRE - Apache 2.0
+
+[Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0)
+
+Terms and conditions for use, reproduction, and distribution...
+
+---
+
+## Licenses of Dependencies - MAESTRE - BSD 2-Clause
+
+[BSD 2-Clause License](https://opensource.org/license/bsd-2-clause)
+
+Redistribution and use in source and binary forms...
+
+---
+
+## Licenses of Dependencies - MAESTRE - BSD 3-Clause
+
+[BSD 3-Clause License](https://opensource.org/license/bsd-3-clause)
+
+Redistribution and use in source and binary forms...
+
+---
+
+## Licenses of Dependencies - MAESTRE - BlueOak-1.0.0
+
+[Blue Oak Model License 1.0.0](https://blueoakcouncil.org/license/1.0.0)
+
+This license gives everyone as much permission...
+
+---
+
+## Licenses of Dependencies - MAESTRE - CC-BY-3.0
+
+[Creative Commons Attribution 3.0](https://creativecommons.org/licenses/by/3.0/)
+
+You are free to share and adapt...
+
+---
+
+## Licenses of Dependencies - MAESTRE - CC-BY-4.0
+
+[Creative Commons Attribution 4.0](https://creativecommons.org/licenses/by/4.0/)
+
+You are free to share and adapt...
+
+---
+
+## Licenses of Dependencies - MAESTRE - CC0-1.0
+
+[Creative Commons Zero v1.0 Universal](https://creativecommons.org/publicdomain/zero/1.0/)
+
+No rights reserved. You can use the work freely...
+
+---
+
+## Licenses of Dependencies - MAESTRE - ISC
+
+[ISC License](https://opensource.org/license/isc-license-txt)
+
+Permission to use, copy, modify...
+
+---
+
+## Licenses of Dependencies - MAESTRE - LGPL-3.0-or-later
+
+[GNU LGPL v3.0 or later](https://www.gnu.org/licenses/lgpl-3.0.html)
+
+A free software license that allows linking...
+
+---
+
+## Licenses of Dependencies - MAESTRE - MIT
+
+[MIT License](https://opensource.org/license/mit)
+
+Permission is hereby granted, free of charge...
+
+---
+
+## Licenses of Dependencies - MAESTRE - MPL-2.0
+
+[Mozilla Public License 2.0](https://www.mozilla.org/en-US/MPL/2.0/)
+
+A file-based copyleft license allowing integration...
+
+---
+
+## Licenses of Dependencies - MAESTRE - MPL-2.0 OR Apache-2.0
+
+Both [MPL-2.0](https://www.mozilla.org/en-US/MPL/2.0/) and [Apache-2.0](https://www.apache.org/licenses/LICENSE-2.0) are compatible and apply. Choose the most appropriate for your redistribution needs.
+
+---
+
+## Licenses of Dependencies - MAESTRE - Python-2.0
+
+[Python Software Foundation License 2.0](https://www.python.org/download/releases/2.0/license/)
+
+A permissive license with minimal conditions...
+
+---
+
+## Licenses of Dependencies - MAESTRE - Other / Complex
+
+Some dependencies specify licenses like:
+
+- **(MIT OR Apache-2.0)**
+- **(MPL-2.0 OR Apache-2.0)**
+- **(MIT AND CC-BY-3.0)**
+- **MIT OR SEE LICENSE IN FEEL-FREE.md**
+
+These are dual/multi-licensed or ambiguous and should be reviewed case-by-case.
+
+---
+
+## Licenses of Dependencies - MAESTRE - Unknown
+
+Some packages have `"licenses": "UNKNOWN"` and require manual review. Please inspect the `licenses.json` for full details.
