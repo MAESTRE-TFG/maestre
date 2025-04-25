@@ -344,7 +344,7 @@
       "context": {
         "label": "Nivel de Contexto",
         "options": {
-          "none": "Ninguno",
+          "none": "Poco",
           "medium": "Medio",
           "very_much": "Mucho"
         }
@@ -377,7 +377,7 @@
       "difficultyDescription": "Establece la dificultad de los problemas (1 = más fácil, 10 = más difícil). La dificultad es relativa al nivel del aula seleccionada.",
       "context": "Nivel de Contexto",
       "contextLevels": {
-        "none": "Ninguno",
+        "none": "Poco",
         "medium": "Medio",
         "very_much": "Mucho"
       },

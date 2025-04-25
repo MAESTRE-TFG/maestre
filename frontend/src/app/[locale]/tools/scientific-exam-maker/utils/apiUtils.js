@@ -58,7 +58,7 @@ export const uploadPDFToClassroom = async (pdfBlob, classroomId, fileName, token
 
 // Process uploaded file
 export const processUploadedFile = async (file, token, showAlert) => {
-  if (!file.name.toLowerCase().endsWith(".docx")) {
+  if (!file.name || !file.name.toLowerCase().endsWith(".docx")) {
     showAlert("error", "Only DOCX files are supported");
     return null;
   }
