@@ -10,6 +10,7 @@ from users.models import CustomUser
 from rest_framework.authtoken.models import Token
 from materials.views import DocumentViewSet
 import os
+from django.conf import settings
 
 
 class DocumentTests(APITestCase):
@@ -67,6 +68,7 @@ class DocumentTests(APITestCase):
         }
         response = self.client.post(reverse('materials-list'), data, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('file', response.data)
 
     def test_document_limit_per_classroom(self):
         # Create 5 documents
@@ -326,8 +328,9 @@ class DocumentTests(APITestCase):
 
         response = self.client.post(reverse('materials-list'), data, format='multipart')
 
-        # This should fail because the current user doesn't own the classroom
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        # Expect a 403 Forbidden response because the user doesn't own the classroom
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertIn("You don't have permission to add documents to this classroom.", response.data['error'])
 
     def test_document_serializer_validation(self):
         data = {
@@ -447,7 +450,7 @@ class DocumentTests(APITestCase):
 
     def test_document_clean_method(self):
         # Create 5 documents to reach the limit
-        for i in range(5):
+        for i in range(settings.MAX_FILES_PER_CLASSROOM):
             Document.objects.create(
                 name=f'Clean Test Document {i}',
                 file=self.test_file,
@@ -457,13 +460,15 @@ class DocumentTests(APITestCase):
         # Try to create a 6th document directly with the model
         from django.core.exceptions import ValidationError
 
+        document = Document(
+            name='Sixth Document',
+            file=self.test_file,
+            classroom=self.classroom
+        )
+
+        # Explicitly call the clean method to trigger validation
         with self.assertRaises(ValidationError):
-            document = Document(
-                name='Sixth Document',
-                file=self.test_file,
-                classroom=self.classroom
-            )
-            document.clean()  # This should raise ValidationError
+            document.clean()
 
     def test_document_update_with_new_file(self):
         document = Document.objects.create(
@@ -512,6 +517,7 @@ class DocumentTests(APITestCase):
                 try:
                     os.remove(document.file.path)
                 except (FileNotFoundError, PermissionError) as e:
+                    print(f"Error deleting file {document.file.path}: {e}")
             document.delete()
 
         # Delete all tags
@@ -528,6 +534,8 @@ class DocumentTests(APITestCase):
                     try:
                         os.remove(os.path.join(media_dir, filename))
                     except (FileNotFoundError, PermissionError) as e:
+                        print(f"Error deleting file {filename}: {e}")
+
 
 # ------------------------------------ Test serializers ----------------------------------
 
@@ -654,6 +662,7 @@ class DocumentViewSetAdditionalTests(APITestCase):
                 try:
                     os.remove(document.file.path)
                 except (FileNotFoundError, PermissionError) as e:
+                    print(f"Error deleting file {document.file.path}: {e}")
             document.delete()
 
         # Delete all tags
@@ -670,3 +679,4 @@ class DocumentViewSetAdditionalTests(APITestCase):
                     try:
                         os.remove(os.path.join(media_dir, filename))
                     except (FileNotFoundError, PermissionError) as e:
+                        print(f"Error deleting file {filename}: {e}")

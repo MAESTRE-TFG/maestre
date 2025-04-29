@@ -24,17 +24,23 @@ class TermsModelTests(TestCase):
             school=self.school
         )
 
-        # Create a Terms instance with author
-        # Use SimpleUploadedFile for the content field
+        # Create markdown and PDF files for testing
         self.content_file = SimpleUploadedFile(
             "privacy_policy.md",
             b"Privacy policy content",
             content_type="text/markdown"
         )
+        self.pdf_file = SimpleUploadedFile(
+            "privacy_policy.pdf",
+            b"%PDF-1.4\n%Test PDF content",
+            content_type="application/pdf"
+        )
 
+        # Create a Terms instance with both content and pdf_content
         self.terms = Terms.objects.create(
             tag='privacy',
             content=self.content_file,
+            pdf_content=self.pdf_file,  # Include the PDF file
             name='Privacy Policy',
             version='1.0',
             author=self.admin_user
@@ -79,21 +85,27 @@ class TermsSerializerTests(TestCase):
             school=self.school
         )
 
-        # Use SimpleUploadedFile for the content field
+        # Create markdown and PDF files for testing
         self.content_file = SimpleUploadedFile(
             "privacy_policy.md",
             b"Privacy policy content",
             content_type="text/markdown"
         )
+        self.pdf_file = SimpleUploadedFile(
+            "privacy_policy.pdf",
+            b"%PDF-1.4\n%Test PDF content",
+            content_type="application/pdf"
+        )
 
+        # Create the Terms instance with all required fields
         self.terms_attributes = {
             'tag': 'privacy',
             'name': 'Privacy Policy',
             'version': '1.0',
             'content': self.content_file,
+            'pdf_content': self.pdf_file,  # Include the PDF file
         }
 
-        # Create the Terms instance with all required fields
         self.terms = Terms.objects.create(
             **self.terms_attributes,
             author=self.admin_user
@@ -106,7 +118,10 @@ class TermsSerializerTests(TestCase):
 
     def test_contains_expected_fields(self):
         data = self.serializer.data
-        expected_fields = {'id', 'tag', 'content', 'created_at', 'updated_at', 'author', 'name', 'version'}
+        expected_fields = {
+            'id', 'tag', 'tag_display', 'content', 'pdf_content',  # Include 'tag_display' and 'pdf_content'
+            'created_at', 'updated_at', 'author', 'name', 'version'
+        }
         self.assertEqual(set(data.keys()), expected_fields)
 
     def test_content_field_content(self):
@@ -149,16 +164,22 @@ class TermsAPITests(APITestCase):
             school=self.school
         )
 
-        # Create some Terms instances with proper file content
+        # Create markdown and PDF files for testing
         self.content_file1 = SimpleUploadedFile(
             "privacy_policy.md",
             b"Privacy policy content",
             content_type="text/markdown"
         )
+        self.pdf_file1 = SimpleUploadedFile(
+            "privacy_policy.pdf",
+            b"%PDF-1.4\n%Test PDF content",
+            content_type="application/pdf"
+        )
 
         self.terms1 = Terms.objects.create(
             tag='privacy',
             content=self.content_file1,
+            pdf_content=self.pdf_file1,  # Use the correct field name
             name='Privacy Policy',
             version='1.0',
             author=self.admin_user
@@ -169,10 +190,16 @@ class TermsAPITests(APITestCase):
             b"Terms of service content",
             content_type="text/markdown"
         )
+        self.pdf_file2 = SimpleUploadedFile(
+            "terms_of_service.pdf",
+            b"%PDF-1.4\n%Test PDF content",
+            content_type="application/pdf"
+        )
 
         self.terms2 = Terms.objects.create(
             tag='terms',
             content=self.content_file2,
+            pdf_content=self.pdf_file2,  # Use the correct field name
             name='Terms of Service',
             version='1.0',
             author=self.admin_user
@@ -203,17 +230,23 @@ class TermsAPITests(APITestCase):
     def test_create_terms_as_admin(self):
         self.client.force_authenticate(user=self.admin_user)
 
-        # Create a file for testing
-        test_file = SimpleUploadedFile(
+        # Create files for testing
+        test_md_file = SimpleUploadedFile(
             "cookie_policy.md",
             b"Cookie policy content",
             content_type="text/markdown"
+        )
+        test_pdf_file = SimpleUploadedFile(
+            "cookie_policy.pdf",
+            b"%PDF-1.4\n%Test PDF content",
+            content_type="application/pdf"
         )
 
         # Use multipart form data for file uploads
         data = {
             'tag': 'cookies',
-            'content': test_file,
+            'content': test_md_file,
+            'pdf_content': test_pdf_file,  # Include the PDF file
             'name': 'Cookie Policy',
             'version': '1.0'
         }

@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -27,6 +28,12 @@ class ClassroomViewSet(viewsets.ModelViewSet):
                     message="You do not have permission to perform this action."
                 )
         return super().check_object_permissions(request, obj)
+
+    def get_object(self):
+        # Retrieve the object without filtering by the current user
+        obj = get_object_or_404(Classroom, pk=self.kwargs['pk'])
+        self.check_object_permissions(self.request, obj)
+        return obj
 
     def update(self, request, *args, **kwargs):
         instance = self.get_object()  # This will trigger permission checks

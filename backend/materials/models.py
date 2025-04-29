@@ -30,8 +30,7 @@ class Document(models.Model):
         return self.name
 
     def clean(self):
-        if not self.pk:  # Only check on creation
-            validate_file_limit(self.classroom)
+        validate_file_limit(self.classroom)
         super().clean()
 
     def save(self, *args, **kwargs):

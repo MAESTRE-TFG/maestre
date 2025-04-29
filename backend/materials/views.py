@@ -497,3 +497,8 @@ class DocumentViewSet(viewsets.ModelViewSet):
             
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def perform_create(self, serializer):
+        document = serializer.save()
+        document.clean()  # Explicitly call the clean method to enforce validation
+        document.save()
