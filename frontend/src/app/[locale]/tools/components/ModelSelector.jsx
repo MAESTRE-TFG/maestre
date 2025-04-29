@@ -26,7 +26,11 @@ const ModelSelector = ({ value, onChange, theme }) => {
           required
           value={value}
           onChange={onChange}
-          className="appearance-none"
+          className={`w-full appearance-none block px-3 py-2 rounded-md text-sm ${
+            theme === "dark"
+              ? "bg-zinc-800 border-zinc-700 text-white placeholder-gray-400"
+              : "bg-white border-gray-300 text-gray-900 placeholder-gray-500"
+          } border focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500`}
         >
           {llmModels.map(model => (
             <option key={model.value} value={model.value}>

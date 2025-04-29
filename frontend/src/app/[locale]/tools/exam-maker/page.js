@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 import { SidebarDemo } from "@/components/sidebar-demo";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import Alert from "@/components/ui/Alert";
 import { formatExamText, createPDFVersion } from "./utils/pdfUtils";
 import {
@@ -17,16 +17,18 @@ import MaterialsModal from "../components/MaterialsModal";
 import ExamResultModal from "../components/ExamResultModal";
 import axios from "axios";
 import Image from "next/image";
-import { IconFileText, IconBrain } from "@tabler/icons-react";
+import { IconBook, IconBrain } from "@tabler/icons-react";
 import { buildExamPrompt } from "./utils/promptUtils";
 import { getApiBaseUrl } from "@/lib/api";
 import { useTranslations } from "next-intl";
 import NoClassroomModal from "../components/no-classroom-modal";
 
-const ExamMaker = ({ params }) => {
+const ExamMaker = () => {
   const t = useTranslations("ExamMaker");
+  const t2 = useTranslations("ToolsPage");
   const { theme } = useTheme();
-  const locale = params?.locale || "es";
+  const params = useParams();
+  const locale = params.locale || "es";
   const router = useRouter();
   const [classrooms, setClassrooms] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -269,13 +271,40 @@ const ExamMaker = ({ params }) => {
           params={params}
         />
 
-        <div className="relative w-full flex-1 flex flex-col items-center py-12">
+        <div className="relative w-full flex-1 flex flex-col items-center py-14">
+        <button
+            onClick={() => router.push(`/${locale}/tools`)}
+            className={cn(
+              "absolute left-4 flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all",
+              "hover:scale-105 active:scale-95",
+              "shadow-md hover:shadow-lg",
+              theme === "dark" 
+                ? "bg-gray-800 text-gray-200 hover:bg-gray-700" 
+                : "bg-white text-gray-800 hover:bg-gray-50"
+            )}
+          >
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              className="h-4 w-4" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M10 19l-7-7m0 0l7-7m-7 7h18" 
+              />
+            </svg>
+            <span>{t2("backToTools")}</span>
+          </button>
           {/* Header Section */}
           <div className="w-full max-w-4xl flex items-center mb-8 justify-center space-x-6">
             <div className="relative">
-              <IconBrain className="w-20 h-20 drop-shadow-lg text-primary" />
+              <IconBrain className="w-16 h-16 drop-shadow-lg text-primary" />
               <div className="absolute -bottom-2 -right-2 bg-white dark:bg-gray-800 rounded-full p-1">
-                <IconFileText className="w-8 h-8 text-cyan-500" />
+                <IconBook className="w-8 h-8 text-cyan-500" />
               </div>
             </div>
             <div className="text-center">

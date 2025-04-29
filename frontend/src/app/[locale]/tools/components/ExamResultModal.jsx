@@ -7,12 +7,16 @@ const ExamResultModal = ({
   examResult, 
   formatExamText, 
   createPDFVersion, 
-  uploadPDFToClassroom, 
+  uploadPDFToClassroom,
+  convertAndDownloadWord,
+  uploadWordToClassroom,
   formData,
   addAlert
 }) => {
   const { theme } = useTheme();
   const t = useTranslations("ExamMaker");
+  const t2 = useTranslations("ScientificExamMaker");
+  const isScientificExam = window.location.pathname.includes('scientific-exam-maker');
 
   const handleSavePDF = async () => {
     try {
@@ -51,6 +55,49 @@ const ExamResultModal = ({
       addAlert("success", t("alerts.pdfDownloadedSuccess")); 
     } catch (error) {
       addAlert("error", t("alerts.pdfDownloadFailed", { error: error.message || t("alerts.unknownError") })); 
+    }
+  };
+
+  const handleDownloadWord = async () => {
+    try {
+      let fileName = `${formData.subject || t("defaultExamName")}.docx`.replace(/\s+/g, '_');
+      
+      if (fileName.length > 30) {
+        fileName = fileName.substring(0, 26) + '.docx';
+      }
+      
+      const token = localStorage.getItem('authToken');
+      const success = await convertAndDownloadWord(examResult, fileName, {
+        subject: formData.subject,
+        token: token
+      });
+      
+      if (success) {
+        addAlert("success", t("alerts.wordDownloadedSuccess") || "Word document downloaded successfully"); 
+      }
+    } catch (error) {
+      addAlert("error", t("alerts.wordDownloadFailed", { error: error.message || t("alerts.unknownError") }) || "Error downloading Word document"); 
+    }
+  };
+
+  const handleSaveWord = async () => {
+    try {
+      // Create a filename based on subject and exam name, limited to 30 characters
+      let fileName = `${formData.subject || t("defaultExamName")}.docx`.replace(/\s+/g, '_');
+      
+      // Ensure filename is no more than 30 characters (including .docx extension)
+      if (fileName.length > 30) {
+        fileName = fileName.substring(0, 26) + '.docx';
+      }
+      
+      const token = localStorage.getItem('authToken');
+      const success = await uploadWordToClassroom(examResult, formData.classroom, fileName, token, addAlert, t);
+      
+      if (success) {
+        addAlert("success", t("alerts.wordSavedSuccess") || "Word document saved to classroom successfully");
+      }
+    } catch (error) {
+      addAlert("error", t("alerts.wordSaveFailed", { error: error.message || t("alerts.unknownError") }) || "Error saving Word document");
     }
   };
 
@@ -106,24 +153,55 @@ const ExamResultModal = ({
           >
             {t("buttons.close")} 
           </button>
-          <button
-            onClick={handleDownloadPDF}
-            className="btn btn-primary btn-sm flex items-center"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-            </svg>
-            {t("buttons.downloadPDF")} 
-          </button>
-          <button
-            onClick={handleSavePDF}
-            className="btn btn-success btn-sm flex items-center"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
-            </svg>
-            {t("buttons.saveToClassroom")} 
-          </button>
+          
+          {/* PDF Buttons */}
+          { !isScientificExam && (
+            <>
+              <button
+                onClick={handleDownloadPDF}
+                className="btn btn-primary btn-sm flex items-center"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                {t("buttons.downloadPDF")} 
+              </button>
+              
+              <button
+                onClick={handleSavePDF}
+                className="btn btn-success btn-sm flex items-center"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                </svg>
+                {t("buttons.saveToClassroom")} 
+              </button>
+            </>
+          )}
+          {/* Word Buttons */}
+          {isScientificExam && (
+            <>
+              <button
+                onClick={handleDownloadWord}
+                className="btn btn-primary btn-sm flex items-center"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                {t2("buttons.downloadWord") || "Download Word"} 
+              </button>
+              
+              <button
+                onClick={handleSaveWord}
+                className="btn btn-success btn-sm flex items-center"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
+                </svg>
+                {t2("buttons.saveWordToClassroom") || "Save Word to Classroom"} 
+              </button>
+            </>
+          )}
         </div>
       </div>
     </div>

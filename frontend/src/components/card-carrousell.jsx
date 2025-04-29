@@ -27,6 +27,21 @@ export function CardCarrousell() {
     },
     {
       category: t('tool_category_assessment'),
+      title: t('tool_title_science_exams'),
+      src: "/static/tools/science_exam_maker.webp",
+      page: "scientific-exam-maker",
+      sizes: "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
+      content: <CardContent>
+        {t('tool_content_science_exams')}
+        <ul className="list-disc ml-6 mt-4">
+          <li>{t('tool_feature_science_exams_1')}</li>
+          <li>{t('tool_feature_science_exams_2')}</li>
+          <li>{t('tool_feature_science_exams_3')}</li>
+        </ul>
+      </CardContent>
+    },
+    {
+      category: t('tool_category_assessment'),
       title: t('tool_title_tests'),
       src: "/static/tools/test_maker.webp",
       page: "test-maker",

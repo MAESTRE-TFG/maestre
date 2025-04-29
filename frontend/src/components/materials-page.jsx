@@ -741,36 +741,75 @@ export function MaterialsPage({ classroomId }) {
                     <div
                       key={material.id}
                       className={cn(
-                        "relative overflow-hidden z-40 bg-white dark:bg-neutral-900 flex flex-col items-start justify-between p-4 rounded-md",
-                        "shadow-sm hover:shadow-md transition-shadow duration-200",
-                        theme === "dark" ? "border border-neutral-800" : "border border-gray-200",
-                        "min-h-[12rem]"
+                        "relative overflow-hidden z-40 bg-white dark:bg-neutral-900 flex flex-col items-start justify-start p-4 rounded-md",
+                        "shadow-sm",
+                        theme === "dark" ? "border border-neutral-800" : "border border-gray-200"
                       )}
                     >
                       <div className="w-full">
-                        <div className="flex justify-between w-full items-start mb-3">
-                          <div className="flex items-center space-x-2 mb-2">
-                            <input
-                              type="checkbox"
-                              checked={selectedMaterials.includes(material.id)}
-                              onChange={() => toggleMaterialSelection(material.id)}
-                              className="form-checkbox"
-                            />
+                        <div className="flex flex-col w-full">
+                          <div className="flex items-center gap-2 mb-4">
+                            <div
+                              onClick={() => toggleMaterialSelection(material.id)}
+                              className={`w-5 h-5 border-2 rounded cursor-pointer transition-all duration-200 flex items-center justify-center ${selectedMaterials.includes(material.id)
+                                  ? 'bg-blue-500 border-blue-500'
+                                  : 'border-gray-300 dark:border-gray-600'
+                                }`}
+                            >
+                              {selectedMaterials.includes(material.id) && (
+                                <svg
+                                  className="w-4 h-4 text-white font-extrabold stroke-[3]"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={3}
+                                    d="M5 13l4 4L19 7"
+                                  />
+                                </svg>
+                              )}
+                            </div>
                             <p
-                              className="text-base font-medium text-neutral-700 dark:text-neutral-300 cursor-pointer underline"
+                              className="text-base font-medium text-neutral-700 dark:text-neutral-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors truncate max-w-[calc(100%-30px)] flex items-center gap-2"
+                              title={material.name}
                               onClick={() => {
                                 const fileUrl = material.file.startsWith('http')
                                   ? material.file
                                   : `${getApiBaseUrl()}${material.file}`;
                                 window.open(fileUrl, '_blank');
-                              }}
-                            >
-                              {material.name}
+                              }}>
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-5 w-5 flex-shrink-0"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke={
+                                  material.name.toLowerCase().endsWith('.pdf') ? '#FF0000' :
+                                    material.name.toLowerCase().endsWith('.doc') || material.name.toLowerCase().endsWith('.docx') ? '#0000FF' :
+                                      material.name.toLowerCase().endsWith('.png') || material.name.toLowerCase().endsWith('.jpg') ? '#800080' :
+                                        material.name.toLowerCase().endsWith('.pptx') ? '#FFA500' :
+                                          material.name.toLowerCase().endsWith('.txt') ? '#000000' :
+                                            'currentColor'
+                                }
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  strokeWidth={2}
+                                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                                />
+                              </svg>
+                              <span className="hover:underline">
+                                {material.name}
+                              </span>
                             </p>
                           </div>
                         </div>
-                        <div className="flex items-center gap-1 mt-2">
-                          <div className="flex items-center gap-2">
+                        <div className="flex items-center justify-center gap-1 mt-2">
+                          <div className="flex items-center justify-center gap-2">
                             <button
                               onClick={() => {
                                 setEditingMaterial(material);

@@ -3,46 +3,49 @@ import { useState, useEffect, useRef } from "react";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 import { SidebarDemo } from "@/components/sidebar-demo";
-import { useRouter, useParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Alert from "@/components/ui/Alert";
+import { formatExamText, createPDFVersion, convertAndDownloadWord, uploadWordToClassroom } from "./utils/pdfUtils";
 import {
+  uploadPDFToClassroom,
   processUploadedFile,
   processMaterialFromClassroom,
-  generatePlan
+  generateExam
 } from "./utils/apiUtils";
-import PlannerForm from "./components/PlannerForm";
-import MaterialsModal from "./components/MaterialsModal";
-import PlanResultModal from "./components/PlanResultModal";
+import ExamForm from "../components/ExamForm";
+import MaterialsModal from "../components/MaterialsModal";
+import ExamResultModal from "../components/ExamResultModal";
 import axios from "axios";
 import Image from "next/image";
-import { IconCalendar, IconBrain } from "@tabler/icons-react";
-import { buildPlannerPrompt } from "./utils/promptUtils";
+import { IconFileText, IconBrain } from "@tabler/icons-react";
+import { buildExamPrompt } from "./utils/promptUtils";
 import { getApiBaseUrl } from "@/lib/api";
 import { useTranslations } from "next-intl";
 import NoClassroomModal from "../components/no-classroom-modal";
 
-const LessonPlanner = () => {
-  const t = useTranslations("LessonPlanner");
-  const t2 = useTranslations("ToolsPage");
+const ScientificExamMaker = ({ params }) => {
+  const t = useTranslations("ScientificExamMaker");
   const { theme } = useTheme();
-  const params = useParams();
-  const locale = params.locale || "es";
+  const locale = params?.locale || "es";
   const router = useRouter();
   const [classrooms, setClassrooms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [alerts, setAlerts] = useState([]);
   const [formData, setFormData] = useState({
     subject: "",
-    theme: "",
-    numLessons: 3,
+    numQuestions: 5,
+    difficulty: 5, // Default difficulty level (1-10)
+    context: "medium", // Default context level (none, medium, very_much)
     classroom: "",
-    playfulnessLevel: 50,
+    scoringStyle: "equal",
+    customScoringDetails: "",
     additionalInfo: "",
+    totalPoints: 10,
     llmModel: "llama3.2:3b",
-    planName: ""
+    examName: ""
   });
   const [isGenerating, setIsGenerating] = useState(false);
-  const [planResult, setPlanResult] = useState(null);
+  const [examResult, setExamResult] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [userMaterials, setUserMaterials] = useState([]);
   const [showMaterialsModal, setShowMaterialsModal] = useState(false);
@@ -50,6 +53,15 @@ const LessonPlanner = () => {
   const [uploadedFiles, setUploadedFiles] = useState([]);
   const fileContentsRef = useRef("");
   const [showNoClassroomModal, setShowNoClassroomModal] = useState(false);
+
+  // Move addAlert inside the component so it can access t
+  const addAlert = (type, message) => {
+    const id = Date.now() + Math.random().toString(36).substring(2, 9);
+    setAlerts(prev => [...prev, { id, type, message }]);
+    setTimeout(() => {
+      setAlerts(prev => prev.filter(alert => alert.id !== id));
+    }, 5000);
+  };
 
   // Fetch classrooms on component mount
   useEffect(() => {
@@ -75,7 +87,7 @@ const LessonPlanner = () => {
             setShowNoClassroomModal(true);
           }
         } else {
-          addAlert("error", t("alerts.fetchClassroomsError"));
+            addAlert("error", t("alerts.fetchClassroomsError"));
         }
 
         setLoading(false);
@@ -86,7 +98,7 @@ const LessonPlanner = () => {
     };
 
     fetchClassrooms();
-  }, [router, locale, t]);
+  }, [router, t]);
 
   // Fetch user materials when classrooms are loaded
   useEffect(() => {
@@ -117,21 +129,12 @@ const LessonPlanner = () => {
     }
   }, [classrooms, t]);
 
-  const addAlert = (type, message) => {
-    const id = Date.now();
-    setAlerts(prev => [...prev, { id, type, message }]);
-    setTimeout(() => {
-      setAlerts(prev => prev.filter(alert => alert.id !== id));
-    }, 5000);
-  };
-
   // Form change handler
   const handleChange = e => {
     const { name, value, type } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === "number" ? parseInt(value) || 0 : 
-              type === "range" ? parseInt(value) : value
+      [name]: type === "number" ? parseInt(value) || 0 : value
     }));
   };
 
@@ -144,7 +147,7 @@ const LessonPlanner = () => {
 
     try {
       const token = localStorage.getItem("authToken");
-      const processedFile = await processUploadedFile(file, token);
+      const processedFile = await processUploadedFile(file, token, addAlert, t);
 
       setUploadedFiles([processedFile]);
       fileContentsRef.current = processedFile.content;
@@ -169,7 +172,7 @@ const LessonPlanner = () => {
 
     try {
       const token = localStorage.getItem("authToken");
-      const processedMaterial = await processMaterialFromClassroom(material, token);
+      const processedMaterial = await processMaterialFromClassroom(material, token, addAlert, t);
 
       setUploadedFiles([processedMaterial]);
       fileContentsRef.current = processedMaterial.content;
@@ -202,31 +205,32 @@ const LessonPlanner = () => {
         throw new Error(t("alerts.missingClassroom"));
       }
 
-      if (!formData.theme) {
-        throw new Error(t("alerts.missingTheme"));
-      }
-
-      // Get user data from localStorage
+      // Get user info
       const userString = localStorage.getItem("user");
       const user = userString ? JSON.parse(userString) : {};
 
-      // Build the prompt using the utility function
-      const prompt = buildPlannerPrompt(formData, classrooms, fileContentsRef.current, user, t);
+      // Build the prompt
+      const prompt = buildExamPrompt(
+        formData,
+        classrooms,
+        fileContentsRef.current,
+        user,
+        locale
+      );
 
-      // Generate the lesson plan
-      const token = localStorage.getItem("authToken");
-      const result = await generatePlan(prompt, formData.llmModel);
+      // Generate the exam
+      const generatedExam = await generateExam(
+        prompt,
+        formData.llmModel,
+        addAlert
+      );
 
-      // Ensure planResult is set correctly
-      if (result && result.plan) {
-        setPlanResult(result);
+      if (generatedExam) {
+        setExamResult(generatedExam);
         setShowModal(true);
-        addAlert("success", t("alerts.planGeneratedSuccess"));
-      } else {
-        throw new Error(t("alerts.planGenerationFailed"));
       }
     } catch (error) {
-      addAlert("error", `${t("alerts.planGenerationFailed")}: ${error.message}`);
+      addAlert("error", error.message);
     } finally {
       setIsGenerating(false);
     }
@@ -264,40 +268,13 @@ const LessonPlanner = () => {
           params={params}
         />
 
-        <div className="relative w-full flex-1 flex flex-col items-center py-14">
-        <button
-            onClick={() => router.push(`/${locale}/tools`)}
-            className={cn(
-              "absolute left-4 flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all",
-              "hover:scale-105 active:scale-95",
-              "shadow-md hover:shadow-lg",
-              theme === "dark" 
-                ? "bg-gray-800 text-gray-200 hover:bg-gray-700" 
-                : "bg-white text-gray-800 hover:bg-gray-50"
-            )}
-          >
-            <svg 
-              xmlns="http://www.w3.org/2000/svg" 
-              className="h-4 w-4" 
-              fill="none" 
-              viewBox="0 0 24 24" 
-              stroke="currentColor"
-            >
-              <path 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                strokeWidth={2} 
-                d="M10 19l-7-7m0 0l7-7m-7 7h18" 
-              />
-            </svg>
-            <span>{t2("backToTools")}</span>
-          </button>
+        <div className="relative w-full flex-1 flex flex-col items-center py-12">
           {/* Header Section */}
           <div className="w-full max-w-4xl flex items-center mb-8 justify-center space-x-6">
             <div className="relative">
-              <IconBrain className="w-16 h-16 drop-shadow-lg text-primary" />
+              <IconBrain className="w-20 h-20 drop-shadow-lg text-primary" />
               <div className="absolute -bottom-2 -right-2 bg-white dark:bg-gray-800 rounded-full p-1">
-                <IconCalendar className="w-8 h-8 text-cyan-500" />
+                <IconFileText className="w-8 h-8 text-cyan-500" />
               </div>
             </div>
             <div className="text-center">
@@ -329,10 +306,10 @@ const LessonPlanner = () => {
                   </p>
                 </div>
 
-                <div className="relative w-full h-[700px] -mt-16 flex items-center justify-center">
+                <div className="relative w-full h-[600px] -mt-16 flex items-center justify-center">
                   <div className="animate-float relative w-96 h-full">
                     <Image
-                      src="/static/teachers/8.webp"
+                      src="/static/teachers/10.webp"
                       alt={t("header.teacherImageAlt")}
                       layout="fill"
                       objectFit="contain"
@@ -351,7 +328,7 @@ const LessonPlanner = () => {
                     theme === "dark" ? "bg-gray-800 border border-gray-700" : "bg-white border border-gray-100"
                   )}
                 >
-                  <PlannerForm
+                  <ExamForm
                     formData={formData}
                     handleChange={handleChange}
                     handleSubmit={handleSubmit}
@@ -381,11 +358,16 @@ const LessonPlanner = () => {
         isProcessingFile={isProcessingFile}
       />
 
-      {/* Plan Result Modal */}
-      <PlanResultModal
+      {/* Exam Result Modal */}
+      <ExamResultModal
         showModal={showModal}
         setShowModal={setShowModal}
-        planResult={planResult}
+        examResult={examResult}
+        formatExamText={formatExamText}
+        createPDFVersion={createPDFVersion}
+        uploadPDFToClassroom={uploadPDFToClassroom}
+        convertAndDownloadWord={convertAndDownloadWord}
+        uploadWordToClassroom={uploadWordToClassroom}
         formData={formData}
         addAlert={addAlert}
       />
@@ -416,7 +398,7 @@ export default function Main() {
   return (
     <>
       <style jsx global>{styles}</style>
-      <SidebarDemo ContentComponent={LessonPlanner} />
+      <SidebarDemo ContentComponent={ScientificExamMaker} />
     </>
   );
 }

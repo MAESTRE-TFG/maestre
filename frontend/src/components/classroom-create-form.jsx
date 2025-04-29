@@ -109,90 +109,98 @@ export const CreateClassroomForm = ({ onSubmit, educationalStages }) => {
         }
       `}</style>
 
-      <form className="my-4" onSubmit={handleSubmit}>
+      <form 
+        className="my-1" 
+        onSubmit={(e) => {
+          e.preventDefault();
+          handleSubmit(e);
+        }}
+      >
         <div className="flex flex-col md:flex-row gap-6 mb-8">
           <div className="flex-1 md:w-1/2 border border-gray-300 rounded-md p-4">
-            <h3
-              className={cn(
-                "text-lg font-bold mb-4",
-                theme === "dark" ? "text-white" : "text-gray-700"
-              )}
-              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-            >
-              {t("sections.information.title")} 
-            </h3>
+            {/* Classroom Information Section */}
+            <div className="flex flex-col gap-6 mb-8">
+              {/* Name and Academic Course in one row */}
+              <div className="flex flex-col md:flex-row gap-6">
+                <LabelInputContainer className="flex-1">
+                  <Label
+                    className="flex items-center"
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: "1rem",
+                      fontWeight: "bold",
+                    }}
+                    htmlFor="name"
+                  >
+                    <IconSchool className="mr-2 h-5 w-5 text-blue-500" />
+                    {t("fields.name.label")}
+                  </Label>
+                  <Input
+                    id="name"
+                    name="name"
+                    placeholder={t("fields.name.placeholder")}
+                    type="text"
+                    required
+                    value={formData.name}
+                    onChange={handleChange}
+                  />
+                </LabelInputContainer>
 
-            <div className="flex flex-col gap-6">
+                <LabelInputContainer className="flex-1">
+                  <Label
+                    className="flex items-center"
+                    style={{
+                      fontFamily: "'DM Sans', sans-serif",
+                      fontSize: "1rem",
+                      fontWeight: "bold",
+                    }}
+                    htmlFor="academic_course"
+                  >
+                    <IconBook className="mr-2 h-5 w-5 text-purple-500" />
+                    {t("fields.academicCourse.label")}
+                  </Label>
+                  <select
+                    id="academic_course"
+                    name="academic_course"
+                    required
+                    value={formData.academic_course}
+                    onChange={handleChange}
+                    className="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  >
+                    <option value="" disabled>
+                      {t("fields.academicCourse.placeholder")}
+                    </option>
+                    {educationalStages.map((stage) => (
+                      <optgroup key={stage.stage} label={stage.stage}>
+                        {stage.courses.map((course) => (
+                          <option key={course} value={course}>
+                            {course}
+                          </option>
+                        ))}
+                      </optgroup>
+                    ))}
+                  </select>
+                </LabelInputContainer>
+              </div>
+
+              {/* Academic Year */}
               <LabelInputContainer className="flex-1">
                 <Label
                   className="flex items-center"
-                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-                  htmlFor="name"
-                >
-                  <IconSchool className="mr-2 h-5 w-5 text-blue-500" />
-                  {t("fields.name.label")} 
-                </Label>
-                <Input
-                  id="name"
-                  name="name"
-                  placeholder={t("fields.name.placeholder")} 
-                  type="text"
-                  required
-                  value={formData.name}
-                  onChange={handleChange}
-                />
-              </LabelInputContainer>
-
-              <LabelInputContainer className="flex-1">
-                <Label
-                  className="flex items-center"
-                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-                  htmlFor="academic_course"
-                >
-                  <IconBook className="mr-2 h-5 w-5 text-purple-500" />
-                  {t("fields.academicCourse.label")} 
-                </Label>
-                <select
-                  id="academic_course"
-                  name="academic_course"
-                  required
-                  value={formData.academic_course}
-                  onChange={handleChange}
-                  className={cn(
-                    "block w-full px-3 py-2 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm",
-                    theme === "dark"
-                      ? "bg-gray-700 border-gray-600 text-white"
-                      : "bg-white border-gray-300 text-black"
-                  )}
-                >
-                  <option value="" disabled>
-                    {t("fields.academicCourse.placeholder")} 
-                  </option>
-                  {educationalStages.map((stage) => (
-                    <optgroup key={stage.stage} label={stage.stage}>
-                      {stage.courses.map((course) => (
-                        <option key={course} value={course}>
-                          {course}
-                        </option>
-                      ))}
-                    </optgroup>
-                  ))}
-                </select>
-              </LabelInputContainer>
-
-              <LabelInputContainer className="flex-1">
-                <Label
-                  className="flex items-center"
-                  style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                  style={{
+                    fontFamily: "'DM Sans', sans-serif",
+                    fontSize: "1rem",
+                    fontWeight: "bold",
+                  }}
                   htmlFor="academic_year"
                 >
                   <IconCalendar className="mr-2 h-5 w-5 text-green-500" />
-                  {t("fields.academicYear.label")} 
+                  {t("fields.academicYear.label")}
                 </Label>
                 <Input
                   id="academic_year"
                   name="academic_year"
-                  placeholder={t("fields.academicYear.placeholder")} 
+                  placeholder={t("fields.academicYear.placeholder")}
                   type="text"
                   required
                   value={formData.academic_year}
@@ -203,29 +211,33 @@ export const CreateClassroomForm = ({ onSubmit, educationalStages }) => {
           </div>
 
           <div className="flex-1 md:w-1/2 border border-gray-300 rounded-md p-4">
+            {/* Description Section */}
             <h3
               className={cn(
-                "text-lg font-bold mb-4",
-                theme === "dark" ? "text-white" : "text-gray-700"
+                "text-lg font-extrabold mb-4",
+                theme === "dark" ? "text-white" : "text-gray-800"
               )}
-              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
             >
-              {t("sections.description.title")} 
+              {t("sections.description.title")}
             </h3>
 
             <LabelInputContainer className="mb-4">
               <Label
                 className="flex items-center"
-                style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+                style={{
+                  fontFamily: "'DM Sans', sans-serif",
+                  fontSize: "1rem",
+                  fontWeight: "bold",
+                }}
                 htmlFor="description"
               >
                 <IconFileDescription className="mr-2 h-5 w-5 text-amber-500" />
-                {t("fields.description.label")} 
+                {t("fields.description.label")}
               </Label>
               <textarea
                 id="description"
                 name="description"
-                placeholder={t("fields.description.placeholder")} 
+                placeholder={t("fields.description.placeholder")}
                 value={formData.description}
                 onChange={handleChange}
                 rows="5"
@@ -240,44 +252,64 @@ export const CreateClassroomForm = ({ onSubmit, educationalStages }) => {
           </div>
         </div>
 
-        <div className="flex flex-col sm:flex-row gap-4 mt-8">
+        {/* Create Classroom and Cancel Buttons */}
+        <div className="flex justify-center gap-4 mt-4">
           <button
-            className="btn btn-secondary py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center w-full mx-auto max-w-sm"
+            className={cn(
+              "btn btn-md btn-secondary w-1/2",
+              theme === "dark" ? "dark:btn-secondary" : ""
+            )}
+            type="button"
             onClick={() => router.back()}
           >
-            &larr; {t("buttons.cancel")} 
+            <span className="font-bold flex items-center gap-2">
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="20" 
+                height="20" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+                className="rotate-180 transition-transform group-hover:-translate-x-1"
+              >
+                <path d="M5 12h14"/>
+                <path d="m12 5 7 7-7 7"/>
+              </svg>
+              {t("buttons.cancel")}
+            </span>
           </button>
           <button
-            className="btn btn-success py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center w-full mx-auto max-w-sm"
+            className={cn(
+              "btn btn-md btn-success w-1/2",
+              theme === "dark" ? "dark:btn-success" : ""
+            )}
+            type="submit"
           >
-            {t("buttons.create")} &rarr; 
+            <span className="font-bold flex items-center gap-2">
+              {t("buttons.create")}
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="20" 
+                height="20" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                strokeWidth="2" 
+                strokeLinecap="round" 
+                strokeLinejoin="round"
+                className="transition-transform group-hover:translate-x-1"
+              >
+                <path d="M5 12h14"/>
+                <path d="m12 5 7 7-7 7"/>
+              </svg>
+            </span>
           </button>
         </div>
       </form>
     </div>
-  );
-};
-
-const BottomGradient = ({ isCancel }) => {
-  return (
-    <>
-      <span
-        className={cn(
-          "group-hover/btn:opacity-100 block transition duration-500 opacity-0 absolute h-px w-full -bottom-px inset-x-0",
-          isCancel
-            ? "bg-gradient-to-r from-transparent via-orange-500 to-transparent"
-            : "bg-gradient-to-r from-transparent via-cyan-500 to-transparent"
-        )}
-      />
-      <span
-        className={cn(
-          "group-hover/btn:opacity-100 blur-sm block transition duration-500 opacity-0 absolute h-px w-1/2 mx-auto -bottom-px inset-x-10",
-          isCancel
-            ? "bg-gradient-to-r from-transparent via-orange-500 to-transparent"
-            : "bg-gradient-to-r from-transparent via-indigo-500 to-transparent"
-        )}
-      />
-    </>
   );
 };
 
@@ -287,7 +319,7 @@ const LabelInputContainer = ({ children, className }) => {
       {React.Children.map(children, (child) => {
         if (child.type === Label) {
           return React.cloneElement(child, {
-            style: { ...child.props.style, fontSize: "1.25rem" },
+            style: { ...child.props.style, fontSize: "0.875rem" }, // Adjusted font size to make labels smaller
           });
         }
         return child;

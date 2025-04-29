@@ -1,6 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { Link as I18nLink } from '@/i18n/navigation'; // Import the internationalized Link
 import React, { useState, createContext, useContext } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { IconX } from "@tabler/icons-react";
@@ -146,7 +147,7 @@ export const SidebarLink = ({ link, className, ...props }) => {
   const { open, animate } = useSidebar();
   const { theme } = useTheme();
   return (
-    <Link
+    <I18nLink
       href={link.href}
       className={cn(
         "flex items-center justify-start gap-3 group/sidebar py-3",
@@ -167,6 +168,6 @@ export const SidebarLink = ({ link, className, ...props }) => {
       >
         {link.label}
       </motion.span>
-    </Link>
+    </I18nLink>
   );
 };
