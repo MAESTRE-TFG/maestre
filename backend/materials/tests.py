@@ -512,7 +512,6 @@ class DocumentTests(APITestCase):
                 try:
                     os.remove(document.file.path)
                 except (FileNotFoundError, PermissionError) as e:
-                    print(f"Could not delete file {document.file.path}: {e}")
             document.delete()
 
         # Delete all tags
@@ -529,7 +528,6 @@ class DocumentTests(APITestCase):
                     try:
                         os.remove(os.path.join(media_dir, filename))
                     except (FileNotFoundError, PermissionError) as e:
-                        print(f"Could not delete temporary file {filename}: {e}")
 
 # ------------------------------------ Test serializers ----------------------------------
 
@@ -656,7 +654,6 @@ class DocumentViewSetAdditionalTests(APITestCase):
                 try:
                     os.remove(document.file.path)
                 except (FileNotFoundError, PermissionError) as e:
-                    print(f"Could not delete file {document.file.path}: {e}")
             document.delete()
 
         # Delete all tags
@@ -673,4 +670,3 @@ class DocumentViewSetAdditionalTests(APITestCase):
                     try:
                         os.remove(os.path.join(media_dir, filename))
                     except (FileNotFoundError, PermissionError) as e:
-                        print(f"Could not delete temporary file {filename}: {e}")

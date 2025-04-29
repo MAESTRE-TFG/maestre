@@ -41,7 +41,6 @@ class DocumentViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         auth_header = get_authorization_header(request).decode('utf-8')
-        print(f"Authorization Header: {auth_header}")
 
         classroom_id = request.data.get('classroom')
         if classroom_id:
@@ -306,7 +305,6 @@ class DocumentViewSet(viewsets.ModelViewSet):
         except Exception as e:
             import traceback
             error_details = traceback.format_exc()
-            print(f"Translation error: {error_details}")
             return Response(
                 {"error": str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR

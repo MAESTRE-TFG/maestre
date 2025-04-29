@@ -25,6 +25,7 @@ import NoClassroomModal from "../components/no-classroom-modal";
 
 const ScientificExamMaker = ({ params }) => {
   const t = useTranslations("ScientificExamMaker");
+  const t2 = useTranslations("ToolsPage");
   const { theme } = useTheme();
   const locale = params?.locale || "es";
   const router = useRouter();
@@ -285,6 +286,33 @@ const ScientificExamMaker = ({ params }) => {
                 {t("header.subtitle")}
               </p>
             </div>
+            <button
+            onClick={() => router.push(`/${locale}/tools`)}
+            className={cn(
+              "absolute left-4 flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all",
+              "hover:scale-105 active:scale-95",
+              "shadow-md hover:shadow-lg",
+              theme === "dark" 
+                ? "bg-gray-800 text-gray-200 hover:bg-gray-700" 
+                : "bg-white text-gray-800 hover:bg-gray-50"
+            )}
+          >
+            <svg 
+              xmlns="http://www.w3.org/2000/svg" 
+              className="h-4 w-4" 
+              fill="none" 
+              viewBox="0 0 24 24" 
+              stroke="currentColor"
+            >
+              <path 
+                strokeLinecap="round" 
+                strokeLinejoin="round" 
+                strokeWidth={2} 
+                d="M10 19l-7-7m0 0l7-7m-7 7h18" 
+              />
+            </svg>
+            <span>{t2("backToTools")}</span>
+          </button>
           </div>
 
           {/* Form Section */}
