@@ -15,7 +15,7 @@ class Document(models.Model):
     file = models.FileField(
         upload_to='documents/',
         validators=[
-            FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx', 'png', 'jpg', 'pptx', 'txt', 'md', 'tex']),
+            FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx', 'png', 'jpg', 'pptx', 'txt', 'md', 'tex', 'pages']),
         ]
     )
     classroom = models.ForeignKey(

@@ -55,21 +55,6 @@ class DocumentTests(APITestCase):
         )
         self.assertEqual(str(document), 'Test Document')
 
-    def test_document_file_validation(self):
-        invalid_file = SimpleUploadedFile(
-            "test.txt",
-            b"invalid_content",
-            content_type="text/plain"
-        )
-        data = {
-            'name': 'Invalid Document',
-            'file': invalid_file,
-            'classroom': self.classroom.id
-        }
-        response = self.client.post(reverse('materials-list'), data, format='multipart')
-        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('file', response.data)
-
     def test_document_limit_per_classroom(self):
         # Create 5 documents
         for i in range(5):
@@ -617,7 +602,11 @@ class DocumentViewSetAdditionalTests(APITestCase):
         self.assertEqual(len(response.data), 0)
 
     def test_create_document_with_invalid_file_extension(self):
-        invalid_file = SimpleUploadedFile("test.txt", b"invalid_content", content_type="text/plain")
+        invalid_file = SimpleUploadedFile(
+            "test.xls",
+            b"invalid_content",
+            content_type="text/plain"
+        )
         data = {
             'name': 'Invalid File',
             'file': invalid_file,
@@ -625,7 +614,8 @@ class DocumentViewSetAdditionalTests(APITestCase):
         }
         response = self.client.post(reverse('materials-list'), data, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
-        self.assertIn('file', response.data)
+        self.assertIn('error', response.data)
+        self.assertIn("Invalid file extension 'xls'. Allowed extensions are: pdf, doc, docx, png, jpg, pptx, txt, md, tex, pages.", response.data['error'])
 
     def test_update_tags_with_invalid_tag_ids(self):
         document = Document.objects.create(

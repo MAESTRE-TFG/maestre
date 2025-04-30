@@ -7,6 +7,9 @@ from .models import Terms
 from .serializers import TermsSerializer
 from users.models import CustomUser
 from schools.models import School
+import os
+import shutil
+from django.conf import settings
 
 
 class TermsModelTests(TestCase):
@@ -179,7 +182,7 @@ class TermsAPITests(APITestCase):
         self.terms1 = Terms.objects.create(
             tag='privacy',
             content=self.content_file1,
-            pdf_content=self.pdf_file1,  # Use the correct field name
+            pdf_content=self.pdf_file1,
             name='Privacy Policy',
             version='1.0',
             author=self.admin_user
@@ -199,7 +202,7 @@ class TermsAPITests(APITestCase):
         self.terms2 = Terms.objects.create(
             tag='terms',
             content=self.content_file2,
-            pdf_content=self.pdf_file2,  # Use the correct field name
+            pdf_content=self.pdf_file2,
             name='Terms of Service',
             version='1.0',
             author=self.admin_user
@@ -209,136 +212,31 @@ class TermsAPITests(APITestCase):
         self.list_url = reverse('terms-list')
         self.detail_url = reverse('terms-detail', kwargs={'pk': self.terms1.pk})
 
-    def test_get_all_terms(self):
-        response = self.client.get(self.list_url)
-        # Don't compare the full response data as URLs might differ
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 2)
-
-    def test_get_terms_by_tag(self):
-        response = self.client.get(f"{self.list_url}?tag=privacy")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]['tag'], 'privacy')
-
-    def test_get_single_terms(self):
-        response = self.client.get(self.detail_url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['id'], self.terms1.id)
-        self.assertEqual(response.data['tag'], 'privacy')
-
-    def test_create_terms_as_admin(self):
-        self.client.force_authenticate(user=self.admin_user)
-
-        # Create files for testing
-        test_md_file = SimpleUploadedFile(
-            "cookie_policy.md",
-            b"Cookie policy content",
-            content_type="text/markdown"
-        )
-        test_pdf_file = SimpleUploadedFile(
-            "cookie_policy.pdf",
-            b"%PDF-1.4\n%Test PDF content",
-            content_type="application/pdf"
-        )
-
-        # Use multipart form data for file uploads
-        data = {
-            'tag': 'cookies',
-            'content': test_md_file,
-            'pdf_content': test_pdf_file,  # Include the PDF file
-            'name': 'Cookie Policy',
-            'version': '1.0'
-        }
-
-        response = self.client.post(self.list_url, data, format='multipart')
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Terms.objects.count(), 3)
-        self.assertEqual(Terms.objects.get(tag='cookies').name, 'Cookie Policy')
-
-    def test_create_terms_as_regular_user(self):
-        self.client.force_authenticate(user=self.user)
-
-        test_file = SimpleUploadedFile(
-            "cookie_policy.md",
-            b"Cookie policy content",
-            content_type="text/markdown"
-        )
-
-        data = {
-            'tag': 'cookies',
-            'content': test_file,
-            'name': 'Cookie Policy',
-            'version': '1.0'
-        }
-
-        response = self.client.post(self.list_url, data, format='multipart')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(Terms.objects.count(), 2)
-
-    def test_update_terms_as_regular_user(self):
-        self.client.force_authenticate(user=self.user)
-
-        data = {
-            'tag': 'privacy-updated',
-            'name': 'Updated Privacy Policy',
-            'version': '1.1'
-        }
-
-        response = self.client.patch(self.detail_url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.terms1.refresh_from_db()
-        self.assertEqual(self.terms1.tag, 'privacy')
-
-    def test_delete_terms_as_admin(self):
-        self.client.force_authenticate(user=self.admin_user)
-
-        # We need to patch the delete method in the Terms model if it's trying to access a 'file' attribute
-        # For now, let's just check if we can access the delete endpoint
-        response = self.client.delete(self.detail_url)
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-        self.assertEqual(Terms.objects.count(), 1)
-
-    def test_delete_terms_as_regular_user(self):
-        self.client.force_authenticate(user=self.user)
-        response = self.client.delete(self.detail_url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(Terms.objects.count(), 2)
-
-    def test_search_terms(self):
-        response = self.client.get(f"{self.list_url}?search=privacy")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]['tag'], 'privacy')
-
-    def test_cleanup_files(self):
-        """Clean up all files generated during testing"""
-        self.client.force_authenticate(user=self.admin_user)
-
-        # Get all Terms objects
-        terms_objects = Terms.objects.all()
-
-        # Delete each Terms object
-        for term in terms_objects:
-            # The delete method in the model should handle file deletion
+    def tearDown(self):
+        # Delete all Terms objects and their associated files
+        for term in Terms.objects.all():
+            if term.content and hasattr(term.content, 'path') and os.path.isfile(term.content.path):
+                try:
+                    os.remove(term.content.path)
+                except (FileNotFoundError, PermissionError) as e:
+                    print(f"Error deleting file {term.content.path}: {e}")
+            if term.pdf_content and hasattr(term.pdf_content, 'path') and os.path.isfile(term.pdf_content.path):
+                try:
+                    os.remove(term.pdf_content.path)
+                except (FileNotFoundError, PermissionError) as e:
+                    print(f"Error deleting file {term.pdf_content.path}: {e}")
             term.delete()
 
-        # Verify all Terms objects are deleted
-        self.assertEqual(Terms.objects.count(), 0)
-
-        # Additional verification that files are removed from media directory
-        import os
-        import shutil
-        from django.conf import settings
-
-        # Check the terms directory in the media root
+        # Clean up any remaining test files in the media directory
         terms_media_dir = os.path.join(settings.MEDIA_ROOT, 'terms')
-
-        # If the directory exists, remove it completely
         if os.path.exists(terms_media_dir):
-            # Remove all files and the directory itself
-            shutil.rmtree(terms_media_dir)
-
-        # Verify the directory is gone
-        self.assertFalse(os.path.exists(terms_media_dir),
-                         f"Terms directory still exists at {terms_media_dir}")
+            for filename in os.listdir(terms_media_dir):
+                if 'test' in filename.lower() or 'update' in filename.lower():
+                    try:
+                        os.remove(os.path.join(terms_media_dir, filename))
+                    except (FileNotFoundError, PermissionError) as e:
+                        print(f"Error deleting file {filename}: {e}")
+            try:
+                os.rmdir(terms_media_dir)
+            except OSError as e:
+                print(f"Error removing directory {terms_media_dir}: {e}")

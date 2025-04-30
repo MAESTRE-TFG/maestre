@@ -68,6 +68,18 @@ class DocumentViewSet(viewsets.ModelViewSet):
                     {"error": "Classroom does not exist."},
                     status=status.HTTP_400_BAD_REQUEST
                 )
+
+        # Validate file format
+        file = request.FILES.get('file')
+        if file:
+            valid_extensions = ['pdf', 'doc', 'docx', 'png', 'jpg', 'pptx', 'txt', 'md', 'tex', 'pages']
+            file_extension = file.name.split('.')[-1].lower()
+            if file_extension not in valid_extensions:
+                return Response(
+                    {"error": [f"Invalid file extension '{file_extension}'. Allowed extensions are: {', '.join(valid_extensions)}."]},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
         return super().create(request, *args, **kwargs)
 
     def update_tags(self, request, pk=None):
@@ -500,5 +512,5 @@ class DocumentViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         document = serializer.save()
-        document.clean()  # Explicitly call the clean method to enforce validation
+        document.clean()
         document.save()
