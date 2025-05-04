@@ -2,7 +2,7 @@
 export const getApiBaseUrl = () => {
   return process.env.NODE_ENV === 'development' 
     ? 'http://localhost:8000' 
-    : 'http://165.22.68.4';
+    : 'https://maestre.tech';
 };
 
 export const getLLMApiUrl = () => {
