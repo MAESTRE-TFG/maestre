@@ -8,5 +8,5 @@ export const getApiBaseUrl = () => {
 export const getLLMApiUrl = () => {
   return process.env.NODE_ENV === 'development' 
     ? 'http://localhost:11434' 
-    : 'http://localhost:11434';
+    : null;
 };
