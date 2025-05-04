@@ -32,7 +32,7 @@ ALLOWED_HOSTS = ['maestre.tech','165.22.68.4','maestre.netlify.app']
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",  # React/Next.js frontend
-    "maestre.netlify.app",
+    "https://maestre.netlify.app",
 ]
 CORS_ALLOW_CREDENTIALS = True
 
