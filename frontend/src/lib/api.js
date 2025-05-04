@@ -2,11 +2,11 @@
 export const getApiBaseUrl = () => {
   return process.env.NODE_ENV === 'development' 
     ? 'http://localhost:8000' 
-    : process.env.NEXT_PUBLIC_API_URL;
+    : 'http://165.22.68.4';
 };
 
 export const getLLMApiUrl = () => {
   return process.env.NODE_ENV === 'development' 
     ? 'http://localhost:11434' 
-    : process.env.NEXT_PUBLIC_API_URL;
+    : 'http://localhost:11434';
 };
