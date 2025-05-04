@@ -147,7 +147,7 @@ export const processMaterialFromClassroom = async (material, token) => {
 // Generate plan using Ollama
 export const generatePlan = async (prompt, model = "llama3.2:3b") => {
   try {
-    const response = await axios.post(`${getLLMApiUrl()}/api/generate`, {
+    const response = await axios.post(`${getApiBaseUrl()}/api/generate`, {
       model: model,
       prompt: prompt,
       stream: false,

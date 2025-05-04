@@ -499,3 +499,33 @@ class DocumentViewSet(viewsets.ModelViewSet):
             
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    @action(detail=False, methods=['post'], url_path='generate')
+    def generate(request):
+        OLLAMA_URL = 'http://localhost:11434/api/generate'
+
+        prompt = request.data.get('prompt')
+        model = request.data.get('model', 'llama3.2:3b')
+        stream = request.data.get('stream', False)
+        temperature = request.data.get('temperature', 0.7)
+
+        if not prompt:
+            return Response({'error': 'Prompt is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        payload = {
+            "model": model,
+            "prompt": prompt,
+            "stream": stream,
+            "temperature": temperature,
+        }
+
+        try:
+            ollama_response = requests.post(OLLAMA_URL, json=payload)
+            ollama_response.raise_for_status()
+            data = ollama_response.json()
+
+            # Return only the part your frontend expects
+            return Response({'plan': data.get('response', '')})
+
+        except requests.exceptions.RequestException as e:
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
