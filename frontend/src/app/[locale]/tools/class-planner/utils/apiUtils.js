@@ -145,7 +145,7 @@ export const processMaterialFromClassroom = async (material, token) => {
 };
 
 // Generate plan using Ollama
-export const generatePlan = async (prompt, model = "llama3.2:3b") => {
+export const generatePlan = async (prompt, model = "llama3.2:3b", addAlert) => {
   try {
     const response = await fetch(`${getApiBaseUrl()}/api/materials/generate_content`, {
       method: 'POST',

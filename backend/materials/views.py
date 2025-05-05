@@ -502,16 +502,15 @@ class DocumentViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    @action(detail=False, methods=['post'], url_path='generate_content')
+    @action(detail=False, methods=['get'], url_path='generate_content')
     def generate_content(self, request):
         OLLAMA_URL = 'http://localhost:11434/api/generate'
 
         prompt = request.data.get('prompt')
         model = request.data.get('model', 'llama3.2:3b')
-        stream = request.data.get('stream', False)
         temperature = request.data.get('temperature', 0.7)
 
-        logger.info(f"Received data: prompt={prompt}, model={model}, stream={stream}, temperature={temperature}")
+        logger.warning(f"Received data: prompt={prompt}, model={model}, stream={stream}, temperature={temperature}")
 
         if not prompt:
             logger.warning("Prompt is missing!")
@@ -520,24 +519,24 @@ class DocumentViewSet(viewsets.ModelViewSet):
         payload = {
             "model": model,
             "prompt": prompt,
-            "stream": stream,
+            "stream": false,
             "temperature": temperature,
         }
 
-        logger.info(f"Payload to Ollama: {payload}")
+        logger.warning(f"Payload to Ollama: {payload}")
 
         try:
             ollama_response = requests.post(OLLAMA_URL, json=payload)
             ollama_response.raise_for_status()
             data = ollama_response.json()
 
-            logger.info(f"Ollama response: {data}")
+            logger.warning(f"Ollama response: {data}")
 
             return Response({'plan': data.get('response', '')})
 
         except requests.exceptions.RequestException as e:
-            logger.error(f"Ollama request error: {e}")
+            logger.warning(f"Ollama request error: {e}")
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
         except Exception as ex:
-            logger.error(f"Unexpected error: {ex}")
+            logger.warning(f"Unexpected error: {ex}")
             return Response({'error': f"Unexpected error: {str(ex)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

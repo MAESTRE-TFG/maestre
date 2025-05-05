@@ -155,8 +155,9 @@ export const processMaterialFromClassroom = async (material, token, showAlert) =
 // Generate exam using Ollama
 export const generateExam = async (prompt, model, showAlert) => {
   try {
+    console.log("Generating exam with prompt:", prompt);
     const response = await fetch(`${getApiBaseUrl()}/api/materials/generate_content`, {
-      method: 'POST',
+      method: 'GET',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Token ${localStorage.getItem("authToken")}`,
