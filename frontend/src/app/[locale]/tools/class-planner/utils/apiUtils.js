@@ -147,30 +147,35 @@ export const processMaterialFromClassroom = async (material, token) => {
 // Generate plan using Ollama
 export const generatePlan = async (prompt, model = "llama3.2:3b") => {
   try {
-    const response = await axios.post(`${getApiBaseUrl()}/api/materials/generate`, {
-      model: model,
-      prompt: prompt,
-      stream: false,
-      temperature: 0.7,
-    }, {
+    const response = await fetch(`${getApiBaseUrl()}/api/materials/generate`, {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Token ${localStorage.getItem("authToken")}`,
+        'Authorization': `Token ${localStorage.getItem("authToken")}`,
       },
+      body: JSON.stringify({
+        model: model,
+        prompt: prompt,
+        stream: false,
+        temperature: 0.7,
+      })
     });
 
-    if (response.data && response.data.response) {
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    if (data && data.response) {
       // Return an object with a plan property instead of the raw response
       return {
-        plan: response.data.response
+        plan: data.response
       };
     } else {
       addAlert("error", "Failed to generate lesson plan");
     }
   } catch (error) {
-    if (error.response) {
-      addAlert("error", "Server error while generating plan");
-    } else if (error.request) {
+    if (error.name === 'TypeError') {
       addAlert("error", "Network error. Please check your connection.");
     } else {
       addAlert("error", error.message);
