@@ -162,9 +162,9 @@ export const generateExam = async (prompt, model, showAlert) => {
       temperature: 0.7
     }, {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        Authorization: `Token ${localStorage.getItem("authToken")}`,
       },
-      withCredentials: false
     });
 
     if (response.data?.response) {

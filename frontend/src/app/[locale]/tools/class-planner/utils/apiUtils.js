@@ -152,6 +152,11 @@ export const generatePlan = async (prompt, model = "llama3.2:3b") => {
       prompt: prompt,
       stream: false,
       temperature: 0.7,
+    }, {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Token ${localStorage.getItem("authToken")}`,
+      },
     });
 
     if (response.data && response.data.response) {
