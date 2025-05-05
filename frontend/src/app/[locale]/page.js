@@ -386,7 +386,7 @@ const Home = () => {
               poster="/static/video-poster.jpg"
               muted
               playsInline
-              preload="none" // Don't preload video data
+              preload="none"
               loading="lazy"
               style={{ 
                 pointerEvents: 'none',

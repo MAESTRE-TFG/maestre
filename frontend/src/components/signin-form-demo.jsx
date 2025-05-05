@@ -7,10 +7,8 @@ import { useTheme } from "@/components/theme-provider";
 import { IconUser, IconLock, IconEye, IconEyeOff } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
 
-export function SigninForm({ onSubmit, params }) {
+export function SigninForm({ onSubmit, locale = "es" }) {
   const { theme } = useTheme();
-  const locale = params.locale || "es";
-
 
   const t = useTranslations("SigninForm");
   const [formData, setFormData] = React.useState({
