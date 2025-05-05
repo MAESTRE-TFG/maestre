@@ -502,13 +502,14 @@ class DocumentViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-    @action(detail=False, methods=['get'], url_path='generate_content')
+    @action(detail=False, methods=['get', 'post'], url_path='generate_content')
     def generate_content(self, request):
         OLLAMA_URL = 'http://localhost:11434/api/generate'
 
         prompt = request.data.get('prompt')
         model = request.data.get('model', 'llama3.2:3b')
         temperature = request.data.get('temperature', 0.7)
+        stream = request.data.get('stream', False)
 
         logger.warning(f"Received data: prompt={prompt}, model={model}, stream={stream}, temperature={temperature}")
 
@@ -532,7 +533,8 @@ class DocumentViewSet(viewsets.ModelViewSet):
 
             logger.warning(f"Ollama response: {data}")
 
-            return Response({'plan': data.get('response', '')})
+            # Return response in a format compatible with both frontend methods
+            return Response({'response': data.get('response', '')})
 
         except requests.exceptions.RequestException as e:
             logger.warning(f"Ollama request error: {e}")

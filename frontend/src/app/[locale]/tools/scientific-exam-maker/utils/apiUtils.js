@@ -157,7 +157,7 @@ export const generateExam = async (prompt, model, showAlert) => {
   try {
     console.log("Generating exam with prompt:", prompt);
     const response = await fetch(`${getApiBaseUrl()}/api/materials/generate_content`, {
-      method: 'GET',
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Token ${localStorage.getItem("authToken")}`,
