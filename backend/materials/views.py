@@ -501,7 +501,7 @@ class DocumentViewSet(viewsets.ModelViewSet):
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     @action(detail=False, methods=['post'], url_path='generate')
-    def generate(request):
+    def generate(self, request):
         OLLAMA_URL = 'http://localhost:11434/api/generate'
 
         prompt = request.data.get('prompt')
