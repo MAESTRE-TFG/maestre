@@ -155,7 +155,7 @@ export const processMaterialFromClassroom = async (material, token, showAlert) =
 // Generate exam using Ollama
 export const generateExam = async (prompt, model, showAlert) => {
   try {
-    const response = await axios.post(`${getApiBaseUrl()}/api/generate`, {
+    const response = await axios.post(`${getApiBaseUrl()}/api/materials/generate`, {
       model: model,
       prompt: prompt,
       stream: false,
