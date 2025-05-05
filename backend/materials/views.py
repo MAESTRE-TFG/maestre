@@ -14,6 +14,8 @@ from googletrans import Translator
 from rest_framework.authentication import get_authorization_header
 import io
 from django.http import HttpResponse
+import logging
+logger = logging.getLogger(__name__)
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
@@ -509,7 +511,10 @@ class DocumentViewSet(viewsets.ModelViewSet):
         stream = request.data.get('stream', False)
         temperature = request.data.get('temperature', 0.7)
 
+        logger.info(f"Received data: prompt={prompt}, model={model}, stream={stream}, temperature={temperature}")
+
         if not prompt:
+            logger.warning("Prompt is missing!")
             return Response({'error': 'Prompt is required.'}, status=status.HTTP_400_BAD_REQUEST)
 
         payload = {
@@ -519,13 +524,20 @@ class DocumentViewSet(viewsets.ModelViewSet):
             "temperature": temperature,
         }
 
+        logger.info(f"Payload to Ollama: {payload}")
+
         try:
             ollama_response = requests.post(OLLAMA_URL, json=payload)
             ollama_response.raise_for_status()
             data = ollama_response.json()
 
-            # Return only the part your frontend expects
+            logger.info(f"Ollama response: {data}")
+
             return Response({'plan': data.get('response', '')})
 
         except requests.exceptions.RequestException as e:
+            logger.error(f"Ollama request error: {e}")
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as ex:
+            logger.error(f"Unexpected error: {ex}")
+            return Response({'error': f"Unexpected error: {str(ex)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
