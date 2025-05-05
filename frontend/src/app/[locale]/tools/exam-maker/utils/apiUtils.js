@@ -155,29 +155,25 @@ export const processMaterialFromClassroom = async (material, token, showAlert) =
 // Generate exam using Ollama
 export const generateExam = async (prompt, model, showAlert) => {
   try {
-    const response = await fetch(`${getApiBaseUrl()}/api/materials/generate_content`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Token ${localStorage.getItem("authToken")}`,
-      },
-      body: JSON.stringify({
+    const response = await axios.post(
+      `${getApiBaseUrl()}/api/materials/generate_content/`,
+      {
         model: model,
         prompt: prompt,
         stream: false,
         temperature: 0.7
-      })
-    });
+      },
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${localStorage.getItem("authToken")}`,
+        }
+      }
+    );
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    
-    if (data?.response) {
+    if (response.data?.response) {
       showAlert("success", "Exam generated successfully");
-      return data.response;
+      return response.data.response;
     }
     showAlert("error", "Failed to generate exam");
     return null;
@@ -186,9 +182,9 @@ export const generateExam = async (prompt, model, showAlert) => {
     console.error('Ollama API Error:', error);
     let errorMessage = "Failed to generate exam";
     
-    if (error.name === 'TypeError' && error.message.includes('Failed to fetch')) {
+    if (error.code === 'ERR_NETWORK') {
       errorMessage = "Ollama service not running. Please start Ollama first.";
-    } else if (error.message.includes('404')) {
+    } else if (error.response?.status === 404) {
       errorMessage = "Ollama API endpoint not found. Check your Ollama version.";
     } else if (error.message.includes('CORS')) {
       errorMessage = "CORS issue detected. Please start Ollama with: 'ollama serve --cors'";

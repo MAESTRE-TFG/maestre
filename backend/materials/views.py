@@ -506,10 +506,18 @@ class DocumentViewSet(viewsets.ModelViewSet):
     def generate_content(self, request):
         OLLAMA_URL = 'http://localhost:11434/api/generate'
 
-        prompt = request.data.get('prompt')
-        model = request.data.get('model', 'llama3.2:3b')
-        temperature = request.data.get('temperature', 0.7)
-        stream = request.data.get('stream', False)
+        # Check if it's a POST request and get data accordingly
+        if request.method == 'POST':
+            logger.warning("Received POST request.")
+            data = request.data
+        else:
+            logger.warning("Received GET request.")
+            data = request.query_params
+
+        prompt = data.get('prompt')
+        model = data.get('model')  # Default model if not provided
+        temperature = data.get('temperature')  # Default temperature if not provided
+        stream = data.get('stream')  # Default stream if not provided
 
         logger.warning(f"Received data: prompt={prompt}, model={model}, stream={stream}, temperature={temperature}")
 
@@ -520,7 +528,7 @@ class DocumentViewSet(viewsets.ModelViewSet):
         payload = {
             "model": model,
             "prompt": prompt,
-            "stream": false,
+            "stream": False,  # Python boolean, not JavaScript 'false'
             "temperature": temperature,
         }
 
