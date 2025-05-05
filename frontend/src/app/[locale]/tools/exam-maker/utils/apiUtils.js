@@ -165,9 +165,8 @@ export const generateExam = async (prompt, model, showAlert) => {
       },
       {
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Token ${localStorage.getItem("authToken")}`,
-        }
+          Authorization: `Token ${localStorage.getItem("authToken")}`,
+        },
       }
     );
 

@@ -157,8 +157,7 @@ export const generatePlan = async (prompt, model = "llama3.2:3b", addAlert) => {
       },
       {
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Token ${localStorage.getItem("authToken")}`,
+          Authorization: `Token ${localStorage.getItem("authToken")}`,
         },
       }
     );
