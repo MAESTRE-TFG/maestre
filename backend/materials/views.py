@@ -14,6 +14,7 @@ from googletrans import Translator
 from rest_framework.authentication import get_authorization_header
 import io
 from django.http import HttpResponse
+import requests
 import logging
 logger = logging.getLogger(__name__)
 
@@ -504,7 +505,11 @@ class DocumentViewSet(viewsets.ModelViewSet):
 
     @action(detail=False, methods=['get', 'post'], url_path='generate_content')
     def generate_content(self, request):
-        OLLAMA_URL = 'http://localhost:11434/api/generate'
+        logger.warning(f"Headers: {request.headers}")
+        logger.warning(f"Data: {request.data}")
+        logger.warning(f"Query params: {request.query_params}")
+
+        OLLAMA_URL = 'http://127.0.0.1:11434/api/generate'
 
         # Check if it's a POST request and get data accordingly
         if request.method == 'POST':
@@ -519,8 +524,6 @@ class DocumentViewSet(viewsets.ModelViewSet):
         temperature = data.get('temperature')  # Default temperature if not provided
         stream = data.get('stream')  # Default stream if not provided
 
-        logger.warning(f"Received data: prompt={prompt}, model={model}, stream={stream}, temperature={temperature}")
-
         if not prompt:
             logger.warning("Prompt is missing!")
             return Response({'error': 'Prompt is required.'}, status=status.HTTP_400_BAD_REQUEST)
@@ -528,14 +531,12 @@ class DocumentViewSet(viewsets.ModelViewSet):
         payload = {
             "model": model,
             "prompt": prompt,
-            "stream": False,  # Python boolean, not JavaScript 'false'
+            "stream": False,
             "temperature": temperature,
         }
 
-        logger.warning(f"Payload to Ollama: {payload}")
-
         try:
-            ollama_response = requests.post(OLLAMA_URL, json=payload)
+            ollama_response = requests.post(OLLAMA_URL, json=payload, timeout=1200)
             ollama_response.raise_for_status()
             data = ollama_response.json()
 

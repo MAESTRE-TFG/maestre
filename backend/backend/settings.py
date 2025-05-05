@@ -29,11 +29,11 @@ DEBUG = False
 ALLOWED_HOSTS = ['maestre.tech','165.22.68.4','maestre.netlify.app']
 
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # React/Next.js frontend
-    "https://maestre.netlify.app",
-]
+CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",  # React/Next.js frontend
+#     "https://maestre.netlify.app",
+# ]
 CORS_ALLOW_CREDENTIALS = True
 
 
