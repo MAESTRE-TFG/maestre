@@ -1142,7 +1142,8 @@
       "fetchStagesError": "Errorea hezkuntza faseak lortzean. Mesedez, saiatu berriro geroago.",
       "networkError": "Sarearen akatsa hezkuntza faseak lortzean.",
       "success": "Klasea arrakastaz sortu da!",
-      "creationFailed": "Errorea gertatu da klasea sortzerakoan. Mesedez, saiatu berriro."
+      "creationFailed": "Errorea gertatu da klasea sortzerakoan. Mesedez, saiatu berriro.",
+      "maxClassroomsReached": "Ezin dituzu 5 ikasgela baino gehiago sortu."
     }
   },
   "ClassroomPage": {

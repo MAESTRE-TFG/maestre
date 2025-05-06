@@ -1206,7 +1206,8 @@
       "fetchStagesError": "Error al obtener las etapas educativas. Por favor, inténtalo de nuevo más tarde.",
       "networkError": "Error de red al obtener las etapas educativas.",
       "success": "¡Clase creada con éxito!",
-      "creationFailed": "Error al crear la clase. Por favor, inténtalo de nuevo."
+      "creationFailed": "Error al crear la clase. Por favor, inténtalo de nuevo.",
+      "maxClassroomsReached": "Has alcanzado el límite máximo de clases"
     }
   },
 

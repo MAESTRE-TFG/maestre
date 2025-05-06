@@ -1194,7 +1194,8 @@
       "fetchStagesError": "Error en l'obtenció de les etapes educatives. Torneu -ho a provar més tard.",
       "networkError": "Error de xarxa en obtenir les etapes educatives.",
       "success": "Classe creada amb èxit!",
-      "creationFailed": "Error en crear la classe. Torneu -ho a provar."
+      "creationFailed": "Error en crear la classe. Torneu -ho a provar.",
+      "maxClassroomsReached": "No pots crear més de 5 aules."
     }
   },
   

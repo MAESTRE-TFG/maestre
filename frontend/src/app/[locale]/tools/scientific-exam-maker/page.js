@@ -286,6 +286,7 @@ const ScientificExamMaker = ({ params }) => {
                 {t("header.subtitle")}
               </p>
             </div>
+            <div className="w-full max-w-4xl flex items-center mb-8">
             <button
             onClick={() => router.push(`/${locale}/tools`)}
             className={cn(
@@ -313,6 +314,7 @@ const ScientificExamMaker = ({ params }) => {
             </svg>
             <span>{t2("backToTools")}</span>
           </button>
+          </div>
           </div>
 
           {/* Form Section */}

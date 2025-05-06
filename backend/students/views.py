@@ -4,6 +4,7 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.exceptions import ValidationError
+from django.conf import settings
 from .models import Student
 from .serializers import StudentSerializer
 from classrooms.models import Classroom
@@ -30,6 +31,16 @@ class StudentViewSet(viewsets.ModelViewSet):
             )
 
         classroom = get_object_or_404(Classroom, id=classroom_id)
+
+        # Check if the classroom has reached the maximum number of students
+        if classroom.students.count() >= settings.MAX_STUDENTS_PER_CLASSROOM:
+            return Response(
+                {
+                    'error': (f'This classroom already has the maximum number of students '
+                              f'({settings.MAX_STUDENTS_PER_CLASSROOM}).')
+                },
+                status=status.HTTP_400_BAD_REQUEST
+            )
 
         data = request.data.copy()
         data['classroom'] = classroom.id

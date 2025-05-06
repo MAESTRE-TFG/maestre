@@ -272,6 +272,7 @@ const ExamMaker = () => {
         />
 
         <div className="relative w-full flex-1 flex flex-col items-center py-14">
+        <div className="w-full max-w-4xl flex items-center mb-8">
         <button
             onClick={() => router.push(`/${locale}/tools`)}
             className={cn(
@@ -299,6 +300,7 @@ const ExamMaker = () => {
             </svg>
             <span>{t2("backToTools")}</span>
           </button>
+          </div>
           {/* Header Section */}
           <div className="w-full max-w-4xl flex items-center mb-8 justify-center space-x-6">
             <div className="relative">
