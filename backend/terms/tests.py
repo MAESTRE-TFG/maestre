@@ -212,31 +212,203 @@ class TermsAPITests(APITestCase):
         self.list_url = reverse('terms-list')
         self.detail_url = reverse('terms-detail', kwargs={'pk': self.terms1.pk})
 
+
+
+class TermsViewSetTests(APITestCase):
+    def setUp(self):
+        self.client = APIClient()
+
+        # Create a school for the CustomUser
+        self.school = School.objects.create(name='Test School')
+
+        # Create admin user
+        self.admin_user = CustomUser.objects.create_user(
+            username='admin',
+            email='admin@example.com',
+            password='adminpassword',
+            is_staff=True,
+            name='Admin',
+            surname='User',
+            school=self.school
+        )
+
+        # Create regular user
+        self.user = CustomUser.objects.create_user(
+            username='user',
+            email='user@example.com',
+            password='userpassword',
+            name='Regular',
+            surname='User',
+            school=self.school
+        )
+
+        # Authenticate as admin user
+        self.client.force_authenticate(user=self.admin_user)
+
+        # Create markdown and PDF files for testing
+        self.content_file1 = SimpleUploadedFile(
+            "privacy_policy.md",
+            b"Privacy policy content",
+            content_type="text/markdown"
+        )
+        self.pdf_file1 = SimpleUploadedFile(
+            "privacy_policy.pdf",
+            b"%PDF-1.4\n%Test PDF content",
+            content_type="application/pdf"
+        )
+
+        self.terms1 = Terms.objects.create(
+            tag='privacy',
+            content=self.content_file1,
+            pdf_content=self.pdf_file1,
+            name='Privacy Policy',
+            version='1.0',
+            author=self.admin_user
+        )
+
+        self.content_file2 = SimpleUploadedFile(
+            "terms_of_service.md",
+            b"Terms of service content",
+            content_type="text/markdown"
+        )
+        self.pdf_file2 = SimpleUploadedFile(
+            "terms_of_service.pdf",
+            b"%PDF-1.4\n%Test PDF content",
+            content_type="application/pdf"
+        )
+
+        self.terms2 = Terms.objects.create(
+            tag='terms',
+            content=self.content_file2,
+            pdf_content=self.pdf_file2,
+            name='Terms of Service',
+            version='1.0',
+            author=self.admin_user
+        )
+
+        # URLs for ViewSet
+        self.list_url = reverse('terms-list')
+        self.detail_url = reverse('terms-detail', kwargs={'pk': self.terms1.pk})
+
+    # ---------------- Positive Test Cases ----------------
+
+    def test_list_terms(self):
+        response = self.client.get(self.list_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 2)
+
+    def test_retrieve_terms(self):
+        response = self.client.get(self.detail_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['name'], self.terms1.name)
+
+    def test_create_terms(self):
+        content_file = SimpleUploadedFile(
+            "new_terms.md",
+            b"New terms content",
+            content_type="text/markdown"
+        )
+        pdf_file = SimpleUploadedFile(
+            "new_terms.pdf",
+            b"%PDF-1.4\n%New PDF content",
+            content_type="application/pdf"
+        )
+        data = {
+            'tag': 'license',
+            'name': 'License Agreement',
+            'version': '1.0',
+            'content': content_file,
+            'pdf_content': pdf_file
+        }
+        response = self.client.post(self.list_url, data, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Terms.objects.count(), 3)
+
+    def test_update_terms(self):
+        data = {'name': 'Updated Privacy Policy'}
+        response = self.client.patch(self.detail_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.terms1.refresh_from_db()
+        self.assertEqual(self.terms1.name, 'Updated Privacy Policy')
+
+    def test_delete_terms(self):
+        response = self.client.delete(self.detail_url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Terms.objects.count(), 1)
+
+    # ---------------- Negative Test Cases ----------------
+
+    def test_create_terms_duplicate_tag(self):
+        data = {
+            'tag': 'privacy',
+            'name': 'Duplicate Privacy Policy',
+            'version': '1.0',
+            'content': self.content_file1,
+            'pdf_content': self.pdf_file1
+        }
+        response = self.client.post(self.list_url, data, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('tag', response.data)
+
+    def test_create_terms_invalid_file_type(self):
+        invalid_file = SimpleUploadedFile(
+            "invalid_file.txt",
+            b"Invalid file content",
+            content_type="text/plain"
+        )
+        data = {
+            'tag': 'license',
+            'name': 'Invalid File Terms',
+            'version': '1.0',
+            'content': invalid_file,
+            'pdf_content': self.pdf_file1
+        }
+        response = self.client.post(self.list_url, data, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_retrieve_nonexistent_terms(self):
+        response = self.client.get(reverse('terms-detail', kwargs={'pk': 999}))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_update_terms_unauthenticated(self):
+        self.client.force_authenticate(user=None)
+        data = {'name': 'Unauthorized Update'}
+        response = self.client.patch(self.detail_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_delete_terms_unauthenticated(self):
+        self.client.force_authenticate(user=None)
+        response = self.client.delete(self.detail_url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_list_terms_with_filter(self):
+        response = self.client.get(self.list_url, {'tag': 'privacy'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]['tag'], 'privacy')
+
+
     def tearDown(self):
+        # List of files to exclude from deletion
+        excluded_files = {'terms.pdf', 'terms.md', 'cookies.pdf', 'cookies.md', 'privacy.pdf', 'privacy.md'}
+
         # Delete all Terms objects and their associated files
         for term in Terms.objects.all():
             if term.content and hasattr(term.content, 'path') and os.path.isfile(term.content.path):
-                try:
-                    os.remove(term.content.path)
-                except (FileNotFoundError, PermissionError) as e:
-                    print(f"Error deleting file {term.content.path}: {e}")
+                if os.path.basename(term.content.path) not in excluded_files:
+                    try:
+                        os.remove(term.content.path)
+                    except (FileNotFoundError, PermissionError) as e:
+                        print(f"Error deleting file {term.content.path}: {e}")
             if term.pdf_content and hasattr(term.pdf_content, 'path') and os.path.isfile(term.pdf_content.path):
-                try:
-                    os.remove(term.pdf_content.path)
-                except (FileNotFoundError, PermissionError) as e:
-                    print(f"Error deleting file {term.pdf_content.path}: {e}")
+                if os.path.basename(term.pdf_content.path) not in excluded_files:
+                    try:
+                        os.remove(term.pdf_content.path)
+                    except (FileNotFoundError, PermissionError) as e:
+                        print(f"Error deleting file {term.pdf_content.path}: {e}")
             term.delete()
 
         # Clean up any remaining test files in the media directory
         terms_media_dir = os.path.join(settings.MEDIA_ROOT, 'terms')
         if os.path.exists(terms_media_dir):
-            for filename in os.listdir(terms_media_dir):
-                if 'test' in filename.lower() or 'update' in filename.lower():
-                    try:
-                        os.remove(os.path.join(terms_media_dir, filename))
-                    except (FileNotFoundError, PermissionError) as e:
-                        print(f"Error deleting file {filename}: {e}")
-            try:
-                os.rmdir(terms_media_dir)
-            except OSError as e:
-                print(f"Error removing directory {terms_media_dir}: {e}")
+            shutil.rmtree(terms_media_dir)
