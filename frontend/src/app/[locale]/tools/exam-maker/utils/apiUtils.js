@@ -155,17 +155,20 @@ export const processMaterialFromClassroom = async (material, token, showAlert) =
 // Generate exam using Ollama
 export const generateExam = async (prompt, model, showAlert) => {
   try {
-    const response = await axios.post(`${getLLMApiUrl()}/api/generate`, {
-      model: model,
-      prompt: prompt,
-      stream: false,
-      temperature: 0.7
-    }, {
-      headers: {
-        'Content-Type': 'application/json'
+    const response = await axios.post(
+      `${getApiBaseUrl()}/api/materials/generate_content/`,
+      {
+        model: model,
+        prompt: prompt,
+        stream: false,
+        temperature: 0.7
       },
-      withCredentials: false
-    });
+      {
+        headers: {
+          Authorization: `Token ${localStorage.getItem("authToken")}`,
+        },
+      }
+    );
 
     if (response.data?.response) {
       showAlert("success", "Exam generated successfully");
@@ -178,11 +181,11 @@ export const generateExam = async (prompt, model, showAlert) => {
     console.error('Ollama API Error:', error);
     let errorMessage = "Failed to generate exam";
     
-    if (error.code === 'ECONNREFUSED') {
+    if (error.code === 'ERR_NETWORK') {
       errorMessage = "Ollama service not running. Please start Ollama first.";
     } else if (error.response?.status === 404) {
       errorMessage = "Ollama API endpoint not found. Check your Ollama version.";
-    } else if (error.message.includes('Network Error') || error.message.includes('CORS')) {
+    } else if (error.message.includes('CORS')) {
       errorMessage = "CORS issue detected. Please start Ollama with: 'ollama serve --cors'";
     } else {
       errorMessage = `Failed to generate exam: ${error.message}`;

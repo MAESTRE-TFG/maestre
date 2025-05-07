@@ -19,11 +19,17 @@ from django.urls import path, include
 from rest_framework.authtoken.views import obtain_auth_token
 from django.conf import settings
 from django.conf.urls.static import static
+from django.http import JsonResponse  # 👈 importante tener esto
+
+def test_cors_view(request):
+    return JsonResponse({"message": "It works!"})
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('api.urls')),
     path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
+    path('api/test-cors/', test_cors_view),
+
 ]
 
 if settings.DEBUG:

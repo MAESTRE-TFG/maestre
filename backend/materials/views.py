@@ -13,6 +13,9 @@ import docx
 from googletrans import Translator
 import io
 from django.http import HttpResponse
+import requests
+import logging
+logger = logging.getLogger(__name__)
 
 
 class DocumentViewSet(viewsets.ModelViewSet):
@@ -516,7 +519,58 @@ class DocumentViewSet(viewsets.ModelViewSet):
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
+    @action(detail=False, methods=['get', 'post'], url_path='generate_content')
+    def generate_content(self, request):
+        logger.warning(f"Headers: {request.headers}")
+        logger.warning(f"Data: {request.data}")
+        logger.warning(f"Query params: {request.query_params}")
+
+        OLLAMA_URL = 'http://127.0.0.1:11434/api/generate'
+
+        # Check if it's a POST request and get data accordingly
+        if request.method == 'POST':
+            logger.warning("Received POST request.")
+            data = request.data
+        else:
+            logger.warning("Received GET request.")
+            data = request.query_params
+
+        prompt = data.get('prompt')
+        model = data.get('model')  # Default model if not provided
+        temperature = data.get('temperature')  # Default temperature if not provided
+        stream = data.get('stream')  # Default stream if not provided
+
+        if not prompt:
+            logger.warning("Prompt is missing!")
+            return Response({'error': 'Prompt is required.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        payload = {
+            "model": model,
+            "prompt": prompt,
+            "stream": False,
+            "temperature": temperature,
+        }
+
+        try:
+            ollama_response = requests.post(OLLAMA_URL, json=payload, timeout=1200)
+            ollama_response.raise_for_status()
+            data = ollama_response.json()
+
+            logger.warning(f"Ollama response: {data}")
+
+            # Return response in a format compatible with both frontend methods
+            return Response({'response': data.get('response', '')})
+
+        except requests.exceptions.RequestException as e:
+            logger.warning(f"Ollama request error: {e}")
+            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as ex:
+            logger.warning(f"Unexpected error: {ex}")
+            return Response({'error': f"Unexpected error: {str(ex)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
     def perform_create(self, serializer):
         document = serializer.save()
         document.clean()
         document.save()
+

@@ -215,7 +215,7 @@ const LessonPlanner = () => {
 
       // Generate the lesson plan
       const token = localStorage.getItem("authToken");
-      const result = await generatePlan(prompt, formData.llmModel);
+      const result = await generatePlan(prompt, formData.llmModel, addAlert);
 
       // Ensure planResult is set correctly
       if (result && result.plan) {

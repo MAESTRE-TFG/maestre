@@ -15,7 +15,7 @@ import {
 import Alert from "@/components/ui/Alert";
 import { useTranslations } from "next-intl";
 
-export function SignupForm({ onSubmit, showAlert, params}) {
+export function SignupForm({ onSubmit, showAlert, params }) {
   const { theme } = useTheme();
   const t = useTranslations("SignupForm");
   const locale = params?.locale || 'es';
@@ -111,132 +111,132 @@ export function SignupForm({ onSubmit, showAlert, params}) {
 
       <form className="grid grid-cols-1 gap-6" onSubmit={handleSubmit}>
 
-          <fieldset className="border rounded-lg p-4">
-            <legend
-              className={cn(
-                "px-2 font-semibold",
-                theme === "dark" ? "text-white" : "text-black"
-              )}
-              style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
-            >
-              {t("sections.personalInfo")}
-            </legend>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <LabelInputContainer>
-                <Label htmlFor="firstname">
-            <IconIdBadge className="inline-block mr-2 text-blue-500" /> {t("fields.name.label")} {/* Internationalized */}
-                </Label>
-                <Input
-            id="firstname"
-            name="name"
-            placeholder={t("fields.name.placeholder")}
-            type="text"
-            required
-            value={formData.name}
-            onChange={handleChange}
+        <fieldset className="border rounded-lg p-4">
+          <legend
             className={cn(
-              theme === "dark"
-                ? "hover:bg-white hover:text-black"
-                : "hover:bg-gray-100"
-            )}
-                />
-              </LabelInputContainer>
-
-              <LabelInputContainer>
-                <Label htmlFor="lastname">
-            <IconIdBadge className="inline-block mr-2 text-blue-500" /> {t("fields.surname.label")} {/* Internationalized */}
-                </Label>
-                <Input
-            id="lastname"
-            name="surname"
-            placeholder={t("fields.surname.placeholder")} // Internationalized
-            type="text"
-            required
-            value={formData.surname}
-            onChange={handleChange}
-            className={cn(
-              theme === "dark"
-                ? "hover:bg-white hover:text-black"
-                : "hover:bg-gray-100"
-            )}
-                />
-              </LabelInputContainer>
-            </div>
-          </fieldset>
-
-          {/* Account Information Section */}
-          <fieldset className="border rounded-lg p-4">
-            <legend className={cn(
               "px-2 font-semibold",
               theme === "dark" ? "text-white" : "text-black"
-            )} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-              {t("sections.accountInfo")} {/* Internationalized */}
-            </legend>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <LabelInputContainer>
-                <Label htmlFor="username">
-            <IconUser className="inline-block mr-2 text-green-500" /> {t("fields.username.label")} {/* Internationalized */}
-                </Label>
-                <Input 
-            id="username" 
-            name="username" 
-            placeholder={t("fields.username.placeholder")} // Internationalized
-            type="text" 
-            required 
-            value={formData.username} 
-            onChange={handleChange} 
-            className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
-                />
-              </LabelInputContainer>
-              
-              <LabelInputContainer>
-                <Label htmlFor="email">
-            <IconMail className="inline-block mr-2 text-red-500" /> {t("fields.email.label")} {/* Internationalized */}
-                </Label>
-                <Input 
-            id="email" 
-            name="email" 
-            placeholder={t("fields.email.placeholder")} // Internationalized
-            type="email" 
-            required 
-            value={formData.email} 
-            onChange={handleChange} 
-            className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
-                />
-              </LabelInputContainer>
-              
-              <LabelInputContainer className="md:col-span-2 relative">
-                <Label htmlFor="password">
-            <IconLock className="inline-block mr-2 text-purple-500" /> {t("fields.password.label")} {/* Internationalized */}
-                </Label>
-                <Input 
-            id="password" 
-            name="password" 
-            placeholder={t("fields.password.placeholder")} // Internationalized
-            type={showPassword ? "text" : "password"}
-            required 
-            value={formData.password} 
-            onChange={handleChange} 
-            className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
-                />
-                <button
-            type="button"
-            onClick={togglePasswordVisibility}
-            className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
-                >
-            {showPassword ? (
-              <IconEyeOff className="h-5 w-5 text-gray-500" />
-            ) : (
-              <IconEye className="h-5 w-5 text-gray-500" />
             )}
-                </button>
-              </LabelInputContainer>
-            </div>
-          </fieldset>
+            style={{ fontFamily: "'Alfa Slab One', sans-serif" }}
+          >
+            {t("sections.personalInfo")}
+          </legend>
 
-          {/* Terms and Conditions */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <LabelInputContainer>
+              <Label htmlFor="firstname">
+                <IconIdBadge className="inline-block mr-2 text-blue-500" /> {t("fields.name.label")} {/* Internationalized */}
+              </Label>
+              <Input
+                id="firstname"
+                name="name"
+                placeholder={t("fields.name.placeholder")}
+                type="text"
+                required
+                value={formData.name}
+                onChange={handleChange}
+                className={cn(
+                  theme === "dark"
+                    ? "hover:bg-white hover:text-black"
+                    : "hover:bg-gray-100"
+                )}
+              />
+            </LabelInputContainer>
+
+            <LabelInputContainer>
+              <Label htmlFor="lastname">
+                <IconIdBadge className="inline-block mr-2 text-blue-500" /> {t("fields.surname.label")} {/* Internationalized */}
+              </Label>
+              <Input
+                id="lastname"
+                name="surname"
+                placeholder={t("fields.surname.placeholder")} // Internationalized
+                type="text"
+                required
+                value={formData.surname}
+                onChange={handleChange}
+                className={cn(
+                  theme === "dark"
+                    ? "hover:bg-white hover:text-black"
+                    : "hover:bg-gray-100"
+                )}
+              />
+            </LabelInputContainer>
+          </div>
+        </fieldset>
+
+        {/* Account Information Section */}
+        <fieldset className="border rounded-lg p-4">
+          <legend className={cn(
+            "px-2 font-semibold",
+            theme === "dark" ? "text-white" : "text-black"
+          )} style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
+            {t("sections.accountInfo")} {/* Internationalized */}
+          </legend>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <LabelInputContainer>
+              <Label htmlFor="username">
+                <IconUser className="inline-block mr-2 text-green-500" /> {t("fields.username.label")} {/* Internationalized */}
+              </Label>
+              <Input
+                id="username"
+                name="username"
+                placeholder={t("fields.username.placeholder")} // Internationalized
+                type="text"
+                required
+                value={formData.username}
+                onChange={handleChange}
+                className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
+              />
+            </LabelInputContainer>
+
+            <LabelInputContainer>
+              <Label htmlFor="email">
+                <IconMail className="inline-block mr-2 text-red-500" /> {t("fields.email.label")} {/* Internationalized */}
+              </Label>
+              <Input
+                id="email"
+                name="email"
+                placeholder={t("fields.email.placeholder")} // Internationalized
+                type="email"
+                required
+                value={formData.email}
+                onChange={handleChange}
+                className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
+              />
+            </LabelInputContainer>
+
+            <LabelInputContainer className="md:col-span-2 relative">
+              <Label htmlFor="password">
+                <IconLock className="inline-block mr-2 text-purple-500" /> {t("fields.password.label")} {/* Internationalized */}
+              </Label>
+              <Input
+                id="password"
+                name="password"
+                placeholder={t("fields.password.placeholder")} // Internationalized
+                type={showPassword ? "text" : "password"}
+                required
+                value={formData.password}
+                onChange={handleChange}
+                className={cn(theme === "dark" ? "hover:bg-white hover:text-black" : "hover:bg-gray-100")}
+              />
+              <button
+                type="button"
+                onClick={togglePasswordVisibility}
+                className="absolute right-3 top-9 text-gray-500 hover:text-gray-700"
+              >
+                {showPassword ? (
+                  <IconEyeOff className="h-5 w-5 text-gray-500" />
+                ) : (
+                  <IconEye className="h-5 w-5 text-gray-500" />
+                )}
+              </button>
+            </LabelInputContainer>
+          </div>
+        </fieldset>
+
+        {/* Terms and Conditions */}
         <div className="flex items-center space-x-2 mt-2">
           <input
             type="checkbox"
@@ -283,7 +283,7 @@ export function SignupForm({ onSubmit, showAlert, params}) {
           {t("buttons.signup")} &rarr;
           <BottomGradient />
         </button>
-                  
+
         {/* Sign In Option */}
         <div className="text-center mt-4">
           <p
