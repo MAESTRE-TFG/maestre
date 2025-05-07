@@ -215,3 +215,57 @@ class TagTests(TestCase):
         self.assertEqual(Tag.objects.count(), 0)
         self.assertEqual(Classroom.objects.count(), 0)
         self.assertEqual(Document.objects.count(), 0)
+
+
+class TagViewSetAdditionalTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="testuser",
+            email="testuser@example.com",
+            password="password"
+        )
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
+
+        # Create initial data
+        self.tag = Tag.objects.create(name="Test Tag", creator=self.user)
+        self.classroom = Classroom.objects.create(name="Test Classroom", creator=self.user)
+        self.document = Document.objects.create(name="Test Document", classroom=self.classroom)
+
+    def test_user_tags_unauthenticated(self):
+        self.client.force_authenticate(user=None)
+        response = self.client.get('/api/tags/user_tags/')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertIn('Authentication credentials were not provided.', str(response.data))
+
+    def test_destroy_unauthenticated(self):
+        self.client.force_authenticate(user=None)
+        response = self.client.delete(f'/api/tags/{self.tag.id}/')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertIn('Authentication credentials were not provided.', str(response.data))
+
+    def test_filtered_documents_invalid_classroom_id(self):
+        response = self.client.get('/api/tags/filtered_documents/', {'tags': 'Test Tag', 'classroom_id': 'invalid'})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('classroom_id must be a valid integer.', str(response.data))
+
+    def test_filtered_documents_user_no_matching_documents(self):
+        response = self.client.get('/api/tags/filtered_documents_user/', {'tags': 'Nonexistent Tag'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)  # Ensure no documents are returned for nonexistent tags
+
+    def test_filtered_documents_user_invalid_tags(self):
+        response = self.client.get('/api/tags/filtered_documents_user/', {'tags': 'Invalid,AnotherInvalid'})
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 0)  # Ensure no documents are returned for invalid tags
+
+    def test_filtered_documents_no_tags(self):
+        response = self.client.get('/api/tags/filtered_documents/', {'classroom_id': self.classroom.id})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('Tags are required', str(response.data))
+
+    def test_filtered_documents_user_unauthenticated(self):
+        self.client.force_authenticate(user=None)
+        response = self.client.get('/api/tags/filtered_documents_user/', {'tags': 'Test Tag'})
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertIn('Authentication credentials were not provided.', str(response.data))

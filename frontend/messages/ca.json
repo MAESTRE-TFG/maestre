@@ -683,6 +683,8 @@
     "supportedFormats": "PDF, DOC, DOCX, PNG, JPG, PPTX o TXT",
     "browseFiles": "Exporta fitxers",
     "removeFile": "Eliminar fitxer",
+    "tagName": "Nom de l'etiqueta",
+    "deleteTagTitle": "Eliminar etiqueta",
     "alerts": {
       "editSuccess": "Nom del material actualitzat amb èxit.",
       "editError": "Error en actualitzar el nom del material. Torneu -ho a provar.",
@@ -1194,7 +1196,8 @@
       "fetchStagesError": "Error en l'obtenció de les etapes educatives. Torneu -ho a provar més tard.",
       "networkError": "Error de xarxa en obtenir les etapes educatives.",
       "success": "Classe creada amb èxit!",
-      "creationFailed": "Error en crear la classe. Torneu -ho a provar."
+      "creationFailed": "Error en crear la classe. Torneu -ho a provar.",
+      "maxClassroomsReached": "No pots crear més de 5 aules."
     }
   },
   
@@ -1241,7 +1244,10 @@
     "surnameLabel": "Nom",
     "cancelButton": "Cancel·lar",
     "saveChanges": "Desa els canvis",
-    "processing": "Processament ..."
+    "processing": "Processament ...",
+    "errors": {
+      "maxStudentsReached": "Aquesta aula ja té el nombre màxim d'estudiants"
+    }
   },
 
 
@@ -1280,6 +1286,9 @@
     "editName": "Editar el nom",
     "downloadFile": "Descarregueu el fitxer",
     "creating": "Creació ...",
+    "createNewTag": "Creant nova etiqueta",
+    "selectColor": "Seleccioneu el color",
+    "tagName": "Nom de l'etiqueta",
     "alerts": {
       "createdSuccess": "Material creat amb correctament!",
       "deleteSelectedSuccess": "Els materials seleccionats correctament eliminats.",

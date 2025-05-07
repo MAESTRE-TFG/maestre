@@ -43,8 +43,8 @@ class StudentModelTests(TestCase):
         self.assertEqual(str(self.student), 'TestStudent')
 
     def test_student_classroom_relationship(self):
-        self.assertEqual(self.classroom.student_set.count(), 1)
-        self.assertEqual(self.classroom.student_set.first(), self.student)
+        self.assertEqual(self.classroom.students.count(), 1)
+        self.assertEqual(self.classroom.students.first(), self.student)
 
     def test_student_without_classroom(self):
         student = Student(name='NoClassroomStudent', surname='NoClassroom')

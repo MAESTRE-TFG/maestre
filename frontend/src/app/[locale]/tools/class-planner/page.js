@@ -265,10 +265,11 @@ const LessonPlanner = () => {
         />
 
         <div className="relative w-full flex-1 flex flex-col items-center py-14">
-        <button
+        <div className="w-full max-w-4xl flex items-center mb-8">
+          <button
             onClick={() => router.push(`/${locale}/tools`)}
             className={cn(
-              "absolute left-4 flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all",
+              "flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-medium transition-all",
               "hover:scale-105 active:scale-95",
               "shadow-md hover:shadow-lg",
               theme === "dark" 
@@ -292,6 +293,7 @@ const LessonPlanner = () => {
             </svg>
             <span>{t2("backToTools")}</span>
           </button>
+        </div>
           {/* Header Section */}
           <div className="w-full max-w-4xl flex items-center mb-8 justify-center space-x-6">
             <div className="relative">

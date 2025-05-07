@@ -125,16 +125,17 @@ const ClassroomsList = () => {
                 <p className={`text-lg font-bold mb-6 ${theme === "dark" ? "text-white" : "text-gray-800"}`}>
                   {t("noClasses")}
                 </p>
-                <button
-                  onClick={handleCreate}
-                  className="btn btn-success py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center w-full mx-auto max-w-sm"
-                >
-                  {t("createClassButton")}
-                </button>
+                  <button
+                    onClick={handleCreate}
+                    className="btn btn-success py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center w-full mx-auto max-w-sm"
+                  >
+                    {t("createClassButton")}
+                  </button>
               </div>
             ) : (
               <>
                 <div className="flex justify-center mb-6">
+                  {classes.length < 5 && (
                     <button
                       className={cn(
                         "px-4 py-3 rounded-full font-medium text-white transition-all",
@@ -149,6 +150,7 @@ const ClassroomsList = () => {
                       </svg>
                       {t("createClassButton")}
                     </button>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
