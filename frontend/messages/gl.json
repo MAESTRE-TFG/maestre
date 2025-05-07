@@ -1139,7 +1139,8 @@
       "fetchStagesError": "Erro ao obter as etapas educativas. Por favor, téntao de novo máis tarde.",
       "networkError": "Erro de rede ao obter as etapas educativas.",
       "success": "Clase creada con éxito!",
-      "creationFailed": "Erro ao crear a clase. Por favor, téntao de novo."
+      "creationFailed": "Erro ao crear a clase. Por favor, téntao de novo.",
+      "maxClassroomsReached": "Non podes crear máis de 5 aulas."
     }
   },
   "ClassroomPage": {
@@ -1175,6 +1176,7 @@
       "surnameLimitExceeded": "O apelido supera o límite de caracteres {límite}."
     }
   },
+
   "StudentModal": {
     "editStudent": "Editar estudante",
     "addStudent": "Engade estudante",
@@ -1182,14 +1184,19 @@
     "surnameLabel": "Apelido",
     "cancelButton": "Cancelar",
     "saveChanges": "Gardar cambios",
-    "processing": "Procesamento ..."
+    "processing": "Procesamento ...",
+    "errors": {
+      "maxStudentsReached": "Esta aula xa ten o número máximo de estudantes"
+    }
   },
+
   "EditMaterialModal": {
     "editMaterialName": "Editar o nome do material",
     "editMaterialNameDescription": "Introduza un novo nome para o material:",
     "cancel": "Cancelar",
     "save": "Garda"
   },
+
   "MaterialPage": {
     "header": {
       "title": "Os meus materiais",
@@ -1217,6 +1224,10 @@
     "editName": "Nome de edición",
     "downloadFile": "Ficheiro de descarga",
     "creating": "Creando ...",
+    "createNewTag": "Crear nova etiqueta",
+    "selectColor": "Seleccione unha cor",
+    "tagName": "Nome da etiqueta",
+    "deleteTagTitle": "Eliminar etiqueta",
     "alerts": {
       "createdSuccess": "Material creado con correctamente!",
       "deleteSelectedSuccess": "Materiais seleccionados correctamente eliminados.",

@@ -44,6 +44,7 @@ class TermsViewSet(viewsets.ModelViewSet):
         try:
             return super().create(request, *args, **kwargs)
         except ValidationError as e:
-            return Response(e.message_dict, status=status.HTTP_400_BAD_REQUEST)
+            # Use e.messages to return the error messages
+            return Response({'detail': e.messages}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({'detail': str(e)}, status=status.HTTP_400_BAD_REQUEST)

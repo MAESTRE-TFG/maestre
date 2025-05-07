@@ -2,7 +2,13 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from django.core.validators import RegexValidator
 from users.models import CustomUser
+from django.conf import settings
 import re
+
+
+def validate_classroom_limit(user):
+    if user.classrooms.count() >= settings.MAX_CLASSROOMS_PER_TEACHER:
+        raise ValidationError(f'A teacher cannot have more than {settings.MAX_CLASSROOMS_PER_TEACHER} classrooms.')
 
 
 class Classroom(models.Model):
@@ -23,6 +29,7 @@ class Classroom(models.Model):
             raise ValidationError({'academic_year': 'Academic year cannot be empty.'})
         if not re.match(r'^\d{4}-\d{4}$', self.academic_year):
             raise ValidationError({'academic_year': 'Academic year must be in the format YYYY-YYYY.'})
+        validate_classroom_limit(self.creator)
 
     @property
     def number_of_students(self):

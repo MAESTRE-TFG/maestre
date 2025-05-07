@@ -29,11 +29,11 @@ DEBUG = False
 ALLOWED_HOSTS = ['maestre.tech','165.22.68.4','maestre.netlify.app','localhost','127.0.0.1']
 
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # React/Next.js frontend
-    "https://maestre.netlify.app",
-]
+CORS_ALLOW_ALL_ORIGINS = True
+# CORS_ALLOWED_ORIGINS = [
+#     "http://localhost:3000",  # React/Next.js frontend
+#     "https://maestre.netlify.app",
+# ]
 CORS_ALLOW_CREDENTIALS = True
 
 
@@ -165,3 +165,5 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'users.CustomUser'
 
 MAX_FILES_PER_CLASSROOM = 10
+MAX_CLASSROOMS_PER_TEACHER = 5
+MAX_STUDENTS_PER_CLASSROOM = 50

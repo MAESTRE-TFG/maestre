@@ -109,7 +109,12 @@ export default function CreateClassroom() {
       } else {
         const data = await response.json();
         if (data.error) {
-          setAlert({ type: "error", message: data.error });
+          // Use the translation for max classrooms error if it matches
+          if (data.error.includes("You cannot create more than")) {
+            setAlert({ type: "error", message: t("alerts.maxClassroomsReached") });
+          } else {
+            setAlert({ type: "error", message: data.error });
+          }
         } else {
           setAlert({ type: "error", message: t("alerts.creationFailed") });
         }

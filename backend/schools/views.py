@@ -47,6 +47,10 @@ class SchoolViewSet(viewsets.ModelViewSet):
         instance = self.get_object()
         data = request.data.copy()
 
+        # Filter out invalid fields
+        valid_fields = {field.name for field in School._meta.get_fields()}
+        data = {key: value for key, value in data.items() if key in valid_fields}
+
         # Validate name length
         if len(data.get("name", "")) > 50:
             return Response({"detail": "Name cannot exceed 50 characters."}, status=status.HTTP_400_BAD_REQUEST)

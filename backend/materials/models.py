@@ -15,7 +15,9 @@ class Document(models.Model):
     file = models.FileField(
         upload_to='documents/',
         validators=[
-            FileExtensionValidator(allowed_extensions=['pdf', 'doc', 'docx', 'png', 'jpg', 'pptx', 'txt', 'md', 'tex']),
+            FileExtensionValidator(allowed_extensions=[
+                'pdf', 'doc', 'docx', 'png', 'jpg', 'pptx', 'txt', 'md', 'tex', 'pages'
+            ]),
         ]
     )
     classroom = models.ForeignKey(
@@ -30,8 +32,7 @@ class Document(models.Model):
         return self.name
 
     def clean(self):
-        if not self.pk:  # Only check on creation
-            validate_file_limit(self.classroom)
+        validate_file_limit(self.classroom)
         super().clean()
 
     def save(self, *args, **kwargs):

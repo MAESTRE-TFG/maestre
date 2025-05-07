@@ -96,25 +96,16 @@ class TagViewSet(viewsets.ModelViewSet):
             # Get all tags that match the provided names and belong to the user
             tags = Tag.objects.filter(name__in=tag_names, creator=request.user)
 
-            # Get classrooms created by the user
-            from classrooms.models import Classroom
-            user_classrooms = Classroom.objects.filter(creator=request.user)
+            if not tags.exists():
+                return Response([], status=status.HTTP_200_OK)
 
-            # Get documents from those classrooms
-            from materials.models import Document
-            documents = Document.objects.filter(
-                classroom_id__in=user_classrooms.values_list('id', flat=True)
-            ).distinct()
-
-            # Filter by tags
+            # Get documents that have ALL the specified tags
+            documents = Document.objects.all()
             for tag in tags:
                 documents = documents.filter(tags=tag)
 
-            if not documents.exists():
-                return Response([], status=status.HTTP_200_OK)
-
-            from materials.serializers import DocumentSerializer
             serializer = DocumentSerializer(documents, many=True)
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_200_OK)
+
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)

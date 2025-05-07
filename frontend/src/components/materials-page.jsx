@@ -7,6 +7,7 @@ import axios from "axios";
 import { FileUploadDemo } from "@/components/file-upload-demo";
 import Alert from "@/components/ui/Alert";
 import { useTranslations } from "next-intl";
+import { Input } from "@/components/ui/input";
 
 export function MaterialsPage({ classroomId }) {
   const { theme } = useTheme();
@@ -393,7 +394,7 @@ export function MaterialsPage({ classroomId }) {
                 <button
                   onClick={() => handleDeleteTag(tag.id)}
                   className="p-2 rounded-lg bg-red-100 dark:bg-red-900 hover:bg-red-200 dark:hover:bg-red-800 transition-colors"
-                  title={t("deleteTag", { tagName: tag.name })}
+                  title={`${t("deleteTagTitle")} ${tag.name}`}
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -587,20 +588,15 @@ export function MaterialsPage({ classroomId }) {
               {t("createTag")}
             </h3>
             <form onSubmit={handleCreateTag}>
-              <input
+              <Input
                 type="text"
                 value={newTagName}
                 onChange={(e) => setNewTagName(e.target.value)}
-                className={cn(
-                  "w-full p-2 rounded border mb-4",
-                  theme === "dark"
-                    ? "bg-neutral-700 border-neutral-600 text-white"
-                    : "bg-white border-gray-300 text-gray-800"
-                )}
-                placeholder="Enter tag name"
+                placeholder={t("tagName")}
                 required
-                onClick={(e) => e.stopPropagation()}
+                onClick={e => e.stopPropagation()}
               />
+              <br />
               <div className="mb-4">
                 <label
                   className={cn(
@@ -608,7 +604,7 @@ export function MaterialsPage({ classroomId }) {
                     theme === "dark" ? "text-white" : "text-gray-800"
                   )}
                 >
-                  {t("selectTagColor")}
+                  {t("selectColor")}
                 </label>
                 <div className="grid grid-cols-5 gap-2 justify-center">
                   {TAG_COLORS.map((color) => (

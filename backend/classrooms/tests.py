@@ -1,6 +1,8 @@
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.test import APITestCase
+from django.core.exceptions import ValidationError
+from django.test import TestCase
 from .models import Classroom
 from users.models import CustomUser
 from rest_framework.authtoken.models import Token
@@ -72,3 +74,65 @@ class ClassroomTests(APITestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(Classroom.objects.count(), 1)
+
+
+class ClassroomModelTests(TestCase):
+    def setUp(self):
+        self.user = CustomUser.objects.create_user(
+            username="testuser",
+            email="testuser@example.com",
+            password="password"
+        )
+        self.classroom_data = {
+            'name': 'Test Classroom',
+            'academic_course': 'Math',
+            'description': 'A test classroom',
+            'academic_year': '2023-2024',
+            'creator': self.user
+        }
+
+    def test_create_classroom(self):
+        classroom = Classroom.objects.create(**self.classroom_data)
+        self.assertEqual(classroom.name, 'Test Classroom')
+        self.assertEqual(classroom.academic_course, 'Math')
+        self.assertEqual(classroom.description, 'A test classroom')
+        self.assertEqual(classroom.academic_year, '2023-2024')
+        self.assertEqual(classroom.creator, self.user)
+
+    def test_academic_year_validation(self):
+        # Test valid academic year
+        classroom = Classroom(**self.classroom_data)
+        try:
+            classroom.clean()
+        except ValidationError:
+            self.fail("ValidationError raised for a valid academic year.")
+
+        # Test invalid academic year format
+        invalid_data = self.classroom_data.copy()
+        invalid_data['academic_year'] = '2023/2024'
+        classroom = Classroom(**invalid_data)
+        with self.assertRaises(ValidationError) as context:
+            classroom.clean()
+        self.assertIn('Academic year must be in the format YYYY-YYYY.', str(context.exception))
+
+        # Test empty academic year
+        invalid_data['academic_year'] = ''
+        classroom = Classroom(**invalid_data)
+        with self.assertRaises(ValidationError) as context:
+            classroom.clean()
+        self.assertIn('Academic year cannot be empty.', str(context.exception))
+
+    def test_number_of_students_property(self):
+        classroom = Classroom.objects.create(**self.classroom_data)
+        self.assertEqual(classroom.number_of_students, 0)
+
+    def test_string_representation(self):
+        classroom = Classroom.objects.create(**self.classroom_data)
+        self.assertEqual(str(classroom), 'Test Classroom')
+
+    def test_classroom_ordering(self):
+        Classroom.objects.create(**{**self.classroom_data, 'name': 'B Classroom'})
+        Classroom.objects.create(**{**self.classroom_data, 'name': 'A Classroom'})
+        classrooms = Classroom.objects.all()
+        self.assertEqual(classrooms[0].name, 'A Classroom')
+        self.assertEqual(classrooms[1].name, 'B Classroom')
