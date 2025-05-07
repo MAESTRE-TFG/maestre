@@ -68,9 +68,17 @@ const StudentModal = ({
           {editMode ? t("editStudent") : t("addStudent")}
         </h3>
         <form
-          onSubmit={(e) => {
+          onSubmit={async (e) => {
             e.preventDefault();
-            onSubmit();
+            try {
+              await onSubmit();
+            } catch (error) {
+              if (error.message?.includes('maximum number of students')) {
+                alert(t('errors.maxStudentsReached'));
+              } else {
+                alert(error.message);
+              }
+            }
           }}
         >
           <div className="mb-4">

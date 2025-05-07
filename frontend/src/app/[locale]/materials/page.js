@@ -8,6 +8,7 @@ import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 import Alert from "@/components/ui/Alert";
 import { IconBooks} from "@tabler/icons-react";
+import { Input } from "@/components/ui/input";
 import MaterialCreateModal from "@/components/material-create-modal";
 import EditMaterialModal from "@/components/material-edit-modal";
 import { useTranslations } from "next-intl";
@@ -812,20 +813,15 @@ const MaterialsList = () => {
                     
                     <form onSubmit={handleCreateTag}>
                       
-                      <input
-                      type="text"
-                      value={newTagName}
-                      onChange={(e) => setNewTagName(e.target.value)}
-                      className={cn(
-                        "w-full p-2 rounded border mb-4",
-                        theme === "dark"
-                        ? "bg-gray-700 border-gray-600 text-white"
-                        : "bg-white border-gray-300 text-gray-800"
-                      )}
-                      placeholder="Enter tag name"
-                      required
-                      onClick={e => e.stopPropagation()}
+                      <Input
+                        type="text"
+                        value={newTagName}
+                        onChange={(e) => setNewTagName(e.target.value)}
+                        placeholder={t("tagName")}
+                        required
+                        onClick={e => e.stopPropagation()}
                       />
+                      <br />
                       <div className="mb-4">
                       <label className={cn(
                         "block mb-2 font-medium text-center",

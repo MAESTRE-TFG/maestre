@@ -663,6 +663,8 @@
     "supportedFormats": "Pdf, doc, docx, png, jpg, pptx edo txt",
     "browseFiles": "Esportatu fitxategiak",
     "removeFile": "Kendu fitxategia",
+    "tagName": "Etiketa izena",
+    "deleteTagTitle": "Etiketa ezabatu",
     "alerts": {
       "editSuccess": "Eguneratutako materialaren izena arrakastaz!",
       "editError": "Errorea materialaren izena eguneratzean. Mesedez, saiatu berriro.",
@@ -1186,8 +1188,12 @@
     "surnameLabel": "Abizena",
     "cancelButton": "Indargabetu",
     "saveChanges": "Gorde aldaketak",
-    "processing": "Tratamendua ..."
+    "processing": "Tratamendua ...",
+    "errors": {
+      "maxStudentsReached": "Gela honek dagoeneko ikasle kopuru maximoa du"
+    }
   },
+  
   "EditMaterialModal": {
     "editMaterialName": "Editatu izena",
     "editMaterialNameDescription": "Idatzi material berria:",
@@ -1221,6 +1227,9 @@
     "editName": "Editatu izena",
     "downloadFile": "Deskargatu fitxategia",
     "creating": "Sortzen ...",
+    "createNewTag": "Etiketa berria sortu",
+    "selectColor": "Kolorea aukeratu",
+    "tagName": "Etiketa izena",
     "alerts": {
       "createdSuccess": "Behar bezala sortutako materiala!",
       "deleteSelectedSuccess": "Hautatutako materialak behar bezala kendu dira.",

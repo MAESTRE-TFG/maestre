@@ -695,6 +695,8 @@
     "supportedFormats": "PDF, DOC, DOCX, PNG, JPG, PPTX o TXT",
     "browseFiles": "Exportar archivos",
     "removeFile": "Eliminar archivo",
+    "tagName": "Nombre de la etiqueta",
+    "deleteTagTitle": "Eliminar etiqueta",
     "alerts": {
       "editSuccess": "¡Nombre del material actualizado con éxito!",
       "editError": "Error al actualizar el nombre del material. Por favor, inténtalo de nuevo.",
@@ -1254,7 +1256,10 @@
     "surnameLabel": "Apellido",
     "cancelButton": "Cancelar",
     "saveChanges": "Guardar cambios",
-    "processing": "Procesando..."
+    "processing": "Procesando...",
+    "errors": {
+      "maxStudentsReached": "Esta clase ya tiene el número máximo de estudiantes"
+    }
   },
 
 
@@ -1299,6 +1304,9 @@
     "editName": "Editar nombre",
     "downloadFile": "Descargar archivo",
     "creating": "Creando...",
+    "createNewTag": "Crear nueva etiqueta",
+    "selectColor": "Seleccionar color",
+    "tagName": "Nombre de la etiqueta",
     "alerts": {
       "createdSuccess": "¡Material creado con correctamente!",
       "deleteSelectedSuccess": "Materiales seleccionados eliminados correctamente.",

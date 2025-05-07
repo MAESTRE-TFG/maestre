@@ -27,6 +27,13 @@ const ClassroomPage = () => {
     return 'students';
   });
 
+  // Add this useEffect to save the tab state when it changes
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('classroomActiveTab', activeTab);
+    }
+  }, [activeTab]);
+
   const { theme } = useTheme();
   const params = useParams();
   const [classroom, setClassroom] = useState(null);
