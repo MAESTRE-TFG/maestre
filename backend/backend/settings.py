@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-de68p@muu3ow2cxhvv3_(8j0%niahb$7zd*=81s^an-36nc!jf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['maestre.tech','165.22.68.4','maestre.netlify.app']
+ALLOWED_HOSTS = ['maestre.tech','165.22.68.4','maestre.netlify.app','localhost','127.0.0.1']
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = False
