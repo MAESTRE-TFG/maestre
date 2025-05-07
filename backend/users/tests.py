@@ -4,6 +4,8 @@ from rest_framework.test import APITestCase, APIClient
 from .models import CustomUser
 from rest_framework.authtoken.models import Token
 from schools.models import School
+from django.core.exceptions import ValidationError
+from django.contrib.auth.models import Group, Permission
 
 
 class UserTests(APITestCase):
@@ -429,3 +431,183 @@ class UserTests(APITestCase):
         self.assertEqual(CustomUser.objects.count(), 0)
         self.assertEqual(School.objects.count(), 0)
         self.assertEqual(Token.objects.count(), 0)
+
+
+class UserModelTests(APITestCase):
+    def setUp(self):
+        self.school = School.objects.create(name='TestSchool')
+
+    def test_create_superuser(self):
+        superuser = CustomUser.objects.create_superuser(
+            email='admin@example.com',
+            username='adminuser',
+            password='adminpassword',
+            name='Admin',
+            surname='User',
+            region='AdminRegion',
+            city='AdminCity',
+            school=self.school
+        )
+        self.assertTrue(superuser.is_staff)
+        self.assertTrue(superuser.is_superuser)
+        self.assertEqual(superuser.email, 'admin@example.com')
+
+    def test_user_str_representation(self):
+        user = CustomUser.objects.create_user(
+            email='user@example.com',
+            username='testuser',
+            password='testpassword',
+            name='Test',
+            surname='User',
+            school=self.school
+        )
+        self.assertEqual(str(user), 'user@example.com')
+
+    def test_create_user_without_email(self):
+        with self.assertRaises(ValueError) as context:
+            CustomUser.objects.create_user(
+                email=None,
+                username='testuser',
+                password='testpassword',
+                name='Test',
+                surname='User',
+                school=self.school
+            )
+        self.assertEqual(str(context.exception), 'The Email field must be set')
+
+    def test_user_groups_and_permissions(self):
+        user = CustomUser.objects.create_user(
+            email='user@example.com',
+            username='testuser',
+            password='testpassword',
+            name='Test',
+            surname='User',
+            school=self.school
+        )
+        group = Group.objects.create(name='TestGroup')
+        permission = Permission.objects.first()  # Get any permission
+        user.groups.add(group)
+        user.user_permissions.add(permission)
+
+        self.assertIn(group, user.groups.all())
+        self.assertIn(permission, user.user_permissions.all())
+
+    def test_user_with_blank_fields(self):
+        with self.assertRaises(ValidationError):
+            user = CustomUser(
+                email='',
+                username='',
+                name='',
+                surname='',
+                school=self.school
+            )
+            user.full_clean()  # This triggers validation
+
+
+class UserViewSetTests(APITestCase):
+    def setUp(self):
+        self.school = School.objects.create(name='TestSchool')
+        self.user = CustomUser.objects.create_user(
+            username='testuser',
+            email='testuser@example.com',
+            password='testpassword',
+            name='Test',
+            surname='User',
+            region='TestRegion',
+            city='TestCity',
+            school=self.school
+        )
+        self.admin_user = CustomUser.objects.create_superuser(
+            username='adminuser',
+            email='admin@example.com',
+            password='adminpassword',
+            name='Admin',
+            surname='User',
+            region='AdminRegion',
+            city='AdminCity',
+            school=self.school
+        )
+        self.client = APIClient()
+        self.token = Token.objects.create(user=self.user)
+        self.admin_token = Token.objects.create(user=self.admin_user)
+
+    def test_signup_authenticated_user(self):
+        self.client.force_authenticate(user=self.user)
+        url = reverse('customuser-signup')
+        data = {
+            'username': 'newuser',
+            'email': 'newuser@example.com',
+            'password': 'newpassword',
+            'name': 'New',
+            'surname': 'User',
+            'region': 'Region',
+            'city': 'City',
+            'school': self.school.id
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('detail', response.data)
+
+    def test_signin_invalid_format(self):
+        url = reverse('customuser-signin')
+        data = {
+            'emailOrUsername': 'invalid_format',
+            'password': 'testpassword'
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertIn('detail', response.data)
+
+    def test_signin_valid_username_invalid_password(self):
+        url = reverse('customuser-signin')
+        data = {
+            'emailOrUsername': 'testuser',
+            'password': 'wrongpassword'
+        }
+        response = self.client.post(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        self.assertIn('detail', response.data)
+
+    def test_signout_no_token(self):
+        self.client.force_authenticate(user=self.user)
+        url = reverse('customuser-signout')
+        self.token.delete()  # Simulate no token
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_check_role_admin(self):
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.admin_token.key}")
+        url = reverse('customuser-check-role')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['user_role'], 'admin')
+        self.assertTrue(response.data['is_admin'])
+
+    def test_check_role_non_admin(self):
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
+        url = reverse('customuser-check-role')
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['user_role'], 'user')
+        self.assertFalse(response.data['is_admin'])
+
+    def test_update_user_missing_old_password(self):
+        self.client.force_authenticate(user=self.user)
+        url = reverse('customuser-update-user', kwargs={'pk': self.user.pk})
+        data = {
+            'password': 'newpassword123',
+            'name': self.user.name,
+            'surname': self.user.surname,
+            'region': self.user.region,
+            'city': self.user.city,
+            'school': self.user.school.id
+        }
+        response = self.client.put(url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('oldPassword', response.data)
+
+    def test_delete_user_invalid_id(self):
+        self.client.force_authenticate(user=self.user)
+        url = reverse('customuser-detail', kwargs={'pk': 9999})  # Non-existent user ID
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

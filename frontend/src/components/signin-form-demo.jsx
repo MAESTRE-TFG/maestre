@@ -6,9 +6,11 @@ import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 import { IconUser, IconLock, IconEye, IconEyeOff } from "@tabler/icons-react";
 import { useTranslations } from "next-intl";
+import { useParams } from "next/navigation";
 
-export function SigninForm({ onSubmit, params }) {
+export function SigninForm({ onSubmit }) {
   const { theme } = useTheme();
+  const params = useParams();
   const locale = params.locale || "es";
 
 

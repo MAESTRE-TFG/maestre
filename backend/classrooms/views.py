@@ -1,3 +1,4 @@
+from django.shortcuts import get_object_or_404
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -5,6 +6,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.exceptions import ValidationError
 from .models import Classroom
 from .serializers import ClassroomSerializer
+from django.conf import settings
 
 
 class ClassroomViewSet(viewsets.ModelViewSet):
@@ -28,8 +30,14 @@ class ClassroomViewSet(viewsets.ModelViewSet):
                 )
         return super().check_object_permissions(request, obj)
 
+    def get_object(self):
+        # Retrieve the object without filtering by the current user
+        obj = get_object_or_404(Classroom, pk=self.kwargs['pk'])
+        self.check_object_permissions(self.request, obj)
+        return obj
+
     def update(self, request, *args, **kwargs):
-        instance = self.get_object()  # This will trigger permission checks
+        instance = self.get_object()
         partial = kwargs.pop('partial', True)
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         try:
@@ -53,15 +61,17 @@ class ClassroomViewSet(viewsets.ModelViewSet):
         serializer.save(creator=self.request.user)
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
         try:
-            serializer.is_valid(raise_exception=True)
+            if request.user.classrooms.count() >= settings.MAX_CLASSROOMS_PER_TEACHER:
+                return Response(
+                    {"error": f'You cannot create more than {settings.MAX_CLASSROOMS_PER_TEACHER} classrooms.'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+            serializer = self.get_serializer(data=request.data)
             self.perform_create(serializer)
-            headers = self.get_success_headers(serializer.data)
             return Response(
                 {"message": "Classroom created successfully!", "data": serializer.data},
-                status=status.HTTP_201_CREATED,
-                headers=headers
+                status=status.HTTP_201_CREATED
             )
         except ValidationError as e:
             return Response(

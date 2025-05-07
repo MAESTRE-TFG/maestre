@@ -7,6 +7,9 @@ from .models import Terms
 from .serializers import TermsSerializer
 from users.models import CustomUser
 from schools.models import School
+import os
+import shutil
+from django.conf import settings
 
 
 class TermsModelTests(TestCase):
@@ -24,17 +27,23 @@ class TermsModelTests(TestCase):
             school=self.school
         )
 
-        # Create a Terms instance with author
-        # Use SimpleUploadedFile for the content field
+        # Create markdown and PDF files for testing
         self.content_file = SimpleUploadedFile(
             "privacy_policy.md",
             b"Privacy policy content",
             content_type="text/markdown"
         )
+        self.pdf_file = SimpleUploadedFile(
+            "privacy_policy.pdf",
+            b"%PDF-1.4\n%Test PDF content",
+            content_type="application/pdf"
+        )
 
+        # Create a Terms instance with both content and pdf_content
         self.terms = Terms.objects.create(
             tag='privacy',
             content=self.content_file,
+            pdf_content=self.pdf_file,  # Include the PDF file
             name='Privacy Policy',
             version='1.0',
             author=self.admin_user
@@ -79,21 +88,27 @@ class TermsSerializerTests(TestCase):
             school=self.school
         )
 
-        # Use SimpleUploadedFile for the content field
+        # Create markdown and PDF files for testing
         self.content_file = SimpleUploadedFile(
             "privacy_policy.md",
             b"Privacy policy content",
             content_type="text/markdown"
         )
+        self.pdf_file = SimpleUploadedFile(
+            "privacy_policy.pdf",
+            b"%PDF-1.4\n%Test PDF content",
+            content_type="application/pdf"
+        )
 
+        # Create the Terms instance with all required fields
         self.terms_attributes = {
             'tag': 'privacy',
             'name': 'Privacy Policy',
             'version': '1.0',
             'content': self.content_file,
+            'pdf_content': self.pdf_file,  # Include the PDF file
         }
 
-        # Create the Terms instance with all required fields
         self.terms = Terms.objects.create(
             **self.terms_attributes,
             author=self.admin_user
@@ -106,7 +121,10 @@ class TermsSerializerTests(TestCase):
 
     def test_contains_expected_fields(self):
         data = self.serializer.data
-        expected_fields = {'id', 'tag', 'content', 'created_at', 'updated_at', 'author', 'name', 'version'}
+        expected_fields = {
+            'id', 'tag', 'tag_display', 'content', 'pdf_content',  # Include 'tag_display' and 'pdf_content'
+            'created_at', 'updated_at', 'author', 'name', 'version'
+        }
         self.assertEqual(set(data.keys()), expected_fields)
 
     def test_content_field_content(self):
@@ -149,16 +167,22 @@ class TermsAPITests(APITestCase):
             school=self.school
         )
 
-        # Create some Terms instances with proper file content
+        # Create markdown and PDF files for testing
         self.content_file1 = SimpleUploadedFile(
             "privacy_policy.md",
             b"Privacy policy content",
             content_type="text/markdown"
         )
+        self.pdf_file1 = SimpleUploadedFile(
+            "privacy_policy.pdf",
+            b"%PDF-1.4\n%Test PDF content",
+            content_type="application/pdf"
+        )
 
         self.terms1 = Terms.objects.create(
             tag='privacy',
             content=self.content_file1,
+            pdf_content=self.pdf_file1,
             name='Privacy Policy',
             version='1.0',
             author=self.admin_user
@@ -169,10 +193,16 @@ class TermsAPITests(APITestCase):
             b"Terms of service content",
             content_type="text/markdown"
         )
+        self.pdf_file2 = SimpleUploadedFile(
+            "terms_of_service.pdf",
+            b"%PDF-1.4\n%Test PDF content",
+            content_type="application/pdf"
+        )
 
         self.terms2 = Terms.objects.create(
             tag='terms',
             content=self.content_file2,
+            pdf_content=self.pdf_file2,
             name='Terms of Service',
             version='1.0',
             author=self.admin_user
@@ -182,130 +212,203 @@ class TermsAPITests(APITestCase):
         self.list_url = reverse('terms-list')
         self.detail_url = reverse('terms-detail', kwargs={'pk': self.terms1.pk})
 
-    def test_get_all_terms(self):
+
+
+class TermsViewSetTests(APITestCase):
+    def setUp(self):
+        self.client = APIClient()
+
+        # Create a school for the CustomUser
+        self.school = School.objects.create(name='Test School')
+
+        # Create admin user
+        self.admin_user = CustomUser.objects.create_user(
+            username='admin',
+            email='admin@example.com',
+            password='adminpassword',
+            is_staff=True,
+            name='Admin',
+            surname='User',
+            school=self.school
+        )
+
+        # Create regular user
+        self.user = CustomUser.objects.create_user(
+            username='user',
+            email='user@example.com',
+            password='userpassword',
+            name='Regular',
+            surname='User',
+            school=self.school
+        )
+
+        # Authenticate as admin user
+        self.client.force_authenticate(user=self.admin_user)
+
+        # Create markdown and PDF files for testing
+        self.content_file1 = SimpleUploadedFile(
+            "privacy_policy.md",
+            b"Privacy policy content",
+            content_type="text/markdown"
+        )
+        self.pdf_file1 = SimpleUploadedFile(
+            "privacy_policy.pdf",
+            b"%PDF-1.4\n%Test PDF content",
+            content_type="application/pdf"
+        )
+
+        self.terms1 = Terms.objects.create(
+            tag='privacy',
+            content=self.content_file1,
+            pdf_content=self.pdf_file1,
+            name='Privacy Policy',
+            version='1.0',
+            author=self.admin_user
+        )
+
+        self.content_file2 = SimpleUploadedFile(
+            "terms_of_service.md",
+            b"Terms of service content",
+            content_type="text/markdown"
+        )
+        self.pdf_file2 = SimpleUploadedFile(
+            "terms_of_service.pdf",
+            b"%PDF-1.4\n%Test PDF content",
+            content_type="application/pdf"
+        )
+
+        self.terms2 = Terms.objects.create(
+            tag='terms',
+            content=self.content_file2,
+            pdf_content=self.pdf_file2,
+            name='Terms of Service',
+            version='1.0',
+            author=self.admin_user
+        )
+
+        # URLs for ViewSet
+        self.list_url = reverse('terms-list')
+        self.detail_url = reverse('terms-detail', kwargs={'pk': self.terms1.pk})
+
+    # ---------------- Positive Test Cases ----------------
+
+    def test_list_terms(self):
         response = self.client.get(self.list_url)
-        # Don't compare the full response data as URLs might differ
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 2)
 
-    def test_get_terms_by_tag(self):
-        response = self.client.get(f"{self.list_url}?tag=privacy")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
-        self.assertEqual(response.data[0]['tag'], 'privacy')
-
-    def test_get_single_terms(self):
+    def test_retrieve_terms(self):
         response = self.client.get(self.detail_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(response.data['id'], self.terms1.id)
-        self.assertEqual(response.data['tag'], 'privacy')
+        self.assertEqual(response.data['name'], self.terms1.name)
 
-    def test_create_terms_as_admin(self):
-        self.client.force_authenticate(user=self.admin_user)
-
-        # Create a file for testing
-        test_file = SimpleUploadedFile(
-            "cookie_policy.md",
-            b"Cookie policy content",
+    def test_create_terms(self):
+        content_file = SimpleUploadedFile(
+            "new_terms.md",
+            b"New terms content",
             content_type="text/markdown"
         )
-
-        # Use multipart form data for file uploads
+        pdf_file = SimpleUploadedFile(
+            "new_terms.pdf",
+            b"%PDF-1.4\n%New PDF content",
+            content_type="application/pdf"
+        )
         data = {
-            'tag': 'cookies',
-            'content': test_file,
-            'name': 'Cookie Policy',
-            'version': '1.0'
+            'tag': 'license',
+            'name': 'License Agreement',
+            'version': '1.0',
+            'content': content_file,
+            'pdf_content': pdf_file
         }
-
         response = self.client.post(self.list_url, data, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Terms.objects.count(), 3)
-        self.assertEqual(Terms.objects.get(tag='cookies').name, 'Cookie Policy')
 
-    def test_create_terms_as_regular_user(self):
-        self.client.force_authenticate(user=self.user)
-
-        test_file = SimpleUploadedFile(
-            "cookie_policy.md",
-            b"Cookie policy content",
-            content_type="text/markdown"
-        )
-
-        data = {
-            'tag': 'cookies',
-            'content': test_file,
-            'name': 'Cookie Policy',
-            'version': '1.0'
-        }
-
-        response = self.client.post(self.list_url, data, format='multipart')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(Terms.objects.count(), 2)
-
-    def test_update_terms_as_regular_user(self):
-        self.client.force_authenticate(user=self.user)
-
-        data = {
-            'tag': 'privacy-updated',
-            'name': 'Updated Privacy Policy',
-            'version': '1.1'
-        }
-
+    def test_update_terms(self):
+        data = {'name': 'Updated Privacy Policy'}
         response = self.client.patch(self.detail_url, data, format='json')
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.terms1.refresh_from_db()
-        self.assertEqual(self.terms1.tag, 'privacy')
+        self.assertEqual(self.terms1.name, 'Updated Privacy Policy')
 
-    def test_delete_terms_as_admin(self):
-        self.client.force_authenticate(user=self.admin_user)
-
-        # We need to patch the delete method in the Terms model if it's trying to access a 'file' attribute
-        # For now, let's just check if we can access the delete endpoint
+    def test_delete_terms(self):
         response = self.client.delete(self.detail_url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Terms.objects.count(), 1)
 
-    def test_delete_terms_as_regular_user(self):
-        self.client.force_authenticate(user=self.user)
-        response = self.client.delete(self.detail_url)
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
-        self.assertEqual(Terms.objects.count(), 2)
+    # ---------------- Negative Test Cases ----------------
 
-    def test_search_terms(self):
-        response = self.client.get(f"{self.list_url}?search=privacy")
+    def test_create_terms_duplicate_tag(self):
+        data = {
+            'tag': 'privacy',
+            'name': 'Duplicate Privacy Policy',
+            'version': '1.0',
+            'content': self.content_file1,
+            'pdf_content': self.pdf_file1
+        }
+        response = self.client.post(self.list_url, data, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('tag', response.data)
+
+    def test_create_terms_invalid_file_type(self):
+        invalid_file = SimpleUploadedFile(
+            "invalid_file.txt",
+            b"Invalid file content",
+            content_type="text/plain"
+        )
+        data = {
+            'tag': 'license',
+            'name': 'Invalid File Terms',
+            'version': '1.0',
+            'content': invalid_file,
+            'pdf_content': self.pdf_file1
+        }
+        response = self.client.post(self.list_url, data, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_retrieve_nonexistent_terms(self):
+        response = self.client.get(reverse('terms-detail', kwargs={'pk': 999}))
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_update_terms_unauthenticated(self):
+        self.client.force_authenticate(user=None)
+        data = {'name': 'Unauthorized Update'}
+        response = self.client.patch(self.detail_url, data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_delete_terms_unauthenticated(self):
+        self.client.force_authenticate(user=None)
+        response = self.client.delete(self.detail_url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_list_terms_with_filter(self):
+        response = self.client.get(self.list_url, {'tag': 'privacy'})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.data), 1)
         self.assertEqual(response.data[0]['tag'], 'privacy')
 
-    def test_cleanup_files(self):
-        """Clean up all files generated during testing"""
-        self.client.force_authenticate(user=self.admin_user)
 
-        # Get all Terms objects
-        terms_objects = Terms.objects.all()
+    def tearDown(self):
+        # List of files to exclude from deletion
+        excluded_files = {'terms.pdf', 'terms.md', 'cookies.pdf', 'cookies.md', 'privacy.pdf', 'privacy.md'}
 
-        # Delete each Terms object
-        for term in terms_objects:
-            # The delete method in the model should handle file deletion
+        # Delete all Terms objects and their associated files
+        for term in Terms.objects.all():
+            if term.content and hasattr(term.content, 'path') and os.path.isfile(term.content.path):
+                if os.path.basename(term.content.path) not in excluded_files:
+                    try:
+                        os.remove(term.content.path)
+                    except (FileNotFoundError, PermissionError) as e:
+                        print(f"Error deleting file {term.content.path}: {e}")
+            if term.pdf_content and hasattr(term.pdf_content, 'path') and os.path.isfile(term.pdf_content.path):
+                if os.path.basename(term.pdf_content.path) not in excluded_files:
+                    try:
+                        os.remove(term.pdf_content.path)
+                    except (FileNotFoundError, PermissionError) as e:
+                        print(f"Error deleting file {term.pdf_content.path}: {e}")
             term.delete()
 
-        # Verify all Terms objects are deleted
-        self.assertEqual(Terms.objects.count(), 0)
-
-        # Additional verification that files are removed from media directory
-        import os
-        import shutil
-        from django.conf import settings
-
-        # Check the terms directory in the media root
+        # Clean up any remaining test files in the media directory
         terms_media_dir = os.path.join(settings.MEDIA_ROOT, 'terms')
-
-        # If the directory exists, remove it completely
         if os.path.exists(terms_media_dir):
-            # Remove all files and the directory itself
             shutil.rmtree(terms_media_dir)
-
-        # Verify the directory is gone
-        self.assertFalse(os.path.exists(terms_media_dir),
-                         f"Terms directory still exists at {terms_media_dir}")

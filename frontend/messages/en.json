@@ -698,6 +698,8 @@
       "supportedFormats": "PDF, DOC, DOCX, PNG, JPG, PPTX or TXT",
       "browseFiles": "Browse files",
       "removeFile": "Remove file",
+      "tagName": "Enter tag name",
+      "deleteTagTitle": "Delete tag",
       "alerts": {
         "editSuccess": "Material name updated successfully!",
         "editError": "Failed to update material name. Please try again.",
@@ -1211,7 +1213,8 @@
         "fetchStagesError": "Failed to fetch stages. Please try again later.",
         "networkError": "Network error occurred while fetching stages.",
         "success": "Classroom created successfully!",
-        "creationFailed": "Failed to create classroom. Please try again."
+        "creationFailed": "Failed to create classroom. Please try again.",
+        "maxClassroomsReached": "You have reached the maximum number of classrooms."
       }
     },
 
@@ -1258,7 +1261,10 @@
       "surnameLabel": "Surname",
       "cancelButton": "Cancel",
       "saveChanges": "Save Changes",
-      "processing": "Processing..."
+      "processing": "Processing...",
+      "errors": {
+        "maxStudentsReached": "This classroom already has the maximum number of students"
+      }
     },
 
     "EditMaterialModal": {
@@ -1302,6 +1308,9 @@
       "editName": "Edit Name",
       "downloadFile": "Download File",
       "creating": "Creating...",
+      "createNewTag": "Create New Tag",
+      "selectColor": "Select Color",
+      "tagName": "Enter tag name",
       "alerts": {
         "createdSuccess": "Material created successfully.",
         "deleteSelectedSuccess": "Selected materials deleted successfully.",

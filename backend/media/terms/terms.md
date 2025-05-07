@@ -1,220 +1,191 @@
 <!-- ---
-title: "TÉRMINOS Y CONDICIONES - FISIOFIND - ACUERDO CON EL USUARIO"
-subtitle: "FISIO FIND - Grupo 6 - #SPRINT 2"
-author: [Alberto Carmona Sicre, Antonio Macías Ferrera, Benjamín Ignacio Maureira Flores, Francisco Capote García, Daniel Alors Romero, Daniel Fernández Caballero, Daniel Ruiz López, Daniel Tortorici Bartús, Daniel Vela Camacho, Delfín Santana Rubio, Guadalupe Ridruejo Pineda, Julen Redondo Pacheco, Miguel Encina Martínez, Francisco Mateos Villarejo, Pablo Fernández Pérez, Ramón Gavira Sánchez, Rafael Pulido Cifuentes]
-date: "17/03/2025"
-subject: "ISPP"
-lang: "es"
+title: "TERMS AND CONDITIONS - MAESTRE - USER AGREEMENT / TÉRMINOS Y CONDICIONES - MAESTRE - ACUERDO CON EL USUARIO"
+subtitle: "MAESTRE"
+author: [Antonio Macías Ferrera]
+date: "2024"
+subject: "Legal"
+lang: "en-ES"
 toc: true
 titlepage: true
 titlepage-text-color: "1C1C1C"
 titlepage-rule-color: "1C1C1C"
+titlepage-background: "./background5V.pdf"
 titlepage-rule-height: 0
 colorlinks: true
 linkcolor: blue
-titlepage-background: "../.backgrounds/background1V.pdf"
-header-left: "ACUERDO CON EL USUARIO"
-header-right: "17/03/2025"
-footer-left: "FISIO FIND"
+header-left: "USER AGREEMENT"
+header-right: "2024"
+footer-left: "MAESTRE"
 documentclass: scrartcl
 classoption: "table"
 --- -->
 
-<!-- COMMENT THIS WHEN EXPORTING TO PDF -->
 <p align="center">
-  <img src="https://raw.githubusercontent.com/Proyecto-ISPP/FISIOFIND/main/docs/.img/Logo_FisioFind_Verde_sin_fondo.webp" alt="Logo FisioFind" width="300" />
+  <img src="../../../frontend/static/maestrito/maestrito_jump_transparent.webp" alt="Logo Maestre" width="200" />
 </p>
 
 <h1 align="center" style="font-size: 30px; font-weight: bold;">
-  TÉRMINOS Y CONDICIONES - FISIOFIND - ACUERDO CON EL USUARIO
+  TERMS AND CONDITIONS - MAESTRE
 </h1>
 
-<br>
+[🇬🇧 English](#english) | [🇪🇸 Español](#español)
 
-**ÍNDICE**
-- [1. INTRODUCCIÓN](#1-introducción)
-- [2. OBJETIVO DEL ACUERDO](#2-objetivo-del-acuerdo)
-- [3. ALCANCE Y APLICACIÓN](#3-alcance-y-aplicación)
-- [4. TÉRMINOS Y CONDICIONES](#4-términos-y-condiciones)
-  - [4.1. Registro y Acceso](#41-registro-y-acceso)
-  - [4.2. Propiedad Intelectual](#42-propiedad-intelectual)
-  - [4.3. Limitación de Responsabilidad](#43-limitación-de-responsabilidad)
-  - [4.4. Planes de Suscripción y Pagos](#44-planes-de-suscripción-y-pagos)
-  - [4.5. Gestión de Citas](#45-gestión-de-citas)
-- [5. MODIFICACIONES AL ACUERDO](#5-modificaciones-al-acuerdo)
-- [6. CONTACTO Y SOPORTE](#6-contacto-y-soporte)
-- [7. DISPOSICIONES FINALES](#7-disposiciones-finales)
-
-<br>
-<!-- COMMENT THIS WHEN EXPORTING TO PDF -->
-
-
----
-
-**Ficha del documento**
-
-- **Nombre del Proyecto:** FISIO FIND
-
-- **Número de Grupo:** Grupo 6
-
-- **Entregable:** #SPRINT 2
-
-- **Miembros del grupo:** Alberto Carmona Sicre, Antonio Macías Ferrera, Benjamín Ignacio Maureira Flores, Francisco Capote García, Daniel Alors Romero, Daniel Fernández Caballero, Daniel Ruiz López, Daniel Tortorici Bartús, Daniel Vela Camacho, Delfín Santana Rubio, Guadalupe Ridruejo Pineda, Julen Redondo Pacheco, Miguel Encina Martínez, Francisco Mateos Villarejo, Pablo Fernández Pérez, Ramón Gavira Sánchez, Rafael Pulido Cifuentes.
-
-- **Contribuidores:** [Antonio Macías Ferrera](https://github.com/antoniommff) (autor),  [Delfín Santana Rubio](https://github.com/DelfinSR) (revisor y autor)
-
-- **Fecha de Creación:** 17/03/2025  
-
-- **Versión:** v1.4
-
-<br>
+**Table of contents  |  Índice**
+- [English Version](#english-version)
+  - [1. INTRODUCTION](#1-introduction)
+  - [2. PURPOSE OF THE AGREEMENT](#2-purpose-of-the-agreement)
+  - [3. SCOPE AND APPLICATION](#3-scope-and-application)
+  - [4. TERMS AND CONDITIONS](#4-terms-and-conditions)
+    - [4.1. Registration and Access](#41-registration-and-access)
+    - [4.2. Intellectual Property](#42-intellectual-property)
+    - [4.3. Limitation of Liability](#43-limitation-of-liability)
+    - [4.4. Usage and Services](#44-usage-and-services)
+  - [5. MODIFICATIONS TO THE AGREEMENT](#5-modifications-to-the-agreement)
+  - [6. CONTACT AND SUPPORT](#6-contact-and-support)
+  - [7. FINAL PROVISIONS](#7-final-provisions)
+- [Versión en Español](#versión-en-español)
+  - [1. INTRODUCCIÓN](#1-introducción)
+  - [2. OBJETIVO DEL ACUERDO](#2-objetivo-del-acuerdo)
+  - [3. ALCANCE Y APLICACIÓN](#3-alcance-y-aplicación)
+  - [4. TÉRMINOS Y CONDICIONES](#4-términos-y-condiciones)
+    - [4.1. Registro y Acceso](#41-registro-y-acceso)
+    - [4.2. Propiedad Intelectual](#42-propiedad-intelectual)
+    - [4.3. Limitación de Responsabilidad](#43-limitación-de-responsabilidad)
+    - [4.4. Uso y Servicios](#44-uso-y-servicios)
+  - [5. MODIFICACIONES AL ACUERDO](#5-modificaciones-al-acuerdo)
+  - [6. CONTACTO Y SOPORTE](#6-contacto-y-soporte)
+  - [7. DISPOSICIONES FINALES](#7-disposiciones-finales)
 
 
----
+<br></br>
 
-**Histórico de Modificaciones**
 
-| Fecha        | Versión  | Realizada por               | Descripción de los cambios                                    |
-| ------------ | -------- | --------------------------- | ------------------------------------------------------------- |
-| 17/03/2025   | v1.0     | Antonio Macías Ferrera      | Elaboración de la primera versión del acuerdo con el usuario. |
-| 20/03/2025   | v1.1     | Antonio Macías Ferrera      | Adecuación del SLA a FISIO FIND |
-| 22/03/2025   | v1.2     | Delfín Santana Rubio     | Corrección y ampliación de algunos apartados |
-| 22/03/2025   | v1.3     | Antonio Macías Ferrera     | División del documento SLA en 3 documentos |
-| 26/03/2025   | v1.4     | Delfín Santana Rubio     | Añadido correo de privacidad@fisiofind.com |
+<div id="english">
 
-<br>
+# English Version
 
-<!-- \newpage -->
+## 1. INTRODUCTION
 
-<br>
+This document establishes the general terms and conditions that govern access to and use of the services offered by **Maestre**. This agreement defines the contractual relationship between Maestre and its users, establishing the rights and obligations of both parties, as well as the platform usage rules.
 
+## 2. PURPOSE OF THE AGREEMENT
+
+This agreement aims to:
+- Define the conditions for using the Maestre platform
+- Inform clearly and transparently about personal data processing
+- Ensure compliance with current privacy and data protection regulations
+
+## 3. SCOPE AND APPLICATION
+
+This agreement applies to all users accessing the Maestre platform, whether through web browsers or mobile applications. By using our services, users must expressly accept the conditions described herein.
+
+## 4. TERMS AND CONDITIONS
+
+### 4.1. Registration and Access
+- Users must provide truthful and updated information during registration
+- Personal information will be kept confidential and used only for specific purposes
+- Accounts may be suspended if false information or fraudulent activity is detected
+
+### 4.2. Intellectual Property
+- All content, design, source code, logos, and trademarks belong to **Maestre**
+- Unauthorized reproduction, distribution, or modification of any content hosted on the platform is prohibited
+
+### 4.3. Limitation of Liability
+- Maestre is not responsible for damages resulting from improper use of the platform
+- All content generated through Maestre is produced by Large Language Models (LLM) and AI systems
+- Any educational material or content generated by Maestre MUST be reviewed and validated by a qualified professional teacher or subject matter expert before being used in an educational context
+- Maestre explicitly disclaims any responsibility for errors, inaccuracies, or misunderstandings that may arise from the AI-generated content
+- Users acknowledge that AI-generated content may contain errors and should not be used as the sole source of educational material
+- Under no circumstances will Maestre's liability exceed the value of the fee paid by the user (if applicable)
+
+### 4.4. Usage and Services
+- Maestre provides AI-powered content generation and assistance
+- All AI models are operated exclusively on Maestre's own servers
+- Users' data and generated content will not be shared with or provided to any external AI companies
+- All materials and documents provided by users are stored securely in Digital Ocean's infrastructure, which provides a secure and locked environment for data storage. For detailed information about data security and storage practices, please refer to Digital Ocean's Terms of Service and Security Measures at https://www.digitalocean.com/legal/terms-of-service
+- Users are responsible for the content they generate using our services
+- The platform may be updated or modified to improve user experience
+
+## 5. MODIFICATIONS TO THE AGREEMENT
+
+Maestre reserves the right to modify this agreement based on legislative changes or operational needs. Users will be notified of modifications through the platform or via email.
+
+## 6. CONTACT AND SUPPORT
+
+For any questions regarding this agreement or data processing, users can contact the Maestre team at:
+- **Email:** antmacfer1@alum.us.es
+
+## 7. FINAL PROVISIONS
+
+- This agreement shall be governed and interpreted in accordance with Spanish legislation
+- If any provision of this agreement is deemed null or unenforceable, the remaining clauses shall remain in full force
+- Use of the platform implies full acceptance of all conditions set forth herein
+
+</div>
+
+<div id="español">
+
+# Versión en Español
 
 ## 1. INTRODUCCIÓN
 
-El presente documento establece los términos y condiciones generales que regulan el acceso y uso de los servicios ofrecidos por **FisioFind**. Este acuerdo define la relación contractual entre FisioFind y sus usuarios, estableciendo los derechos y obligaciones de ambas partes, así como las normas de uso de la plataforma, los planes de suscripción disponibles y las políticas de gestión de citas.
+El presente documento establece los términos y condiciones generales que regulan el acceso y uso de los servicios ofrecidos por **Maestre**. Este acuerdo define la relación contractual entre Maestre y sus usuarios, estableciendo los derechos y obligaciones de ambas partes, así como las normas de uso de la plataforma.
 
 ## 2. OBJETIVO DEL ACUERDO
 
 Este acuerdo tiene como finalidad:
-- Definir las condiciones de uso de la plataforma FisioFind.
-
-- Informar de manera clara y transparente sobre el tratamiento de datos personales.
-
-- Establecer el uso de cookies para optimizar la experiencia del usuario.
-
-- Garantizar el cumplimiento de la normativa de privacidad y protección de datos vigente.
+- Definir las condiciones de uso de la plataforma Maestre
+- Informar de manera clara y transparente sobre el tratamiento de datos personales
+- Garantizar el cumplimiento de la normativa de privacidad y protección de datos vigente
 
 ## 3. ALCANCE Y APLICACIÓN
 
-El acuerdo es aplicable a todos los usuarios que accedan a la plataforma FisioFind, ya sea a través de navegadores web o aplicaciones móviles. Al utilizar nuestros servicios, el usuario debe aceptar de forma expresa las condiciones aquí descritas.  
-
-Para mayor transparencia, el código fuente y documentación técnica del proyecto se encuentran disponibles en el repositorio oficial: [https://github.com/Proyecto-ISPP/FISIOFIND](https://github.com/Proyecto-ISPP/FISIOFIND).
-
-<br>
-
-<!-- \newpage -->
-
-<hr>
-
+El acuerdo es aplicable a todos los usuarios que accedan a la plataforma Maestre, ya sea a través de navegadores web o aplicaciones móviles. Al utilizar nuestros servicios, el usuario debe aceptar de forma expresa las condiciones aquí descritas.
 
 ## 4. TÉRMINOS Y CONDICIONES
 
 ### 4.1. Registro y Acceso
-- Los usuarios deberán proporcionar información veraz y actualizada durante el registro.
-
-  - Para pacientes: nombre completo, correo electrónico, teléfono y datos de facturación.
-
-  - Para fisioterapeutas: además de los datos personales, número de colegiado, especialidades, y documentación que acredite su formación.
-
-- La información personal proporcionada por los usuarios fisioterapeutas será contrastada con la información oficial encontrada en los colegios de fisioterapeutas de España, en las páginas de los colegios oficiales de las respectivas comunidades autónomas.
-
-- La información proporcionada será confidencial y se utilizará únicamente para fines específicos.
-
-- La cuenta puede ser suspendida si se detecta información falsa o actividad fraudulenta.
+- Los usuarios deberán proporcionar información veraz y actualizada durante el registro
+- La información personal será confidencial y se utilizará únicamente para fines específicos
+- La cuenta puede ser suspendida si se detecta información falsa o actividad fraudulenta
 
 ### 4.2. Propiedad Intelectual
-
-- Todo el contenido, diseño, código fuente, logotipos y marcas pertenecen a **FisioFind** a excepción de los modelos 3D y el mapa de dolor.
-
-- Queda prohibida la reproducción, distribución o modificación no autorizada de cualquier contenido alojado en la plataforma que no haya sido proporcionado por los propios usuarios. Dicho esto, quedan exluidos de esta restricción los informes generados tras las consultas o el material multimedia alojado que pertenezca a un usuario fisioterapeuta (véase videos o documentos).
-
+- Todo el contenido, diseño, código fuente, logotipos y marcas pertenecen a **Maestre**
+- Queda prohibida la reproducción, distribución o modificación no autorizada de cualquier contenido alojado en la plataforma
 
 ### 4.3. Limitación de Responsabilidad
+- Maestre no se hace responsable por daños derivados del uso inadecuado de la plataforma
+- Todo el contenido generado a través de Maestre es producido por Modelos de Lenguaje Grande (LLM) y sistemas de IA
+- Cualquier material educativo o contenido generado por Maestre DEBE ser revisado y validado por un profesor profesional cualificado o experto en la materia antes de ser utilizado en un contexto educativo
+- Maestre declina expresamente cualquier responsabilidad por errores, inexactitudes o malentendidos que puedan surgir del contenido generado por IA
+- Los usuarios reconocen que el contenido generado por IA puede contener errores y no debe utilizarse como única fuente de material educativo
+- En ningún caso, la responsabilidad de Maestre excederá el valor de la tarifa abonada por el usuario (si aplicable)
 
-- FisioFind no se hace responsable por daños o perjuicios derivados del uso inadecuado de la plataforma.
-
-- En ningún caso, la responsabilidad de **FisioFind** excederá el valor de la tarifa abonada por el usuario (si aplicable).
-
-
-### 4.4. Planes de Suscripción y Pagos
-
-- FisioFind ofrece dos planes de suscripción para fisioterapeutas:
-
-  - Plan Fisio Blue: Plan básico con funcionalidades esenciales
-
-  - Plan Fisio Gold: Plan premium con funcionalidades avanzadas y mayor visibilidad
-
-- Los pagos se procesarán de forma segura a través de pasarelas de pago autorizadas
-
-- Las tarifas se cobrarán según el ciclo de facturación elegido
-
-A continuación se detallan las funcionalidades que **Fisio Find** se compromete a ofrecer a cada usuario en función de su plan de precio:
-
-**Plan Fisio Blue**
-
-| Precio | Funcionalidades |
-|--------|----------------|
-| 17,99€ / mes | - Videoconsultas con todas las herramientas |
-|              | - Seguimiento del paciente |
-|              | - Chat integrado |
-|              | - Subir y compartir vídeos (más limitado) |
-|              | - Soporte técnico limitado |
-
-**Plan Fisio Gold**
-
-| Precio | Funcionalidades |
-|--------|----------------|
-| 24,99€ / mes | - Todas las ventajas de Fisio Blue |
-|              | - Mayor alcance y posicionamiento en las búsquedas |
-|              | - Tick de verificación |
-|              | - Subir y compartir vídeos |
-|              | - Soporte técnico personalizado |
-
-
-### 4.5. Gestión de Citas
-- Los pacientes podrán reservar, modificar o cancelar citas con al menos 48 horas de antelación
-
-- Los fisioterapeutas deben mantener actualizada su disponibilidad horaria
-
-- El sistema enviará recordatorios automáticos de citas mediante el correo corporativo
-
-- Las cancelaciones fuera de plazo actualmente solo puede gestionarla el administrador del sistema. Estas solo se gestionarán en casos excepcionales. Puede contactar con la administración del sistema a través de info@fisiofind.com.
-
-<br>
-
-<!-- \newpage -->
-
-<hr>
-
+### 4.4. Uso y Servicios
+- Maestre proporciona generación de contenido y asistencia mediante IA
+- Todos los modelos de IA operan exclusivamente en los servidores propios de Maestre
+- Los datos de los usuarios y el contenido generado no serán compartidos ni proporcionados a ninguna empresa externa de IA
+- Todos los materiales y documentos proporcionados por los usuarios se almacenan de forma segura en la infraestructura de Digital Ocean, que proporciona un entorno seguro y protegido para el almacenamiento de datos. Para información detallada sobre las prácticas de seguridad y almacenamiento de datos, consulte los Términos de Servicio y Medidas de Seguridad de Digital Ocean en https://www.digitalocean.com/legal/privacy-policy.
+- Los usuarios son responsables del contenido que generen usando nuestros servicios
+- La plataforma puede ser actualizada o modificada para mejorar la experiencia del usuario
 
 ## 5. MODIFICACIONES AL ACUERDO
 
-FisioFind se reserva el derecho de modificar el presente acuerdo en función de cambios legislativos o necesidades operativas. Las modificaciones serán notificadas a los usuarios mediante aviso en la plataforma o vía correo electrónico, siendo efectivas a partir de la fecha de su publicación.
+Maestre se reserva el derecho de modificar el presente acuerdo en función de cambios legislativos o necesidades operativas. Las modificaciones serán notificadas a los usuarios mediante aviso en la plataforma o vía correo electrónico.
 
 ## 6. CONTACTO Y SOPORTE
 
-Para cualquier duda o consulta relativa a este acuerdo, al uso de cookies o al tratamiento de datos personales, los usuarios podrán contactar con el equipo de FisioFind a través de:
-
-- **Correo Electrónico:** info@fisiofind.com
+Para cualquier duda o consulta relativa a este acuerdo o al tratamiento de datos personales, los usuarios podrán contactar con el equipo de Maestre a través de:
+- **Correo Electrónico:** antmacfer1@alum.us.es
 
 ## 7. DISPOSICIONES FINALES
 
-- El presente acuerdo se regirá e interpretará de acuerdo con la legislación española.
+- El presente acuerdo se regirá e interpretará de acuerdo con la legislación española
+- Si alguna de las disposiciones de este acuerdo fuera considerada nula o inejecutable, el resto de las cláusulas mantendrán plena vigencia
+- La utilización de la plataforma implica la aceptación íntegra de todas las condiciones aquí expuestas
 
-- Si alguna de las disposiciones de este acuerdo fuera considerada nula o inejecutable, el resto de las cláusulas mantendrán plena vigencia.
-
-- La utilización de la plataforma implica la aceptación íntegra de todas las condiciones aquí expuestas.
+</div>
 
 ---
 
-*FisioFind agradece la confianza depositada en sus servicios y se compromete a proteger la privacidad y seguridad de sus usuarios, ofreciendo un entorno digital transparente y seguro.*
+*Maestre agradece la confianza depositada en sus servicios y se compromete a proteger la privacidad y seguridad de sus usuarios, ofreciendo un entorno digital transparente y seguro.*
