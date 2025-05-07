@@ -50,5 +50,3 @@ with open('maestre_models.puml', 'w', encoding='utf-8') as f:
                 f.write(f"{model_name} \"*\" -- \"*\" {related_model} : {field.name}\n")
     
     f.write("\n@enduml")
-
-print("PlantUML model diagram generated successfully in 'maestre_models.puml'")

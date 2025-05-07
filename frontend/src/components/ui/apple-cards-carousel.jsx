@@ -201,6 +201,32 @@ export const Carousel = ({
           </motion.button>
         )}
 
+        {/* Floating Left Scroll Button */}
+        {canScrollLeft && (
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="hidden md:flex absolute left-4 top-1/2 transform -translate-y-1/2 z-30 h-14 w-14 rounded-full bg-gray-100/90 hover:bg-gray-200/90 items-center justify-center transition-all"
+            onClick={scrollLeft}
+          >
+            <IconArrowNarrowLeft className="h-8 w-8 text-gray-700" />
+          </motion.button>
+        )}
+
+        {/* Floating Right Scroll Button */}
+        {canScrollRight && (
+          <motion.button
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="hidden md:flex absolute right-4 top-1/2 transform -translate-y-1/2 z-30 h-14 w-14 rounded-full bg-gray-100/90 hover:bg-gray-200/90 items-center justify-center transition-all"
+            onClick={scrollRight}
+          >
+            <IconArrowNarrowRight className="h-8 w-8 text-gray-700" />
+          </motion.button>
+        )}
+
         <div className="flex justify-center gap-4 mt-2">
           <button
             className="h-14 w-14 rounded-full bg-gray-100/90 hover:bg-gray-200/90 flex items-center justify-center disabled:opacity-50 transition-all"

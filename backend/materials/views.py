@@ -11,7 +11,6 @@ from .serializers import DocumentSerializer
 from django.core.exceptions import ObjectDoesNotExist
 import docx
 from googletrans import Translator
-from rest_framework.authentication import get_authorization_header
 import io
 from django.http import HttpResponse
 import requests
@@ -43,8 +42,6 @@ class DocumentViewSet(viewsets.ModelViewSet):
         return queryset
 
     def create(self, request, *args, **kwargs):
-        auth_header = get_authorization_header(request).decode('utf-8')
-        print(f"Authorization Header: {auth_header}")
 
         classroom_id = request.data.get('classroom')
         if classroom_id:
@@ -72,6 +69,23 @@ class DocumentViewSet(viewsets.ModelViewSet):
                     {"error": "Classroom does not exist."},
                     status=status.HTTP_400_BAD_REQUEST
                 )
+
+        # Validate file format
+        file = request.FILES.get('file')
+        if file:
+            valid_extensions = ['pdf', 'doc', 'docx', 'png', 'jpg', 'pptx', 'txt', 'md', 'tex', 'pages']
+            file_extension = file.name.split('.')[-1].lower()
+            if file_extension not in valid_extensions:
+                return Response(
+                    {
+                        "error": [
+                            f"Invalid file extension '{file_extension}'. "
+                            f"Allowed extensions are: {', '.join(valid_extensions)}."
+                        ]
+                    },
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
         return super().create(request, *args, **kwargs)
 
     def update_tags(self, request, pk=None):
@@ -308,8 +322,10 @@ class DocumentViewSet(viewsets.ModelViewSet):
 
         except Exception as e:
             import traceback
-            error_details = traceback.format_exc()
-            print(f"Translation error: {error_details}")
+            return Response(
+                {"error": traceback.format_exc()},
+                status=status.HTTP_500_INTERNAL_SERVER_ERROR
+            )
             return Response(
                 {"error": str(e)},
                 status=status.HTTP_500_INTERNAL_SERVER_ERROR
@@ -320,23 +336,23 @@ class DocumentViewSet(viewsets.ModelViewSet):
         """Convert text content to a DOCX file and return it for download"""
         text = request.data.get('text')
         title = request.data.get('title', 'Scientific Exam')
-        
+
         if not text:
             return Response({'error': 'No text provided'}, status=status.HTTP_400_BAD_REQUEST)
-        
+
         try:
             # Create a new DOCX document
             doc = docx.Document()
-            
+
             # Add a title
             doc.add_heading(title, level=1)
-            
+
             # Process the text content
             paragraphs = text.split('\n\n')
             for para in paragraphs:
                 if not para.strip():
                     continue
-                    
+
                 # Check if it's a heading
                 if para.startswith('# '):
                     doc.add_heading(para[2:], level=1)
@@ -371,48 +387,48 @@ class DocumentViewSet(viewsets.ModelViewSet):
                                 p.add_run(line)
                     else:
                         doc.add_paragraph(para)
-            
+
             # Save the document to a bytes buffer
             docx_buffer = io.BytesIO()
             doc.save(docx_buffer)
             docx_buffer.seek(0)
-            
+
             # Create the response with the DOCX file
             response = HttpResponse(
                 docx_buffer.getvalue(),
                 content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
             )
             response['Content-Disposition'] = f'attachment; filename="{title.replace(" ", "_")}.docx"'
-            
+
             return response
-            
+
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-    
+
     @action(detail=False, methods=['post'], url_path='convert-text-to-docx-and-upload')
     def convert_text_to_docx_and_upload(self, request):
         """Convert text content to a DOCX file and upload it to a classroom"""
         text = request.data.get('text')
         title = request.data.get('title', 'Scientific Exam')
         classroom_id = request.data.get('classroom')
-        
+
         if not text:
             return Response({'error': 'No text provided'}, status=status.HTTP_400_BAD_REQUEST)
-            
+
         if not classroom_id:
             return Response({'error': 'No classroom specified'}, status=status.HTTP_400_BAD_REQUEST)
-            
+
         try:
             # Verify classroom exists and user has permission
             try:
                 classroom = Classroom.objects.get(id=classroom_id)
-                
+
                 if classroom.creator != request.user:
                     return Response(
                         {"error": "You don't have permission to add documents to this classroom."},
                         status=status.HTTP_403_FORBIDDEN
                     )
-                    
+
                 if classroom.documents.count() >= settings.MAX_FILES_PER_CLASSROOM:
                     return Response(
                         {
@@ -428,19 +444,19 @@ class DocumentViewSet(viewsets.ModelViewSet):
                     {"error": "Classroom does not exist."},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-            
+
             # Create a new DOCX document
             doc = docx.Document()
-            
+
             # Add a title
             doc.add_heading(title, level=1)
-            
+
             # Process the text content (same as in convert_text_to_docx)
             paragraphs = text.split('\n\n')
             for para in paragraphs:
                 if not para.strip():
                     continue
-                    
+
                 # Check if it's a heading
                 if para.startswith('# '):
                     doc.add_heading(para[2:], level=1)
@@ -475,12 +491,12 @@ class DocumentViewSet(viewsets.ModelViewSet):
                                 p.add_run(line)
                     else:
                         doc.add_paragraph(para)
-            
+
             # Save the document to a temporary file
             with tempfile.NamedTemporaryFile(delete=False, suffix='.docx') as temp_file:
                 doc.save(temp_file.name)
                 temp_file_path = temp_file.name
-            
+
             # Create a Document object in the database
             filename = f"{title.replace(' ', '_')}.docx"
             with open(temp_file_path, 'rb') as file:
@@ -492,16 +508,17 @@ class DocumentViewSet(viewsets.ModelViewSet):
                 )
                 document.file.save(filename, file)
                 document.save()
-            
+
             # Clean up the temporary file
             os.unlink(temp_file_path)
-            
+
             # Return success response with document info
             serializer = self.get_serializer(document)
             return Response(serializer.data, status=status.HTTP_201_CREATED)
-            
+
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
     @action(detail=False, methods=['get', 'post'], url_path='generate_content')
     def generate_content(self, request):
@@ -551,3 +568,9 @@ class DocumentViewSet(viewsets.ModelViewSet):
         except Exception as ex:
             logger.warning(f"Unexpected error: {ex}")
             return Response({'error': f"Unexpected error: {str(ex)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+    def perform_create(self, serializer):
+        document = serializer.save()
+        document.clean()
+        document.save()
+

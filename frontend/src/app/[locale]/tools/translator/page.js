@@ -162,6 +162,7 @@ const Translator = () => {
         )}
 
         <div className="relative w-full flex-1 flex flex-col items-center py-14">
+        <div className="w-full max-w-4xl flex items-center mb-8">
         <button
             onClick={() => router.push(`/${locale}/tools`)}
             className={cn(
@@ -189,6 +190,7 @@ const Translator = () => {
             </svg>
             <span>{t2("backToTools")}</span>
           </button>
+          </div>
           <div className="w-full max-w-4xl flex items-center mb-8 justify-center space-x-6">
             <div className="relative">
               <IconLanguage className="w-16 h-16 drop-shadow-lg text-primary" />
