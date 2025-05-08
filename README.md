@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="frontend/static/logos/maestre_logo_circle_black.png" align="center" width="30%">
+    <img src="/frontend/static/maestrito/maestrito_jump_transparent.webp" align="center" width="30%">
 </p>
 <p align="center"><h1 align="center">MAESTRE</h1></p>
 <p align="center">
@@ -73,21 +73,26 @@
 
 ```sh
 └── maestre/
-    ├── .github
+    ├── .github/
     │   ├── ISSUE_TEMPLATE
     │   └── PULL_REQUEST_TEMPLATE.md
-    ├── backend
-    │   ├── api
-    │   ├── backend
-    │   ├── classrooms
-    │   ├── materials
-    │   ├── schools
-    │   ├── students
-    │   └── users
-    └── frontend
-    	├── public
-    	├── src
-    	└── static
+    ├── CONTRIBUTING.md
+    ├── LICENSE
+    ├── README.md
+    ├── backend/
+    │   ├── api/
+    │   ├── backend/
+    │   ├── classrooms/
+    │   ├── materials/
+    │   ├── media/
+    │   ├── schools/
+    │   ├── students/
+    │   ├── tags/
+    │   └── users/
+    └── frontend/
+    	├── public/
+    	├── src/
+    	└── static/
 ```
 
 
@@ -105,6 +110,119 @@
 					<tr>
 						<td><code>❯ Contains the issue template(s) used for reporting bugs and requesting features.</code></td>
 					</tr>
+				</blockquote>
+			</details>
+		</blockquote>
+	</details>
+	<!-- backend Submodule -->
+	<details>
+		<summary><b>backend</b></summary>
+		<blockquote>
+			<table>
+			<tr>
+				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/.coverage'>.coverage</a></b></td>
+				<td><code>❯ Generated file storing code coverage data from tests.</code></td>
+			</tr>
+			<tr>
+				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/manage.py'>manage.py</a></b></td>
+				<td><code>❯ Django management script for administrative tasks.</code></td>
+			</tr>
+			<tr>
+				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/requirements.txt'>requirements.txt</a></b></td>
+				<td><code>❯ List of Python dependencies required for the backend.</code></td>
+			</tr>
+			</table>
+			<details>
+				<summary><b>api</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><code>❯ Contains API endpoints (likely using Django REST Framework) exposing backend services.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>backend</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/backend/urls.py'>urls.py</a></b></td>
+						<td><code>❯ URL configuration mapping routes to views for the Django project.</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/backend/wsgi.py'>wsgi.py</a></b></td>
+						<td><code>❯ WSGI entry point used by production servers to serve the Django app.</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/backend/asgi.py'>asgi.py</a></b></td>
+						<td><code>❯ ASGI entry point enabling asynchronous support.</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/backend/settings.py'>settings.py</a></b></td>
+						<td><code>❯ Django settings file containing configuration for database, apps, middleware, etc.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>classrooms</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><code>❯ Contains the Django app/module for managing classroom-related data and views.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>materials</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><code>❯ Modules related to managing materials or resources (e.g. inventory) in the application.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>schools</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><code>❯ Contains the Django app/module handling school-related models, views, and functionality.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>students</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><code>❯ Contains functionality related to student management within the backend.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>tags</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><code>❯ Contains functionality related to materials' tags.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>users</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><code>❯ Contains the Django app/module handling user models, authentication, and related views.</code></td>
+					</tr>
+					</table>
 				</blockquote>
 			</details>
 		</blockquote>
@@ -327,109 +445,6 @@
 			</details>
 		</blockquote>
 	</details>
-	<!-- backend Submodule -->
-	<details>
-		<summary><b>backend</b></summary>
-		<blockquote>
-			<table>
-			<tr>
-				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/.coverage'>.coverage</a></b></td>
-				<td><code>❯ Generated file storing code coverage data from tests.</code></td>
-			</tr>
-			<tr>
-				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/manage.py'>manage.py</a></b></td>
-				<td><code>❯ Django management script for administrative tasks.</code></td>
-			</tr>
-			<tr>
-				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/requirements.txt'>requirements.txt</a></b></td>
-				<td><code>❯ List of Python dependencies required for the backend.</code></td>
-			</tr>
-			</table>
-			<details>
-				<summary><b>users</b></summary>
-				<blockquote>
-					<table>
-					<tr>
-						<td><code>❯ Contains the Django app/module handling user models, authentication, and related views.</code></td>
-					</tr>
-					</table>
-				</blockquote>
-			</details>
-			<details>
-				<summary><b>students</b></summary>
-				<blockquote>
-					<table>
-					<tr>
-						<td><code>❯ Contains functionality related to student management within the backend.</code></td>
-					</tr>
-					</table>
-				</blockquote>
-			</details>
-			<details>
-				<summary><b>materials</b></summary>
-				<blockquote>
-					<table>
-					<tr>
-						<td><code>❯ Modules related to managing materials or resources (e.g. inventory) in the application.</code></td>
-					</tr>
-					</table>
-				</blockquote>
-			</details>
-			<details>
-				<summary><b>api</b></summary>
-				<blockquote>
-					<table>
-					<tr>
-						<td><code>❯ Contains API endpoints (likely using Django REST Framework) exposing backend services.</code></td>
-					</tr>
-					</table>
-				</blockquote>
-			</details>
-			<details>
-				<summary><b>backend</b></summary>
-				<blockquote>
-					<table>
-					<tr>
-						<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/backend/urls.py'>urls.py</a></b></td>
-						<td><code>❯ URL configuration mapping routes to views for the Django project.</code></td>
-					</tr>
-					<tr>
-						<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/backend/wsgi.py'>wsgi.py</a></b></td>
-						<td><code>❯ WSGI entry point used by production servers to serve the Django app.</code></td>
-					</tr>
-					<tr>
-						<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/backend/asgi.py'>asgi.py</a></b></td>
-						<td><code>❯ ASGI entry point enabling asynchronous support.</code></td>
-					</tr>
-					<tr>
-						<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/backend/settings.py'>settings.py</a></b></td>
-						<td><code>❯ Django settings file containing configuration for database, apps, middleware, etc.</code></td>
-					</tr>
-					</table>
-				</blockquote>
-			</details>
-			<details>
-				<summary><b>classrooms</b></summary>
-				<blockquote>
-					<table>
-					<tr>
-						<td><code>❯ Contains the Django app/module for managing classroom-related data and views.</code></td>
-					</tr>
-					</table>
-				</blockquote>
-			</details>
-			<details>
-				<summary><b>schools</b></summary>
-				<blockquote>
-					<table>
-					<tr>
-						<td><code>❯ Contains the Django app/module handling school-related models, views, and functionality.</code></td>
-					</tr>
-					</table>
-				</blockquote>
-			</details>
-		</blockquote>
-	</details>
 </details>
 
 
@@ -479,7 +494,7 @@ Then we proceed to install the dependencies:
 ```sh
 ❯ pip install -r requirements.txt
 ```
-**Using `npm`** &nbsp; [<img align="center" src="" />]()
+**Using `npm`** &nbsp; [<img align="center" src="https://img.shields.io/badge/npm-CB3837.svg?style=flat&logo=npm&logoColor=white" />](https://www.npmjs.com/)
 
 We now install the frontend framework dependencies in the `frontend` directory:
 
@@ -508,7 +523,7 @@ Additionaly, the first time the project is locally deployed, we need to create a
 
 After the local backend server is running, we can run the frontend server **in a new terminal window**:
 
-**Using `npm`** &nbsp; [<img align="center" src="" />]()
+**Using `npm`** &nbsp; [<img align="center" src="https://img.shields.io/badge/npm-CB3837.svg?style=flat&logo=npm&logoColor=white" />](https://www.npmjs.com/)
 
 ```sh
 ❯ cd ../../fronted
@@ -521,21 +536,21 @@ Run the test suite using the following command:
 **Using `pip`** &nbsp; [<img align="center" src="https://img.shields.io/badge/Pip-3776AB.svg?style={badge_style}&logo=pypi&logoColor=white" />](https://pypi.org/project/pip/)
 
 ```sh
-❯ pytest
+❯ run manage.py test
 ```
 
 Or choose an specific module to test using:
 
 ```sh
-❯ pytest classroom
+❯ run manage.py test [module]
 ```
 
 For a detailed coverage study:
 
 ```sh
-❯ pytest
-❯ pytest --cov=backend
-❯ pytest --cov=backend --cov-report=html
+❯ coverage run manage.py test [module]
+❯ coverage report
+❯ coverage html
 ```
 
 
@@ -543,39 +558,42 @@ For a detailed coverage study:
 ##  Project Roadmap
 
 **Sprint 1**
-- [X] **`Task 1`**: <strike>Mock-ups</strike>
-- [X] **`Task 2`**: User registration
-- [X] **`Task 3`**: Data modeling
-- [X] **`Task 4`**: CRUD for content
+- [X] **`Task 1.1`**: User management - signin/login/logout/edit
+- [X] **`Task 1.2`**: Classroom functionality
+- [X] **`Task 1.3`**: Students management
+- [X] **`Task 1.4`**: Base interface - Home
+- [X] **`Task 1.5`**: First unit testing
 
 **Sprint 2**
-- [X] **`Task 1`**: Manage materials and students (replanned from Sprint 1)
-- [X] **`Task 2`**: Implement unit tests
-- [X] **`Task 3`**: Modify the homepage styles
-- [ ] **`Task 4`**: Error management
-- [X] **`Task 5`**: Exam generation
-- [X] **`Task 5`**: Research on AI APIs
+- [X] **`Task 2.1`**: Materials management (replanned from Sprint 1)
+- [X] **`Task 2.2`**: **Exam generation tool**
+- [X] **`Task 2.3`**: Styled interface
+- [X] **`Task 2.4`**: Complete unit test suite (replanned from Sprint 1)
 
 **Sprint 3**
 
-- [ ] **`Task 1`**: TODO
-- [ ] ...
+- [X] **`Task 3.1`**: Error management  (replanned from Sprint 2)
+- [ ] **`Task 3.2`**: User policy & terms management
+- [ ] **`Task 3.3`**: **Planning tool**
+- [ ] **`Task 3.4`**: Exam generation tool testing & improovements
 
 **Sprint 4**
 
-- [ ] **`Task 1`**: TODO.
-- [ ] ...
+- [X] **`Task 4.1`**: Traduction tool
+- [ ] **`Task 4.2`**: Planner tool
+- [ ] **`Task 4.3`**: Final Testing report
 
 ---
 
 ##  Contributing
 
-- **💬 [Join the Discussions](https://github.com/MAESTRE-TFG/maestre/discussions)**: Share your insights, provide feedback, or ask questions.
 - **🐛 [Report Issues](https://github.com/MAESTRE-TFG/maestre/issues)**: Submit bugs found or log feature requests for the `maestre.git` project.
+
 - **💡 [Submit Pull Requests](https://github.com/MAESTRE-TFG/maestre/blob/main/CONTRIBUTING.md)**: Review open PRs, and submit your own PRs.
 
 <details closed>
 <summary>Contributing Guidelines</summary>
+
 
 1. **Fork the Repository**: Start by forking the project repository to your github account.
 
@@ -589,9 +607,9 @@ For a detailed coverage study:
    git checkout -b feat/new-feature-x
    ```
 
-4. **Make Your Changes**: Develop and test your changes locally.
+4. **Make Your Changes**: Develop and *test* your changes locally.
 
-5. **Commit Your Changes**: Commit with a clear message describing your updates.
+5. **Commit Your Changes**: Commit with a clear message describing your updates following the *conventional commits* standards and trying to make them as '*atomic*' as possible.
    ```sh
    git commit -m 'Feat: Implemented new feature x.'
    ```
@@ -601,7 +619,7 @@ For a detailed coverage study:
    git push origin feat/new-feature-x
    ```
 
-7. **Submit a Pull Request**: Create a PR against the original project repository. Clearly describe the changes and their motivations.
+7. **Submit a Pull Request**: Create a PR against the original project repository pointing to the develop branch. **Clearly describe the changes and their motivations using the provided template**.
 
 8. **Review**: Once your PR is reviewed and approved, it will be merged into the main branch. Congratulations on your contribution!
 </details>
