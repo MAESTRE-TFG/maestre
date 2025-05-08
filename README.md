@@ -609,7 +609,7 @@ For a detailed coverage study:
 
 4. **Make Your Changes**: Develop and *test* your changes locally.
 
-5. **Commit Your Changes**: Commit with a clear message describing your updates following the *conventional commits* standards and trying to make them as '*atomimc*' as possible.
+5. **Commit Your Changes**: Commit with a clear message describing your updates following the *conventional commits* standards and trying to make them as '*atomic*' as possible.
    ```sh
    git commit -m 'Feat: Implemented new feature x.'
    ```
