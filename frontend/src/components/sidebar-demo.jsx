@@ -249,7 +249,7 @@ export function SidebarDemo({ ContentComponent, params }) {
             <SidebarLink
               link={{
                 label: t("links.theme"),
-                href: "/",
+                href: "#",
                 icon: (
                   <ThemeSwitch
                     checked={theme === "dark"}
