@@ -879,6 +879,11 @@
     }
   },
   "TermsPage": {
+    "dragOrDrop": "Arrastatu eta jaregin zure fitxategia hemen",
+    "browseFiles": "Arakatu Fitxategiak",
+    "supportedPdfFormat": "Onartutako formatua: PDF",
+    "supportedMdFormat": "Onartutako formatua: MD",
+    "dropIt": "Lotu",
     "header": {
       "title": "Masterra - Lege informazioa",
       "description": "Ongi etorri gure informazio juridikoa atalera. Hemen aurkituko dituzu gure plataformaren erabilera arautzen duten beharrezko dokumentu eta politika guztiak. Mesedez, berrikusi arretaz zure eskubideak eta erantzukizunak ulertzeko."
@@ -905,9 +910,7 @@
       "nameError": "Errorea izenaren arabera: {{error}}",
       "noPdf": "Ez dago PDF dokumentu honetarako.",
       "noMd": "Kargatu markaren fitxategia (.md)",
-      "failedToOpenPdf": "Dokumentua ezin da fitxa berri batean ireki. Mesedez, egiaztatu zure arakatzailearen konfigurazioa.",
-      "termTypeError": "Hautatu baliozko termino mota bat.",
-      "noVersion": "Mesedez, sartu bertsio zenbakia."
+      "failedToOpenPdf": "Dokumentua ezin da fitxa berri batean ireki. Mesedez, egiaztatu zure arakatzailearen konfigurazioa."
     },
     "buttons": {
       "addNewTerm": "Gehitu epe berria",
@@ -915,7 +918,8 @@
       "openDocument": "Ireki dokumentua",
       "cancel": "Indargabetu",
       "save": "Kontserbatu",
-      "delete": "Ezabatu"
+      "delete": "Ezabatu",
+      "removeFile": "Fitxategia ezabatu"
     },
     "messages": {
       "allTermsCreated": "Baldintza mota guztiak sortu dira dagoeneko. Ezin dituzu termino gehiago gehitu."
@@ -939,22 +943,15 @@
       "acceptance": "Plataformaren erabilerak hemen ezarritako baldintza guztiak onartzea dakar."
     },
     "addForm": {
-      "title": "Gehitu epe berria",
-      "termTypeLabel": "Epe mota",
-      "selectTermType": "Hautatu termino mota bat",
-      "markdownContentLabel": "Markdown edukia",
-      "uploadMarkdown": "Arrastatu eta askatu .md fitxategia hemen edo egin klik hautatzeko",
-      "pdfContentLabel": "PDF edukia",
-      "uploadPdf": "Arrastatu eta askatu .pdf fitxategia hemen edo egin klik hautatzeko",
-      "uploadedFile": "Kargatutako artxiboa",
-      "versionLabel": "Bertsio",
-      "versionPlaceholder": "Adib. 'V1.0'",
-      "availableTermTypes": {
-        "termsOfUse": "Erabilera baldintzak",
-        "privacyPolicy": "Pribatutasun politika",
-        "cookiePolicy": "Cookie politika",
-        "licenses": "Lizentziak"
-      }
+      "title": "Termino Berria Gehitu",
+      "termTypeLabel": "Termino Mota",
+      "selectTermType": "Aukeratu termino mota bat",
+      "markdownContentLabel": "Markdown Edukia",
+      "uploadMarkdown": "Arrastatu eta jaregin zure markdown fitxategia hemen edo egin klik arakatzeko",
+      "pdfContentLabel": "PDF Edukia",
+      "uploadPdf": "Arrastatu eta jaregin zure PDF fitxategia hemen edo egin klik arakatzeko",
+      "versionLabel": "Bertsioa",
+      "versionPlaceholder": "adib., v1.0"
     },
     "footer": {
       "lastUpdated": "Azken eguneratzea: ",

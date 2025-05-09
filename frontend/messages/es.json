@@ -927,6 +927,11 @@
 
 
   "TermsPage": {
+    "dragOrDrop": "Arrastra y suelta tu archivo aquí",
+    "browseFiles": "Explorar Archivos",
+    "supportedPdfFormat": "Formato soportado: PDF",
+    "supportedMdFormat": "Formato soportado: MD",
+    "dropIt": "Suéltalo",
     "header": {
       "title": "MAESTRE - Información Legal",
       "description": "Bienvenido a nuestra sección de información legal. Aquí encontrarás todos los documentos y políticas necesarios que rigen el uso de nuestra plataforma. Por favor, revísalos cuidadosamente para entender tus derechos y responsabilidades."
@@ -953,9 +958,7 @@
       "nameError": "Error en el nombre: {{error}}",
       "noPdf": "No existe un PDF para este documento.",
       "noMd": "Por favor, sube un archivo markdown (.md)",
-      "failedToOpenPdf": "No se pudo abrir el documento en una nueva pestaña. Por favor, verifica la configuración de tu navegador.",
-      "termTypeError": "Selecciona un tipo de término válido.",
-      "noVersion": "Por favor, introduce un número de versión."
+      "failedToOpenPdf": "No se pudo abrir el documento en una nueva pestaña. Por favor, verifica la configuración de tu navegador."
     },
     "buttons": {
       "addNewTerm": "Agregar Nuevo Término",
@@ -963,7 +966,8 @@
       "openDocument": "Abrir documento",
       "cancel": "Cancelar",
       "save": "Guardar",
-      "delete": "Eliminar"
+      "delete": "Eliminar",
+      "removeFile": "Eliminar archivo"
     },
     "messages": {
       "allTermsCreated": "Todos los tipos de términos ya han sido creados. No puedes agregar más términos."
@@ -987,22 +991,15 @@
       "acceptance": "El uso de la plataforma implica la aceptación total de todas las condiciones aquí establecidas."
     },
     "addForm": {
-      "title": "Agregar Nuevo Término",
+      "title": "Añadir Nuevo Término",
       "termTypeLabel": "Tipo de Término",
       "selectTermType": "Selecciona un tipo de término",
       "markdownContentLabel": "Contenido Markdown",
-      "uploadMarkdown": "Arrastra y suelta un archivo .md aquí, o haz clic para seleccionarlo",
+      "uploadMarkdown": "Arrastra y suelta tu archivo markdown aquí o haz clic para buscar",
       "pdfContentLabel": "Contenido PDF",
-      "uploadPdf": "Arrastra y suelta un archivo .pdf aquí, o haz clic para seleccionarlo",
-      "uploadedFile": "Archivo subido",
+      "uploadPdf": "Arrastra y suelta tu archivo PDF aquí o haz clic para buscar",
       "versionLabel": "Versión",
-      "versionPlaceholder": "Ej. 'v1.0'",
-      "availableTermTypes": {
-        "termsOfUse": "Términos de Uso",
-        "privacyPolicy": "Política de Privacidad",
-        "cookiePolicy": "Política de Cookies",
-        "licenses": "Licencias"
-      }
+      "versionPlaceholder": "ej., v1.0"
     },
     "footer": {
       "lastUpdated": "Última actualización: ",

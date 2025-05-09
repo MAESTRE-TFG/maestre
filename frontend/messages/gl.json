@@ -874,6 +874,11 @@
     }
   },
   "TermsPage": {
+    "dragOrDrop": "Arrastra e solta o teu arquivo aquí",
+    "browseFiles": "Explorar Arquivos",
+    "supportedPdfFormat": "Formato admitido: PDF",
+    "supportedMdFormat": "Formato admitido: MD",
+    "dropIt": "Sé",
     "header": {
       "title": "Mestre - Información legal",
       "description": "Benvido á nosa sección de información legal. Aquí atoparás todos os documentos e políticas necesarias que rexen o uso da nosa plataforma. Por favor, revígaos con coidado para comprender os seus dereitos e responsabilidades."
@@ -900,9 +905,7 @@
       "nameError": "Erro no nome: {{error}}",
       "noPdf": "Non hai PDF para este documento.",
       "noMd": "Carga un ficheiro de marcas (.md)",
-      "failedToOpenPdf": "O documento non se puido abrir nunha nova pestana. Comprobe a configuración do seu navegador.",
-      "termTypeError": "Seleccione un tipo de termo válido.",
-      "noVersion": "Insira un número de versión."
+      "failedToOpenPdf": "O documento non se puido abrir nunha nova pestana. Comprobe a configuración do seu navegador."
     },
     "buttons": {
       "addNewTerm": "Engade un novo termo",
@@ -910,7 +913,8 @@
       "openDocument": "Documento aberto",
       "cancel": "Cancelar",
       "save": "Garda",
-      "delete": "Eliminar"
+      "delete": "Eliminar",
+      "removeFile": "Eliminar arquivo"
     },
     "messages": {
       "allTermsCreated": "Xa se crearon todo tipo de termos. Non podes engadir máis termos."
@@ -934,22 +938,15 @@
       "acceptance": "O uso da plataforma implica a aceptación total de todas as condicións establecidas aquí."
     },
     "addForm": {
-      "title": "Engade un novo termo",
-      "termTypeLabel": "Tipo de termo",
+      "title": "Engadir Novo Termo",
+      "termTypeLabel": "Tipo de Termo",
       "selectTermType": "Selecciona un tipo de termo",
-      "markdownContentLabel": "Contido de Markdown",
-      "uploadMarkdown": "Arrastre e solte un ficheiro .md aquí ou fai clic para seleccionalo",
+      "markdownContentLabel": "Contido Markdown",
+      "uploadMarkdown": "Arrastra e solta o teu arquivo markdown aquí ou fai clic para buscar",
       "pdfContentLabel": "Contido PDF",
-      "uploadPdf": "Arrastre e solte un ficheiro .pdf aquí ou fai clic para seleccionalo",
-      "uploadedFile": "Arquivo cargado",
+      "uploadPdf": "Arrastra e solta o teu arquivo PDF aquí ou fai clic para buscar",
       "versionLabel": "Versión",
-      "versionPlaceholder": "Por exemplo, 'v1.0'",
-      "availableTermTypes": {
-        "termsOfUse": "Termos de uso",
-        "privacyPolicy": "Política de privacidade",
-        "cookiePolicy": "Política de cookies",
-        "licenses": "Licenzas"
-      }
+      "versionPlaceholder": "ex., v1.0"
     },
     "footer": {
       "lastUpdated": "Última actualización: ",

@@ -915,6 +915,11 @@
 
 
   "TermsPage": {
+    "dragOrDrop": "Arrossega i deixa anar el teu fitxer aquí",
+    "browseFiles": "Explorar Fitxers",
+    "supportedPdfFormat": "Format suportat: PDF",
+    "supportedMdFormat": "Format suportat: MD",
+    "dropIt": "Mite -ho",
     "header": {
       "title": "Master - Informació legal",
       "description": "Benvingut a la nostra secció d'informació legal. Aquí trobareu tots els documents i polítiques necessàries que regeixen l'ús de la nostra plataforma. Si us plau, reviseu -los detingudament per entendre els vostres drets i responsabilitats."
@@ -941,9 +946,7 @@
       "nameError": "Error en el nom: {{error}}",
       "noPdf": "No hi ha PDF per a aquest document.",
       "noMd": "Pengeu un fitxer de marcatge (.md)",
-      "failedToOpenPdf": "El document no es va poder obrir en una fitxa nova. Comproveu la configuració del vostre navegador.",
-      "termTypeError": "Seleccioneu un tipus de terme vàlid.",
-      "noVersion": "Introduïu un número de versió."
+      "failedToOpenPdf": "El document no es va poder obrir en una fitxa nova. Comproveu la configuració del vostre navegador."
     },
     "buttons": {
       "addNewTerm": "Afegiu un nou terme",
@@ -951,7 +954,8 @@
       "openDocument": "Document obert",
       "cancel": "Cancel·lar",
       "save": "Mantenir",
-      "delete": "Eliminar"
+      "delete": "Eliminar",
+      "removeFile": "Eliminar arxiu"
     },
     "messages": {
       "allTermsCreated": "Ja s'han creat tots els tipus de termes. No podeu afegir més termes."
@@ -975,22 +979,15 @@
       "acceptance": "L'ús de la plataforma implica l'acceptació total de totes les condicions establertes aquí."
     },
     "addForm": {
-      "title": "Afegiu un nou terme",
-      "termTypeLabel": "Tipus de terme",
-      "selectTermType": "Seleccioneu un tipus de terme",
-      "markdownContentLabel": "Contingut de marcatge",
-      "uploadMarkdown": "Arrossegueu i allibereu un fitxer .md aquí o feu clic per seleccionar -lo",
+      "title": "Afegir Nou Terme",
+      "termTypeLabel": "Tipus de Terme",
+      "selectTermType": "Selecciona un tipus de terme",
+      "markdownContentLabel": "Contingut Markdown",
+      "uploadMarkdown": "Arrossega i deixa anar el teu arxiu markdown aquí o fes clic per cercar",
       "pdfContentLabel": "Contingut PDF",
-      "uploadPdf": "Arrossegueu i allibereu un fitxer .pdf aquí o feu clic per seleccionar -lo",
-      "uploadedFile": "Arxiu penjat",
+      "uploadPdf": "Arrossega i deixa anar el teu arxiu PDF aquí o fes clic per cercar",
       "versionLabel": "Versió",
-      "versionPlaceholder": "Per exemple, \"v1.0\"",
-      "availableTermTypes": {
-        "termsOfUse": "Condicions d'ús",
-        "privacyPolicy": "Política de privadesa",
-        "cookiePolicy": "Política de cookies",
-        "licenses": "Llicències"
-      }
+      "versionPlaceholder": "ex., v1.0"
     },
     "footer": {
       "lastUpdated": "Última actualització: ",

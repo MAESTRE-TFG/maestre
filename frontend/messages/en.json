@@ -930,6 +930,11 @@
 
 
     "TermsPage": {
+      "dragOrDrop": "Drag and drop your file here",
+      "browseFiles": "Browse Files",
+      "supportedPdfFormat": "Supported format: PDF",
+      "supportedMdFormat": "Supported format: MD",
+      "dropIt": "Drop it",
       "header": {
         "title": "MAESTRE - Legal Information",
         "description": "Welcome to our legal information section. Here you'll find all the necessary documents and policies that govern the use of our platform. Please review them carefully to understand your rights and responsibilities."
@@ -966,7 +971,8 @@
         "openDocument": "Open document",
         "cancel": "Cancel",
         "save": "Save",
-        "delete": "Delete"
+        "delete": "Delete",
+        "removeFile": "Remove file"
       },
       "messages": {
         "allTermsCreated": "All term types have already been created. You cannot add more terms."
@@ -996,18 +1002,11 @@
         "termTypeLabel": "Term Type",
         "selectTermType": "Select a term type",
         "markdownContentLabel": "Markdown Content",
-        "uploadMarkdown": "Drag and drop a .md file here, or click to select one",
+        "uploadMarkdown": "Drag & drop your markdown file here or click to browse",
         "pdfContentLabel": "PDF Content",
-        "uploadPdf": "Drag and drop a .pdf file here, or click to select one",
-        "uploadedFile": "Uploaded file",
+        "uploadPdf": "Drag & drop your PDF file here or click to browse",
         "versionLabel": "Version",
-        "versionPlaceholder": "E.g., 'v1.0'",
-        "availableTermTypes": {
-          "termsOfUse": "Terms of Use",
-          "privacyPolicy": "Privacy Policy",
-          "cookiePolicy": "Cookie Policy",
-          "licenses": "Licenses"
-        }
+        "versionPlaceholder": "e.g., v1.0"
       },
       "footer": {
         "lastUpdated": "Last updated: ",
