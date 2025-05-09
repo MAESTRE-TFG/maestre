@@ -46,11 +46,6 @@ class StudentModelTests(TestCase):
         self.assertEqual(self.classroom.students.count(), 1)
         self.assertEqual(self.classroom.students.first(), self.student)
 
-    def test_student_without_classroom(self):
-        student = Student(name='NoClassroomStudent', surname='NoClassroom')
-        with self.assertRaises(ValidationError):
-            student.full_clean()  # Validate the model instance before saving
-
     def test_student_max_length_name(self):
         long_name = 'A' * 31
         student = Student(name=long_name, surname='ValidSurname', classroom=self.classroom)

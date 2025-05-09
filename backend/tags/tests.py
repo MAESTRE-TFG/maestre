@@ -1,8 +1,9 @@
+from django.core.exceptions import ValidationError
 from django.test import TestCase
 from rest_framework.test import APIClient
 from rest_framework import status
 from django.contrib.auth import get_user_model
-from .models import Tag
+from .models import Tag, validate_user_tags_limit, validate_document_tags_limit
 from materials.models import Document
 from classrooms.models import Classroom
 
@@ -269,3 +270,47 @@ class TagViewSetAdditionalTests(TestCase):
         response = self.client.get('/api/tags/filtered_documents_user/', {'tags': 'Test Tag'})
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertIn('Authentication credentials were not provided.', str(response.data))
+
+
+class TagModelTests(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="testuser",
+            email="testuser@example.com",
+            password="password"
+        )
+        self.classroom = Classroom.objects.create(name="Test Classroom", creator=self.user)
+        self.document = Document.objects.create(name="Test Document", classroom=self.classroom)
+        self.tag = Tag.objects.create(name="Test Tag", creator=self.user)
+
+    def test_validate_document_tags_limit(self):
+        # Add 5 tags to the document
+        for i in range(5):
+            tag = Tag.objects.create(name=f"Tag {i}", creator=self.user)
+            self.document.tags.add(tag)
+
+        with self.assertRaises(ValidationError) as context:
+            validate_document_tags_limit(self.document)
+        self.assertIn('A document can only have up to 5 tags.', str(context.exception))
+
+    def test_invalid_hexadecimal_color_code(self):
+        tag = Tag(name="Invalid Color Tag", creator=self.user, color="invalid")
+        with self.assertRaises(ValidationError) as context:
+            tag.full_clean()
+        self.assertIn('Invalid hexadecimal color code.', str(context.exception))
+
+    def test_clean_method_validates_uniqueness(self):
+        # Attempt to create a duplicate tag
+        duplicate_tag = Tag(name="Test Tag", creator=self.user)
+        with self.assertRaises(ValidationError) as context:
+            duplicate_tag.full_clean()
+        self.assertIn('Tag with this Name and Creator already exists.', str(context.exception))
+
+    def test_save_calls_full_clean(self):
+        tag = Tag(name="New Tag", creator=self.user, color="#123456")
+        # Save should call full_clean without raising errors
+        tag.save()
+        self.assertEqual(Tag.objects.count(), 2)
+
+    def test_str_method(self):
+        self.assertEqual(str(self.tag), "Test Tag")
