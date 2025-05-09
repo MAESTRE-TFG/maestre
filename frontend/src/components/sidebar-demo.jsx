@@ -262,7 +262,7 @@ export function SidebarDemo({ ContentComponent, params }) {
               <SidebarLink
                 link={{
                   label: t("links.signout"),
-                  href: "/",
+                  href: "#",
                   icon: (
                     <IconArrowLeft
                       className={cn(
@@ -272,7 +272,10 @@ export function SidebarDemo({ ContentComponent, params }) {
                     />
                   ),
                 }}
-                onClick={openLogoutModal}
+                onClick={(e) => {
+                  e.preventDefault();
+                  openLogoutModal();
+                }}
               />
             )}
           </div>

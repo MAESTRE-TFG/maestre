@@ -45,20 +45,18 @@ export default function RootLayout({ children, params }) {
   }
 
   return (
-    <html lang={locale} suppressHydrationWarning className={`${geistSans.variable} ${geistMono.variable} ${alfaSlabOne.className}`}>
-      <body>
-        <NextIntlClientProvider locale={locale} messages={messages[locale] || {}}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="system"
-            enableSystem
-            disableTransitionOnChange
-          >
-            {children}
-            <CookieConsent />
-          </ThemeProvider>
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <>
+      <NextIntlClientProvider locale={locale} messages={messages[locale] || {}}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          {children}
+          <CookieConsent />
+        </ThemeProvider>
+      </NextIntlClientProvider>
+    </>
   );
 }
