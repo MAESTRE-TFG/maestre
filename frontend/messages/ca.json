@@ -996,9 +996,9 @@
       "lastUpdated": "Última actualització: ",
       "contactSupport": "Si teniu preguntes sobre els nostres termes o no els podeu accedir, poseu -vos en contacte amb nosaltres."
     },
-    "deleteModal": {
-      "title": "Confirmeu l'eliminació",
-      "description": "Esteu segur que voleu suprimir aquest document? Aquesta acció no es pot desfer."
+    "modals": {
+      "deleteTitle": "Eliminar terme",
+      "deleteConfirmation": "Està segur que voleu eliminar aquest terme?"
     }
   },
 

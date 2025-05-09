@@ -1008,9 +1008,9 @@
       "lastUpdated": "Última actualización: ",
       "contactSupport": "Si tienes preguntas sobre nuestros términos o no puedes acceder a ellos, por favor contáctanos."
     },
-    "deleteModal": {
-      "title": "Confirmar Eliminación",
-      "description": "¿Estás seguro de que deseas eliminar este documento? Esta acción no se puede deshacer."
+    "modals": {
+      "deleteTitle": "Confirmar Eliminación",
+      "deleteConfirmation": "¿Estás seguro de que deseas eliminar este documento? Esta acción no se puede deshacer."
     }
   },
 

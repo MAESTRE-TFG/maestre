@@ -713,47 +713,48 @@ export default function TermsPage() {
                 </div>
 
             {showDeleteModal && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <div
-                  className={`
-                  p-6 rounded-lg shadow-lg max-w-md w-full
-                  ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"}
-                `}
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowDeleteModal(false)}>
+                <div 
+                  className={cn(
+                    "p-6 rounded-xl max-w-md w-full mx-4",
+                    theme === "dark" ? "bg-gray-800" : "bg-white",
+                    "shadow-xl"
+                  )}
+                  onClick={e => e.stopPropagation()}
                 >
-                  <h3 className="text-xl font-bold mb-4">{t("deleteModal.title")} </h3>
-                  <p
-                    className={`
-                    mb-6
-                    ${theme === "dark" ? "text-gray-300" : "text-gray-600"}
-                  `}
-                  >
-                    {t("deleteModal.description")} 
+                  <div className="flex items-center justify-center mb-4 text-red-500">
+                    <IconTrash className="h-12 w-12" />
+                  </div>
+
+                  <h3 className={cn(
+                    "text-xl font-bold mb-2 text-center",
+                    theme === "dark" ? "text-white" : "text-gray-800"
+                  )}>
+                    {t("modals.deleteTitle")}
+                  </h3>
+
+                  <p className={cn(
+                    "mb-6 text-center",
+                    theme === "dark" ? "text-gray-300" : "text-gray-600"
+                  )}>
+                    {t("modals.deleteConfirmation")}
                   </p>
-                  <div className="flex justify-end space-x-3">
+
+                  <div className="flex justify-center gap-3">
                     <button
-                      onClick={() => {
-                        setShowDeleteModal(false);
-                        setTermToDelete(null);
-                      }}
-                      className={`
-                        px-4 py-2 rounded-md
-                        ${theme === "dark" 
-                          ? "bg-gray-700 text-gray-300 hover:bg-gray-600" 
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"}
-                      `}
+                      onClick={() => setShowDeleteModal(false)}
+                      className={cn(
+                        "px-4 py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1",
+                        theme === "dark" ? "bg-gray-700 hover:bg-gray-600 text-white" : "bg-gray-200 hover:bg-gray-300 text-gray-800"
+                      )}
                     >
-                      {t("buttons.cancel")} 
+                      {t("buttons.cancel")}
                     </button>
                     <button
                       onClick={confirmDelete}
-                      className={`
-                        px-4 py-2 rounded-md
-                        ${theme === "dark" 
-                          ? "bg-red-600 text-white hover:bg-red-700" 
-                          : "bg-red-500 text-white hover:bg-red-600"}
-                      `}
+                      className="px-4 py-2 rounded-full bg-red-500 hover:bg-red-600 text-white transition-all duration-300 flex items-center justify-center flex-1"
                     >
-                      {t("buttons.delete")} 
+                      {t("buttons.delete")}
                     </button>
                   </div>
                 </div>

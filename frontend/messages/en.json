@@ -1013,9 +1013,9 @@
         "lastUpdated": "Last updated: ",
         "contactSupport": "If you have any questions about our terms or cannot access them, please contact us."
       },
-      "deleteModal": {
-        "title": "Confirm Deletion",
-        "description": "Are you sure you want to delete this document? This action cannot be undone."
+      "modals": {
+        "deleteTitle": "Confirm Deletion",
+        "deleteConfirmation": "Are you sure you want to delete this document? This action cannot be undone."
       }
     },
 

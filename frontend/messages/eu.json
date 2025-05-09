@@ -960,9 +960,9 @@
       "lastUpdated": "Azken eguneratzea: ",
       "contactSupport": "Gure baldintzei buruzko galderak izanez gero edo ezin dituzu sartu, jar zaitez gurekin harremanetan."
     },
-    "deleteModal": {
-      "title": "Berretsi ezabatzea",
-      "description": "Ziur dokumentu hau ezabatu nahi duzula? Ekintza hau ezin da desegin."
+    "modals": {
+      "deleteTitle": "Berretsi ezabatzea",
+      "deleteConfirmation": "Ziur dokumentu hau ezabatu nahi duzula? Ekintza hau ezin da desegin."
     }
   },
   "CreateSchoolPage": {

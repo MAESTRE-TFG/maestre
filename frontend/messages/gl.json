@@ -955,9 +955,9 @@
       "lastUpdated": "Última actualización: ",
       "contactSupport": "Se tes preguntas sobre os nosos termos ou non podes acceder a eles, póñase en contacto connosco."
     },
-    "deleteModal": {
-      "title": "Confirmar a eliminación",
-      "description": "¿Estás seguro de que queres eliminar este documento? Esta acción non se pode desfacer."
+    "modals": {
+      "deleteTitle": "Confirmar a eliminación",
+      "deleteConfirmation": "¿Estás seguro de que queres eliminar este documento? Esta acción non se pode desfacer."
     }
   },
   "CreateSchoolPage": {
