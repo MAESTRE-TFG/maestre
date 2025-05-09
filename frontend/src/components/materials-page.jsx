@@ -490,7 +490,7 @@ export function MaterialsPage({ classroomId }) {
             >
           <div className="flex items-center justify-center mb-4 text-[#A350C4]">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" clipRule="evenodd" />
+              <path fillRule="evenodd" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" />
             </svg>
           </div>
 
@@ -772,9 +772,10 @@ export function MaterialsPage({ classroomId }) {
                               className="text-base font-medium text-neutral-700 dark:text-neutral-300 cursor-pointer hover:text-blue-600 dark:hover:text-blue-400 transition-colors truncate max-w-[calc(100%-30px)] flex items-center gap-2"
                               title={material.name}
                               onClick={() => {
+                                // ... existing code ...
                                 const fileUrl = material.file.startsWith('http')
                                   ? material.file
-                                  : `${getApiBaseUrl()}${material.file}`;
+                                  : `${getApiBaseUrl()}/media/documents/${material.file.split('/').pop()}`;
                                 window.open(fileUrl, '_blank');
                               }}>
                               <svg

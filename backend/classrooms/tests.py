@@ -136,3 +136,68 @@ class ClassroomModelTests(TestCase):
         classrooms = Classroom.objects.all()
         self.assertEqual(classrooms[0].name, 'A Classroom')
         self.assertEqual(classrooms[1].name, 'B Classroom')
+
+
+class ClassroomViewSetAdditionalTests(APITestCase):
+    def setUp(self):
+        self.user = CustomUser.objects.create_user(
+            username='testuser',
+            email='testuser@example.com',
+            password='testpassword'
+        )
+        self.token = Token.objects.create(user=self.user)
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {self.token.key}")
+
+        self.classroom_data = {
+            'name': 'Test Classroom',
+            'academic_course': 'Math',
+            'description': 'A test classroom',
+            'academic_year': '2023-2024'
+        }
+        self.classroom = Classroom.objects.create(**self.classroom_data, creator=self.user)
+
+    def test_get_queryset_unauthenticated(self):
+        self.client.credentials()  # Remove authentication
+        response = self.client.get(reverse('classroom-list'))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+    def test_create_classroom_max_limit_reached(self):
+        # Simulate reaching the maximum number of classrooms
+        with self.settings(MAX_CLASSROOMS_PER_TEACHER=1):
+            response = self.client.post(reverse('classroom-list'), self.classroom_data, format='json')
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            self.assertIn('You cannot create more than 1 classrooms.', str(response.data))
+
+    def test_update_classroom_invalid_data(self):
+        url = reverse('classroom-detail', args=[self.classroom.id])
+        invalid_data = self.classroom_data.copy()
+        invalid_data['academic_year'] = 'invalid-year'
+        response = self.client.patch(url, invalid_data, format='json')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn('Validation error occurred.', str(response.data))
+
+    def test_destroy_classroom_no_permission(self):
+        other_user = CustomUser.objects.create_user(
+            username='otheruser',
+            email='otheruser@example.com',
+            password='otherpassword'
+        )
+        other_token = Token.objects.create(user=other_user)
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {other_token.key}")
+        url = reverse('classroom-detail', args=[self.classroom.id])
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(Classroom.objects.count(), 1)
+
+    def test_check_object_permissions_not_creator_or_staff(self):
+        other_user = CustomUser.objects.create_user(
+            username='otheruser',
+            email='otheruser@example.com',
+            password='otherpassword'
+        )
+        other_token = Token.objects.create(user=other_user)
+        self.client.credentials(HTTP_AUTHORIZATION=f"Token {other_token.key}")
+        url = reverse('classroom-detail', args=[self.classroom.id])
+        response = self.client.patch(url, {'name': 'Updated Name'}, format='json')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertIn('You do not have permission to perform this action.', str(response.data))
