@@ -94,6 +94,8 @@ export default function CreateClassroom() {
   const handleSubmit = async (formData) => {
     try {
       const token = localStorage.getItem("authToken");
+      console.log("Submitting data:", formData); // Add logging to see what's being sent
+      
       const response = await fetch(`${getApiBaseUrl()}/api/classrooms/`, {
         method: "POST",
         headers: {
@@ -103,23 +105,31 @@ export default function CreateClassroom() {
         body: JSON.stringify(formData),
       });
 
+      const data = await response.json();
+      console.log("Response:", data); // Log the response for debugging
+
       if (response.ok) {
         setAlert({ type: "success", message: t("alerts.success") });
         router.push(`/${locale}/classrooms`);
       } else {
-        const data = await response.json();
         if (data.error) {
-          // Use the translation for max classrooms error if it matches
           if (data.error.includes("You cannot create more than")) {
             setAlert({ type: "error", message: t("alerts.maxClassroomsReached") });
           } else {
             setAlert({ type: "error", message: data.error });
           }
+        } else if (data.details) {
+          // Handle validation errors
+          const errorMessage = Object.entries(data.details)
+            .map(([field, errors]) => `${field}: ${errors.join(', ')}`)
+            .join('; ');
+          setAlert({ type: "error", message: errorMessage });
         } else {
           setAlert({ type: "error", message: t("alerts.creationFailed") });
         }
       }
     } catch (err) {
+      console.error("Error:", err);
       setAlert({ type: "error", message: t("alerts.networkError") });
     }
   };
