@@ -682,6 +682,10 @@
       "buttons": {
         "cancel": "Cancel",
         "update": "Update"
+      },
+      "alerts": {
+        "passwordSameAsUsername": "Password cannot be the same as your username",
+        "invalidEmail": "Please enter a valid email address"
       }
     },
 
@@ -1026,10 +1030,22 @@
         "logoAlt": "MAESTRE Logo"
       },
       "alerts": {
-        "mustSignUp": "You must sign up to create a school.",
-        "success": "School created successfully!",
-        "failure": "Failed to create school.",
-        "networkError": "Network error occurred."
+        "usernameTooLong": "Username cannot exceed 30 characters",
+        "emailTooLong": "Email cannot exceed 255 characters", 
+        "nameTooLong": "Name cannot exceed 30 characters",
+        "surnameTooLong": "Surname cannot exceed 30 characters",
+        "passwordTooLong": "Password cannot exceed 128 characters",
+        "passwordTooShort": "Password must be at least 8 characters long",
+        "passwordUppercase": "Password must contain at least one uppercase letter",
+        "passwordLowercase": "Password must contain at least one lowercase letter",
+        "passwordNumber": "Password must contain at least one number",
+        "passwordSpecialCharacter": "Password must contain at least one special character",
+        "passwordNoWhitespace": "Password cannot contain leading or trailing whitespace",
+        "signupSuccess": "Account created successfully",
+        "signupFailure": "Registration failed",
+        "networkError": "A network error occurred",
+        "invalidEmailFormat": "Please enter a valid email address",
+        "passwordSameAsUsername": "Password cannot be the same as your username"
       }
     },
 
@@ -1075,7 +1091,9 @@
         "passwordSpecialCharacter": "Password must contain at least one special character",
         "signinSuccess": "Signed in successfully",
         "signinFailure": "Login failed",
-        "networkError": "Network error occurred"
+        "networkError": "Network error occurred",
+        "passwordSameAsUsername": "Password cannot be the same as your username",
+        "invalidEmailFormat": "Please enter a valid email address"
       }
     },
 

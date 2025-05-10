@@ -12,7 +12,6 @@ import {
   IconEye,
   IconEyeOff,
 } from "@tabler/icons-react";
-import Alert from "@/components/ui/Alert";
 import { useTranslations } from "next-intl";
 
 export function SignupForm({ onSubmit, showAlert, params }) {

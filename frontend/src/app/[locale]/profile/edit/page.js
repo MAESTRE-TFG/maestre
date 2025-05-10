@@ -205,8 +205,8 @@ const ProfileEdit = () => {
         showAlert("warning", "Password must contain at least one number");
         return;
       }
-      if (!/[!@#$%^&*]/.test(value)) {
-        showAlert("warning", "Password must contain at least one special character (!@#$%^&*)");
+      if (!/[!@#$%^&*_-]/.test(value)) {
+        showAlert("warning", "Password must contain at least one special character (!@#$%^&*_-)");
         return;
       }
     }
@@ -232,7 +232,9 @@ const ProfileEdit = () => {
       updatePayload.oldPassword = formData.oldPassword;
     }
 
-    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    // Replace the simple email validation with the more robust one
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(formData.email)) {
       showAlert("error", t("alerts.invalidEmail"));
       return;
     }

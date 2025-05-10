@@ -647,8 +647,14 @@
     "buttons": {
       "cancel": "Cancelar",
       "update": "Actualización"
+    },
+    "alerts": {
+      "passwordSameAsUsername": "O contrasinal non pode ser igual que o teu nome de usuario",
+      "invalidEmail": "Por favor, introduce un enderezo de correo electrónico válido"
     }
   },
+
+
   "MaterialsPage": {
     "filterByTags": "Filtro por etiquetas:",
     "createMaterial": "Crear novo material",
@@ -977,20 +983,22 @@
     "videoCaption": "O mestre está aquí para axudarche nas túas clases",
     "videoAutoplayError": "Impediu a reprodución automática de vídeo",
     "alerts": {
-      "usernameTooLong": "O nome de usuario non pode superar os 30 caracteres",
-      "emailTooLong": "O correo electrónico non pode exceder os 255 caracteres",
+      "usernameTooLong": "O nome de usuario non pode exceder os 30 caracteres",
+      "emailTooLong": "O correo electrónico non pode exceder os 255 caracteres", 
       "nameTooLong": "O nome non pode exceder os 30 caracteres",
-      "surnameTooLong": "O apelido non pode superar os 30 caracteres",
+      "surnameTooLong": "O apelido non pode exceder os 30 caracteres",
       "passwordTooLong": "O contrasinal non pode exceder os 128 caracteres",
       "passwordTooShort": "O contrasinal debe ter polo menos 8 caracteres",
-      "passwordUppercase": "O contrasinal debe conter polo menos unha maiúscula",
-      "passwordLowercase": "O contrasinal debe conter polo menos unha carta en minúscula",
+      "passwordUppercase": "O contrasinal debe conter polo menos unha letra maiúscula",
+      "passwordLowercase": "O contrasinal debe conter polo menos unha letra minúscula",
       "passwordNumber": "O contrasinal debe conter polo menos un número",
-      "passwordSpecialCharacter": "O contrasinal debe conter polo menos un personaxe especial",
-      "passwordNoWhitespace": "O contrasinal non pode conter espazos en branco ao comezo ou ao final",
-      "signupSuccess": "Conta creada",
+      "passwordSpecialCharacter": "O contrasinal debe conter polo menos un carácter especial",
+      "passwordNoWhitespace": "O contrasinal non pode conter espazos en branco ao principio ou ao final",
+      "signupSuccess": "Conta creada con éxito",
       "signupFailure": "Erro ao rexistrarse",
-      "networkError": "Produciuse un erro de rede"
+      "networkError": "Produciuse un erro de rede",
+      "invalidEmailFormat": "Por favor, introduce un enderezo de correo electrónico válido",
+      "passwordSameAsUsername": "O contrasinal non pode ser igual que o teu nome de usuario"
     }
   },
   "SignInPage": {
@@ -1009,7 +1017,9 @@
       "passwordSpecialCharacter": "O contrasinal debe conter polo menos un personaxe especial",
       "signinSuccess": "Inicio de sesión exitoso",
       "signinFailure": "Erro no rexistro",
-      "networkError": "Produciuse un erro de rede"
+      "networkError": "Produciuse un erro de rede",
+      "passwordSameAsUsername": "O contrasinal non pode ser igual que o teu nome de usuario",
+      "invalidEmailFormat": "Por favor, introduce un enderezo de correo electrónico válido"
     }
   },
   "ProfileEditPage": {

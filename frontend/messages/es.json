@@ -629,56 +629,60 @@
 
   "ProfileEditForm": {
     "fields": {
-    "username": {
-      "label": "Nombre de Usuario",
-      "placeholder": "Introduce tu nombre de usuario"
-    },
-    "email": {
-      "label": "Correo Electrónico",
-      "placeholder": "Introduce tu correo electrónico"
-    },
-    "name": {
-      "label": "Nombre",
-      "placeholder": "Introduce tu nombre"
-    },
-    "surname": {
-      "label": "Apellido",
-      "placeholder": "Introduce tu apellido"
-    },
-    "oldPassword": {
-      "label": "Contraseña Antigua",
-      "placeholder": "Introduce tu contraseña antigua"
-    },
-    "newPassword": {
-      "label": "Nueva Contraseña",
-      "placeholder": "· · · · ·"
-    },
-    "confirmPassword": {
-      "label": "Confirmar",
-      "placeholder": "· · · · ·"
-    },
-    "region": {
-      "label": "Región",
-      "placeholder": "Selecciona una región"
-    },
-    "city": {
-      "label": "Ciudad",
-      "placeholder": "Introduce tu ciudad"
-    },
-    "school": {
-      "label": "Centro Educativo",
-      "placeholder": "Selecciona un centro educativo",
-      "notFound": "¿No encuentras tu centro?",
-      "createButton": "Crear uno"
-    }
+      "username": {
+        "label": "Nombre de Usuario",
+        "placeholder": "Introduce tu nombre de usuario"
+      },
+      "email": {
+        "label": "Correo Electrónico",
+        "placeholder": "Introduce tu correo electrónico"
+      },
+      "name": {
+        "label": "Nombre",
+        "placeholder": "Introduce tu nombre"
+      },
+      "surname": {
+        "label": "Apellido",
+        "placeholder": "Introduce tu apellido"
+      },
+      "oldPassword": {
+        "label": "Contraseña Antigua",
+        "placeholder": "Introduce tu contraseña antigua"
+      },
+      "newPassword": {
+        "label": "Nueva Contraseña",
+        "placeholder": "· · · · ·"
+      },
+      "confirmPassword": {
+        "label": "Confirmar",
+        "placeholder": "· · · · ·"
+      },
+      "region": {
+        "label": "Región",
+        "placeholder": "Selecciona una región"
+      },
+      "city": {
+        "label": "Ciudad",
+        "placeholder": "Introduce tu ciudad"
+      },
+      "school": {
+        "label": "Centro Educativo",
+        "placeholder": "Selecciona un centro educativo",
+        "notFound": "¿No encuentras tu centro?",
+        "createButton": "Crear uno"
+      }
     },
     "password": {
-    "changeTitle": "¿Quieres cambiar tu contraseña?",
-    "changeDescription": "Rellena los campos de arriba para actualizar tu contraseña."
+      "changeTitle": "¿Quieres cambiar tu contraseña?",
+      "changeDescription": "Rellena los campos de arriba para actualizar tu contraseña."
     },
     "buttons": {
-    "cancel": "Cancelar",
-    "update": "Actualizar"
+      "cancel": "Cancelar",
+      "update": "Actualizar"
+    },
+    "alerts": {
+      "passwordSameAsUsername": "La contraseña no puede ser igual que tu nombre de usuario",
+      "invalidEmail": "Por favor, introduce una dirección de correo electrónico válida"
     }
   },
 
@@ -1047,7 +1051,9 @@
       "passwordNoWhitespace": "La contraseña no puede contener espacios en blanco al principio o al final",
       "signupSuccess": "Cuenta creada con éxito",
       "signupFailure": "Error al registrarse",
-      "networkError": "Ocurrió un error de red"
+      "networkError": "Ocurrió un error de red",
+      "invalidEmailFormat": "Por favor, introduce una dirección de correo electrónico válida",
+      "passwordSameAsUsername": "La contraseña no puede ser igual que tu nombre de usuario"
     }
   },
 
@@ -1068,7 +1074,9 @@
       "passwordSpecialCharacter": "La contraseña debe contener al menos un carácter especial",
       "signinSuccess": "Inicio de sesión exitoso",
       "signinFailure": "Error al iniciar sesión",
-      "networkError": "Ocurrió un error de red"
+      "networkError": "Ocurrió un error de red",
+      "passwordSameAsUsername": "La contraseña no puede ser igual que tu nombre de usuario",
+      "invalidEmailFormat": "Por favor, introduce una dirección de correo electrónico válida"
     }
   },
 

@@ -650,6 +650,10 @@
     "buttons": {
       "cancel": "Indargabetu",
       "update": "Eguneratu"
+    },
+    "alerts": {
+      "passwordSameAsUsername": "Pasahitza ezin da erabiltzaile-izena bezalakoa izan",
+      "invalidEmail": "Mesedez, sartu baliozko helbide elektronikoa"
     }
   },
   "MaterialsPage": {
@@ -982,20 +986,22 @@
     "videoCaption": "Masterra hemen dago zure klaseetan laguntzeko",
     "videoAutoplayError": "Bideo erreprodukzio automatikoa saihestu da",
     "alerts": {
-      "usernameTooLong": "Erabiltzaile izenak ezin du 30 karaktere baino gehiago izan",
-      "emailTooLong": "Posta elektronikoa ezin da 255 karaktere baino gehiago izan",
-      "nameTooLong": "Izenak ezin du 30 karaktere baino gehiago izan",
-      "surnameTooLong": "Abizenak ezin du 30 karaktere baino gehiago izan",
-      "passwordTooLong": "Pasahitzak ezin du 128 karaktere baino gehiago izan",
+      "usernameTooLong": "Erabiltzaile-izenak ezin ditu 30 karaktere baino gehiago izan",
+      "emailTooLong": "Posta elektronikoak ezin ditu 255 karaktere baino gehiago izan",
+      "nameTooLong": "Izenak ezin ditu 30 karaktere baino gehiago izan",
+      "surnameTooLong": "Abizenak ezin ditu 30 karaktere baino gehiago izan", 
+      "passwordTooLong": "Pasahitzak ezin ditu 128 karaktere baino gehiago izan",
       "passwordTooShort": "Pasahitzak gutxienez 8 karaktere izan behar ditu",
-      "passwordUppercase": "Pasahitzak gutxienez letra larriz eduki behar du",
-      "passwordLowercase": "Pasahitzak gutxienez letra xehe bat eduki behar du",
-      "passwordNumber": "Pasahitzak gutxienez zenbaki bat eduki behar du",
-      "passwordSpecialCharacter": "Pasahitzak gutxienez karaktere berezia izan behar du",
-      "passwordNoWhitespace": "Pasahitzak ezin ditu hasiera hutsik hasieran edo amaieran",
-      "signupSuccess": "Kontua sortu da",
+      "passwordUppercase": "Pasahitzak gutxienez letra larri bat izan behar du",
+      "passwordLowercase": "Pasahitzak gutxienez letra xehe bat izan behar du",
+      "passwordNumber": "Pasahitzak gutxienez zenbaki bat izan behar du",
+      "passwordSpecialCharacter": "Pasahitzak gutxienez karaktere berezi bat izan behar du",
+      "passwordNoWhitespace": "Pasahitzak ezin du zuriunerik izan hasieran edo amaieran",
+      "signupSuccess": "Kontua arrakastaz sortu da",
       "signupFailure": "Errorea erregistratzean",
-      "networkError": "Sareko errorea gertatu da"
+      "networkError": "Sare-errorea gertatu da",
+      "invalidEmailFormat": "Mesedez, sartu baliozko helbide elektroniko bat",
+      "passwordSameAsUsername": "Pasahitza ezin da erabiltzaile-izena bezalakoa izan"
     }
   },
   "SignInPage": {
@@ -1014,7 +1020,9 @@
       "passwordSpecialCharacter": "Pasahitzak gutxienez karaktere berezia izan behar du",
       "signinSuccess": "Arrakasta saioa",
       "signinFailure": "Errorea erregistratzean",
-      "networkError": "Sareko errorea gertatu da"
+      "networkError": "Sareko errorea gertatu da",
+      "passwordSameAsUsername": "Pasahitza ezin da erabiltzaile-izena bezalakoa izan",
+      "invalidEmailFormat": "Mesedez, sartu baliozko helbide elektronikoa"
     }
   },
   "ProfileEditPage": {

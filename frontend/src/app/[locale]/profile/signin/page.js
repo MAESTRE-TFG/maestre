@@ -45,6 +45,15 @@ export default function SignIn() {
       showAlert("warning", t("alerts.emailOrUsernameTooLong"));
       return;
     }
+
+    // Email validation for when emailOrUsername contains an email
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (formData.emailOrUsername && formData.emailOrUsername.includes('@') && 
+        !emailRegex.test(formData.emailOrUsername)) {
+      showAlert("warning", t("alerts.invalidEmailFormat"));
+      return;
+    }
+
     if (formData.password && formData.password.length > 128) {
       showAlert("warning", t("alerts.passwordTooLong"));
       return;
@@ -65,8 +74,14 @@ export default function SignIn() {
       showAlert("warning", t("alerts.passwordNumber"));
       return;
     }
-    if (formData.password && !/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
+    if (formData.password && !/[!@#$%^&*(),.?":{}|<>-_]/.test(formData.password)) {
       showAlert("warning", t("alerts.passwordSpecialCharacter"));
+      return;
+    }
+    // Add username-password validation
+    if (formData.password && formData.emailOrUsername && 
+        formData.password.toLowerCase() === formData.emailOrUsername.toLowerCase()) {
+      showAlert("warning", t("alerts.passwordSameAsUsername"));
       return;
     }
 

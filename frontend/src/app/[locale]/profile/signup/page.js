@@ -45,6 +45,12 @@ export default function SignUp() {
       showAlert("warning", t("alerts.usernameTooLong"));
       return;
     }
+    // Email validation with improved regex
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(formData.email)) {
+      showAlert("warning", t("alerts.invalidEmailFormat"));
+      return;
+    }
     if (formData.email && formData.email.length > 255) {
       showAlert("warning", t("alerts.emailTooLong"));
       return;
@@ -81,12 +87,17 @@ export default function SignUp() {
       showAlert("warning", t("alerts.passwordNumber"));
       return;
     }
-    if (formData.password && !/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
+    if (formData.password && !/[!@#$%^&*(),.?":{}|<>_-]/.test(formData.password)) {
       showAlert("warning", t("alerts.passwordSpecialCharacter"));
       return;
     }
     if (formData.password && !/^[^\s]+$/.test(formData.password)) {
       showAlert("warning", t("alerts.passwordNoWhitespace"));
+      return;
+    }
+    if (formData.password && formData.username && 
+        formData.password.toLowerCase() === formData.username.toLowerCase()) {
+      showAlert("warning", t("alerts.passwordSameAsUsername"));
       return;
     }
 
