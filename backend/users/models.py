@@ -28,21 +28,22 @@ class CustomUserManager(BaseUserManager):
 class CustomUser(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(unique=True, max_length=255)
     username = models.CharField(max_length=30, unique=True)
-    is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
-    is_superuser = models.BooleanField(default=False)
-    school = models.ForeignKey(School, on_delete=models.SET_NULL, null=True, blank=True, related_name='users')
+    name = models.CharField(max_length=30)
+    surname = models.CharField(max_length=30)
 
     objects = CustomUserManager()
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username']
 
-    name = models.CharField(max_length=30)
-    surname = models.CharField(max_length=30)
     region = models.CharField(max_length=50, null=True, blank=True, default=None)
     city = models.CharField(max_length=50, null=True, blank=True, default=None)
 
+    school = models.ForeignKey(School, on_delete=models.SET_NULL, null=True, blank=True, related_name='users')
+
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+    is_superuser = models.BooleanField(default=False)
     groups = models.ManyToManyField(
         'auth.Group',
         related_name='custom_user_set',

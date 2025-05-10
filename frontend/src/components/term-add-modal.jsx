@@ -144,10 +144,9 @@ const TermAddModal = ({
       const formData = new FormData();
       formData.append("tag", selectedTermType);
       formData.append("version", version.trim());
-      formData.append("content", mdFile);  // Remove filename parameter
-      formData.append("pdf_content", pdfFile);  // Remove filename parameter
+      formData.append("content", mdFile, mdFile.name);
+      formData.append("pdf_content", pdfFile, pdfFile.name);
       
-      // Generate a more descriptive name based on the term type and version
       const termTypeDisplay = availableTermTypes.find(type => type.value === selectedTermType)?.label || selectedTermType;
       const termName = `${termTypeDisplay} - Version ${version.trim()}`;
       formData.append("name", termName);
@@ -179,22 +178,22 @@ const TermAddModal = ({
     >
       <div
         className={cn(
-          "p-4 rounded-lg max-w-md w-full mx-4 shadow-lg",
+          "p-3 rounded-lg max-w-md w-full mx-4 shadow-lg",
           theme === "dark" ? "bg-gray-800" : "bg-white"
         )}
         onClick={(e) => e.stopPropagation()}
       >
         {alert && <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />}
 
-        <div className="flex flex-col items-center justify-center mb-4">
+        <div className="flex flex-col items-center justify-center mb-2">
           <div className="flex items-center justify-center text-primary">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" viewBox="0 0 24 24" fill="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" viewBox="0 0 24 24" fill="currentColor">
               <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
             </svg>
           </div>
           <h3
             className={cn(
-              "text-lg font-bold text-center",
+              "text-base font-bold text-center",
               theme === "dark" ? "text-white" : "text-gray-800"
             )}
             style={{ fontFamily: "'Poppins', sans-serif" }}
@@ -204,7 +203,7 @@ const TermAddModal = ({
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="mb-4">
+          <div className="mb-2">
             <label className={cn("block text-sm font-bold mb-2", theme === "dark" ? "text-gray-300" : "text-gray-700")}>
               {t("addForm.termTypeLabel")}
             </label>
@@ -212,7 +211,7 @@ const TermAddModal = ({
               value={selectedTermType}
               onChange={(e) => setSelectedTermType(e.target.value)}
               className={cn(
-                "shadow appearance-none border rounded-md w-full py-2 px-3 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500",
+                "shadow appearance-none border rounded-md w-full py-1.5 px-3 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500",
                 theme === "dark" ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-700"
               )}
               required
@@ -226,7 +225,7 @@ const TermAddModal = ({
             </select>
           </div>
 
-          <div className="mb-4">
+          <div className="mb-2">
             <label className={cn("block text-sm font-bold mb-2", theme === "dark" ? "text-gray-300" : "text-gray-700")}>
               {t("addForm.versionLabel")}
             </label>
@@ -236,20 +235,20 @@ const TermAddModal = ({
               onChange={(e) => setVersion(e.target.value)}
               placeholder={t("addForm.versionPlaceholder")}
               className={cn(
-                "shadow appearance-none border rounded-md w-full py-2 px-3 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500",
+                "shadow appearance-none border rounded-md w-full py-1.5 px-3 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500",
                 theme === "dark" ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-700"
               )}
               required
             />
           </div>
 
-          <div className="mb-4">
+          <div className="mb-2">
             <label className={cn("block text-sm font-bold mb-2", theme === "dark" ? "text-gray-300" : "text-gray-700")}>
               {t("addForm.markdownContentLabel")}
             </label>
             <div
               className={cn(
-                "border-2 border-dashed rounded-md p-4 text-center min-h-[120px] flex flex-col items-center justify-center",
+                "border-2 border-dashed rounded-md p-3 text-center min-h-[90px] flex flex-col items-center justify-center",
                 theme === "dark" ? "border-gray-600" : "border-gray-300",
                 mdFile ? "bg-green-500/10" : "",
                 isDraggingMd ? "border-primary bg-primary/5" : ""
@@ -298,13 +297,13 @@ const TermAddModal = ({
             </div>
           </div>
 
-          <div className="mb-4">
+          <div className="mb-2">
             <label className={cn("block text-sm font-bold mb-2", theme === "dark" ? "text-gray-300" : "text-gray-700")}>
               {t("addForm.pdfContentLabel")}
             </label>
             <div
               className={cn(
-                "border-2 border-dashed rounded-md p-4 text-center min-h-[120px] flex flex-col items-center justify-center",
+                "border-2 border-dashed rounded-md p-3 text-center min-h-[90px] flex flex-col items-center justify-center",
                 theme === "dark" ? "border-gray-600" : "border-gray-300",
                 pdfFile ? "bg-green-500/10" : "",
                 isDraggingPdf ? "border-primary bg-primary/5" : ""

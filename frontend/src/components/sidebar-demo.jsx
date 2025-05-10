@@ -89,10 +89,14 @@ export function SidebarDemo({ ContentComponent, params }) {
             }
           );
         } catch (apiError) {
-          console.error("API error during signout:", apiError);
+          // Ignore 401 errors during signout as they're expected
+          if (apiError.response?.status !== 401) {
+            console.error("API error during signout:", apiError);
+          }
         }
       }
 
+      // Continue with local cleanup regardless of API response
       localStorage.removeItem("authToken");
       localStorage.removeItem("user");
       setUser(null);
@@ -106,7 +110,8 @@ export function SidebarDemo({ ContentComponent, params }) {
       }, 3000);
     } catch (error) {
       console.error("Error during signout process:", error);
-
+      
+      // Ensure cleanup happens even if there's an error
       localStorage.removeItem("authToken");
       localStorage.removeItem("user");
       setUser(null);

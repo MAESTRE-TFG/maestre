@@ -56,8 +56,8 @@ class Terms(models.Model):
         if self.content:
             if not self.content.name.endswith('.md'):
                 raise ValidationError("The content file must be a markdown (.md) file.")
-            if hasattr(self.content.file, 'content_type') and self.content.file.content_type != "text/markdown":
-                raise ValidationError("The uploaded markdown file must have a valid markdown content type.")
+            # Remove the strict content-type check for markdown files
+            # as it's not consistently set across different systems
 
         if self.pdf_content:
             if not self.pdf_content.name.endswith('.pdf'):
