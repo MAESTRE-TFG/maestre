@@ -28,7 +28,7 @@ class TermsViewSet(viewsets.ModelViewSet):
         queryset = super().get_queryset()
         tag = self.request.query_params.get('tag', None)
         if tag:
-            queryset = queryset.filter(tag=tag)
+            return queryset.filter(tag=tag)
         return queryset
 
     def perform_create(self, serializer):

@@ -62,22 +62,6 @@ export default function TermsPage() {
     setTimeout(() => setAlert(null), 5000);
   };
 
-  const handleFileUpload = (file, type) => {
-    if (file) {
-      if (type === "md") {
-        setUploadedMdFileName(file.name);
-        const reader = new FileReader();
-        reader.onload = (event) => {
-          setNewTermContent(event.target.result);
-        };
-        reader.readAsText(file);
-      } else if (type === "pdf") {
-        setUploadedPdfFileName(file.name);
-        setPdfFile(file);
-      }
-    }
-  };
-
   // Function to fetch terms data
   useEffect(() => {
     const fetchTerms = async () => {
@@ -197,21 +181,6 @@ export default function TermsPage() {
   // Check if all term types have been created
   const allTermsCreated = terms.length > 0 && getAvailableTermTypes().length === 0;
 
-  // Get static PDF filename based on term tag
-  const getStaticPdfFilename = (tag) => {
-    switch (tag) {
-      case "cookies":
-        return "cookie_policy.pdf";
-      case "privacy":
-        return "privacy_policy.pdf";
-      case "terms":
-        return "terms_of_use.pdf";
-      case "license":
-        return "licenses.pdf";
-      default:
-        return null;
-    }
-  };
 
   // Handle delete button click
   const handleDelete = (id) => {
@@ -249,49 +218,9 @@ export default function TermsPage() {
     }
   };
 
-  const handleAddTerm = async () => {
-    // Validate form
-    if (!newTermType) {
-      showAlert("error", t("alerts.termTypeError")); 
-      return;
-    }
-
-    if (!uploadedMdFileName) {
-      showAlert("error", t("alerts.noMd")); 
-      return;
-    }
-
-    if (!uploadedPdfFileName || !pdfFile) {
-      showAlert("error", t("alerts.noPdf")); 
-      return;
-    }
-
-    if (!newTermVersion) {
-      showAlert("error", t("alerts.noVersion")); 
-      return;
-    }
-
+  const handleAddTerm = async (formData) => {
     try {
       const token = localStorage.getItem("authToken");
-
-      // Prepare form data for file upload
-      const formData = new FormData();
-      formData.append("tag", newTermType);
-      formData.append("version", newTermVersion);
-      formData.append("name", getTermTitle(newTermType));
-
-      // Convert content to a Blob for file upload
-      const contentBlob = new Blob([newTermContent], { type: "text/markdown" });
-      formData.append("content", contentBlob, `${newTermType}.md`);
-
-      // Add the PDF file directly from our stored state
-      if (pdfFile) {
-        formData.append("pdf_content", pdfFile, `${newTermType}.pdf`);
-      } else {
-        showAlert("error", t("alerts.noPdf")); 
-        return;
-      }
-
       const response = await axios.post(
         `${getApiBaseUrl()}/api/terms/`,
         formData,
@@ -300,11 +229,9 @@ export default function TermsPage() {
             Authorization: `Token ${token}`,
             "Content-Type": "multipart/form-data",
           },
-          withCredentials: true,
         }
       );
 
-      // Add the new term to local state
       const newTerm = {
         ...response.data,
         icon: getIconForTag(response.data.tag),
@@ -312,15 +239,6 @@ export default function TermsPage() {
       };
 
       setTerms([...terms, newTerm]);
-      setNoTermsFound(false);
-
-      // Reset form and close modal
-      setNewTermType("");
-      setNewTermContent("");
-      setNewTermVersion("");
-      setUploadedMdFileName(""); // Reset markdown file name
-      setUploadedPdfFileName(""); // Reset PDF file name
-      setPdfFile(null); // Reset the PDF file object
       setShowAddForm(false);
       showAlert("success", t("alerts.addSuccess"));
     } catch (error) {
@@ -379,11 +297,11 @@ export default function TermsPage() {
 
                 {/* Header Section with Logo */}
                 <br />
-                <div className="w-full max-w-4xl flex items-center mb-8 justify-center space-x-6">
+                <div className="w-full max-w-4xl mx-auto flex flex-col items-center mb-8 text-center">
                   <img
                     src={theme === "dark" ? "/static/logos/maestre_logo_white_transparent.webp" : "/static/logos/maestre_logo_blue_transparent.webp"}
                     alt="MAESTRE Logo"
-                    className="w-20 h-20 drop-shadow-lg"
+                    className="w-20 h-20 drop-shadow-lg mb-4"
                   />
                   <div className="text-center">
                     <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
@@ -684,26 +602,11 @@ export default function TermsPage() {
             {/* Add Term Form */}
             {showAddForm && (
               <AddTermModal
-                showAddForm={showAddForm}
-                setShowAddForm={setShowAddForm}
-                newTermType={newTermType}
-                setNewTermType={setNewTermType}
-                newTermContent={newTermContent}
-                setNewTermContent={setNewTermContent}
-                newTermVersion={newTermVersion}
-                setNewTermVersion={setNewTermVersion}
-                uploadedMdFileName={uploadedMdFileName}
-                setUploadedMdFileName={setUploadedMdFileName}
-                uploadedPdfFileName={uploadedPdfFileName}
-                setUploadedPdfFileName={setUploadedPdfFileName}
-                pdfFile={pdfFile}
-                setPdfFile={setPdfFile}
-                handleFileUpload={handleFileUpload}
-                handleAddTerm={handleAddTerm}
-                alert={alert}
-                setAlert={setAlert}
-                t={t}
-                theme={theme}
+                showModal={showAddForm}
+                setShowModal={setShowAddForm}
+                onTermCreate={handleAddTerm}
+                isProcessing={false}
+                availableTermTypes={getAvailableTermTypes()}
               />
             )}
 
@@ -713,47 +616,48 @@ export default function TermsPage() {
                 </div>
 
             {showDeleteModal && (
-              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-                <div
-                  className={`
-                  p-6 rounded-lg shadow-lg max-w-md w-full
-                  ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"}
-                `}
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowDeleteModal(false)}>
+                <div 
+                  className={cn(
+                    "p-6 rounded-xl max-w-md w-full mx-4",
+                    theme === "dark" ? "bg-gray-800" : "bg-white",
+                    "shadow-xl"
+                  )}
+                  onClick={e => e.stopPropagation()}
                 >
-                  <h3 className="text-xl font-bold mb-4">{t("deleteModal.title")} </h3>
-                  <p
-                    className={`
-                    mb-6
-                    ${theme === "dark" ? "text-gray-300" : "text-gray-600"}
-                  `}
-                  >
-                    {t("deleteModal.description")} 
+                  <div className="flex items-center justify-center mb-4 text-red-500">
+                    <IconTrash className="h-12 w-12" />
+                  </div>
+
+                  <h3 className={cn(
+                    "text-xl font-bold mb-2 text-center",
+                    theme === "dark" ? "text-white" : "text-gray-800"
+                  )}>
+                    {t("modals.deleteTitle")}
+                  </h3>
+
+                  <p className={cn(
+                    "mb-6 text-center",
+                    theme === "dark" ? "text-gray-300" : "text-gray-600"
+                  )}>
+                    {t("modals.deleteConfirmation")}
                   </p>
-                  <div className="flex justify-end space-x-3">
+
+                  <div className="flex justify-center gap-3">
                     <button
-                      onClick={() => {
-                        setShowDeleteModal(false);
-                        setTermToDelete(null);
-                      }}
-                      className={`
-                        px-4 py-2 rounded-md
-                        ${theme === "dark" 
-                          ? "bg-gray-700 text-gray-300 hover:bg-gray-600" 
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"}
-                      `}
+                      onClick={() => setShowDeleteModal(false)}
+                      className={cn(
+                        "px-4 py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1",
+                        theme === "dark" ? "bg-gray-700 hover:bg-gray-600 text-white" : "bg-gray-200 hover:bg-gray-300 text-gray-800"
+                      )}
                     >
-                      {t("buttons.cancel")} 
+                      {t("buttons.cancel")}
                     </button>
                     <button
                       onClick={confirmDelete}
-                      className={`
-                        px-4 py-2 rounded-md
-                        ${theme === "dark" 
-                          ? "bg-red-600 text-white hover:bg-red-700" 
-                          : "bg-red-500 text-white hover:bg-red-600"}
-                      `}
+                      className="px-4 py-2 rounded-full bg-red-500 hover:bg-red-600 text-white transition-all duration-300 flex items-center justify-center flex-1"
                     >
-                      {t("buttons.delete")} 
+                      {t("buttons.delete")}
                     </button>
                   </div>
                 </div>

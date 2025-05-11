@@ -205,8 +205,8 @@ const ProfileEdit = () => {
         showAlert("warning", "Password must contain at least one number");
         return;
       }
-      if (!/[!@#$%^&*]/.test(value)) {
-        showAlert("warning", "Password must contain at least one special character (!@#$%^&*)");
+      if (!/[!@#$%^&*_-]/.test(value)) {
+        showAlert("warning", "Password must contain at least one special character (!@#$%^&*_-)");
         return;
       }
     }
@@ -223,6 +223,19 @@ const ProfileEdit = () => {
       school: formData.school,
     };
 
+    // Username validation
+    const usernameRegex = /^[a-zA-Z0-9_]{3,30}$/;
+    if (!usernameRegex.test(formData.username)) {
+      showAlert("warning", t("alerts.invalidUsername"));
+      return;
+    }
+    
+    // Check for XSS attempts
+    if (formData.username.toLowerCase().includes('<script>')) {
+      showAlert("warning", t("alerts.invalidUsernameCharacters"));
+      return;
+    }
+
     if (formData.password && formData.oldPassword) {
       if (formData.password !== formData.confirmPassword) {
         showAlert("error", t("alerts.passwordMismatch"));
@@ -232,7 +245,9 @@ const ProfileEdit = () => {
       updatePayload.oldPassword = formData.oldPassword;
     }
 
-    if (!/\S+@\S+\.\S+/.test(formData.email)) {
+    // Replace the simple email validation with the more robust one
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(formData.email)) {
       showAlert("error", t("alerts.invalidEmail"));
       return;
     }

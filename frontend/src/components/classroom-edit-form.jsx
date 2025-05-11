@@ -25,7 +25,7 @@ export function ClassroomEditForm({ formData, handleChange, handleUpdate, openDe
   const handleSubmit = async (e) => {
     e.preventDefault();
     await handleUpdate();
-    router.push(`/${locale}/classrooms`);
+    // router.push(`/${locale}/classrooms`);
   };
 
   return (

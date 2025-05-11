@@ -31,6 +31,38 @@ export const CreateClassroomForm = ({ onSubmit, educationalStages }) => {
     setFormData({ ...formData, [name]: value });
   };
 
+  // Add this validation function
+  const validateAcademicYear = (value) => {
+    // Check format AAAA-AAAA
+    const regex = /^\d{4}-\d{4}$/;
+    if (!regex.test(value)) {
+      return t("alerts.invalidAcademicYear");
+    }
+    
+    // Extract years
+    const [firstYear, secondYear] = value.split('-').map(Number);
+    
+    // First year should not be after second year
+    if (firstYear > secondYear) {
+      // return "First year cannot be after second year";
+      return t("alerts.firstYearAfterSecond")
+    }
+    
+    // Both years cannot be the same
+    if (firstYear === secondYear) {
+      // return "Both years cannot be the same";
+      return t("alerts.cantBeSameYear")
+    }
+    
+    // Gap cannot be more than one year
+    if (secondYear - firstYear > 1) {
+      //return "Gap between years cannot be more than one year";
+      return t("alerts.gapTooLarge")
+    }
+    
+    return null; // No error
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -55,9 +87,9 @@ export const CreateClassroomForm = ({ onSubmit, educationalStages }) => {
     }
 
     // Validate academic year
-    const yearPattern = /^\d{4}-\d{4}$/;
-    if (!yearPattern.test(formData.academic_year)) {
-      setAlert({ type: "warning", message: t("alerts.invalidAcademicYear") });
+    const academicYearError = validateAcademicYear(formData.academic_year);
+    if (academicYearError) {
+      setAlert({ type: "warning", message: academicYearError});
       return;
     }
 
@@ -198,13 +230,15 @@ export const CreateClassroomForm = ({ onSubmit, educationalStages }) => {
                   {t("fields.academicYear.label")}
                 </Label>
                 <Input
+                  type="text"
                   id="academic_year"
                   name="academic_year"
-                  placeholder={t("fields.academicYear.placeholder")}
-                  type="text"
-                  required
                   value={formData.academic_year}
                   onChange={handleChange}
+                  placeholder="YYYY-YYYY (e.g., 2023-2024)"
+                  pattern="\d{4}-\d{4}"
+                  className={ 'w-full p-2 border rounded border-gray-300' }
+                  required
                 />
               </LabelInputContainer>
             </div>

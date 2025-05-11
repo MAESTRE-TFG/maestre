@@ -589,7 +589,9 @@
     "alreadyHaveAccount": "Ja teniu un compte?",
     "alerts": {
       "acceptTerms": "Heu d'acceptar els Termes d'ús i la Política de privadesa per registrar -vos.",
-      "signupError": "S'ha produït un error en registrar -se. Torneu -ho a provar."
+      "signupError": "S'ha produït un error en registrar -se. Torneu -ho a provar.",
+      "invalidUsername": "El nom d'usuari ha de tenir entre 3 i 30 caràcters i contenir només lletres, números i guions baixos",
+      "invalidUsernameCharacters": "El nom d'usuari conté caràcters no vàlids"
     }
   },
 
@@ -668,6 +670,12 @@
     "buttons": {
       "cancel": "Cancel·lar",
       "update": "Actualitzar"
+    },
+    "alerts": {
+      "passwordSameAsUsername": "La contrasenya no pot ser igual que el teu nom d'usuari",
+      "invalidEmail": "Si us plau, introdueix una adreça de correu electrònic vàlida",
+      "invalidUsername": "El nom d'usuari ha de tenir entre 3 i 30 caràcters i contenir només lletres, números i guions baixos",
+      "invalidUsernameCharacters": "El nom d'usuari conté caràcters no vàlids"
     }
   },
 
@@ -915,6 +923,11 @@
 
 
   "TermsPage": {
+    "dragOrDrop": "Arrossega i deixa anar el teu fitxer aquí",
+    "browseFiles": "Explorar Fitxers",
+    "supportedPdfFormat": "Format suportat: PDF",
+    "supportedMdFormat": "Format suportat: MD",
+    "dropIt": "Mite -ho",
     "header": {
       "title": "Master - Informació legal",
       "description": "Benvingut a la nostra secció d'informació legal. Aquí trobareu tots els documents i polítiques necessàries que regeixen l'ús de la nostra plataforma. Si us plau, reviseu -los detingudament per entendre els vostres drets i responsabilitats."
@@ -941,9 +954,7 @@
       "nameError": "Error en el nom: {{error}}",
       "noPdf": "No hi ha PDF per a aquest document.",
       "noMd": "Pengeu un fitxer de marcatge (.md)",
-      "failedToOpenPdf": "El document no es va poder obrir en una fitxa nova. Comproveu la configuració del vostre navegador.",
-      "termTypeError": "Seleccioneu un tipus de terme vàlid.",
-      "noVersion": "Introduïu un número de versió."
+      "failedToOpenPdf": "El document no es va poder obrir en una fitxa nova. Comproveu la configuració del vostre navegador."
     },
     "buttons": {
       "addNewTerm": "Afegiu un nou terme",
@@ -951,7 +962,8 @@
       "openDocument": "Document obert",
       "cancel": "Cancel·lar",
       "save": "Mantenir",
-      "delete": "Eliminar"
+      "delete": "Eliminar",
+      "removeFile": "Eliminar arxiu"
     },
     "messages": {
       "allTermsCreated": "Ja s'han creat tots els tipus de termes. No podeu afegir més termes."
@@ -975,30 +987,23 @@
       "acceptance": "L'ús de la plataforma implica l'acceptació total de totes les condicions establertes aquí."
     },
     "addForm": {
-      "title": "Afegiu un nou terme",
-      "termTypeLabel": "Tipus de terme",
-      "selectTermType": "Seleccioneu un tipus de terme",
-      "markdownContentLabel": "Contingut de marcatge",
-      "uploadMarkdown": "Arrossegueu i allibereu un fitxer .md aquí o feu clic per seleccionar -lo",
+      "title": "Afegir Nou Terme",
+      "termTypeLabel": "Tipus de Terme",
+      "selectTermType": "Selecciona un tipus de terme",
+      "markdownContentLabel": "Contingut Markdown",
+      "uploadMarkdown": "Arrossega i deixa anar el teu arxiu markdown aquí o fes clic per cercar",
       "pdfContentLabel": "Contingut PDF",
-      "uploadPdf": "Arrossegueu i allibereu un fitxer .pdf aquí o feu clic per seleccionar -lo",
-      "uploadedFile": "Arxiu penjat",
+      "uploadPdf": "Arrossega i deixa anar el teu arxiu PDF aquí o fes clic per cercar",
       "versionLabel": "Versió",
-      "versionPlaceholder": "Per exemple, \"v1.0\"",
-      "availableTermTypes": {
-        "termsOfUse": "Condicions d'ús",
-        "privacyPolicy": "Política de privadesa",
-        "cookiePolicy": "Política de cookies",
-        "licenses": "Llicències"
-      }
+      "versionPlaceholder": "ex., v1.0"
     },
     "footer": {
       "lastUpdated": "Última actualització: ",
       "contactSupport": "Si teniu preguntes sobre els nostres termes o no els podeu accedir, poseu -vos en contacte amb nosaltres."
     },
-    "deleteModal": {
-      "title": "Confirmeu l'eliminació",
-      "description": "Esteu segur que voleu suprimir aquest document? Aquesta acció no es pot desfer."
+    "modals": {
+      "deleteTitle": "Eliminar terme",
+      "deleteConfirmation": "Està segur que voleu eliminar aquest terme?"
     }
   },
 
@@ -1026,19 +1031,21 @@
     "videoAutoplayError": "Es preveia la reproducció automàtica de vídeo",
     "alerts": {
       "usernameTooLong": "El nom d'usuari no pot superar els 30 caràcters",
-      "emailTooLong": "El correu electrònic no pot superar els 255 caràcters",
+      "emailTooLong": "El correu electrònic no pot superar els 255 caràcters", 
       "nameTooLong": "El nom no pot superar els 30 caràcters",
       "surnameTooLong": "El cognom no pot superar els 30 caràcters",
       "passwordTooLong": "La contrasenya no pot superar els 128 caràcters",
       "passwordTooShort": "La contrasenya ha de tenir almenys 8 caràcters",
-      "passwordUppercase": "La contrasenya ha de contenir almenys una majúscula",
+      "passwordUppercase": "La contrasenya ha de contenir almenys una lletra majúscula",
       "passwordLowercase": "La contrasenya ha de contenir almenys una lletra minúscula",
       "passwordNumber": "La contrasenya ha de contenir almenys un número",
       "passwordSpecialCharacter": "La contrasenya ha de contenir almenys un caràcter especial",
       "passwordNoWhitespace": "La contrasenya no pot contenir espais en blanc al principi o al final",
-      "signupSuccess": "Compte creat",
-      "signupFailure": "Error en registrar -se",
-      "networkError": "S'ha produït un error de xarxa"
+      "signupSuccess": "Compte creat amb èxit",
+      "signupFailure": "Error en registrar-se",
+      "networkError": "S'ha produït un error de xarxa",
+      "invalidEmailFormat": "Si us plau, introdueix una adreça de correu electrònic vàlida",
+      "passwordSameAsUsername": "La contrasenya no pot ser igual que el teu nom d'usuari"
     }
   },
 
@@ -1059,7 +1066,11 @@
       "passwordSpecialCharacter": "La contrasenya ha de contenir almenys un caràcter especial",
       "signinSuccess": "Inici de sessió amb èxit",
       "signinFailure": "Error al registre",
-      "networkError": "S'ha produït un error de xarxa"
+      "networkError": "S'ha produït un error de xarxa",
+      "passwordSameAsUsername": "La contrasenya no pot ser igual que el teu nom d'usuari",
+      "invalidEmailFormat": "Si us plau, introdueix una adreça de correu electrònic vàlida",
+      "invalidUsername": "El nom d'usuari ha de tenir entre 3 i 30 caràcters i contenir només lletres, números i guions baixos",
+      "invalidUsernameCharacters": "El nom d'usuari conté caràcters no vàlids"
     }
   },
 

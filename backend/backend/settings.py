@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
-import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -26,7 +25,7 @@ SECRET_KEY = 'django-insecure-de68p@muu3ow2cxhvv3_(8j0%niahb$7zd*=81s^an-36nc!jf
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ['maestre.tech','165.22.68.4','maestre.netlify.app','localhost','127.0.0.1']
+ALLOWED_HOSTS = ['maestre.tech', '165.22.68.4', 'maestre.netlify.app', 'localhost', '127.0.0.1']
 
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = True
@@ -165,5 +164,10 @@ REST_FRAMEWORK = {
 AUTH_USER_MODEL = 'users.CustomUser'
 
 MAX_FILES_PER_CLASSROOM = 10
+MAX_FILE_SIZE = 50
+
 MAX_CLASSROOMS_PER_TEACHER = 5
 MAX_STUDENTS_PER_CLASSROOM = 50
+
+MAX_TAGS = 15
+MAX_TAGS_PER_FILE = 5

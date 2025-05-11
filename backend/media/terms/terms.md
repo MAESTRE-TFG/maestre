@@ -21,7 +21,7 @@ classoption: "table"
 --- -->
 
 <p align="center">
-  <img src="../../../frontend/static/maestrito/maestrito_jump_transparent.webp" alt="Logo Maestre" width="200" />
+  <img src="https://github.com/MAESTRE-TFG/maestre/raw/main/frontend/static/maestrito/maestrito_jump_transparent.webp" alt="Logo Maestre" width="200" />
 </p>
 
 <h1 align="center" style="font-size: 30px; font-weight: bold;">

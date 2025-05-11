@@ -629,56 +629,62 @@
 
   "ProfileEditForm": {
     "fields": {
-    "username": {
-      "label": "Nombre de Usuario",
-      "placeholder": "Introduce tu nombre de usuario"
-    },
-    "email": {
-      "label": "Correo Electrónico",
-      "placeholder": "Introduce tu correo electrónico"
-    },
-    "name": {
-      "label": "Nombre",
-      "placeholder": "Introduce tu nombre"
-    },
-    "surname": {
-      "label": "Apellido",
-      "placeholder": "Introduce tu apellido"
-    },
-    "oldPassword": {
-      "label": "Contraseña Antigua",
-      "placeholder": "Introduce tu contraseña antigua"
-    },
-    "newPassword": {
-      "label": "Nueva Contraseña",
-      "placeholder": "· · · · ·"
-    },
-    "confirmPassword": {
-      "label": "Confirmar",
-      "placeholder": "· · · · ·"
-    },
-    "region": {
-      "label": "Región",
-      "placeholder": "Selecciona una región"
-    },
-    "city": {
-      "label": "Ciudad",
-      "placeholder": "Introduce tu ciudad"
-    },
-    "school": {
-      "label": "Centro Educativo",
-      "placeholder": "Selecciona un centro educativo",
-      "notFound": "¿No encuentras tu centro?",
-      "createButton": "Crear uno"
-    }
+      "username": {
+        "label": "Nombre de Usuario",
+        "placeholder": "Introduce tu nombre de usuario"
+      },
+      "email": {
+        "label": "Correo Electrónico",
+        "placeholder": "Introduce tu correo electrónico"
+      },
+      "name": {
+        "label": "Nombre",
+        "placeholder": "Introduce tu nombre"
+      },
+      "surname": {
+        "label": "Apellido",
+        "placeholder": "Introduce tu apellido"
+      },
+      "oldPassword": {
+        "label": "Contraseña Antigua",
+        "placeholder": "Introduce tu contraseña antigua"
+      },
+      "newPassword": {
+        "label": "Nueva Contraseña",
+        "placeholder": "· · · · ·"
+      },
+      "confirmPassword": {
+        "label": "Confirmar",
+        "placeholder": "· · · · ·"
+      },
+      "region": {
+        "label": "Región",
+        "placeholder": "Selecciona una región"
+      },
+      "city": {
+        "label": "Ciudad",
+        "placeholder": "Introduce tu ciudad"
+      },
+      "school": {
+        "label": "Centro Educativo",
+        "placeholder": "Selecciona un centro educativo",
+        "notFound": "¿No encuentras tu centro?",
+        "createButton": "Crear uno"
+      }
     },
     "password": {
-    "changeTitle": "¿Quieres cambiar tu contraseña?",
-    "changeDescription": "Rellena los campos de arriba para actualizar tu contraseña."
+      "changeTitle": "¿Quieres cambiar tu contraseña?",
+      "changeDescription": "Rellena los campos de arriba para actualizar tu contraseña."
     },
     "buttons": {
-    "cancel": "Cancelar",
-    "update": "Actualizar"
+      "cancel": "Cancelar",
+      "update": "Actualizar"
+    },
+    "alerts": {
+      "passwordSameAsUsername": "La contraseña no puede ser igual que tu nombre de usuario",
+      "invalidEmail": "Por favor, introduce una dirección de correo electrónico válida",
+      "invalidUsername": "El nombre de usuario debe tener entre 3 y 30 caracteres y contener solo letras, números y guiones bajos",
+      "invalidUsernameCharacters": "El nombre de usuario contiene caracteres no válidos"
     }
   },
 
@@ -888,7 +894,10 @@
       "descriptionTooLong": "La descripción no puede superar los 255 caracteres.",
       "invalidAcademicYear": "El año debe tener el formato 'AAAA-AAAA'.",
       "success": "Clase creada con éxito!",
-      "error": "Ocurrió un error al enviar el formulario."
+      "error": "Ocurrió un error al enviar el formulario.",
+      "firstYearAfterSecond": "El primer año debe ser anterior al segundo.",
+      "cantBeSameYear": "Ambos años no pueden ser el mismo año.",
+      "gapTooLarge": "Debe haber un máximo de 1 año de diferencia entre ambos años."
     }
   },
 
@@ -927,6 +936,11 @@
 
 
   "TermsPage": {
+    "dragOrDrop": "Arrastra y suelta tu archivo aquí",
+    "browseFiles": "Explorar Archivos",
+    "supportedPdfFormat": "Formato soportado: PDF",
+    "supportedMdFormat": "Formato soportado: MD",
+    "dropIt": "Suéltalo",
     "header": {
       "title": "MAESTRE - Información Legal",
       "description": "Bienvenido a nuestra sección de información legal. Aquí encontrarás todos los documentos y políticas necesarios que rigen el uso de nuestra plataforma. Por favor, revísalos cuidadosamente para entender tus derechos y responsabilidades."
@@ -953,9 +967,7 @@
       "nameError": "Error en el nombre: {{error}}",
       "noPdf": "No existe un PDF para este documento.",
       "noMd": "Por favor, sube un archivo markdown (.md)",
-      "failedToOpenPdf": "No se pudo abrir el documento en una nueva pestaña. Por favor, verifica la configuración de tu navegador.",
-      "termTypeError": "Selecciona un tipo de término válido.",
-      "noVersion": "Por favor, introduce un número de versión."
+      "failedToOpenPdf": "No se pudo abrir el documento en una nueva pestaña. Por favor, verifica la configuración de tu navegador."
     },
     "buttons": {
       "addNewTerm": "Agregar Nuevo Término",
@@ -963,7 +975,8 @@
       "openDocument": "Abrir documento",
       "cancel": "Cancelar",
       "save": "Guardar",
-      "delete": "Eliminar"
+      "delete": "Eliminar",
+      "removeFile": "Eliminar archivo"
     },
     "messages": {
       "allTermsCreated": "Todos los tipos de términos ya han sido creados. No puedes agregar más términos."
@@ -987,30 +1000,23 @@
       "acceptance": "El uso de la plataforma implica la aceptación total de todas las condiciones aquí establecidas."
     },
     "addForm": {
-      "title": "Agregar Nuevo Término",
+      "title": "Añadir Nuevo Término",
       "termTypeLabel": "Tipo de Término",
       "selectTermType": "Selecciona un tipo de término",
       "markdownContentLabel": "Contenido Markdown",
-      "uploadMarkdown": "Arrastra y suelta un archivo .md aquí, o haz clic para seleccionarlo",
+      "uploadMarkdown": "Arrastra y suelta tu archivo markdown aquí o haz clic para buscar",
       "pdfContentLabel": "Contenido PDF",
-      "uploadPdf": "Arrastra y suelta un archivo .pdf aquí, o haz clic para seleccionarlo",
-      "uploadedFile": "Archivo subido",
+      "uploadPdf": "Arrastra y suelta tu archivo PDF aquí o haz clic para buscar",
       "versionLabel": "Versión",
-      "versionPlaceholder": "Ej. 'v1.0'",
-      "availableTermTypes": {
-        "termsOfUse": "Términos de Uso",
-        "privacyPolicy": "Política de Privacidad",
-        "cookiePolicy": "Política de Cookies",
-        "licenses": "Licencias"
-      }
+      "versionPlaceholder": "ej., v1.0"
     },
     "footer": {
       "lastUpdated": "Última actualización: ",
       "contactSupport": "Si tienes preguntas sobre nuestros términos o no puedes acceder a ellos, por favor contáctanos."
     },
-    "deleteModal": {
-      "title": "Confirmar Eliminación",
-      "description": "¿Estás seguro de que deseas eliminar este documento? Esta acción no se puede deshacer."
+    "modals": {
+      "deleteTitle": "Confirmar Eliminación",
+      "deleteConfirmation": "¿Estás seguro de que deseas eliminar este documento? Esta acción no se puede deshacer."
     }
   },
 
@@ -1050,7 +1056,11 @@
       "passwordNoWhitespace": "La contraseña no puede contener espacios en blanco al principio o al final",
       "signupSuccess": "Cuenta creada con éxito",
       "signupFailure": "Error al registrarse",
-      "networkError": "Ocurrió un error de red"
+      "networkError": "Ocurrió un error de red",
+      "invalidEmailFormat": "Por favor, introduce una dirección de correo electrónico válida",
+      "passwordSameAsUsername": "La contraseña no puede ser igual que tu nombre de usuario",
+      "invalidUsername": "El nombre de usuario debe tener entre 3 y 30 caracteres y contener solo letras, números y guiones bajos",
+      "invalidUsernameCharacters": "El nombre de usuario contiene caracteres no válidos"
     }
   },
 
@@ -1071,7 +1081,11 @@
       "passwordSpecialCharacter": "La contraseña debe contener al menos un carácter especial",
       "signinSuccess": "Inicio de sesión exitoso",
       "signinFailure": "Error al iniciar sesión",
-      "networkError": "Ocurrió un error de red"
+      "networkError": "Ocurrió un error de red",
+      "passwordSameAsUsername": "La contraseña no puede ser igual que tu nombre de usuario",
+      "invalidEmailFormat": "Por favor, introduce una dirección de correo electrónico válida",
+      "invalidUsername": "El nombre de usuario debe tener entre 3 y 30 caracteres y contener solo letras, números y guiones bajos",
+      "invalidUsernameCharacters": "El nombre de usuario contiene caracteres no válidos"
     }
   },
 
@@ -1185,7 +1199,10 @@
       "updateError": "Error al actualizar los datos de la clase.",
       "deleteSuccess": "Clase eliminada con éxito.",
       "deleteError": "Error al eliminar la clase.",
-      "nameMismatch": "El nombre de la clase no coincide. Eliminación cancelada."
+      "nameMismatch": "El nombre de la clase no coincide. Eliminación cancelada.",
+      "firstYearAfterSecond": "El primer año debe ser anterior al segundo.",
+      "cantBeSameYear": "Ambos años no pueden ser el mismo año.",
+      "gapTooLarge": "Debe haber un máximo de 1 año de diferencia entre ambos años."
     },
     "deleteModal": {
       "title": "Eliminar Clase",

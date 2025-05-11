@@ -172,10 +172,9 @@ const Home = () => {
       <Image
         src={theme === "dark" ? "/static/teachers/teachers_dark.webp" : "/static/teachers/teachers.webp"}
         alt="Teachers background"
-        layout="fill"
-        objectFit="cover"
+        fill
         className="absolute w-full h-full"
-        priority // Mark as priority since it's above the fold
+        priority
         quality={80}
       />
     
@@ -372,7 +371,6 @@ const Home = () => {
             {t('demo_description')}
           </p>
         </motion.div>
-        
         <motion.div
           initial={{ scale: 0.95, opacity: 0 }}
           whileInView={{ scale: 1, opacity: 1 }}
@@ -383,11 +381,20 @@ const Home = () => {
             <video 
               ref={videoRef}
               className="w-full h-full object-cover"
-              poster="/static/video-poster.jpg"
+              poster="/static/demo_1.webp"
               muted
               playsInline
               preload="none"
               loading="lazy"
+              loop
+              onLoadedMetadata={(e) => {
+                const duration = e.target.duration;
+                const randomTime = Math.random() * (duration - 2);
+                e.target.currentTime = randomTime;
+              }}
+              onEnded={(e) => {
+                e.target.play();
+              }}
               style={{ 
                 pointerEvents: 'none',
                 userSelect: 'none'
@@ -496,8 +503,7 @@ const Home = () => {
           <Image 
             src="/static/teachers/anonymous_teacher.webp"
             alt="Join Maestre" 
-            layout="fill"
-            objectFit="contain"
+            fill
             className="rounded-xl"
             loading="lazy"
           />
@@ -544,8 +550,7 @@ const Home = () => {
                   <Image 
                     src={member.image} 
                     alt={member.name} 
-                    layout="fill"
-                    objectFit="cover"
+                    fill
                     className="rounded-full"
                     loading="lazy"
                   />
@@ -618,8 +623,7 @@ const Home = () => {
                   <Image 
                     src="/static/teachers/anonymous_teacher.webp" 
                     alt="Teacher testimonial" 
-                    layout="fill"
-                    objectFit="cover"
+                    fill
                     className="rounded-full"
                     loading="lazy"
                   />

@@ -1,97 +1,222 @@
-import React from "react";
+import { useTheme } from "@/components/theme-provider";
 import { cn } from "@/lib/utils";
-import { IconPlus, IconFileText } from "@tabler/icons-react";
+import { useState, useCallback } from "react";
+import { useTranslations } from "next-intl";
 import Alert from "@/components/ui/Alert";
 
-const AddTermModal = ({
-  showAddForm,
-  setShowAddForm,
-  newTermType,
-  setNewTermType,
-  newTermVersion,
-  setNewTermVersion,
-  uploadedMdFileName,
-  setUploadedMdFileName,
-  uploadedPdfFileName,
-  setUploadedPdfFileName,
-  setPdfFile,
-  handleFileUpload,
-  handleAddTerm,
-  alert,
-  setAlert,
-  t,
-  theme,
-  existingTerms = [], // Pass the existing terms as a prop with a default value
+const TermAddModal = ({ 
+  showModal, 
+  setShowModal, 
+  onTermCreate,
+  isProcessing,
+  availableTermTypes
 }) => {
-  if (!showAddForm) return null;
+  const { theme } = useTheme();
+  const t = useTranslations("TermsPage");
+  
+  const [selectedTermType, setSelectedTermType] = useState("");
+  const [mdFile, setMdFile] = useState(null);
+  const [pdfFile, setPdfFile] = useState(null);
+  const [version, setVersion] = useState("");
+  const [alert, setAlert] = useState(null);
+  const [isDraggingMd, setIsDraggingMd] = useState(false);
+  const [isDraggingPdf, setIsDraggingPdf] = useState(false);
 
-  // Define all term types
-  const allTermTypes = [
-    { value: "termsOfUse", label: t("addForm.availableTermTypes.termsOfUse") },
-    { value: "privacyPolicy", label: t("addForm.availableTermTypes.privacyPolicy") },
-    { value: "cookiePolicy", label: t("addForm.availableTermTypes.cookiePolicy") },
-    { value: "licenses", label: t("addForm.availableTermTypes.licenses") },
-  ];
+  const showAlert = (type, message) => {
+    setAlert({ type, message });
+    setTimeout(() => setAlert(null), 5000);
+  };
 
-  // Filter out term types that are already in use
-  const usedTermTypes = existingTerms.map((term) => term.tag); // Get the tags of existing terms
-  const availableTermTypes = allTermTypes.filter((type) => !usedTermTypes.includes(type.value));
+  const handleMdFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.name.endsWith('.md')) {
+      setMdFile(file);
+    } else {
+      showAlert("error", t("alerts.noMd"));
+    }
+  };
+
+  const handlePdfFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file && file.name.endsWith('.pdf')) {
+      setPdfFile(file);
+    } else {
+      showAlert("error", t("alerts.noPdf"));
+    }
+  };
+
+  const handleDragEnterMd = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingMd(true);
+  }, []);
+
+  const handleDragLeaveMd = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingMd(false);
+  }, []);
+
+  const handleDragOverMd = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isDraggingMd) {
+      setIsDraggingMd(true);
+    }
+  }, [isDraggingMd]);
+
+  const handleDropMd = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingMd(false);
+
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (file.name.endsWith('.md')) {
+        setMdFile(file);
+      } else {
+        showAlert("error", t("alerts.noMd"));
+      }
+    }
+  }, [t]);
+
+  const handleDragEnterPdf = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingPdf(true);
+  }, []);
+
+  const handleDragLeavePdf = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingPdf(false);
+  }, []);
+
+  const handleDragOverPdf = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!isDraggingPdf) {
+      setIsDraggingPdf(true);
+    }
+  }, [isDraggingPdf]);
+
+  const handleDropPdf = useCallback((e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingPdf(false);
+
+    const files = e.dataTransfer.files;
+    if (files && files.length > 0) {
+      const file = files[0];
+      if (file.name.endsWith('.pdf')) {
+        setPdfFile(file);
+      } else {
+        showAlert("error", t("alerts.noPdf"));
+      }
+    }
+  }, [t]);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!selectedTermType) {
+      showAlert("error", t("alerts.termTypeError"));
+      return;
+    }
+
+    if (!version) {
+      showAlert("error", t("alerts.noVersion"));
+      return;
+    }
+
+    if (!mdFile) {
+      showAlert("error", t("alerts.noMd"));
+      return;
+    }
+
+    if (!pdfFile) {
+      showAlert("error", t("alerts.noPdf"));
+      return;
+    }
+
+    try {
+      const formData = new FormData();
+      formData.append("tag", selectedTermType);
+      formData.append("version", version.trim());
+      formData.append("content", mdFile, mdFile.name);
+      formData.append("pdf_content", pdfFile, pdfFile.name);
+      
+      const termTypeDisplay = availableTermTypes.find(type => type.value === selectedTermType)?.label || selectedTermType;
+      const termName = `${termTypeDisplay} - Version ${version.trim()}`;
+      formData.append("name", termName);
+  
+      await onTermCreate(formData);
+      resetForm();
+    } catch (error) {
+      showAlert("error", error.message || t("alerts.createError"));
+    }
+  };
+
+  const resetForm = () => {
+    setSelectedTermType("");
+    setMdFile(null);
+    setPdfFile(null);
+    setVersion("");
+    setAlert(null);
+  };
+
+  if (!showModal) return null;
 
   return (
     <div
       className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 backdrop-blur-sm"
       onClick={() => {
-        setShowAddForm(false);
-        setUploadedMdFileName(""); // Reset markdown file name on cancel
-        setUploadedPdfFileName(""); // Reset PDF file name on cancel
-        setPdfFile(null); // Reset the PDF file object
+        setShowModal(false);
+        resetForm();
       }}
     >
       <div
         className={cn(
-          "p-4 rounded-lg max-w-md w-full mx-4 shadow-lg",
+          "p-3 rounded-lg max-w-md w-full mx-4 shadow-lg",
           theme === "dark" ? "bg-gray-800" : "bg-white"
         )}
         onClick={(e) => e.stopPropagation()}
       >
         {alert && <Alert type={alert.type} message={alert.message} onClose={() => setAlert(null)} />}
 
-        <div className="flex flex-col items-center justify-center mb-4">
-          <div className="flex items-center justify-center mb-3 text-primary">
-            <IconPlus className="h-10 w-10" />
+        <div className="flex flex-col items-center justify-center mb-2">
+          <div className="flex items-center justify-center text-primary">
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-7 w-7" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z" />
+            </svg>
           </div>
           <h3
             className={cn(
-              "text-lg font-bold text-center",
+              "text-base font-bold text-center",
               theme === "dark" ? "text-white" : "text-gray-800"
             )}
             style={{ fontFamily: "'Poppins', sans-serif" }}
           >
-            {t("addForm.title")} 
+            {t("addForm.title")}
           </h3>
         </div>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleAddTerm();
-          }}
-        >
-          {/* Term Type */}
-          <div className="mb-4">
-            <label className={cn("block text-sm font-bold mb-1", theme === "dark" ? "text-gray-300" : "text-gray-700")}>
-              {t("addForm.termTypeLabel")} 
+        <form onSubmit={handleSubmit}>
+          <div className="mb-2">
+            <label className={cn("block text-sm font-bold mb-2", theme === "dark" ? "text-gray-300" : "text-gray-700")}>
+              {t("addForm.termTypeLabel")}
             </label>
             <select
-              value={newTermType}
-              onChange={(e) => setNewTermType(e.target.value)}
+              value={selectedTermType}
+              onChange={(e) => setSelectedTermType(e.target.value)}
               className={cn(
-                "shadow appearance-none border rounded-md w-full py-1 px-2 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500",
+                "shadow appearance-none border rounded-md w-full py-1.5 px-3 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500",
                 theme === "dark" ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-700"
               )}
               required
             >
-              <option value="">{t("addForm.selectTermType")} </option>
+              <option value="">{t("addForm.selectTermType")}</option>
               {availableTermTypes.map((type) => (
                 <option key={type.value} value={type.value}>
                   {type.label}
@@ -100,114 +225,151 @@ const AddTermModal = ({
             </select>
           </div>
 
-          {/* Markdown and PDF ontent */}
-            <div className="mb-4">
-               <label className="block text-sm font-medium mb-1">
-                 {t("addForm.markdownContentLabel")} 
-               </label>
-               <label
-                 htmlFor="md-file-upload"
-                 className={`
-                 flex items-center justify-center w-full h-24 sm:h-32 border-2 border-dashed rounded-lg cursor-pointer
-                 ${theme === "dark" 
-                   ? "bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600" 
-                   : "bg-gray-50 border-gray-300 text-gray-500 hover:bg-gray-100"}
-               `}
-               >
-                 <input
-                   id="md-file-upload"
-                   type="file"
-                   accept=".md"
-                   onChange={(e) => handleFileUpload(e.target.files[0], "md")}
-                   className="hidden"
-                 />
-                 <div className="text-center">
-                   <IconFileText className="h-6 w-6 sm:h-8 sm:w-8 mx-auto" />
-                   <p className="mt-2 text-xs sm:text-sm font-medium">
-                     {t("addForm.uploadMarkdown")} 
-                   </p>
-                 </div>
-               </label>
-               {uploadedMdFileName && (
-                 <p className="mt-2 text-xs sm:text-sm text-blue-500 dark:text-blue-400">
-                   {t("addForm.uploadedFile")}: <span className="font-medium">{uploadedMdFileName}</span> 
-                 </p>
-               )}
-             </div>      
-             <div className="mb-4">
-               <label className="block text-sm font-medium mb-1">
-                 {t("addForm.pdfContentLabel")} 
-               </label>
-               <label
-                 htmlFor="pdf-file-upload"
-                 className={`
-                 flex items-center justify-center w-full h-24 sm:h-32 border-2 border-dashed rounded-lg cursor-pointer
-                 ${theme === "dark" 
-                   ? "bg-gray-700 border-gray-600 text-gray-300 hover:bg-gray-600" 
-                   : "bg-gray-50 border-gray-300 text-gray-500 hover:bg-gray-100"}
-               `}
-                   >
-                     <input
-                       id="pdf-file-upload"
-                       type="file"
-                       accept=".pdf"
-                       onChange={(e) => handleFileUpload(e.target.files[0], "pdf")}
-                       className="hidden"
-                     />
-                     <div className="text-center">
-                       <IconFileText className="h-6 w-6 sm:h-8 sm:w-8 mx-auto" />
-                       <p className="mt-2 text-xs sm:text-sm font-medium">
-                         {t("addForm.uploadPdf")} 
-                       </p>
-                     </div>
-                   </label>
-                   {uploadedPdfFileName && (
-                     <p className="mt-2 text-xs sm:text-sm text-blue-500 dark:text-blue-400">
-                       {t("addForm.uploadedFile")}: <span className="font-medium">{uploadedPdfFileName}</span> 
-                     </p>
-                   )}
-                 </div>
-
-          {/* Version */}
-          <div className="mb-4">
-            <label className={cn("block text-sm font-bold mb-1", theme === "dark" ? "text-gray-300" : "text-gray-700")}>
-              {t("addForm.versionLabel")} {/* Internationalized */}
+          <div className="mb-2">
+            <label className={cn("block text-sm font-bold mb-2", theme === "dark" ? "text-gray-300" : "text-gray-700")}>
+              {t("addForm.versionLabel")}
             </label>
             <input
               type="text"
-              value={newTermVersion || ""} // Ensure the value is always a string
-              onChange={(e) => {
-                const inputValue = e.target.value;
-                setNewTermVersion(inputValue); // Update the state with the input value
-              }}
+              value={version}
+              onChange={(e) => setVersion(e.target.value)}
               placeholder={t("addForm.versionPlaceholder")}
               className={cn(
-                "shadow appearance-none border rounded-md w-full py-1 px-2 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500",
+                "shadow appearance-none border rounded-md w-full py-1.5 px-3 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500",
                 theme === "dark" ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-700"
               )}
               required
             />
           </div>
 
-          {/* Buttons */}
+          <div className="mb-2">
+            <label className={cn("block text-sm font-bold mb-2", theme === "dark" ? "text-gray-300" : "text-gray-700")}>
+              {t("addForm.markdownContentLabel")}
+            </label>
+            <div
+              className={cn(
+                "border-2 border-dashed rounded-md p-3 text-center min-h-[90px] flex flex-col items-center justify-center",
+                theme === "dark" ? "border-gray-600" : "border-gray-300",
+                mdFile ? "bg-green-500/10" : "",
+                isDraggingMd ? "border-primary bg-primary/5" : ""
+              )}
+              onDragEnter={handleDragEnterMd}
+              onDragOver={handleDragOverMd}
+              onDragLeave={handleDragLeaveMd}
+              onDrop={handleDropMd}
+            >
+              {mdFile ? (
+                <div>
+                  <p className={`text-sm ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
+                    {mdFile.name}
+                  </p>
+                  <p className={`text-xs mt-1 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
+                    {(mdFile.size / 1024).toFixed(2)} KB
+                  </p>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setMdFile(null);
+                    }}
+                    className="mt-2 px-2 py-1 text-xs text-red-500 hover:text-red-700 hover:underline"
+                    type="button"
+                  >
+                    {t("buttons.removeFile")}
+                  </button>
+                </div>
+              ) : (
+                <div className="w-full">
+                  <p className={`text-sm mb-1 ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
+                    {isDraggingMd ? t("dropIt") : t("dragOrDrop")}
+                  </p>
+                  <label className="px-3 py-1 bg-primary text-white rounded-full cursor-pointer hover:bg-primary/90 transition-colors inline-block">
+                    {t("browseFiles")}
+                    <input
+                      type="file"
+                      className="hidden"
+                      onChange={handleMdFileChange}
+                      accept=".md"
+                    />
+                  </label>
+                  <p className="text-xs text-gray-500 mt-2">{t("supportedMdFormat")}</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="mb-2">
+            <label className={cn("block text-sm font-bold mb-2", theme === "dark" ? "text-gray-300" : "text-gray-700")}>
+              {t("addForm.pdfContentLabel")}
+            </label>
+            <div
+              className={cn(
+                "border-2 border-dashed rounded-md p-3 text-center min-h-[90px] flex flex-col items-center justify-center",
+                theme === "dark" ? "border-gray-600" : "border-gray-300",
+                pdfFile ? "bg-green-500/10" : "",
+                isDraggingPdf ? "border-primary bg-primary/5" : ""
+              )}
+              onDragEnter={handleDragEnterPdf}
+              onDragOver={handleDragOverPdf}
+              onDragLeave={handleDragLeavePdf}
+              onDrop={handleDropPdf}
+            >
+              {pdfFile ? (
+                <div>
+                  <p className={`text-sm ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
+                    {pdfFile.name}
+                  </p>
+                  <p className={`text-xs mt-1 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
+                    {(pdfFile.size / 1024).toFixed(2)} KB
+                  </p>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setPdfFile(null);
+                    }}
+                    className="mt-2 px-2 py-1 text-xs text-red-500 hover:text-red-700 hover:underline"
+                    type="button"
+                  >
+                    {t("buttons.removeFile")}
+                  </button>
+                </div>
+              ) : (
+                <div className="w-full">
+                  <p className={`text-sm mb-1 ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
+                    {isDraggingPdf ? t("dropIt") : t("dragOrDrop")}
+                  </p>
+                  <label className="px-3 py-1 bg-primary text-white rounded-full cursor-pointer hover:bg-primary/90 transition-colors inline-block">
+                    {t("browseFiles")}
+                    <input
+                      type="file"
+                      className="hidden"
+                      onChange={handlePdfFileChange}
+                      accept=".pdf"
+                    />
+                  </label>
+                  <p className="text-xs text-gray-500 mt-2">{t("supportedPdfFormat")}</p>
+                </div>
+              )}
+            </div>
+          </div>
+
           <div className="flex justify-center gap-2">
             <button
               type="button"
               onClick={() => {
-                setShowAddForm(false);
-                setUploadedMdFileName(""); // Reset markdown file name on cancel
-                setUploadedPdfFileName(""); // Reset PDF file name on cancel
-                setPdfFile(null); // Reset the PDF file object
+                setShowModal(false);
+                resetForm();
               }}
-              className="btn-secondary py-1 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
+              disabled={isProcessing}
+              className="btn-secondary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
             >
-              {t("buttons.cancel")} 
+              {t("buttons.cancel")}
             </button>
             <button
               type="submit"
-              className="btn-success py-1 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
+              disabled={isProcessing || !selectedTermType || !version || !mdFile || !pdfFile}
+              className="btn-success py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
             >
-              {t("buttons.save")} 
+              {isProcessing ? t("buttons.creating") : t("buttons.save")}
             </button>
           </div>
         </form>
@@ -216,4 +378,4 @@ const AddTermModal = ({
   );
 };
 
-export default AddTermModal;
+export default TermAddModal;

@@ -40,9 +40,27 @@ export default function SignUp() {
   }, [isLargeScreen, t]);
 
   const handleSubmit = async (formData) => {
+    // Username validation
+    const usernameRegex = /^[a-zA-Z0-9_]{3,30}$/;
+    if (!usernameRegex.test(formData.username)) {
+        showAlert("warning", t("alerts.invalidUsername"));
+        return;
+    }
+    
+    // Check for XSS attempts
+    if (formData.username.toLowerCase().includes('<script>')) {
+        showAlert("warning", t("alerts.invalidUsernameCharacters"));
+        return;
+    }
     // Field length restrictions
     if (formData.username && formData.username.length > 30) {
       showAlert("warning", t("alerts.usernameTooLong"));
+      return;
+    }
+    // Email validation with improved regex
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailRegex.test(formData.email)) {
+      showAlert("warning", t("alerts.invalidEmailFormat"));
       return;
     }
     if (formData.email && formData.email.length > 255) {
@@ -81,12 +99,17 @@ export default function SignUp() {
       showAlert("warning", t("alerts.passwordNumber"));
       return;
     }
-    if (formData.password && !/[!@#$%^&*(),.?":{}|<>]/.test(formData.password)) {
+    if (formData.password && !/[!@#$%^&*(),.?":{}|<>_-]/.test(formData.password)) {
       showAlert("warning", t("alerts.passwordSpecialCharacter"));
       return;
     }
     if (formData.password && !/^[^\s]+$/.test(formData.password)) {
       showAlert("warning", t("alerts.passwordNoWhitespace"));
+      return;
+    }
+    if (formData.password && formData.username && 
+        formData.password.toLowerCase() === formData.username.toLowerCase()) {
+      showAlert("warning", t("alerts.passwordSameAsUsername"));
       return;
     }
 
