@@ -652,6 +652,8 @@
       "update": "Eguneratu"
     }
   },
+
+
   "MaterialsPage": {
     "filterByTags": "Iragazi etiketen arabera:",
     "createMaterial": "Material berria sortu",
@@ -879,6 +881,11 @@
     }
   },
   "TermsPage": {
+    "dragOrDrop": "Arrastatu eta jaregin zure fitxategia hemen",
+    "browseFiles": "Arakatu Fitxategiak",
+    "supportedPdfFormat": "Onartutako formatua: PDF",
+    "supportedMdFormat": "Onartutako formatua: MD",
+    "dropIt": "Lotu",
     "header": {
       "title": "Masterra - Lege informazioa",
       "description": "Ongi etorri gure informazio juridikoa atalera. Hemen aurkituko dituzu gure plataformaren erabilera arautzen duten beharrezko dokumentu eta politika guztiak. Mesedez, berrikusi arretaz zure eskubideak eta erantzukizunak ulertzeko."
@@ -906,8 +913,10 @@
       "noPdf": "Ez dago PDF dokumentu honetarako.",
       "noMd": "Kargatu markaren fitxategia (.md)",
       "failedToOpenPdf": "Dokumentua ezin da fitxa berri batean ireki. Mesedez, egiaztatu zure arakatzailearen konfigurazioa.",
-      "termTypeError": "Hautatu baliozko termino mota bat.",
-      "noVersion": "Mesedez, sartu bertsio zenbakia."
+      "versionTooLong": "Bertsioak ezin ditu 20 karaktere baino gehiago izan",
+      "mdFileTooLarge": "Markdown fitxategiaren tamaina 50MB baino txikiagoa izan behar da",
+      "pdfFileTooLarge": "PDF fitxategiaren tamaina 50MB baino txikiagoa izan behar da",
+      "invalidVersionFormat": "Bertsioak letrak, zenbakiak, zuriuneak, puntuak, azpimarra eta marrak soilik izan ditzake"
     },
     "buttons": {
       "addNewTerm": "Gehitu epe berria",
@@ -915,7 +924,8 @@
       "openDocument": "Ireki dokumentua",
       "cancel": "Indargabetu",
       "save": "Kontserbatu",
-      "delete": "Ezabatu"
+      "delete": "Ezabatu",
+      "removeFile": "Fitxategia ezabatu"
     },
     "messages": {
       "allTermsCreated": "Baldintza mota guztiak sortu dira dagoeneko. Ezin dituzu termino gehiago gehitu."
@@ -939,30 +949,23 @@
       "acceptance": "Plataformaren erabilerak hemen ezarritako baldintza guztiak onartzea dakar."
     },
     "addForm": {
-      "title": "Gehitu epe berria",
-      "termTypeLabel": "Epe mota",
-      "selectTermType": "Hautatu termino mota bat",
-      "markdownContentLabel": "Markdown edukia",
-      "uploadMarkdown": "Arrastatu eta askatu .md fitxategia hemen edo egin klik hautatzeko",
-      "pdfContentLabel": "PDF edukia",
-      "uploadPdf": "Arrastatu eta askatu .pdf fitxategia hemen edo egin klik hautatzeko",
-      "uploadedFile": "Kargatutako artxiboa",
-      "versionLabel": "Bertsio",
-      "versionPlaceholder": "Adib. 'V1.0'",
-      "availableTermTypes": {
-        "termsOfUse": "Erabilera baldintzak",
-        "privacyPolicy": "Pribatutasun politika",
-        "cookiePolicy": "Cookie politika",
-        "licenses": "Lizentziak"
-      }
+      "title": "Termino Berria Gehitu",
+      "termTypeLabel": "Termino Mota",
+      "selectTermType": "Aukeratu termino mota bat",
+      "markdownContentLabel": "Markdown Edukia",
+      "uploadMarkdown": "Arrastatu eta jaregin zure markdown fitxategia hemen edo egin klik arakatzeko",
+      "pdfContentLabel": "PDF Edukia",
+      "uploadPdf": "Arrastatu eta jaregin zure PDF fitxategia hemen edo egin klik arakatzeko",
+      "versionLabel": "Bertsioa",
+      "versionPlaceholder": "adib., v1.0"
     },
     "footer": {
       "lastUpdated": "Azken eguneratzea: ",
       "contactSupport": "Gure baldintzei buruzko galderak izanez gero edo ezin dituzu sartu, jar zaitez gurekin harremanetan."
     },
-    "deleteModal": {
-      "title": "Berretsi ezabatzea",
-      "description": "Ziur dokumentu hau ezabatu nahi duzula? Ekintza hau ezin da desegin."
+    "modals": {
+      "deleteTitle": "Berretsi ezabatzea",
+      "deleteConfirmation": "Ziur dokumentu hau ezabatu nahi duzula? Ekintza hau ezin da desegin."
     }
   },
   "CreateSchoolPage": {
@@ -985,20 +988,24 @@
     "videoCaption": "Masterra hemen dago zure klaseetan laguntzeko",
     "videoAutoplayError": "Bideo erreprodukzio automatikoa saihestu da",
     "alerts": {
-      "usernameTooLong": "Erabiltzaile izenak ezin du 30 karaktere baino gehiago izan",
-      "emailTooLong": "Posta elektronikoa ezin da 255 karaktere baino gehiago izan",
-      "nameTooLong": "Izenak ezin du 30 karaktere baino gehiago izan",
-      "surnameTooLong": "Abizenak ezin du 30 karaktere baino gehiago izan",
-      "passwordTooLong": "Pasahitzak ezin du 128 karaktere baino gehiago izan",
+      "usernameTooLong": "Erabiltzaile-izenak ezin ditu 30 karaktere baino gehiago izan",
+      "emailTooLong": "Posta elektronikoak ezin ditu 255 karaktere baino gehiago izan",
+      "nameTooLong": "Izenak ezin ditu 30 karaktere baino gehiago izan",
+      "surnameTooLong": "Abizenak ezin ditu 30 karaktere baino gehiago izan", 
+      "passwordTooLong": "Pasahitzak ezin ditu 128 karaktere baino gehiago izan",
       "passwordTooShort": "Pasahitzak gutxienez 8 karaktere izan behar ditu",
-      "passwordUppercase": "Pasahitzak gutxienez letra larriz eduki behar du",
-      "passwordLowercase": "Pasahitzak gutxienez letra xehe bat eduki behar du",
-      "passwordNumber": "Pasahitzak gutxienez zenbaki bat eduki behar du",
-      "passwordSpecialCharacter": "Pasahitzak gutxienez karaktere berezia izan behar du",
-      "passwordNoWhitespace": "Pasahitzak ezin ditu hasiera hutsik hasieran edo amaieran",
-      "signupSuccess": "Kontua sortu da",
+      "passwordUppercase": "Pasahitzak gutxienez letra larri bat izan behar du",
+      "passwordLowercase": "Pasahitzak gutxienez letra xehe bat izan behar du",
+      "passwordNumber": "Pasahitzak gutxienez zenbaki bat izan behar du",
+      "passwordSpecialCharacter": "Pasahitzak gutxienez karaktere berezi bat izan behar du",
+      "passwordNoWhitespace": "Pasahitzak ezin du zuriunerik izan hasieran edo amaieran",
+      "signupSuccess": "Kontua arrakastaz sortu da",
       "signupFailure": "Errorea erregistratzean",
-      "networkError": "Sareko errorea gertatu da"
+      "networkError": "Sare-errorea gertatu da",
+      "invalidEmailFormat": "Mesedez, sartu baliozko helbide elektroniko bat",
+      "passwordSameAsUsername": "Pasahitza ezin da erabiltzaile-izena bezalakoa izan",
+      "invalidUsername": "Erabiltzaile-izenak 3-30 karaktere izan behar ditu eta letrak, zenbakiak eta azpimarra soilik izan ditzake",
+      "invalidUsernameCharacters": "Erabiltzaile-izenak karaktere baliogabeak ditu"
     }
   },
   "SignInPage": {
@@ -1017,7 +1024,11 @@
       "passwordSpecialCharacter": "Pasahitzak gutxienez karaktere berezia izan behar du",
       "signinSuccess": "Arrakasta saioa",
       "signinFailure": "Errorea erregistratzean",
-      "networkError": "Sareko errorea gertatu da"
+      "networkError": "Sareko errorea gertatu da",
+      "passwordSameAsUsername": "Pasahitza ezin da erabiltzaile-izena bezalakoa izan",
+      "invalidEmailFormat": "Mesedez, sartu baliozko helbide elektronikoa",
+      "invalidUsername": "Erabiltzaile-izenak 3-30 karaktere izan behar ditu eta letrak, zenbakiak eta azpimarra soilik izan ditzake",
+      "invalidUsernameCharacters": "Erabiltzaile-izenak karaktere baliogabeak ditu"
     }
   },
   "ProfileEditPage": {
@@ -1049,7 +1060,13 @@
       "updateError": "Errorea profila eguneratzean.",
       "deleteSuccess": "Kontua behar bezala ezabatu da.",
       "deleteError": "Errorea kontua ezabatuz.",
-      "usernameMismatch": "Erabiltzaile izena ez dator bat. Baliogabetutako kontua ezabatzea."
+      "usernameMismatch": "Erabiltzaile izena ez dator bat. Baliogabetutako kontua ezabatzea.",
+      "passwordSameAsUsername": "Pasahitza ezin da erabiltzaile-izena bezalakoa izan",
+      "invalidUsername": "Erabiltzaile-izenak 3-30 karaktere izan behar ditu eta letrak, zenbakiak eta azpimarra soilik izan ditzake",
+      "invalidUsernameCharacters": "Erabiltzaile-izenak karaktere baliogabeak ditu",
+      "nameTooLong": "Izenak ezin ditu 30 karaktere baino gehiago izan",
+      "surnameTooLong": "Abizenak ezin ditu 30 karaktere baino gehiago izan",
+      "invalidNameCharacters": "Izenak edo abizenak karaktere baliogabeak ditu"
     },
     "fields": {
       "username": "Erabiltzaile izena",
@@ -1190,7 +1207,11 @@
     "saveChanges": "Gorde aldaketak",
     "processing": "Tratamendua ...",
     "errors": {
-      "maxStudentsReached": "Gela honek dagoeneko ikasle kopuru maximoa du"
+      "maxStudentsReached": "Gela honek dagoeneko ikasle kopuru maximoa du",
+      "nameInvalidChars": "Izenak ezin ditu < edo > karaktereak izan",
+      "surnameInvalidChars": "Abizenak ezin ditu < edo > karaktereak izan", 
+      "nameInvalidFormat": "Izenak karaktere baliogabeak ditu",
+      "surnameInvalidFormat": "Abizenak karaktere baliogabeak ditu"
     }
   },
   
@@ -1459,9 +1480,7 @@
         "structured": "Ikuspegi egituratua elementu interaktibo batzuekin",
         "balanced": "Jarduera egituratuak eta jolaserako jardueren arteko nahasketa orekatua",
         "veryPlayful": "Oso jolaserako ikuspegia jokoekin eta jarduera sortzaileekin"
-      }
-    },
-    "planResultModal": {
+      },
       "defaultTitle": "Ikasgai Plana",
       "noPlanAvailable": "Ez dago planik eskuragarri",
       "copySuccess": "Arbelera kopiatuta!",

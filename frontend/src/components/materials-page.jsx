@@ -13,8 +13,8 @@ export function MaterialsPage({ classroomId }) {
   const { theme } = useTheme();
   const t = useTranslations("MaterialsPage");
   const [alert, setAlert] = useState(null);
-
   const [materials, setMaterials] = useState([]);
+
   const [tags, setTags] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
 

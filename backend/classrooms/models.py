@@ -25,8 +25,25 @@ class Classroom(models.Model):
     creator = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='classrooms')
 
     def clean(self):
+        super().clean()
+        if self.academic_year:
+            try:
+                start_year, end_year = map(int, self.academic_year.split('-'))
+                if end_year != start_year + 1:
+                    raise ValidationError({
+                        'academic_year': 'Academic years must be consecutive (e.g., 2024-2025).'
+                    })
+                if end_year <= start_year:
+                    raise ValidationError({
+                        'academic_year': 'End year must be greater than start year.'
+                    })
+            except ValueError:
+                raise ValidationError({
+                    'academic_year': 'Academic year must be in the format YYYY-YYYY.'
+                })
         if not self.academic_year:
             raise ValidationError({'academic_year': 'Academic year cannot be empty.'})
+
         if not re.match(r'^\d{4}-\d{4}$', self.academic_year):
             raise ValidationError({'academic_year': 'Academic year must be in the format YYYY-YYYY.'})
         validate_classroom_limit(self.creator)

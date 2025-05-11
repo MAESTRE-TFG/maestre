@@ -47,7 +47,6 @@ export function ProfileEditForm({
   handleCancel,
   schools,
   isProfileComplete,
-  params,
 }) {
   const { theme } = useTheme();
   const router = useRouter();

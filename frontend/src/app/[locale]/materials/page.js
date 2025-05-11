@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 import Alert from "@/components/ui/Alert";
-import { IconBooks} from "@tabler/icons-react";
+import { IconBooks } from "@tabler/icons-react";
 import { Input } from "@/components/ui/input";
 import MaterialCreateModal from "@/components/material-create-modal";
 import EditMaterialModal from "@/components/material-edit-modal";
@@ -22,7 +22,7 @@ const MaterialsList = () => {
   const [tags, setTags] = useState([]);
   const [classrooms, setClassrooms] = useState([]);
   const [alerts, setAlerts] = useState([]);
-  const [showNewMaterialModal, setShowNewMaterialModal] = useState(false); 
+  const [showNewMaterialModal, setShowNewMaterialModal] = useState(false);
 
   const addAlert = (type, message) => {
     const id = Date.now();
@@ -255,6 +255,24 @@ const MaterialsList = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
+    if (newTagName.length > 50) {
+      addAlert("warning", t("alerts.tagNameTooLong"));
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (tags.length >= 15) {
+      addAlert("warning", t("alerts.tagLimit"));
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (tags.some(tag => tag.name.toLowerCase() === newTagName.toLowerCase())) {
+      addAlert("warning", t("alerts.tagExists"));
+      setIsSubmitting(false);
+      return;
+    }
+
     try {
       const response = await axios.post(`${getApiBaseUrl()}/api/tags/`, {
         name: newTagName,
@@ -384,7 +402,7 @@ const MaterialsList = () => {
         ))}
       </div>
 
-      { /* New Material Modal */ }
+      { /* New Material Modal */}
       <MaterialCreateModal
         showModal={showNewMaterialModal}
         setShowModal={setShowNewMaterialModal}
@@ -397,7 +415,7 @@ const MaterialsList = () => {
 
         <div className="w-full max-w-4xl flex flex-col items-center">
           <div className="flex items-center gap-4 mb-6">
-            <IconBooks 
+            <IconBooks
               className={`w-16 h-16 drop-shadow-lg text-primary`}
             />
             <div>
@@ -416,10 +434,10 @@ const MaterialsList = () => {
           <div className="flex justify-center mt-6">
             <button
               className={cn(
-          "px-4 py-3 rounded-full font-medium text-white transition-all",
-          "bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700",
-          "shadow-md hover:shadow-lg transform hover:-translate-y-0.5",
-          "flex items-center gap-2"
+                "px-4 py-3 rounded-full font-medium text-white transition-all",
+                "bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700",
+                "shadow-md hover:shadow-lg transform hover:-translate-y-0.5",
+                "flex items-center gap-2"
               )}
               onClick={() => setShowNewMaterialModal(true)}
             >
@@ -456,8 +474,8 @@ const MaterialsList = () => {
                     "w-full h-14 pl-14 pr-4 rounded-xl outline-none transition duration-300",
                     "text-gray-800 placeholder-gray-500",
                     "border-2 focus:border-blue-500",
-                    theme === "dark" 
-                      ? "bg-gray-800 border-gray-700 text-white focus:bg-gray-900" 
+                    theme === "dark"
+                      ? "bg-gray-800 border-gray-700 text-white focus:bg-gray-900"
                       : "bg-white border-gray-200 focus:bg-white shadow-md focus:shadow-lg"
                   )}
                   placeholder={t("searchPlaceholder")}
@@ -483,7 +501,7 @@ const MaterialsList = () => {
                 </svg>
                 {t("filters")}
               </h3>
-              
+
               {/* Tags Filter */}
               <div className="mb-6">
                 <div className="flex items-center justify-between mb-3">
@@ -499,10 +517,10 @@ const MaterialsList = () => {
                     onClick={() => setDeleteMode(!deleteMode)}
                     className={cn(
                       "p-2 rounded-full transition-colors flex items-center gap-1",
-                      deleteMode 
-                        ? "bg-red-500 text-white hover:bg-red-600" 
-                        : theme === "dark" 
-                          ? "bg-gray-700 text-gray-300 hover:bg-gray-600" 
+                      deleteMode
+                        ? "bg-red-500 text-white hover:bg-red-600"
+                        : theme === "dark"
+                          ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
                           : "bg-gray-200 text-gray-600 hover:bg-gray-300"
                     )}
                     title={deleteMode ? t("exitDeleteMode") : t("enterDeleteMode")}
@@ -570,8 +588,8 @@ const MaterialsList = () => {
                             onClick={() => handleTagSelect(tag)}
                             className={cn(
                               "px-3 py-1.5 rounded-full transition-all font-medium text-white shadow-sm hover:shadow",
-                              selectedTags.includes(tag.name) 
-                                ? "ring-2 ring-offset-1 ring-blue-300 transform scale-105" 
+                              selectedTags.includes(tag.name)
+                                ? "ring-2 ring-offset-1 ring-blue-300 transform scale-105"
                                 : "hover:transform hover:scale-105"
                             )}
                             style={{ backgroundColor: tag.color }}
@@ -586,14 +604,14 @@ const MaterialsList = () => {
                       {t("noTagsAvailable")}
                     </p>
                   )}
-                  
+
                   {/* Add Tag Button */}
                   <button
                     onClick={() => setShowTagModal(true)}
                     className={cn(
                       "px-3 py-1.5 rounded-full transition-colors font-medium flex items-center gap-1",
-                      theme === "dark" 
-                        ? "bg-gray-700 text-gray-300 hover:bg-gray-600" 
+                      theme === "dark"
+                        ? "bg-gray-700 text-gray-300 hover:bg-gray-600"
                         : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                     )}
                   >
@@ -615,7 +633,7 @@ const MaterialsList = () => {
                     {t("filterByClassroom")}
                   </span>
                 </div>
-                
+
                 <div className={cn(
                   "flex flex-wrap gap-2 p-3 rounded-lg",
                   theme === "dark" ? "bg-gray-900/50" : "bg-gray-100/70"
@@ -627,8 +645,8 @@ const MaterialsList = () => {
                         onClick={() => handleClassroomSelect(classroom)}
                         className={cn(
                           "px-3 py-1.5 rounded-full transition-all font-medium shadow-sm",
-                          selectedClassroom?.id === classroom.id 
-                            ? "bg-blue-500 text-white transform scale-105" 
+                          selectedClassroom?.id === classroom.id
+                            ? "bg-blue-500 text-white transform scale-105"
                             : theme === "dark"
                               ? "bg-gray-700 text-gray-200 hover:bg-gray-600 hover:transform hover:scale-105"
                               : "bg-gray-200 text-gray-700 hover:bg-gray-300 hover:transform hover:scale-105"
@@ -649,12 +667,12 @@ const MaterialsList = () => {
             {/* Delete Confirmation Modal */}
             {showDeleteModal && (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowDeleteModal(false)}>
-                <div 
+                <div
                   className={cn(
                     "p-6 rounded-xl max-w-md w-full mx-4",
                     theme === "dark" ? "bg-gray-800" : "bg-white",
                     "shadow-xl"
-                  )} 
+                  )}
                   onClick={e => e.stopPropagation()}
                 >
                   <div className="flex items-center justify-center mb-4 text-red-500">
@@ -662,21 +680,21 @@ const MaterialsList = () => {
                       <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  
+
                   <h3 className={cn(
                     "text-xl font-bold mb-2 text-center",
                     theme === "dark" ? "text-white" : "text-gray-800"
                   )}>
                     {t("deleteMaterial")}
                   </h3>
-                  
+
                   <p className={cn(
                     "mb-6 text-center",
                     theme === "dark" ? "text-gray-300" : "text-gray-600"
                   )}>
                     {t("deleteMaterialConfirmation")} <span className="font-semibold">{fileToDelete?.name}</span>?
                   </p>
-                  
+
                   <div className="flex justify-center gap-3">
                     <button
                       onClick={() => setShowDeleteModal(false)}
@@ -695,134 +713,140 @@ const MaterialsList = () => {
               </div>
             )}
 
-            { /* Edit Tags Modal */ }
+            { /* Edit Tags Modal */}
             {showEditTagsModal && (
               <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowEditTagsModal(false)}>
-              <div 
-                className={cn(
-                "p-6 rounded-xl max-w-md w-full mx-4",
-                theme === "dark" ? "bg-gray-800" : "bg-white",
-                "shadow-xl"
-                )} 
-                onClick={e => e.stopPropagation()}
-              >
-                <div className="flex items-center justify-center mb-4 text-blue-500">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" viewBox="0 0 20 20" fill="currentColor">
-                  <path fillRule="evenodd" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" clipRule="evenodd" />
-                </svg>
-                </div>
-                
-                <h3 className={cn(
-                "text-xl font-bold mb-2 text-center",
-                theme === "dark" ? "text-white" : "text-gray-800"
-                )}>
-                {t("manageTags")} {editingMaterial?.name}
-                </h3>
-                
-                <div className={cn(
-                "mb-6 text-center",
-                theme === "dark" ? "text-gray-300" : "text-gray-600"
-                )}>
-                {t("selectOrCreateTags")}
-                </div>
-                
-                <div className="space-y-4 mb-6">
-                <div className="flex flex-wrap gap-2 justify-center">
-                  {tags.map(tag => (
-                  <button
-                    key={tag.id}
-                    onClick={() => {
-                    const newSelectedTags = selectedMaterialTags.includes(tag.id)
-                      ? selectedMaterialTags.filter(id => id !== tag.id)
-                      : [...selectedMaterialTags, tag.id];
-                    setSelectedMaterialTags(newSelectedTags);
-                    }}
-                    className={cn(
-                    "px-3 py-1 rounded-full transition-colors font-medium text-white",
-                    selectedMaterialTags.includes(tag.id)
-                      ? "ring-2 ring-offset-1 ring-blue-300"
-                      : "",
-                    "shadow-sm"
-                    )}
-                    style={{ backgroundColor: tag.color }}
-                  >
-                    {tag.name}
-                  </button>
-                  ))}
-                  <button
-                  onClick={() => {
-                    setCreatingTagFromEdit(true);
-                    setShowEditTagsModal(false);
-                    setShowTagModal(true);
-                    }}
-                    className={cn(
-                    "px-3 py-1 rounded-full border-2 border-dashed transition-colors flex items-center gap-1",
-                    theme === "dark"
-                    ? "border-gray-600 text-gray-400 hover:border-gray-500"
-                    : "border-gray-300 text-gray-600 hover:border-gray-400"
-                    )}
-                    >
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                    <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                <div
+                  className={cn(
+                    "p-6 rounded-xl max-w-md w-full mx-4",
+                    theme === "dark" ? "bg-gray-800" : "bg-white",
+                    "shadow-xl"
+                  )}
+                  onClick={e => e.stopPropagation()}
+                >
+                  <div className="flex items-center justify-center mb-4 text-blue-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" clipRule="evenodd" />
                     </svg>
-                    {t("createTag")}
+                  </div>
+
+                  <h3 className={cn(
+                    "text-xl font-bold mb-2 text-center",
+                    theme === "dark" ? "text-white" : "text-gray-800"
+                  )}>
+                    {t("manageTags")} {editingMaterial?.name}
+                  </h3>
+
+                  <div className={cn(
+                    "mb-6 text-center",
+                    theme === "dark" ? "text-gray-300" : "text-gray-600"
+                  )}>
+                    {t("selectOrCreateTags")} (Max 5)
+                  </div>
+
+                  <div className="space-y-4 mb-6">
+                    <div className="flex flex-wrap gap-2 justify-center">
+                      {tags.map(tag => (
+                        <button
+                          key={tag.id}
+                          onClick={() => {
+                            const isSelected = selectedMaterialTags.includes(tag.id);
+                            if (!isSelected && selectedMaterialTags.length >= 5) {
+                              addAlert("warning", t("maxTagsReached"));
+                              return;
+                            }
+                            const newSelectedTags = isSelected
+                              ? selectedMaterialTags.filter(id => id !== tag.id)
+                              : [...selectedMaterialTags, tag.id];
+                            setSelectedMaterialTags(newSelectedTags);
+                          }}
+                          className={cn(
+                            "px-3 py-1 rounded-full transition-colors font-medium text-white",
+                            selectedMaterialTags.includes(tag.id)
+                              ? "ring-2 ring-offset-1 ring-blue-300"
+                              : selectedMaterialTags.length >= 5 ? "opacity-50 cursor-not-allowed" : "",
+                            "shadow-sm"
+                          )}
+                          style={{ backgroundColor: tag.color }}
+                          disabled={!selectedMaterialTags.includes(tag.id) && selectedMaterialTags.length >= 5}
+                        >
+                          {tag.name}
+                        </button>
+                      ))}
+                      <button
+                        onClick={() => {
+                          setCreatingTagFromEdit(true);
+                          setShowEditTagsModal(false);
+                          setShowTagModal(true);
+                        }}
+                        className={cn(
+                          "px-3 py-1 rounded-full border-2 border-dashed transition-colors flex items-center gap-1",
+                          theme === "dark"
+                            ? "border-gray-600 text-gray-400 hover:border-gray-500"
+                            : "border-gray-300 text-gray-600 hover:border-gray-400"
+                        )}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                          <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
+                        </svg>
+                        {t("createTag")}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-center gap-3">
+                    <button
+                      onClick={() => setShowEditTagsModal(false)}
+                      className="btn-secondary py-2 rounded-full flex items-center justify-center flex-1"
+                    >
+                      {t("cancel")}
+                    </button>
+                    <button
+                      onClick={handleUpdateMaterialTags}
+                      className="btn-primary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
+                    >
+                      {t("saveChanges")}
                     </button>
                   </div>
-                  </div>
-                  
-                  <div className="flex justify-center gap-3">
-                  <button
-                    onClick={() => setShowEditTagsModal(false)}
-                    className="btn-secondary py-2 rounded-full flex items-center justify-center flex-1"
-                  >
-                    {t("cancel")}
-                  </button>
-                  <button
-                    onClick={handleUpdateMaterialTags}
-                    className="btn-primary py-2 rounded-full transition-all duration-300 flex items-center justify-center flex-1"
-                  >
-                    {t("saveChanges")}
-                  </button>
-                  </div>
-                  </div>
-                  </div>
-                )}
-                
-                  {showTagModal && (
-                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowTagModal(false)}>
-                    <div 
-                    className={cn(
-                      "p-6 rounded-xl max-w-md w-full mx-4",
-                      theme === "dark" ? "bg-gray-800" : "bg-white",
-                      "shadow-xl"
-                    )} 
-                    onClick={e => e.stopPropagation()}
-                    >
-                    <div className="flex items-center justify-center mb-4 text-blue-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" viewBox="0 0 20 20" fill="currentColor">
+                </div>
+              </div>
+            )}
+
+            {showTagModal && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" onClick={() => setShowTagModal(false)}>
+                <div
+                  className={cn(
+                    "p-6 rounded-xl max-w-md w-full mx-4",
+                    theme === "dark" ? "bg-gray-800" : "bg-white",
+                    "shadow-xl"
+                  )}
+                  onClick={e => e.stopPropagation()}
+                >
+                  <div className="flex items-center justify-center mb-4 text-blue-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12" viewBox="0 0 20 20" fill="currentColor">
                       <path fillRule="evenodd" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A2 2 0 013 12V7a4 4 0 014-4z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                    
-                    <h3 className={cn(
-                      "text-xl font-bold mb-2 text-center",
-                      theme === "dark" ? "text-white" : "text-gray-800"
-                    )}>
-                      {t("createNewTag")}
-                    </h3>
-                    
-                    <form onSubmit={handleCreateTag}>
-                      
-                      <Input
-                        type="text"
-                        value={newTagName}
-                        onChange={(e) => setNewTagName(e.target.value)}
-                        placeholder={t("tagName")}
-                        required
-                        onClick={e => e.stopPropagation()}
-                      />
-                      <br />
-                      <div className="mb-4">
+                    </svg>
+                  </div>
+
+                  <h3 className={cn(
+                    "text-xl font-bold mb-2 text-center",
+                    theme === "dark" ? "text-white" : "text-gray-800"
+                  )}>
+                    {t("createNewTag")}
+                  </h3>
+
+                  <form onSubmit={handleCreateTag}>
+
+                    <Input
+                      type="text"
+                      value={newTagName}
+                      onChange={(e) => setNewTagName(e.target.value)}
+                      placeholder={t("tagName")}
+                      required
+                      onClick={e => e.stopPropagation()}
+                    />
+                    <br />
+                    <div className="mb-4">
                       <label className={cn(
                         "block mb-2 font-medium text-center",
                         theme === "dark" ? "text-white" : "text-gray-800"
@@ -831,30 +855,30 @@ const MaterialsList = () => {
                       </label>
                       <div className="grid grid-cols-5 gap-2 justify-center">
                         {TAG_COLORS.map(color => (
-                        <button
-                          key={color.value}
-                          type="button"
-                          onClick={() => setSelectedColor(color.value)}
-                          className={cn(
-                          "w-8 h-8 rounded-full transition-all duration-200",
-                          selectedColor === color.value
-                            ? "border-4 border-blue-500 shadow-lg scale-110"
-                            : "border-2 border-transparent hover:scale-105"
-                          )}
-                          style={{ backgroundColor: color.value }}
-                          title={color.name}
-                        />
+                          <button
+                            key={color.value}
+                            type="button"
+                            onClick={() => setSelectedColor(color.value)}
+                            className={cn(
+                              "w-8 h-8 rounded-full transition-all duration-200",
+                              selectedColor === color.value
+                                ? "border-4 border-blue-500 shadow-lg scale-110"
+                                : "border-2 border-transparent hover:scale-105"
+                            )}
+                            style={{ backgroundColor: color.value }}
+                            title={color.name}
+                          />
                         ))}
                       </div>
-                      </div>
-                      <div className="flex justify-center gap-3">
+                    </div>
+                    <div className="flex justify-center gap-3">
                       <button
                         type="button"
                         onClick={() => {
-                        setShowTagModal(false);
-                        if (creatingTagFromEdit) {
-                          setShowEditTagsModal(true);
-                        }
+                          setShowTagModal(false);
+                          if (creatingTagFromEdit) {
+                            setShowEditTagsModal(true);
+                          }
                         }}
                         className="btn-secondary py-2 rounded-full flex items-center justify-center flex-1"
                       >
@@ -866,23 +890,23 @@ const MaterialsList = () => {
                       >
                         {isSubmitting ? t("creating") : t("createTag")}
                       </button>
-                      </div>
-                    </form>
                     </div>
-                  </div>
-                  )}
+                  </form>
+                </div>
+              </div>
+            )}
 
-              { /* Edit Material Modal */}
-                {showEditModal && (
-                  <EditMaterialModal
-                  isOpen={showEditModal}
-                  onClose={() => setShowEditModal(false)}
-                  onConfirm={confirmEdit}
-                  newFileName={newFileName}
-                  setNewFileName={setNewFileName}
-                  theme={theme}
-                />
-                )}
+            { /* Edit Material Modal */}
+            {showEditModal && (
+              <EditMaterialModal
+                isOpen={showEditModal}
+                onClose={() => setShowEditModal(false)}
+                onConfirm={confirmEdit}
+                newFileName={newFileName}
+                setNewFileName={setNewFileName}
+                theme={theme}
+              />
+            )}
 
 
             <div className="w-full mt-6">
@@ -914,11 +938,10 @@ const MaterialsList = () => {
                         <div className="flex items-center gap-2 mb-4">
                           <div
                             onClick={() => toggleMaterialSelection(material.id)}
-                            className={`w-5 h-5 border-2 rounded cursor-pointer transition-all duration-200 flex items-center justify-center ${
-                              selectedMaterials.includes(material.id)
+                            className={`w-5 h-5 border-2 rounded cursor-pointer transition-all duration-200 flex items-center justify-center ${selectedMaterials.includes(material.id)
                                 ? 'bg-blue-500 border-blue-500'
                                 : 'border-gray-300 dark:border-gray-600'
-                            }`}
+                              }`}
                           >
                             {selectedMaterials.includes(material.id) && (
                               <svg
@@ -945,25 +968,25 @@ const MaterialsList = () => {
                                 : `${getApiBaseUrl()}${material.file}`;
                               window.open(fileUrl, '_blank');
                             }}>
-                            <svg 
-                              xmlns="http://www.w3.org/2000/svg" 
-                              className="h-5 w-5 flex-shrink-0" 
-                              fill="none" 
-                              viewBox="0 0 24 24" 
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              className="h-5 w-5 flex-shrink-0"
+                              fill="none"
+                              viewBox="0 0 24 24"
                               stroke={
                                 material.name.toLowerCase().endsWith('.pdf') ? '#FF0000' :
-                                material.name.toLowerCase().endsWith('.doc') || material.name.toLowerCase().endsWith('.docx') ? '#0000FF' :
-                                material.name.toLowerCase().endsWith('.png') || material.name.toLowerCase().endsWith('.jpg') ? '#800080' :
-                                material.name.toLowerCase().endsWith('.pptx') ? '#FFA500' :
-                                material.name.toLowerCase().endsWith('.txt') ? '#000000' :
-                                'currentColor'
+                                  material.name.toLowerCase().endsWith('.doc') || material.name.toLowerCase().endsWith('.docx') ? '#0000FF' :
+                                    material.name.toLowerCase().endsWith('.png') || material.name.toLowerCase().endsWith('.jpg') ? '#800080' :
+                                      material.name.toLowerCase().endsWith('.pptx') ? '#FFA500' :
+                                        material.name.toLowerCase().endsWith('.txt') ? '#000000' :
+                                          'currentColor'
                               }
                             >
-                              <path 
-                                strokeLinecap="round" 
-                                strokeLinejoin="round" 
-                                strokeWidth={2} 
-                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" 
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
                               />
                             </svg>
                             <span className="hover:underline">

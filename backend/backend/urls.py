@@ -22,8 +22,10 @@ from django.conf.urls.static import static
 from django.http import JsonResponse
 from django.views.static import serve
 
+
 def test_cors_view(request):
     return JsonResponse({"message": "It works!"})
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),

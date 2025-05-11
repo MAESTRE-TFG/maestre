@@ -2,18 +2,20 @@ from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 import re
+from django.conf import settings
+
 
 User = get_user_model()
 
 
 def validate_user_tags_limit(user):
-    if user.tag_set.count() >= 15:
-        raise ValidationError('You can only create up to 15 tags.')
+    if user.tag_set.count() >= settings.MAX_TAGS:
+        raise ValidationError(f'You can only create up to {settings.MAX_TAGS} tags.')
 
 
 def validate_document_tags_limit(document):
-    if document.tags.count() >= 5:
-        raise ValidationError('A document can only have up to 5 tags.')
+    if document.tags.count() >= settings.MAX_TAGS_PER_FILE:
+        raise ValidationError(f'A document can only have up to {settings.MAX_TAGS_PER_FILE} tags.')
 
 
 class Tag(models.Model):

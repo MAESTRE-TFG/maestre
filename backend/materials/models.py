@@ -10,6 +10,12 @@ def validate_file_limit(classroom):
         raise ValidationError(f'A classroom cannot have more than {settings.MAX_FILES_PER_CLASSROOM} files.')
 
 
+def validate_file_size(value):
+    limit = settings.MAX_FILE_SIZE * 1024 * 1024
+    if value.size > limit:
+        raise ValidationError(f'File size cannot exceed {settings.MAX_FILE_SIZE}MB.')
+
+
 class Document(models.Model):
     name = models.CharField(max_length=50)
     file = models.FileField(
@@ -18,6 +24,7 @@ class Document(models.Model):
             FileExtensionValidator(allowed_extensions=[
                 'pdf', 'doc', 'docx', 'png', 'jpg', 'pptx', 'txt', 'md', 'tex', 'pages'
             ]),
+            validate_file_size,
         ]
     )
     classroom = models.ForeignKey(
