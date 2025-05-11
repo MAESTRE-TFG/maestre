@@ -895,7 +895,10 @@
         "descriptionTooLong": "Description cannot exceed 255 characters.",
         "invalidAcademicYear": "Academic Year must be in the format 'YYYY-YYYY'.",
         "success": "Classroom created successfully!",
-        "error": "An error occurred while submitting the form."
+        "error": "An error occurred while submitting the form.",
+        "firstYearAfterSecond": "First year cannot be after second year.",
+        "cantBeSameYear": "Both years cannot be the same.",
+        "gapTooLarge": "Gap between years cannot be more than one year."
       }
     },
 
@@ -1207,7 +1210,10 @@
         "updateError": "Failed to update classroom data.",
         "deleteSuccess": "Classroom deleted successfully.",
         "deleteError": "Failed to delete classroom.",
-        "nameMismatch": "Classroom name does not match. Deletion cancelled."
+        "nameMismatch": "Classroom name does not match. Deletion cancelled.",
+        "firstYearAfterSecond": "First year cannot be after second year.",
+        "cantBeSameYear": "Both years cannot be the same.",
+        "gapTooLarge": "Gap between years cannot be more than one year."
       },
       "deleteModal": {
         "title": "Delete Classroom",

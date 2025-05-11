@@ -892,7 +892,10 @@
       "descriptionTooLong": "La descripción no puede superar los 255 caracteres.",
       "invalidAcademicYear": "El año debe tener el formato 'AAAA-AAAA'.",
       "success": "Clase creada con éxito!",
-      "error": "Ocurrió un error al enviar el formulario."
+      "error": "Ocurrió un error al enviar el formulario.",
+      "firstYearAfterSecond": "El primer año debe ser anterior al segundo.",
+      "cantBeSameYear": "Ambos años no pueden ser el mismo año.",
+      "gapTooLarge": "Debe haber un máximo de 1 año de diferencia entre ambos años."
     }
   },
 
@@ -1190,7 +1193,10 @@
       "updateError": "Error al actualizar los datos de la clase.",
       "deleteSuccess": "Clase eliminada con éxito.",
       "deleteError": "Error al eliminar la clase.",
-      "nameMismatch": "El nombre de la clase no coincide. Eliminación cancelada."
+      "nameMismatch": "El nombre de la clase no coincide. Eliminación cancelada.",
+      "firstYearAfterSecond": "El primer año debe ser anterior al segundo.",
+      "cantBeSameYear": "Ambos años no pueden ser el mismo año.",
+      "gapTooLarge": "Debe haber un máximo de 1 año de diferencia entre ambos años."
     },
     "deleteModal": {
       "title": "Eliminar Clase",

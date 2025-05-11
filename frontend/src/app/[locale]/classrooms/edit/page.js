@@ -39,6 +39,37 @@ const ClassroomEdit = () => {
     setTimeout(() => setAlert(null), 5000);
   };
 
+  const validateAcademicYear = (value) => {
+    // Check format AAAA-AAAA
+    const regex = /^\d{4}-\d{4}$/;
+    if (!regex.test(value)) {
+      return t("alerts.invalidYearFormat");
+    }
+
+    // Extract years
+    const [firstYear, secondYear] = value.split('-').map(Number);
+
+    // First year should not be after second year
+    if (firstYear > secondYear) {
+      // return "First year cannot be after second year";
+      return t("alerts.firstYearAfterSecond")
+    }
+
+    // Both years cannot be the same
+    if (firstYear === secondYear) {
+      // return "Both years cannot be the same";
+      return t("alerts.cantBeSameYear")
+    }
+
+    // Gap cannot be more than one year
+    if (secondYear - firstYear > 1) {
+      //return "Gap between years cannot be more than one year";
+      return t("alerts.gapTooLarge")
+    }
+
+    return null; // No error
+  };
+
   const validateFormData = () => {
     if (formData.name.length > 30) {
       showAlert("warning", t("alerts.nameTooLong"));
@@ -56,9 +87,9 @@ const ClassroomEdit = () => {
       showAlert("warning", t("alerts.descriptionEmpty"));
       return false;
     }
-    const yearPattern = /^\d{4}-\d{4}$/;
-    if (formData.academic_year && !yearPattern.test(formData.academic_year)) {
-      showAlert("warning", t("alerts.invalidYearFormat"));
+    const academicYearError = validateAcademicYear(formData.academic_year);
+    if (academicYearError) {
+      setAlert({ type: "warning", message: academicYearError });
       return false;
     }
     return true;
@@ -190,9 +221,11 @@ const ClassroomEdit = () => {
       );
       setClassroom(response.data);
       showAlert("success", t("alerts.updateSuccess"));
+      // Only redirect on success
       router.push(`/${locale}/classrooms`);
     } catch (err) {
       showAlert("error", t("alerts.updateError"));
+      // Don't redirect on error
     }
   }, [formData, classroom?.id, router, t, locale]);
 
@@ -212,12 +245,16 @@ const ClassroomEdit = () => {
           }
         );
         showAlert("success", t("alerts.deleteSuccess"));
+        // Only redirect on success
         router.push(`/${locale}/classrooms`);
       } catch (err) {
         showAlert("error", t("alerts.deleteError"));
+        // Don't redirect on error
+        closeDeleteModal(); // Close the modal on error
       }
     } else {
       showAlert("error", t("alerts.nameMismatch"));
+      // Don't redirect on error
     }
   }, [router, classroom?.id, nameInput, t, locale]);
 
