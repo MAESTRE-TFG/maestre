@@ -929,7 +929,8 @@
       "cityRequired": "City is required.",
       "allFieldsRequired": "All fields are required!",
       "success": "School created successfully!",
-      "error": "Failed to create school. Please try again."
+      "error": "Failed to create school. Please try again.",
+      "stagesRequired": "The school should have at least one stage."
     }
     },
 

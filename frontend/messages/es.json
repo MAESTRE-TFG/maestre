@@ -930,7 +930,8 @@
       "cityRequired": "La ciudad es obligatoria.",
       "allFieldsRequired": "¡Todos los campos son obligatorios!",
       "success": "¡Centro creado con éxito!",
-      "error": "Error al crear el centro. Por favor, inténtalo de nuevo."
+      "error": "Error al crear el centro. Por favor, inténtalo de nuevo.",
+      "stagesRequired": "El colegio debe tener al menos una etapa."
     }
   },
 

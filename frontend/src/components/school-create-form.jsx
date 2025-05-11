@@ -86,9 +86,20 @@ export function CreateSchoolForm({ onSubmit }) {
       return;
     }
 
+
     // Validate city is not null
     if (!formDataCopy.city) {
       setAlert({ type: "warning", message: t("alerts.cityRequired") });
+      return;
+    }
+
+    if (formDataCopy.city.length > 50) {
+      setAlert({ type: "warning", message: t("alerts.nameTooLong") });
+      return;
+    }
+
+    if (formDataCopy.stages.length <= 0) {
+      setAlert({ type: "warning", message: t("alerts.stagesRequired") });
       return;
     }
 
