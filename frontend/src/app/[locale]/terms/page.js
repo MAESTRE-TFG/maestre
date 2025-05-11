@@ -23,6 +23,7 @@ import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import { useTranslations } from "next-intl";
 import AddTermModal from "@/components/term-add-modal";
+import DocumentViewModal from "@/components/document-view-modal";
 
 
 const POLICY_ORDER = {
@@ -44,12 +45,6 @@ export default function TermsPage() {
   const [adminUsername, setAdminUsername] = useState("");
 
   const [showAddForm, setShowAddForm] = useState(false);
-  const [newTermType, setNewTermType] = useState("");
-  const [newTermContent, setNewTermContent] = useState("");
-  const [newTermVersion, setNewTermVersion] = useState("");
-  const [uploadedMdFileName, setUploadedMdFileName] = useState(""); // Track uploaded markdown file name
-  const [uploadedPdfFileName, setUploadedPdfFileName] = useState(""); // Track uploaded PDF file name
-  const [pdfFile, setPdfFile] = useState(null);
 
   const [activeTermId, setActiveTermId] = useState(null);
 
@@ -276,7 +271,8 @@ export default function TermsPage() {
     }
   };
 
-  // -------------------- Main Render --------------------
+
+
   return (
 
       <SidebarDemo
@@ -493,109 +489,12 @@ export default function TermsPage() {
                 </div>
 
                 {/* Modal to view full document */}
-                {activeTermId !== null && (
-                  <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-                    <div
-                      className={`
-                    rounded-lg shadow-lg max-w-4xl w-full max-h-[90vh] overflow-hidden flex flex-col
-                    ${theme === "dark" ? "bg-gray-800 text-white" : "bg-white text-black"}
-                  `}
-                    >
-                      {(() => {
-                        const activeTerm = terms.find(
-                          (term) => term.id === activeTermId
-                        );
-                        if (!activeTerm) return null;
+                <DocumentViewModal 
+                  showModal={activeTermId !== null}
+                  setShowModal={() => setActiveTermId(null)}
+                  document={terms.find(term => term.id === activeTermId)}
+                />
 
-                        const [content, setContent] = useState("");
-
-                        useEffect(() => {
-                          const fetchAndSetContent = async () => {
-                            const resolvedContent = await fetchContent(activeTerm.content);
-                            setContent(resolvedContent);
-                          };
-                          fetchAndSetContent();
-                        }, [activeTerm.content]);
-
-                        return (
-                          <>
-                            <div
-                              className={`
-                            p-4 border-b flex justify-between items-center
-                            ${theme === "dark" ? "border-gray-700" : "border-gray-200"}
-                          `}
-                            >
-                              <h3 className="text-lg font-semibold">
-                                {activeTerm.title} - {activeTerm.version}
-                              </h3>
-                              <button
-                                onClick={() => setActiveTermId(null)}
-                                className={`
-                              p-1 rounded-full
-                              ${theme === "dark" ? "hover:bg-gray-700" : "hover:bg-gray-200"}
-                            `}
-                              >
-                                <IconX size={20} />
-                              </button>
-                            </div>
-
-                            <div className="flex-1 overflow-y-auto p-6">
-                              <div className="prose dark:prose-invert max-w-none">
-                                <ReactMarkdown
-                                  remarkPlugins={[remarkGfm]}
-                                  rehypePlugins={[rehypeRaw]}
-                                >
-                                  {content}
-                                </ReactMarkdown>
-                              </div>
-                            </div>
-
-                            <div
-                              className={`
-                            p-4 border-t flex justify-end
-                            ${theme === "dark" ? "border-gray-700" : "border-gray-200"}
-                          `}
-                            >
-                              <button
-                                onClick={() => {
-                                  const activeTerm = terms.find((term) => term.id === activeTermId);
-                                  if (!activeTerm || !activeTerm.pdf_content) {
-                                    alert(t("alerts.noPdf"));
-                                    return;
-                                  }
-                                  const newTab = window.open(activeTerm.pdf_content, "_blank");
-                                  if (!newTab) {
-                                    alert(t("alerts.failedToOpenPdf"));
-                                  }
-                                }}
-                                className={`
-                              px-4 py-2 rounded-md flex items-center
-                              ${theme === "dark" ? "bg-blue-600 text-white hover:bg-blue-700" : "bg-blue-100 text-blue-700 hover:bg-blue-200"}
-                            `}
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  className="h-4 w-4 mr-2"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  stroke="currentColor"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"
-                                  />
-                                </svg>
-                                {t("buttons.openDocument")}
-                              </button>
-                            </div>
-                          </>
-                        );
-                      })()}
-                    </div>
-                  </div>
-                )}
               </>
             )}
 
@@ -669,71 +568,3 @@ export default function TermsPage() {
       />
   );
 }
-
-const handleTermCreate = async (formData) => {
-  try {
-    // Version length validation (max 20 characters as per model)
-    const version = formData.get('version');
-    if (version.length > 20) {
-      showAlert("error", t("alerts.versionTooLong"));
-      return;
-    }
-
-    // File size validation (50MB limit is a reasonable size for documents)
-    const mdFile = formData.get('content');
-    const pdfFile = formData.get('pdf_content');
-    const MAX_FILE_SIZE = 50 * 1024 * 1024; // 10MB in bytes
-
-    if (mdFile.size > MAX_FILE_SIZE) {
-      showAlert("error", t("alerts.mdFileTooLarge"));
-      return;
-    }
-
-    if (pdfFile.size > MAX_FILE_SIZE) {
-      showAlert("error", t("alerts.pdfFileTooLarge"));
-      return;
-    }
-
-    const response = await axios.post(
-      `${getApiBaseUrl()}/api/terms/`,
-      formData,
-      {
-        headers: {
-          Authorization: `Token ${localStorage.getItem("authToken")}`,
-          "Content-Type": "multipart/form-data",
-        },
-      }
-    );
-
-    const newTerm = {
-      ...response.data,
-      icon: getIconForTag(response.data.tag),
-      title: getTermTitle(response.data.tag),
-    };
-
-    setTerms([...terms, newTerm]);
-    setShowAddForm(false);
-    showAlert("success", t("alerts.addSuccess"));
-  } catch (error) {
-    let errorMessage = t("alerts.addError");
-
-    // Check for specific error messages from API
-    if (error.response && error.response.data) {
-      if (error.response.data.tag) {
-        errorMessage = t("alerts.tagError", { error: error.response.data.tag[0] });
-      } else if (error.response.data.content) {
-        errorMessage = t("alerts.contentError", { error: error.response.data.content[0] });
-      } else if (error.response.data.pdf_content) {
-        errorMessage = t("alerts.pdfContentError", { error: error.response.data.pdf_content[0] });
-      } else if (error.response.data.version) {
-        errorMessage = t("alerts.versionError", { error: error.response.data.version[0] });
-      } else if (error.response.data.name) {
-        errorMessage = t("alerts.nameError", { error: error.response.data.name[0] });
-      } else if (typeof error.response.data === "string") {
-        errorMessage = error.response.data;
-      }
-    }
-
-    showAlert("error", errorMessage);
-  }
-};
