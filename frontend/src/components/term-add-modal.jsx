@@ -155,7 +155,7 @@ const TermAddModal = ({
     }
 
     // Add file size validations (50MB limit is a common practice)
-    const MAX_FILE_SIZE = 50 * 1024 * 1024; // 10MB in bytes
+    const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB in bytes
     
     if (mdFile.size > MAX_FILE_SIZE) {
       showAlert("error", t("alerts.mdFileTooLarge"));
