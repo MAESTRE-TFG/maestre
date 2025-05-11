@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import React, { useState, useEffect } from "react";
 import { getApiBaseUrl } from "@/lib/api";
 import { Sidebar, SidebarBody, SidebarLink } from "@/components/ui/sidebar";
@@ -15,13 +15,13 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useTheme } from "@/components/theme-provider";
 import axios from "axios";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { Modal } from "@/components/ui/modal";
 import Alert from "@/components/ui/Alert";
 import { useTranslations } from "next-intl";
 
-export function SidebarDemo({ ContentComponent, params }) {
+export function SidebarDemo({ ContentComponent }) {
   const { theme, setTheme } = useTheme();
   const router = useRouter();
   const t = useTranslations("Sidebar");
@@ -30,13 +30,13 @@ export function SidebarDemo({ ContentComponent, params }) {
   const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
   const [alert, setAlert] = useState(null);
 
+  const routeParams = useParams();
+  
+  // Move the locale setting to useEffect
   useEffect(() => {
-    async function fetchParams() {
-      const resolvedParams = await params;
-      setLocale(resolvedParams?.locale || "es");
-    }
-    fetchParams();
-  }, [params]);
+    const loc = routeParams.locale || "es";
+    setLocale(loc);
+  }, [routeParams.locale]);
 
   const openLogoutModal = () => setLogoutModalOpen(true);
   const closeLogoutModal = () => setLogoutModalOpen(false);
