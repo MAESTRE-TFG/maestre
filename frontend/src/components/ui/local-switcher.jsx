@@ -26,6 +26,7 @@ export default function LocalSwitcher({ locale }) {
   
   const handleLanguageChange = (newLocale) => {
     if (newLocale === locale) return;
+    localStorage.setItem('locale', newLocale);
     
     // Get the current path without locale prefix
     let pathWithoutLocale = pathname;
