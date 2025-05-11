@@ -223,6 +223,19 @@ const ProfileEdit = () => {
       school: formData.school,
     };
 
+    // Username validation
+    const usernameRegex = /^[a-zA-Z0-9_]{3,30}$/;
+    if (!usernameRegex.test(formData.username)) {
+      showAlert("warning", t("alerts.invalidUsername"));
+      return;
+    }
+    
+    // Check for XSS attempts
+    if (formData.username.toLowerCase().includes('<script>')) {
+      showAlert("warning", t("alerts.invalidUsernameCharacters"));
+      return;
+    }
+
     if (formData.password && formData.oldPassword) {
       if (formData.password !== formData.confirmPassword) {
         showAlert("error", t("alerts.passwordMismatch"));

@@ -682,7 +682,9 @@
     },
     "alerts": {
       "passwordSameAsUsername": "La contraseña no puede ser igual que tu nombre de usuario",
-      "invalidEmail": "Por favor, introduce una dirección de correo electrónico válida"
+      "invalidEmail": "Por favor, introduce una dirección de correo electrónico válida",
+      "invalidUsername": "El nombre de usuario debe tener entre 3 y 30 caracteres y contener solo letras, números y guiones bajos",
+      "invalidUsernameCharacters": "El nombre de usuario contiene caracteres no válidos"
     }
   },
 
@@ -1056,7 +1058,9 @@
       "signupFailure": "Error al registrarse",
       "networkError": "Ocurrió un error de red",
       "invalidEmailFormat": "Por favor, introduce una dirección de correo electrónico válida",
-      "passwordSameAsUsername": "La contraseña no puede ser igual que tu nombre de usuario"
+      "passwordSameAsUsername": "La contraseña no puede ser igual que tu nombre de usuario",
+      "invalidUsername": "El nombre de usuario debe tener entre 3 y 30 caracteres y contener solo letras, números y guiones bajos",
+      "invalidUsernameCharacters": "El nombre de usuario contiene caracteres no válidos"
     }
   },
 
@@ -1079,7 +1083,9 @@
       "signinFailure": "Error al iniciar sesión",
       "networkError": "Ocurrió un error de red",
       "passwordSameAsUsername": "La contraseña no puede ser igual que tu nombre de usuario",
-      "invalidEmailFormat": "Por favor, introduce una dirección de correo electrónico válida"
+      "invalidEmailFormat": "Por favor, introduce una dirección de correo electrónico válida",
+      "invalidUsername": "El nombre de usuario debe tener entre 3 y 30 caracteres y contener solo letras, números y guiones bajos",
+      "invalidUsernameCharacters": "El nombre de usuario contiene caracteres no válidos"
     }
   },
 

@@ -589,7 +589,9 @@
     "alreadyHaveAccount": "Ja teniu un compte?",
     "alerts": {
       "acceptTerms": "Heu d'acceptar els Termes d'ús i la Política de privadesa per registrar -vos.",
-      "signupError": "S'ha produït un error en registrar -se. Torneu -ho a provar."
+      "signupError": "S'ha produït un error en registrar -se. Torneu -ho a provar.",
+      "invalidUsername": "El nom d'usuari ha de tenir entre 3 i 30 caràcters i contenir només lletres, números i guions baixos",
+      "invalidUsernameCharacters": "El nom d'usuari conté caràcters no vàlids"
     }
   },
 
@@ -671,7 +673,9 @@
     },
     "alerts": {
       "passwordSameAsUsername": "La contrasenya no pot ser igual que el teu nom d'usuari",
-      "invalidEmail": "Si us plau, introdueix una adreça de correu electrònic vàlida"
+      "invalidEmail": "Si us plau, introdueix una adreça de correu electrònic vàlida",
+      "invalidUsername": "El nom d'usuari ha de tenir entre 3 i 30 caràcters i contenir només lletres, números i guions baixos",
+      "invalidUsernameCharacters": "El nom d'usuari conté caràcters no vàlids"
     }
   },
 
@@ -1064,7 +1068,9 @@
       "signinFailure": "Error al registre",
       "networkError": "S'ha produït un error de xarxa",
       "passwordSameAsUsername": "La contrasenya no pot ser igual que el teu nom d'usuari",
-      "invalidEmailFormat": "Si us plau, introdueix una adreça de correu electrònic vàlida"
+      "invalidEmailFormat": "Si us plau, introdueix una adreça de correu electrònic vàlida",
+      "invalidUsername": "El nom d'usuari ha de tenir entre 3 i 30 caràcters i contenir només lletres, números i guions baixos",
+      "invalidUsernameCharacters": "El nom d'usuari conté caràcters no vàlids"
     }
   },
 

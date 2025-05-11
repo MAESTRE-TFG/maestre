@@ -46,6 +46,21 @@ export default function SignIn() {
       return;
     }
 
+    // Username validation when input doesn't contain @ (meaning it's a username)
+    if (formData.emailOrUsername && !formData.emailOrUsername.includes('@')) {
+      const usernameRegex = /^[a-zA-Z0-9_]{3,30}$/;
+      if (!usernameRegex.test(formData.emailOrUsername)) {
+        showAlert("warning", t("alerts.invalidUsername"));
+        return;
+      }
+      
+      // Check for XSS attempts
+      if (formData.emailOrUsername.toLowerCase().includes('<script>')) {
+        showAlert("warning", t("alerts.invalidUsernameCharacters"));
+        return;
+      }
+    }
+
     // Email validation for when emailOrUsername contains an email
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (formData.emailOrUsername && formData.emailOrUsername.includes('@') && 
