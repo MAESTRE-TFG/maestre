@@ -5,5 +5,5 @@ export const routing = defineRouting({
   locales: ['en', 'es', 'gl', 'ca', 'eu'],
 
   // Used when no locale matches
-  defaultLocale: 'es'
+  defaultLocale: typeof window !== 'undefined' && localStorage.getItem('locale') || 'es'
 });
