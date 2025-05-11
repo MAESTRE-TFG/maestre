@@ -40,6 +40,18 @@ export default function SignUp() {
   }, [isLargeScreen, t]);
 
   const handleSubmit = async (formData) => {
+    // Username validation
+    const usernameRegex = /^[a-zA-Z0-9_]{3,30}$/;
+    if (!usernameRegex.test(formData.username)) {
+        showAlert("warning", t("alerts.invalidUsername"));
+        return;
+    }
+    
+    // Check for XSS attempts
+    if (formData.username.toLowerCase().includes('<script>')) {
+        showAlert("warning", t("alerts.invalidUsernameCharacters"));
+        return;
+    }
     // Field length restrictions
     if (formData.username && formData.username.length > 30) {
       showAlert("warning", t("alerts.usernameTooLong"));

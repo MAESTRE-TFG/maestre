@@ -1,6 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from schools.models import School
+from django.core.validators import RegexValidator
+from django.core.exceptions import ValidationError
 
 
 # Since we have a custom user model, we need a custom user manager
@@ -26,8 +28,17 @@ class CustomUserManager(BaseUserManager):
 
 
 class CustomUser(AbstractBaseUser, PermissionsMixin):
+    username_validator = RegexValidator(
+        regex=r'^[a-zA-Z0-9_]{3,30}$',
+        message='Username must be 3-30 characters long and contain only letters, numbers, and underscores.'
+    )
+
     email = models.EmailField(unique=True, max_length=255)
-    username = models.CharField(max_length=30, unique=True)
+    username = models.CharField(
+        max_length=30,
+        unique=True,
+        validators=[username_validator]
+    )
     name = models.CharField(max_length=30)
     surname = models.CharField(max_length=30)
 
@@ -64,3 +75,11 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def __str__(self):
         return self.email
+
+    def clean(self):
+        super().clean()
+        # Check for XSS attempts in username
+        if '<script>' in self.username.lower():
+            raise ValidationError({
+                'username': 'Username cannot contain potentially harmful script tags.'
+            })

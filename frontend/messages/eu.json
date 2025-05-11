@@ -653,9 +653,13 @@
     },
     "alerts": {
       "passwordSameAsUsername": "Pasahitza ezin da erabiltzaile-izena bezalakoa izan",
-      "invalidEmail": "Mesedez, sartu baliozko helbide elektronikoa"
+      "invalidEmail": "Mesedez, sartu baliozko helbide elektronikoa",
+      "invalidUsername": "Erabiltzaile-izenak 3-30 karaktere izan behar ditu eta letrak, zenbakiak eta azpimarra soilik izan ditzake",
+      "invalidUsernameCharacters": "Erabiltzaile-izenak karaktere baliogabeak ditu"
     }
   },
+
+
   "MaterialsPage": {
     "filterByTags": "Iragazi etiketen arabera:",
     "createMaterial": "Material berria sortu",
@@ -1001,7 +1005,9 @@
       "signupFailure": "Errorea erregistratzean",
       "networkError": "Sare-errorea gertatu da",
       "invalidEmailFormat": "Mesedez, sartu baliozko helbide elektroniko bat",
-      "passwordSameAsUsername": "Pasahitza ezin da erabiltzaile-izena bezalakoa izan"
+      "passwordSameAsUsername": "Pasahitza ezin da erabiltzaile-izena bezalakoa izan",
+      "invalidUsername": "Erabiltzaile-izenak 3-30 karaktere izan behar ditu eta letrak, zenbakiak eta azpimarra soilik izan ditzake",
+      "invalidUsernameCharacters": "Erabiltzaile-izenak karaktere baliogabeak ditu"
     }
   },
   "SignInPage": {
@@ -1022,7 +1028,9 @@
       "signinFailure": "Errorea erregistratzean",
       "networkError": "Sareko errorea gertatu da",
       "passwordSameAsUsername": "Pasahitza ezin da erabiltzaile-izena bezalakoa izan",
-      "invalidEmailFormat": "Mesedez, sartu baliozko helbide elektronikoa"
+      "invalidEmailFormat": "Mesedez, sartu baliozko helbide elektronikoa",
+      "invalidUsername": "Erabiltzaile-izenak 3-30 karaktere izan behar ditu eta letrak, zenbakiak eta azpimarra soilik izan ditzake",
+      "invalidUsernameCharacters": "Erabiltzaile-izenak karaktere baliogabeak ditu"
     }
   },
   "ProfileEditPage": {

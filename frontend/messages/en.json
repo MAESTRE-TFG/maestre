@@ -582,7 +582,9 @@
       "alreadyHaveAccount": "Already have an account?",
       "alerts": {
         "acceptTerms": "You must accept the Terms of Use and Privacy Policy to sign up.",
-        "signupError": "An error occurred while signing up. Please try again."
+        "signupError": "An error occurred while signing up. Please try again.",
+        "invalidUsername": "Username must be 3-30 characters long and contain only letters, numbers, and underscores",
+        "invalidUsernameCharacters": "Username contains invalid characters"
       }
     },
 
@@ -682,10 +684,6 @@
       "buttons": {
         "cancel": "Cancel",
         "update": "Update"
-      },
-      "alerts": {
-        "passwordSameAsUsername": "Password cannot be the same as your username",
-        "invalidEmail": "Please enter a valid email address"
       }
     },
 
@@ -1093,7 +1091,9 @@
         "signinFailure": "Login failed",
         "networkError": "Network error occurred",
         "passwordSameAsUsername": "Password cannot be the same as your username",
-        "invalidEmailFormat": "Please enter a valid email address"
+        "invalidEmailFormat": "Please enter a valid email address",
+        "invalidUsername": "Username must be 3-30 characters long and contain only letters, numbers, and underscores",
+        "invalidUsernameCharacters": "Username contains invalid characters"
       }
     },
 
@@ -1122,12 +1122,15 @@
         "fetchSchoolsError": "Failed to fetch schools.",
         "fetchSchoolError": "Failed to fetch school.",
         "passwordMismatch": "Passwords do not match.",
-        "invalidEmail": "Invalid email format.",
         "updateSuccess": "Profile updated successfully.",
         "updateError": "Failed to update profile.",
         "deleteSuccess": "Account deleted successfully.",
         "deleteError": "Failed to delete account.",
-        "usernameMismatch": "Username does not match. Account deletion cancelled."
+        "usernameMismatch": "Username does not match. Account deletion cancelled.",
+        "passwordSameAsUsername": "Password cannot be the same as your username",
+        "invalidEmail": "Please enter a valid email address",
+        "invalidUsername": "Username must be 3-30 characters long and contain only letters, numbers, and underscores",
+        "invalidUsernameCharacters": "Username contains invalid characters"
       },
       "fields": {
         "username": "Username",
