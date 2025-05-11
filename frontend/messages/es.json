@@ -679,12 +679,6 @@
     "buttons": {
       "cancel": "Cancelar",
       "update": "Actualizar"
-    },
-    "alerts": {
-      "passwordSameAsUsername": "La contraseña no puede ser igual que tu nombre de usuario",
-      "invalidEmail": "Por favor, introduce una dirección de correo electrónico válida",
-      "invalidUsername": "El nombre de usuario debe tener entre 3 y 30 caracteres y contener solo letras, números y guiones bajos",
-      "invalidUsernameCharacters": "El nombre de usuario contiene caracteres no válidos"
     }
   },
 
@@ -1119,7 +1113,13 @@
       "updateError": "Error al actualizar el perfil.",
       "deleteSuccess": "Cuenta eliminada con éxito.",
       "deleteError": "Error al eliminar la cuenta.",
-      "usernameMismatch": "El nombre de usuario no coincide. Eliminación de cuenta cancelada."
+      "usernameMismatch": "El nombre de usuario no coincide. Eliminación de cuenta cancelada.",
+      "passwordSameAsUsername": "La contraseña no puede ser igual que tu nombre de usuario",
+      "invalidUsername": "El nombre de usuario debe tener entre 3 y 30 caracteres y contener solo letras, números y guiones bajos",
+      "invalidUsernameCharacters": "El nombre de usuario contiene caracteres no válidos",
+      "nameTooLong": "El nombre no puede tener más de 30 caracteres",
+      "surnameTooLong": "El apellido no puede tener más de 30 caracteres",
+      "invalidNameCharacters": "El nombre o apellido contiene caracteres no válidos"
     },
     "fields": {
       "username": "Nombre de Usuario",

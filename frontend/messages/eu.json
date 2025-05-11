@@ -650,12 +650,6 @@
     "buttons": {
       "cancel": "Indargabetu",
       "update": "Eguneratu"
-    },
-    "alerts": {
-      "passwordSameAsUsername": "Pasahitza ezin da erabiltzaile-izena bezalakoa izan",
-      "invalidEmail": "Mesedez, sartu baliozko helbide elektronikoa",
-      "invalidUsername": "Erabiltzaile-izenak 3-30 karaktere izan behar ditu eta letrak, zenbakiak eta azpimarra soilik izan ditzake",
-      "invalidUsernameCharacters": "Erabiltzaile-izenak karaktere baliogabeak ditu"
     }
   },
 
@@ -1062,7 +1056,13 @@
       "updateError": "Errorea profila eguneratzean.",
       "deleteSuccess": "Kontua behar bezala ezabatu da.",
       "deleteError": "Errorea kontua ezabatuz.",
-      "usernameMismatch": "Erabiltzaile izena ez dator bat. Baliogabetutako kontua ezabatzea."
+      "usernameMismatch": "Erabiltzaile izena ez dator bat. Baliogabetutako kontua ezabatzea.",
+      "passwordSameAsUsername": "Pasahitza ezin da erabiltzaile-izena bezalakoa izan",
+      "invalidUsername": "Erabiltzaile-izenak 3-30 karaktere izan behar ditu eta letrak, zenbakiak eta azpimarra soilik izan ditzake",
+      "invalidUsernameCharacters": "Erabiltzaile-izenak karaktere baliogabeak ditu",
+      "nameTooLong": "Izenak ezin ditu 30 karaktere baino gehiago izan",
+      "surnameTooLong": "Abizenak ezin ditu 30 karaktere baino gehiago izan",
+      "invalidNameCharacters": "Izenak edo abizenak karaktere baliogabeak ditu"
     },
     "fields": {
       "username": "Erabiltzaile izena",

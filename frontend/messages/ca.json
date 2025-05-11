@@ -670,12 +670,6 @@
     "buttons": {
       "cancel": "Cancel·lar",
       "update": "Actualitzar"
-    },
-    "alerts": {
-      "passwordSameAsUsername": "La contrasenya no pot ser igual que el teu nom d'usuari",
-      "invalidEmail": "Si us plau, introdueix una adreça de correu electrònic vàlida",
-      "invalidUsername": "El nom d'usuari ha de tenir entre 3 i 30 caràcters i contenir només lletres, números i guions baixos",
-      "invalidUsernameCharacters": "El nom d'usuari conté caràcters no vàlids"
     }
   },
 
@@ -1104,7 +1098,13 @@
       "updateError": "Error en actualitzar el perfil.",
       "deleteSuccess": "El compte es va suprimir amb èxit.",
       "deleteError": "Error eliminant el compte.",
-      "usernameMismatch": "El nom d'usuari no coincideix. Eliminació del compte cancel·lat."
+      "usernameMismatch": "El nom d'usuari no coincideix. Eliminació del compte cancel·lat.",
+      "passwordSameAsUsername": "La contrasenya no pot ser igual que el teu nom d'usuari",
+      "invalidUsername": "El nom d'usuari ha de tenir entre 3 i 30 caràcters i contenir només lletres, números i guions baixos",
+      "invalidUsernameCharacters": "El nom d'usuari conté caràcters no vàlids",
+      "nameTooLong": "El nom no pot tenir més de 30 caràcters",
+      "surnameTooLong": "El cognom no pot tenir més de 30 caràcters",
+      "invalidNameCharacters": "El nom o cognom conté caràcters no vàlids"
     },
     "fields": {
       "username": "Nom d'usuari",

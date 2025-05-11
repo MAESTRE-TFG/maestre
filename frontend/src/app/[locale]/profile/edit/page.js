@@ -25,7 +25,7 @@ import { useTranslations } from "next-intl";
 const ProfileEdit = () => {
   const router = useRouter();
   const { theme } = useTheme();
-  const t = useTranslations("ProfileEditPage"); // Use translations for this page
+  const t = useTranslations("ProfileEditPage");
   const [user, setUser] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [isClient, setIsClient] = useState(false);
@@ -223,6 +223,26 @@ const ProfileEdit = () => {
       school: formData.school,
     };
 
+    // Name validation
+    if (formData.name && formData.name.length > 30) {
+      showAlert("warning", t("alerts.nameTooLong"));
+      return;
+    }
+    if (formData.name && formData.name.toLowerCase().includes('<script>')) {
+      showAlert("warning", t("alerts.invalidNameCharacters"));
+      return;
+    }
+
+    // Surname validation
+    if (formData.surname && formData.surname.length > 30) {
+      showAlert("warning", t("alerts.surnameTooLong"));
+      return;
+    }
+    if (formData.surname && formData.surname.toLowerCase().includes('<script>')) {
+      showAlert("warning", t("alerts.invalidNameCharacters"));
+      return;
+    }
+
     // Username validation
     const usernameRegex = /^[a-zA-Z0-9_]{3,30}$/;
     if (!usernameRegex.test(formData.username)) {
@@ -360,12 +380,11 @@ const ProfileEdit = () => {
                 <h1 className={`text-4xl font-extrabold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
                   {t("header.greeting")}{" "}
                   <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
-                    {user ? user.name : ""}
+                    {user ? (user.name.length > 15 ? `` : user.name) : ""}
                   </span>
                 </h1>
                 <p
-                  className={`text-xl ${theme === "dark" ? "text-gray-300" : "text-gray-600"
-                    }`}
+                  className={`text-xl ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}
                 >
                   {t("header.subtitle")}{" "}
                   <span style={{ fontFamily: "'Alfa Slab One', sans-serif" }}>
@@ -426,7 +445,9 @@ const ProfileEdit = () => {
                           <span className="font-bold">{t("fields.username")}</span>
                         </Label>
                         <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
-                          {user?.username}
+                          {user?.username.length > 15 
+                            ? `${user.username.slice(0, 15)}...` 
+                            : user?.username}
                         </p>
                       </LabelInputContainer>
                       
@@ -446,7 +467,9 @@ const ProfileEdit = () => {
                           <span className="font-bold">{t("fields.name")}</span>
                         </Label>
                         <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
-                          {user?.name}
+                          {user?.name.length > 15 
+                            ? `${user.name.slice(0, 15)}...` 
+                            : user?.name}
                         </p>
                       </LabelInputContainer>
                       
@@ -456,7 +479,9 @@ const ProfileEdit = () => {
                           <span className="font-bold">{t("fields.surname")}</span>
                         </Label>
                         <p className={cn("font-medium", theme === "dark" ? "text-white" : "text-black")}>
-                          {user?.surname}
+                          {user?.surname.length > 15 
+                            ? `${user.surname.slice(0, 15)}...` 
+                            : user?.surname}
                         </p>
                       </LabelInputContainer>
                     </div>

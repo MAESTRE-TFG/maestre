@@ -1133,7 +1133,10 @@
         "passwordSameAsUsername": "Password cannot be the same as your username",
         "invalidEmail": "Please enter a valid email address",
         "invalidUsername": "Username must be 3-30 characters long and contain only letters, numbers, and underscores",
-        "invalidUsernameCharacters": "Username contains invalid characters"
+        "invalidUsernameCharacters": "Username contains invalid characters",
+        "nameTooLong": "Name cannot be longer than 30 characters",
+        "surnameTooLong": "Surname cannot be longer than 30 characters",
+        "invalidNameCharacters": "Name or surname contains invalid characters"
       },
       "fields": {
         "username": "Username",
