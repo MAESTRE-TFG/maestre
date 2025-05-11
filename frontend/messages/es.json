@@ -697,9 +697,9 @@
     "materialAnnotation": "Manten la extensión del archivo",
     "materialNamePlaceholder": "Introduce un nombre para el material",
     "uploadFile": "Subir archivo",
-    "dragOrDrop": "Arrastra o suelta tus archivos aquí o haz clic para subirlos",
+    "dragOrDrop": "Arrastra o suelta tus archivo aquí o haz clic para subirlo",
     "supportedFormats": "PDF, DOC, DOCX, PNG, JPG, PPTX o TXT",
-    "browseFiles": "Exportar archivos",
+    "browseFiles": "Importar archivo",
     "removeFile": "Eliminar archivo",
     "tagName": "Nombre de la etiqueta",
     "deleteTagTitle": "Eliminar etiqueta",
@@ -719,7 +719,8 @@
       "tagDeleteError": "Error al eliminar la etiqueta. Por favor, inténtalo de nuevo.",
       "deleteSelectedSuccess": "Materiales seleccionados eliminados correctamente.",
       "deleteSelectedError": "Error al eliminar los materiales seleccionados. Por favor, inténtalo de nuevo.",
-      "nameLimitExceeded": "El nombre supera el límite de ${NAME_LIMIT} caracteres."
+      "nameLimitExceeded": "El nombre supera el límite de 50 caracteres.",
+      "fileTooLarge": "El archivo es demasiado grande. El tamaño máximo son 50MB."
     },
     "enterDeleteMode": "Entrar en modo de eliminación",
     "exitDeleteMode": "Salir del modo de eliminación",
@@ -1342,7 +1343,9 @@
       "tagUpdateSuccess": "Etiquetas actualizadas correctamente.",
       "tagUpdateError": "Error al actualizar las etiquetas. Por favor, inténtalo de nuevo.",
       "tagDeleteSuccess": "Etiqueta eliminada correctamente.",
-      "tagDeleteError": "Error al eliminar la etiqueta. Por favor, inténtalo de nuevo."
+      "tagDeleteError": "Error al eliminar la etiqueta. Por favor, inténtalo de nuevo.",
+      "tagNameTooLong": "El nombre del tag supera los 50 caracteres.",
+      "tagExists": "Ya existe una etiqueta con ese nombre."
     }
   },
 
