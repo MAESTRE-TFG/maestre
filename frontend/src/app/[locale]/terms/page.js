@@ -669,3 +669,71 @@ export default function TermsPage() {
       />
   );
 }
+
+const handleTermCreate = async (formData) => {
+  try {
+    // Version length validation (max 20 characters as per model)
+    const version = formData.get('version');
+    if (version.length > 20) {
+      showAlert("error", t("alerts.versionTooLong"));
+      return;
+    }
+
+    // File size validation (50MB limit is a reasonable size for documents)
+    const mdFile = formData.get('content');
+    const pdfFile = formData.get('pdf_content');
+    const MAX_FILE_SIZE = 50 * 1024 * 1024; // 10MB in bytes
+
+    if (mdFile.size > MAX_FILE_SIZE) {
+      showAlert("error", t("alerts.mdFileTooLarge"));
+      return;
+    }
+
+    if (pdfFile.size > MAX_FILE_SIZE) {
+      showAlert("error", t("alerts.pdfFileTooLarge"));
+      return;
+    }
+
+    const response = await axios.post(
+      `${getApiBaseUrl()}/api/terms/`,
+      formData,
+      {
+        headers: {
+          Authorization: `Token ${localStorage.getItem("authToken")}`,
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+
+    const newTerm = {
+      ...response.data,
+      icon: getIconForTag(response.data.tag),
+      title: getTermTitle(response.data.tag),
+    };
+
+    setTerms([...terms, newTerm]);
+    setShowAddForm(false);
+    showAlert("success", t("alerts.addSuccess"));
+  } catch (error) {
+    let errorMessage = t("alerts.addError");
+
+    // Check for specific error messages from API
+    if (error.response && error.response.data) {
+      if (error.response.data.tag) {
+        errorMessage = t("alerts.tagError", { error: error.response.data.tag[0] });
+      } else if (error.response.data.content) {
+        errorMessage = t("alerts.contentError", { error: error.response.data.content[0] });
+      } else if (error.response.data.pdf_content) {
+        errorMessage = t("alerts.pdfContentError", { error: error.response.data.pdf_content[0] });
+      } else if (error.response.data.version) {
+        errorMessage = t("alerts.versionError", { error: error.response.data.version[0] });
+      } else if (error.response.data.name) {
+        errorMessage = t("alerts.nameError", { error: error.response.data.name[0] });
+      } else if (typeof error.response.data === "string") {
+        errorMessage = error.response.data;
+      }
+    }
+
+    showAlert("error", errorMessage);
+  }
+};

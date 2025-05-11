@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 import { useState, useCallback } from "react";
 import { useTranslations } from "next-intl";
 import Alert from "@/components/ui/Alert";
+import { Input } from "@/components/ui/input";
 
 const TermAddModal = ({ 
   showModal, 
@@ -130,6 +131,19 @@ const TermAddModal = ({
       return;
     }
 
+    // Add proper version validation to prevent XSS and enforce length limits
+    const versionRegex = /^[a-zA-Z0-9\s._-]+$/;
+    if (!versionRegex.test(version)) {
+      showAlert("error", t("alerts.invalidVersionFormat"));
+      return;
+    }
+
+    // Add version length validation (max 20 characters as per model)
+    if (version.length > 20) {
+      showAlert("error", t("alerts.versionTooLong"));
+      return;
+    }
+
     if (!mdFile) {
       showAlert("error", t("alerts.noMd"));
       return;
@@ -137,6 +151,19 @@ const TermAddModal = ({
 
     if (!pdfFile) {
       showAlert("error", t("alerts.noPdf"));
+      return;
+    }
+
+    // Add file size validations (50MB limit is a common practice)
+    const MAX_FILE_SIZE = 50 * 1024 * 1024; // 10MB in bytes
+    
+    if (mdFile.size > MAX_FILE_SIZE) {
+      showAlert("error", t("alerts.mdFileTooLarge"));
+      return;
+    }
+
+    if (pdfFile.size > MAX_FILE_SIZE) {
+      showAlert("error", t("alerts.pdfFileTooLarge"));
       return;
     }
 
@@ -229,14 +256,14 @@ const TermAddModal = ({
             <label className={cn("block text-sm font-bold mb-2", theme === "dark" ? "text-gray-300" : "text-gray-700")}>
               {t("addForm.versionLabel")}
             </label>
-            <input
+            <Input
               type="text"
               value={version}
               onChange={(e) => setVersion(e.target.value)}
               placeholder={t("addForm.versionPlaceholder")}
               className={cn(
-                "shadow appearance-none border rounded-md w-full py-1.5 px-3 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500",
-                theme === "dark" ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-700"
+                "w-full",
+                theme === "dark" ? "bg-gray-700 text-white placeholder-gray-400 border-gray-600" : ""
               )}
               required
             />
@@ -282,16 +309,21 @@ const TermAddModal = ({
                   <p className={`text-sm mb-1 ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
                     {isDraggingMd ? t("dropIt") : t("dragOrDrop")}
                   </p>
-                  <label className="px-3 py-1 bg-primary text-white rounded-full cursor-pointer hover:bg-primary/90 transition-colors inline-block">
+                  <label className={cn(
+                    "px-3 py-1 rounded-full cursor-pointer transition-colors inline-block",
+                    theme === "dark" ? "bg-blue-600 text-white hover:bg-blue-700" : "bg-primary text-white hover:bg-primary/90"
+                  )}>
                     {t("browseFiles")}
-                    <input
+                    <Input
                       type="file"
                       className="hidden"
                       onChange={handleMdFileChange}
                       accept=".md"
                     />
                   </label>
-                  <p className="text-xs text-gray-500 mt-2">{t("supportedMdFormat")}</p>
+                  <p className={`text-xs mt-2 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
+                    {t("supportedMdFormat")}
+                  </p>
                 </div>
               )}
             </div>
@@ -337,16 +369,21 @@ const TermAddModal = ({
                   <p className={`text-sm mb-1 ${theme === "dark" ? "text-gray-300" : "text-gray-700"}`}>
                     {isDraggingPdf ? t("dropIt") : t("dragOrDrop")}
                   </p>
-                  <label className="px-3 py-1 bg-primary text-white rounded-full cursor-pointer hover:bg-primary/90 transition-colors inline-block">
+                  <label className={cn(
+                    "px-3 py-1 rounded-full cursor-pointer transition-colors inline-block",
+                    theme === "dark" ? "bg-blue-600 text-white hover:bg-blue-700" : "bg-primary text-white hover:bg-primary/90"
+                  )}>
                     {t("browseFiles")}
-                    <input
+                    <Input
                       type="file"
                       className="hidden"
                       onChange={handlePdfFileChange}
                       accept=".pdf"
                     />
                   </label>
-                  <p className="text-xs text-gray-500 mt-2">{t("supportedPdfFormat")}</p>
+                  <p className={`text-xs mt-2 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
+                    {t("supportedPdfFormat")}
+                  </p>
                 </div>
               )}
             </div>

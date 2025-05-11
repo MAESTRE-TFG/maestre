@@ -959,9 +959,13 @@
       "pdfContentError": "Error en el contenido del PDF: {{error}}",
       "versionError": "Error en la versión: {{error}}",
       "nameError": "Error en el nombre: {{error}}",
-      "noPdf": "No existe un PDF para este documento.",
-      "noMd": "Por favor, sube un archivo markdown (.md)",
-      "failedToOpenPdf": "No se pudo abrir el documento en una nueva pestaña. Por favor, verifica la configuración de tu navegador."
+      "noPdf": "Por favor, sube un archivo PDF",
+      "noMd": "Por favor, sube un archivo markdown (.MD)",
+      "failedToOpenPdf": "No se pudo abrir el documento en una nueva pestaña. Por favor, verifica la configuración de tu navegador.",
+      "versionTooLong": "La versión no puede exceder los 20 caracteres",
+      "mdFileTooLarge": "El tamaño del archivo Markdown debe ser menor a 50MB",
+      "pdfFileTooLarge": "El tamaño del archivo PDF debe ser menor a 50MB",
+      "invalidVersionFormat": "La versión solo puede contener letras, números, espacios, puntos, guiones bajos y guiones"
     },
     "buttons": {
       "addNewTerm": "Agregar Nuevo Término",
@@ -1563,9 +1567,7 @@
         "structured": "Enfoque estructurado con algunos elementos interactivos",
         "balanced": "Mezcla equilibrada de actividades estructuradas y lúdicas",
         "veryPlayful": "Enfoque muy lúdico con juegos y actividades creativas"
-      }
-    },
-    "planResultModal": {
+      },
       "defaultTitle": "Plan de clases",
       "noPlanAvailable": "No hay plan disponible",
       "copySuccess": "¡Copiado al portapapeles!",

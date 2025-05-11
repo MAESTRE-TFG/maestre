@@ -948,7 +948,11 @@
       "nameError": "Error en el nom: {{error}}",
       "noPdf": "No hi ha PDF per a aquest document.",
       "noMd": "Pengeu un fitxer de marcatge (.md)",
-      "failedToOpenPdf": "El document no es va poder obrir en una fitxa nova. Comproveu la configuració del vostre navegador."
+      "failedToOpenPdf": "El document no es va poder obrir en una fitxa nova. Comproveu la configuració del vostre navegador.",
+      "versionTooLong": "La versió no pot superar els 20 caràcters",
+      "mdFileTooLarge": "La mida del fitxer Markdown ha de ser inferior a 50MB",
+      "pdfFileTooLarge": "La mida del fitxer PDF ha de ser inferior a 50MB",
+      "invalidVersionFormat": "La versió només pot contenir lletres, números, espais, punts, guions baixos i guions"
     },
     "buttons": {
       "addNewTerm": "Afegiu un nou terme",
@@ -1528,9 +1532,7 @@
         "structured": "Enfocament estructurat amb alguns elements interactius",
         "balanced": "Barreja equilibrada d'activitats estructurades i lúdiques",
         "veryPlayful": "Enfocament molt lúdic amb jocs i activitats creatives"
-      }
-    },
-    "planResultModal": {
+      },
       "defaultTitle": "Pla de Lliçó",
       "noPlanAvailable": "No hi ha cap pla disponible",
       "copySuccess": "Copiat al porta-retalls!",

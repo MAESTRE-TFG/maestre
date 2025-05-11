@@ -909,7 +909,11 @@
       "nameError": "Erro no nome: {{error}}",
       "noPdf": "Non hai PDF para este documento.",
       "noMd": "Carga un ficheiro de marcas (.md)",
-      "failedToOpenPdf": "O documento non se puido abrir nunha nova pestana. Comprobe a configuración do seu navegador."
+      "failedToOpenPdf": "O documento non se puido abrir nunha nova pestana. Comprobe a configuración do seu navegador.",
+      "versionTooLong": "A versión non pode exceder os 20 caracteres",
+      "mdFileTooLarge": "O tamaño do arquivo Markdown debe ser menor de 50MB",
+      "pdfFileTooLarge": "O tamaño do arquivo PDF debe ser menor de 50MB",
+      "invalidVersionFormat": "A versión só pode conter letras, números, espazos, puntos, guións baixos e guións"
     },
     "buttons": {
       "addNewTerm": "Engade un novo termo",
@@ -1469,9 +1473,7 @@
         "structured": "Enfoque estruturado con algúns elementos interactivos",
         "balanced": "Mestura equilibrada de actividades estruturadas e lúdicas",
         "veryPlayful": "Enfoque moi lúdico con xogos e actividades creativas"
-      }
-    },
-    "planResultModal": {
+      },
       "defaultTitle": "Plan de Lección",
       "noPlanAvailable": "Non hai plan dispoñible",
       "copySuccess": "Copiado ao portapapeis!",

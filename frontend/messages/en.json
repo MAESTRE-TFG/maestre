@@ -968,7 +968,11 @@
         "noMd": "Please upload a markdown (.md) file",
         "failedToOpenPdf": "Failed to open the document in a new tab. Please check your browser settings.",
         "termTypeError": "Please select a term type",
-        "noVersion": "Please enter a version number"
+        "noVersion": "Please enter a version number",
+        "versionTooLong": "Version cannot exceed 20 characters",
+        "mdFileTooLarge": "Markdown file size must be less than 50MB",
+        "pdfFileTooLarge": "PDF file size must be less than 50MB",
+        "invalidVersionFormat": "Version can only contain letters, numbers, spaces, dots, underscores and hyphens"
       },
       "buttons": {
         "addNewTerm": "Add New Term",
@@ -1580,9 +1584,7 @@
           "structured": "Structured approach with some interactive elements",
           "balanced": "Balanced mix of structured and playful activities",
           "veryPlayful": "Very playful approach with games and creative activities"
-        }
-      },
-      "planResultModal": {
+        },
         "defaultTitle": "Lesson Plan",
         "noPlanAvailable": "No plan available",
         "copySuccess": "Copied to clipboard!",

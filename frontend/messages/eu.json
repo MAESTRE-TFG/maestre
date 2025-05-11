@@ -912,7 +912,11 @@
       "nameError": "Errorea izenaren arabera: {{error}}",
       "noPdf": "Ez dago PDF dokumentu honetarako.",
       "noMd": "Kargatu markaren fitxategia (.md)",
-      "failedToOpenPdf": "Dokumentua ezin da fitxa berri batean ireki. Mesedez, egiaztatu zure arakatzailearen konfigurazioa."
+      "failedToOpenPdf": "Dokumentua ezin da fitxa berri batean ireki. Mesedez, egiaztatu zure arakatzailearen konfigurazioa.",
+      "versionTooLong": "Bertsioak ezin ditu 20 karaktere baino gehiago izan",
+      "mdFileTooLarge": "Markdown fitxategiaren tamaina 50MB baino txikiagoa izan behar da",
+      "pdfFileTooLarge": "PDF fitxategiaren tamaina 50MB baino txikiagoa izan behar da",
+      "invalidVersionFormat": "Bertsioak letrak, zenbakiak, zuriuneak, puntuak, azpimarra eta marrak soilik izan ditzake"
     },
     "buttons": {
       "addNewTerm": "Gehitu epe berria",
@@ -1472,9 +1476,7 @@
         "structured": "Ikuspegi egituratua elementu interaktibo batzuekin",
         "balanced": "Jarduera egituratuak eta jolaserako jardueren arteko nahasketa orekatua",
         "veryPlayful": "Oso jolaserako ikuspegia jokoekin eta jarduera sortzaileekin"
-      }
-    },
-    "planResultModal": {
+      },
       "defaultTitle": "Ikasgai Plana",
       "noPlanAvailable": "Ez dago planik eskuragarri",
       "copySuccess": "Arbelera kopiatuta!",
