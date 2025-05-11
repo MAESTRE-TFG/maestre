@@ -1296,7 +1296,11 @@
       "saveChanges": "Save Changes",
       "processing": "Processing...",
       "errors": {
-        "maxStudentsReached": "This classroom already has the maximum number of students"
+        "maxStudentsReached": "This classroom already has the maximum number of students",
+        "nameInvalidChars": "Name cannot contain < or > characters",
+        "surnameInvalidChars": "Surname cannot contain < or > characters",
+        "nameInvalidFormat": "Name contains invalid characters",
+        "surnameInvalidFormat": "Surname contains invalid characters"
       }
     },
 

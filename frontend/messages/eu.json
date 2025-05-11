@@ -1207,7 +1207,11 @@
     "saveChanges": "Gorde aldaketak",
     "processing": "Tratamendua ...",
     "errors": {
-      "maxStudentsReached": "Gela honek dagoeneko ikasle kopuru maximoa du"
+      "maxStudentsReached": "Gela honek dagoeneko ikasle kopuru maximoa du",
+      "nameInvalidChars": "Izenak ezin ditu < edo > karaktereak izan",
+      "surnameInvalidChars": "Abizenak ezin ditu < edo > karaktereak izan", 
+      "nameInvalidFormat": "Izenak karaktere baliogabeak ditu",
+      "surnameInvalidFormat": "Abizenak karaktere baliogabeak ditu"
     }
   },
   

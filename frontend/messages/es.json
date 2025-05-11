@@ -1279,7 +1279,11 @@
     "saveChanges": "Guardar cambios",
     "processing": "Procesando...",
     "errors": {
-      "maxStudentsReached": "Esta clase ya tiene el número máximo de estudiantes"
+      "maxStudentsReached": "Esta clase ya tiene el número máximo de estudiantes",
+      "nameInvalidChars": "El nombre no puede contener los caracteres < o >",
+      "surnameInvalidChars": "El apellido no puede contener los caracteres < o >",
+      "nameInvalidFormat": "El nombre contiene caracteres no válidos",
+      "surnameInvalidFormat": "El apellido contiene caracteres no válidos"
     }
   },
 

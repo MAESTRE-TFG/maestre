@@ -1261,7 +1261,11 @@
     "saveChanges": "Desa els canvis",
     "processing": "Processament ...",
     "errors": {
-      "maxStudentsReached": "Aquesta aula ja té el nombre màxim d'estudiants"
+      "maxStudentsReached": "Aquesta aula ja té el nombre màxim d'estudiants",
+      "nameInvalidChars": "El nom no pot contenir els caràcters < o >",
+      "surnameInvalidChars": "El cognom no pot contenir els caràcters < o >",
+      "nameInvalidFormat": "El nom conté caràcters no vàlids",
+      "surnameInvalidFormat": "El cognom conté caràcters no vàlids"
     }
   },
 
