@@ -670,12 +670,6 @@
     "buttons": {
       "cancel": "Cancel·lar",
       "update": "Actualitzar"
-    },
-    "alerts": {
-      "passwordSameAsUsername": "La contrasenya no pot ser igual que el teu nom d'usuari",
-      "invalidEmail": "Si us plau, introdueix una adreça de correu electrònic vàlida",
-      "invalidUsername": "El nom d'usuari ha de tenir entre 3 i 30 caràcters i contenir només lletres, números i guions baixos",
-      "invalidUsernameCharacters": "El nom d'usuari conté caràcters no vàlids"
     }
   },
 
@@ -954,7 +948,11 @@
       "nameError": "Error en el nom: {{error}}",
       "noPdf": "No hi ha PDF per a aquest document.",
       "noMd": "Pengeu un fitxer de marcatge (.md)",
-      "failedToOpenPdf": "El document no es va poder obrir en una fitxa nova. Comproveu la configuració del vostre navegador."
+      "failedToOpenPdf": "El document no es va poder obrir en una fitxa nova. Comproveu la configuració del vostre navegador.",
+      "versionTooLong": "La versió no pot superar els 20 caràcters",
+      "mdFileTooLarge": "La mida del fitxer Markdown ha de ser inferior a 50MB",
+      "pdfFileTooLarge": "La mida del fitxer PDF ha de ser inferior a 50MB",
+      "invalidVersionFormat": "La versió només pot contenir lletres, números, espais, punts, guions baixos i guions"
     },
     "buttons": {
       "addNewTerm": "Afegiu un nou terme",
@@ -1104,7 +1102,13 @@
       "updateError": "Error en actualitzar el perfil.",
       "deleteSuccess": "El compte es va suprimir amb èxit.",
       "deleteError": "Error eliminant el compte.",
-      "usernameMismatch": "El nom d'usuari no coincideix. Eliminació del compte cancel·lat."
+      "usernameMismatch": "El nom d'usuari no coincideix. Eliminació del compte cancel·lat.",
+      "passwordSameAsUsername": "La contrasenya no pot ser igual que el teu nom d'usuari",
+      "invalidUsername": "El nom d'usuari ha de tenir entre 3 i 30 caràcters i contenir només lletres, números i guions baixos",
+      "invalidUsernameCharacters": "El nom d'usuari conté caràcters no vàlids",
+      "nameTooLong": "El nom no pot tenir més de 30 caràcters",
+      "surnameTooLong": "El cognom no pot tenir més de 30 caràcters",
+      "invalidNameCharacters": "El nom o cognom conté caràcters no vàlids"
     },
     "fields": {
       "username": "Nom d'usuari",
@@ -1257,7 +1261,11 @@
     "saveChanges": "Desa els canvis",
     "processing": "Processament ...",
     "errors": {
-      "maxStudentsReached": "Aquesta aula ja té el nombre màxim d'estudiants"
+      "maxStudentsReached": "Aquesta aula ja té el nombre màxim d'estudiants",
+      "nameInvalidChars": "El nom no pot contenir els caràcters < o >",
+      "surnameInvalidChars": "El cognom no pot contenir els caràcters < o >",
+      "nameInvalidFormat": "El nom conté caràcters no vàlids",
+      "surnameInvalidFormat": "El cognom conté caràcters no vàlids"
     }
   },
 
@@ -1528,9 +1536,7 @@
         "structured": "Enfocament estructurat amb alguns elements interactius",
         "balanced": "Barreja equilibrada d'activitats estructurades i lúdiques",
         "veryPlayful": "Enfocament molt lúdic amb jocs i activitats creatives"
-      }
-    },
-    "planResultModal": {
+      },
       "defaultTitle": "Pla de Lliçó",
       "noPlanAvailable": "No hi ha cap pla disponible",
       "copySuccess": "Copiat al porta-retalls!",

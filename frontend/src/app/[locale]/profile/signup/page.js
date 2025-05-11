@@ -40,6 +40,22 @@ export default function SignUp() {
   }, [isLargeScreen, t]);
 
   const handleSubmit = async (formData) => {
+    // Name and surname validation
+    if (formData.name && formData.name.length > 30) {
+      showAlert("warning", t("alerts.nameTooLong"));
+      return;
+    }
+    if (formData.surname && formData.surname.length > 30) {
+      showAlert("warning", t("alerts.surnameTooLong"));
+      return;
+    }
+    
+    // Check for XSS attempts in name and surname
+    if (formData.name.toLowerCase().includes('<script>') || formData.surname.toLowerCase().includes('<script>')) {
+      showAlert("warning", t("alerts.invalidNameCharacters"));
+      return;
+    }
+
     // Username validation
     const usernameRegex = /^[a-zA-Z0-9_]{3,30}$/;
     if (!usernameRegex.test(formData.username)) {

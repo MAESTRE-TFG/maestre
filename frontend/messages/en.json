@@ -970,7 +970,11 @@
         "noMd": "Please upload a markdown (.md) file",
         "failedToOpenPdf": "Failed to open the document in a new tab. Please check your browser settings.",
         "termTypeError": "Please select a term type",
-        "noVersion": "Please enter a version number"
+        "noVersion": "Please enter a version number",
+        "versionTooLong": "Version cannot exceed 20 characters",
+        "mdFileTooLarge": "Markdown file size must be less than 50MB",
+        "pdfFileTooLarge": "PDF file size must be less than 50MB",
+        "invalidVersionFormat": "Version can only contain letters, numbers, spaces, dots, underscores and hyphens"
       },
       "buttons": {
         "addNewTerm": "Add New Term",
@@ -1135,7 +1139,10 @@
         "passwordSameAsUsername": "Password cannot be the same as your username",
         "invalidEmail": "Please enter a valid email address",
         "invalidUsername": "Username must be 3-30 characters long and contain only letters, numbers, and underscores",
-        "invalidUsernameCharacters": "Username contains invalid characters"
+        "invalidUsernameCharacters": "Username contains invalid characters",
+        "nameTooLong": "Name cannot be longer than 30 characters",
+        "surnameTooLong": "Surname cannot be longer than 30 characters",
+        "invalidNameCharacters": "Name or surname contains invalid characters"
       },
       "fields": {
         "username": "Username",
@@ -1291,7 +1298,11 @@
       "saveChanges": "Save Changes",
       "processing": "Processing...",
       "errors": {
-        "maxStudentsReached": "This classroom already has the maximum number of students"
+        "maxStudentsReached": "This classroom already has the maximum number of students",
+        "nameInvalidChars": "Name cannot contain < or > characters",
+        "surnameInvalidChars": "Surname cannot contain < or > characters",
+        "nameInvalidFormat": "Name contains invalid characters",
+        "surnameInvalidFormat": "Surname contains invalid characters"
       }
     },
 
@@ -1581,9 +1592,7 @@
           "structured": "Structured approach with some interactive elements",
           "balanced": "Balanced mix of structured and playful activities",
           "veryPlayful": "Very playful approach with games and creative activities"
-        }
-      },
-      "planResultModal": {
+        },
         "defaultTitle": "Lesson Plan",
         "noPlanAvailable": "No plan available",
         "copySuccess": "Copied to clipboard!",

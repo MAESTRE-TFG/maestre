@@ -679,12 +679,6 @@
     "buttons": {
       "cancel": "Cancelar",
       "update": "Actualizar"
-    },
-    "alerts": {
-      "passwordSameAsUsername": "La contraseña no puede ser igual que tu nombre de usuario",
-      "invalidEmail": "Por favor, introduce una dirección de correo electrónico válida",
-      "invalidUsername": "El nombre de usuario debe tener entre 3 y 30 caracteres y contener solo letras, números y guiones bajos",
-      "invalidUsernameCharacters": "El nombre de usuario contiene caracteres no válidos"
     }
   },
 
@@ -967,14 +961,18 @@
       "pdfContentError": "Error en el contenido del PDF: {{error}}",
       "versionError": "Error en la versión: {{error}}",
       "nameError": "Error en el nombre: {{error}}",
-      "noPdf": "No existe un PDF para este documento.",
-      "noMd": "Por favor, sube un archivo markdown (.md)",
-      "failedToOpenPdf": "No se pudo abrir el documento en una nueva pestaña. Por favor, verifica la configuración de tu navegador."
+      "noPdf": "Por favor, sube un archivo PDF",
+      "noMd": "Por favor, sube un archivo markdown (.MD)",
+      "failedToOpenPdf": "No se pudo abrir el documento en una nueva pestaña. Por favor, verifica la configuración de tu navegador.",
+      "versionTooLong": "La versión no puede exceder los 20 caracteres",
+      "mdFileTooLarge": "El tamaño del archivo Markdown debe ser menor a 50MB",
+      "pdfFileTooLarge": "El tamaño del archivo PDF debe ser menor a 50MB",
+      "invalidVersionFormat": "La versión solo puede contener letras, números, espacios, puntos, guiones bajos y guiones"
     },
     "buttons": {
       "addNewTerm": "Agregar Nuevo Término",
       "viewFullDocument": "Ver documento completo",
-      "openDocument": "Abrir documento",
+      "openDocument": "Descargar documento",
       "cancel": "Cancelar",
       "save": "Guardar",
       "delete": "Eliminar",
@@ -1121,7 +1119,13 @@
       "updateError": "Error al actualizar el perfil.",
       "deleteSuccess": "Cuenta eliminada con éxito.",
       "deleteError": "Error al eliminar la cuenta.",
-      "usernameMismatch": "El nombre de usuario no coincide. Eliminación de cuenta cancelada."
+      "usernameMismatch": "El nombre de usuario no coincide. Eliminación de cuenta cancelada.",
+      "passwordSameAsUsername": "La contraseña no puede ser igual que tu nombre de usuario",
+      "invalidUsername": "El nombre de usuario debe tener entre 3 y 30 caracteres y contener solo letras, números y guiones bajos",
+      "invalidUsernameCharacters": "El nombre de usuario contiene caracteres no válidos",
+      "nameTooLong": "El nombre no puede tener más de 30 caracteres",
+      "surnameTooLong": "El apellido no puede tener más de 30 caracteres",
+      "invalidNameCharacters": "El nombre o apellido contiene caracteres no válidos"
     },
     "fields": {
       "username": "Nombre de Usuario",
@@ -1277,7 +1281,11 @@
     "saveChanges": "Guardar cambios",
     "processing": "Procesando...",
     "errors": {
-      "maxStudentsReached": "Esta clase ya tiene el número máximo de estudiantes"
+      "maxStudentsReached": "Esta clase ya tiene el número máximo de estudiantes",
+      "nameInvalidChars": "El nombre no puede contener los caracteres < o >",
+      "surnameInvalidChars": "El apellido no puede contener los caracteres < o >",
+      "nameInvalidFormat": "El nombre contiene caracteres no válidos",
+      "surnameInvalidFormat": "El apellido contiene caracteres no válidos"
     }
   },
 
@@ -1567,9 +1575,7 @@
         "structured": "Enfoque estructurado con algunos elementos interactivos",
         "balanced": "Mezcla equilibrada de actividades estructuradas y lúdicas",
         "veryPlayful": "Enfoque muy lúdico con juegos y actividades creativas"
-      }
-    },
-    "planResultModal": {
+      },
       "defaultTitle": "Plan de clases",
       "noPlanAvailable": "No hay plan disponible",
       "copySuccess": "¡Copiado al portapapeles!",

@@ -16,6 +16,35 @@ const StudentModal = ({
 }) => {
   const t = useTranslations("StudentModal");
 
+  // Input validation function
+  const sanitizeInput = (input) => {
+    return input.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');
+  };
+
+  // Validation function
+  const validateInput = (input, fieldName) => {
+    if (input.length > 30) {
+      return t(`errors.${fieldName}TooLong`);
+    }
+    if (/[^a-zA-ZÀ-ÿ\s]/.test(input)) {
+      return t(`errors.${fieldName}InvalidChars`);
+    }
+    if (input.trim().length === 0) {
+      return t(`errors.${fieldName}Required`);
+    }
+    return null;
+  };
+
+  const handleSanitizedNameChange = (value) => {
+    const sanitizedValue = sanitizeInput(value);
+    handleNameChange(sanitizedValue);
+  };
+
+  const handleSanitizedSurnameChange = (value) => {
+    const sanitizedValue = sanitizeInput(value);
+    handleSurnameChange(sanitizedValue);
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -70,13 +99,35 @@ const StudentModal = ({
         <form
           onSubmit={async (e) => {
             e.preventDefault();
+            
+            // Validate inputs before submission
+            const nameError = validateInput(studentName, 'name');
+            const surnameError = validateInput(studentSurname, 'surname');
+            
+            if (nameError) {
+              alert(nameError);
+              return;
+            }
+            if (surnameError) {
+              alert(surnameError);
+              return;
+            }
+
             try {
               await onSubmit();
             } catch (error) {
-              if (error.message?.includes('maximum number of students')) {
+              if (error.response?.data?.classroom?.includes('cannot have more than') || 
+                  error.response?.data?.detail?.includes('maximum number of students')) {
                 alert(t('errors.maxStudentsReached'));
-              } else {
-                alert(error.message);
+              } 
+              else if (error.response?.data?.name) {
+                alert(t('errors.nameTooLong'));
+              }
+              else if (error.response?.data?.surname) {
+                alert(t('errors.surnameTooLong'));
+              }
+              else {
+                alert(error.message || t('errors.generalError'));
               }
             }
           }}
@@ -93,7 +144,10 @@ const StudentModal = ({
             <input
               type="text"
               value={studentName}
-              onChange={(e) => handleNameChange(e.target.value)}
+              onChange={(e) => handleSanitizedNameChange(e.target.value)}
+              maxLength={30}
+              pattern="[a-zA-ZÀ-ÿ\s]+"
+              title={t("errors.nameInvalidChars")}
               className={cn(
                 "shadow appearance-none border rounded-md w-full py-2 px-3 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500",
                 theme === "dark"
@@ -115,7 +169,10 @@ const StudentModal = ({
             <input
               type="text"
               value={studentSurname}
-              onChange={(e) => handleSurnameChange(e.target.value)}
+              onChange={(e) => handleSanitizedSurnameChange(e.target.value)}
+              maxLength={30}
+              pattern="[^<>]*"
+              title={t("errors.surnameInvalidChars")}
               className={cn(
                 "shadow appearance-none border rounded-md w-full py-2 px-3 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500",
                 theme === "dark"
