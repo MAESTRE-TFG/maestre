@@ -696,9 +696,9 @@
       "materialAnnotation": "Keep file extension in the name",
       "materialNamePlaceholder": "Enter a name for the material",
       "uploadFile": "Upload file",
-      "dragOrDrop": "Drag or drop your files here or click to upload",
+      "dragOrDrop": "Drag or drop your file here or click to upload",
       "supportedFormats": "PDF, DOC, DOCX, PNG, JPG, PPTX or TXT",
-      "browseFiles": "Browse files",
+      "browseFiles": "Upload file",
       "removeFile": "Remove file",
       "tagName": "Enter tag name",
       "deleteTagTitle": "Delete tag",
@@ -718,7 +718,8 @@
         "tagDeleteError": "Error deleting tag. Please try again.",
         "deleteSelectedSuccess": "Selected materials deleted successfully!",
         "deleteSelectedError": "Error deleting selected materials. Please try again.",
-        "nameLimitExceeded": "Name exceeds the limit of ${NAME_LIMIT} characters."
+        "nameLimitExceeded": "Name exceeds the limit of 50 characters.",
+        "fileTooLarge": "The file is too large. Maximum file size is 50MB."
       },
       "enterDeleteMode": "Enter Delete Mode",
       "exitDeleteMode": "Exit Delete Mode",
@@ -929,7 +930,8 @@
       "cityRequired": "City is required.",
       "allFieldsRequired": "All fields are required!",
       "success": "School created successfully!",
-      "error": "Failed to create school. Please try again."
+      "error": "Failed to create school. Please try again.",
+      "stagesRequired": "The school should have at least one stage."
     }
     },
 
@@ -1354,7 +1356,9 @@
         "tagUpdateSuccess": "Tags updated successfully.",
         "tagUpdateError": "Failed to update tags. Please try again.",
         "tagDeleteSuccess": "Tag deleted successfully.",
-        "tagDeleteError": "Failed to delete tag. Please try again."
+        "tagDeleteError": "Failed to delete tag. Please try again.",
+        "tagNameTooLong": "Tag name exceeds the limit of 50 characters.",
+        "tagExists": "Tag already exists."
       }
     },
 

@@ -6,9 +6,9 @@ import { getApiBaseUrl } from "@/lib/api";
 import Alert from "@/components/ui/Alert";
 import { useTranslations } from "next-intl"; // Import the translation hook
 
-const MaterialCreateModal = ({ 
-  showModal, 
-  setShowModal, 
+const MaterialCreateModal = ({
+  showModal,
+  setShowModal,
   onMaterialCreate,
   isProcessing
 }) => {
@@ -57,8 +57,7 @@ const MaterialCreateModal = ({
     const file = e.target.files[0];
     if (file) {
       setSelectedFile(file);
-      const fileName = file.name.split(".").slice(0, -1).join(".");
-      setMaterialName(fileName);
+      setMaterialName(file.name);
     }
   };
 
@@ -91,14 +90,26 @@ const MaterialCreateModal = ({
     if (files && files.length > 0) {
       const file = files[0];
       setSelectedFile(file);
-      const fileName = file.name.split(".").slice(0, -1).join(".");
-      setMaterialName(fileName);
+
+      setMaterialName(file.name);
     }
   }, []);
 
   const handleSubmit = async () => {
     if (!selectedFile || !materialName || !selectedClassroom) {
       showAlert("warning", t("alerts.missingFields")); // New translation key
+      return;
+    }
+
+    if (selectedFile && materialName.length > 50) {
+      showAlert("warning", t("alerts.nameLimitExceeded"));
+      return;
+    }
+
+    // Check if file size exceeds 50MB
+    const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB in bytes
+    if (selectedFile && selectedFile.size > MAX_FILE_SIZE) {
+      showAlert("warning", t("alerts.fileTooLarge"));
       return;
     }
 
@@ -142,8 +153,8 @@ const MaterialCreateModal = ({
           err.response?.data?.error ||
           (typeof err.response?.data === "object"
             ? Object.entries(err.response.data)
-                .map(([key, value]) => `${key}: ${value}`)
-                .join(", ")
+              .map(([key, value]) => `${key}: ${value}`)
+              .join(", ")
             : err.response?.data);
 
         showAlert("error", `${t("alerts.uploadError")}: ${errorDetail || t("alerts.invalidData")}`);
@@ -232,24 +243,6 @@ const MaterialCreateModal = ({
                 </select>
               </div>
 
-              <div className="mb-3">
-                <label className={cn("block text-sm font-bold mb-1", theme === "dark" ? "text-gray-300" : "text-gray-700")}>
-                  {t("materialName")}
-                  <span className="text-xs text-gray-500 ml-1">({t("materialAnnotation")})</span>
-                </label>
-                <input
-                  type="text"
-                  value={materialName}
-                  onChange={(e) => setMaterialName(e.target.value)}
-                  placeholder={t("materialNamePlaceholder")}
-                  className={cn(
-                    "shadow appearance-none border rounded-md w-full py-1 px-2 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500",
-                    theme === "dark" ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-700"
-                  )}
-                  required
-                />
-              </div>
-
               <div className="mb-4">
                 <label className={cn("block text-sm font-bold mb-1", theme === "dark" ? "text-gray-300" : "text-gray-700")}>
                   {t("uploadFile")} {/* Reused from FileUpload */}
@@ -296,13 +289,31 @@ const MaterialCreateModal = ({
                           type="file"
                           className="hidden"
                           onChange={handleFileChange}
-                          accept=".pdf,.doc,.docx,.ppt,.pptx,.txt"
+                          accept=".pdf,.doc,.docx,.ppt,.pptx,.txt,.png,.jpg"
                         />
                       </label>
                       <p className="text-xs text-gray-500 mt-2">{t("supportedFormats")}</p>
                     </div>
                   )}
                 </div>
+              </div>
+
+              <div className="mb-3">
+                <label className={cn("block text-sm font-bold mb-1", theme === "dark" ? "text-gray-300" : "text-gray-700")}>
+                  {t("materialName")}
+                  <span className="text-xs text-gray-500 ml-1">({t("materialAnnotation")})</span>
+                </label>
+                <input
+                  type="text"
+                  value={materialName}
+                  onChange={(e) => setMaterialName(e.target.value)}
+                  placeholder={t("materialNamePlaceholder")}
+                  className={cn(
+                    "shadow appearance-none border rounded-md w-full py-1 px-2 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500",
+                    theme === "dark" ? "bg-gray-700 border-gray-600 text-white" : "bg-white border-gray-300 text-gray-700"
+                  )}
+                  required
+                />
               </div>
 
               <div className="flex justify-center gap-2">
