@@ -153,110 +153,111 @@ const ClassroomsList = () => {
                   )}
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 justify-items-center">
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 justify-items-center w-full">
                   {classes.map((classroom) => (
-                    <CardContainer key={classroom.id} className="inter-var" containerClassName="py-10">
-                      <CardBody
-                        className={cn(
-                          "relative group/card border h-auto rounded-xl p-6",
-                          "bg-opacity-30 backdrop-filter backdrop-blur-lg",
-                          "w-full sm:w-[500px]",
-                          theme === "dark"
-                            ? "dark:hover:shadow-2xl dark:hover:shadow-purple-500/[0.1] bg-gray-800 border-gray-700"
-                            : "hover:shadow-xl hover:shadow-blue-500/[0.1] bg-white border-gray-100"
-                        )}
-                      >
-                        <div className="flex flex-col justify-center items-center">
-                          <CardItem
-                            translateZ="50"
-                            className={`text-2xl font-bold cursor-pointer hover:underline mb-4 ${theme === "dark" ? "text-white" : "text-gray-800"}`}
-                            onClick={() => router.push(`/${locale}/classrooms/${classroom.id}`)}
-                          >
-                            {classroom.name}
-                          </CardItem>
-
-                          <CardItem translateZ="60" className="w-full mb-4 h-40 relative">
-                            <Image
-                              src={classroom.imageUrl}
-                              alt={t("imageAlt", { name: classroom.name })}
-                              fill
-                              className="object-cover rounded-lg group-hover/card:shadow-xl"
-                            />
-                          </CardItem>
-
-                          <CardItem
-                            as="p"
-                            translateZ="40"
-                            className={`text-lg mb-4 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}
-                          >
-                            {truncateDescription(classroom.description)}
-                          </CardItem>
-
-                          <div className="grid grid-cols-2 gap-4 w-full mb-6">
+                    <div key={classroom.id} className="w-full min-w-0 flex">
+                      <CardContainer className="inter-var w-full" containerClassName="py-10 w-full">
+                        <CardBody
+                          className={cn(
+                            "relative group/card border h-auto rounded-xl p-6 w-full",
+                            "bg-opacity-30 backdrop-filter backdrop-blur-lg",
+                            theme === "dark"
+                              ? "dark:hover:shadow-2xl dark:hover:shadow-purple-500/[0.1] bg-gray-800 border-gray-700"
+                              : "hover:shadow-xl hover:shadow-blue-500/[0.1] bg-white border-gray-100"
+                          )}
+                        >
+                          <div className="flex flex-col justify-center items-center">
                             <CardItem
-                              translateZ="30"
-                              translateX="-5"
-                              className={`p-3 rounded-lg ${theme === "dark" ? "bg-gray-700" : "bg-gray-100"}`}
-                            >
-                              <p className={`text-sm font-medium ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-                                {t("courseLabel")}
-                              </p>
-                              <p className={`text-md font-bold ${theme === "dark" ? "text-white" : "text-gray-800"}`}>
-                                {classroom.academic_course}
-                              </p>
-                            </CardItem>
-                            <CardItem
-                              translateZ="30"
-                              translateX="5"
-                              className={`p-3 rounded-lg ${theme === "dark" ? "bg-gray-700" : "bg-gray-100"}`}
-                            >
-                              <p className={`text-sm font-medium ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
-                                {t("yearLabel")}
-                              </p>
-                              <p className={`text-md font-bold ${theme === "dark" ? "text-white" : "text-gray-800"}`}>
-                                {classroom.academic_year}
-                              </p>
-                            </CardItem>
-                          </div>
-
-                          <div className="flex flex-col sm:flex-row gap-4 w-full">
-                            <CardItem
-                              translateZ="40"
-                              translateY="5"
-                              as="button"
+                              translateZ="50"
+                              className={`text-2xl font-bold cursor-pointer hover:underline mb-4 ${theme === "dark" ? "text-white" : "text-gray-800"}`}
                               onClick={() => router.push(`/${locale}/classrooms/${classroom.id}`)}
-                              className="btn btn-success py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center flex-1"
                             >
-                              {t("openClassButton")}
+                              {classroom.name}
                             </CardItem>
+
+                            <CardItem translateZ="60" className="w-full mb-4 h-40 relative">
+                              <Image
+                                src={classroom.imageUrl}
+                                alt={t("imageAlt", { name: classroom.name })}
+                                fill
+                                className="object-cover rounded-lg group-hover/card:shadow-xl"
+                              />
+                            </CardItem>
+
                             <CardItem
+                              as="p"
                               translateZ="40"
-                              translateY="5"
-                              as="button"
-                              onClick={() => handleEdit(classroom.id)}
-                              className="btn btn-secondary py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center flex-1"
+                              className={`text-lg mb-4 ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}
                             >
-                              {t("editButton")}
-                              <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="20"
-                                height="20"
-                                viewBox="0 0 24 24"
-                                fill="none"
-                                stroke="currentColor"
-                                strokeWidth="2"
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                className="transition-transform group-hover:translate-x-1"
-                              >
-                                <path d="M5 12h14" />
-                                <path d="m12 5 7 7-7 7" />
-                              </svg>
+                              {truncateDescription(classroom.description)}
                             </CardItem>
+
+                            <div className="grid grid-cols-2 gap-4 w-full mb-6">
+                              <CardItem
+                                translateZ="30"
+                                translateX="-5"
+                                className={`p-3 rounded-lg ${theme === "dark" ? "bg-gray-700" : "bg-gray-100"}`}
+                              >
+                                <p className={`text-sm font-medium ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+                                  {t("courseLabel")}
+                                </p>
+                                <p className={`text-md font-bold ${theme === "dark" ? "text-white" : "text-gray-800"}`}>
+                                  {classroom.academic_course}
+                                </p>
+                              </CardItem>
+                              <CardItem
+                                translateZ="30"
+                                translateX="5"
+                                className={`p-3 rounded-lg ${theme === "dark" ? "bg-gray-700" : "bg-gray-100"}`}
+                              >
+                                <p className={`text-sm font-medium ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
+                                  {t("yearLabel")}
+                                </p>
+                                <p className={`text-md font-bold ${theme === "dark" ? "text-white" : "text-gray-800"}`}>
+                                  {classroom.academic_year}
+                                </p>
+                              </CardItem>
+                            </div>
+
+                            <div className="flex flex-col sm:flex-row gap-4 w-full">
+                              <CardItem
+                                translateZ="40"
+                                translateY="5"
+                                as="button"
+                                onClick={() => router.push(`/${locale}/classrooms/${classroom.id}`)}
+                                className="btn btn-success py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center flex-1"
+                              >
+                                {t("openClassButton")}
+                              </CardItem>
+                              <CardItem
+                                translateZ="40"
+                                translateY="5"
+                                as="button"
+                                onClick={() => handleEdit(classroom.id)}
+                                className="btn btn-secondary py-2 rounded-full text-lg font-medium transition-all duration-300 flex items-center justify-center flex-1"
+                              >
+                                {t("editButton")}
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  width="20"
+                                  height="20"
+                                  viewBox="0 0 24 24"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  strokeWidth="2"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  className="transition-transform group-hover:translate-x-1"
+                                >
+                                  <path d="M5 12h14" />
+                                  <path d="m12 5 7 7-7 7" />
+                                </svg>
+                              </CardItem>
+                            </div>
                           </div>
-                        </div>
-                      </CardBody>
-                    </CardContainer>
+                        </CardBody>
+                      </CardContainer>
+                    </div>
                   ))}
                 </div>
               </>

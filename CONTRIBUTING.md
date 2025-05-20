@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="/frontend/static/maestrito/maestrito_jump_transparent.webp" align="center" width="30%">
+  <img src="https://github.com/MAESTRE-TFG/maestre/raw/main/frontend/static/maestrito/maestrito_jump_transparent.webp" alt="Logo Maestre" width="200" />
 </p>
 <p align="center"><h1 align="center">MAESTRE</h1></p>
 <p align="center">
