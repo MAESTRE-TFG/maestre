@@ -705,11 +705,14 @@ Antonio Macías and Rafael Pulido, the two creators of this project:
 	<br>
 	<br>
 	<br>
+</p>
+
+<div id="español">
+
+<p align="center">
 	<img src="https://github.com/MAESTRE-TFG/maestre/raw/main/frontend/static/maestrito/maestrito_jump_transparent.webp" alt="Logo Maestre" width="200" />
 </p>
 <p align="center"><h1 align="center">MAESTRE</h1></p>
-
-<div id="español">
 
 <p align="center">
 	<em><code>La mejor experiencia para profesores de secundaria y bachillerato impulsada por INTELIGENCIA ARTIFICIAL</code></em>
