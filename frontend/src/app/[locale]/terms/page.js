@@ -398,12 +398,12 @@ export default function TermsPage() {
                         let processedContent = content;
                         if (termTag === "terms" || termTag === "license") {
                           processedContent = content.split("## 4. ")[1] || content;
-                          setFirstSentence(truncateByWords(processedContent, 45));
+                          setFirstSentence(truncateByWords(processedContent, 38));
                         } else if (termTag === "cookies" || termTag === "privacy") {
                           processedContent = content.split("## 4. ")[1] || content;
-                          setFirstSentence(truncateByWords(processedContent, 22));
+                          setFirstSentence(truncateByWords(processedContent, 15));
                         } else {
-                          setFirstSentence(truncateByWords(content, 45));
+                          setFirstSentence(truncateByWords(content, 40));
                         }
                       };
 

@@ -24,12 +24,12 @@
 - [Overview](#overview)
 - [Features](#features)
 - [Project Structure](#project-structure)
-  - [Project Index](#project-index)
+	- [Project Index](#project-index)
 - [Local deployment](#local-deployment)
-  - [Prerequisites](#prerequisites)
-  - [Installation](#installation)
-  - [Usage](#usage)
-  - [Testing](#testing)
+	- [Prerequisites](#prerequisites)
+	- [Installation](#installation)
+	- [Usage](#usage)
+	- [Testing](#testing)
 - [Project Roadmap](#project-roadmap)
 - [Contributing](#contributing)
 - [License](#license)
@@ -573,15 +573,15 @@ For a detailed coverage study:
 **Sprint 3**
 
 - [X] **`Task 3.1`**: Error management  (replanned from Sprint 2)
-- [ ] **`Task 3.2`**: User policy & terms management
-- [ ] **`Task 3.3`**: **Planning tool**
-- [ ] **`Task 3.4`**: Exam generation tool testing & improovements
+- [X] **`Task 3.2`**: User policy & terms management
+- [X] **`Task 3.3`**: **Planning tool**
+- [X] **`Task 3.4`**: Exam generation tool testing & improovements
 
 **Sprint 4**
 
 - [X] **`Task 4.1`**: Traduction tool
-- [ ] **`Task 4.2`**: Planner tool
-- [ ] **`Task 4.3`**: Final Testing report
+- [X] **`Task 4.2`**: Planner tool
+- [X] **`Task 4.3`**: Final Testing report
 
 ---
 

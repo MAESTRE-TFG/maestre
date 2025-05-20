@@ -28,6 +28,10 @@ classoption: "table"
   LICENSE - MAESTRE - USER AGREEMENT / LICENCIA - MAESTRE - ACUERDO DE USUARIO
 </h1>
 
+
+[🇬🇧 English](#english) | [🇪🇸 Español](#español)
+
+
 **Table of contents  |  Índice**
 - [English Version](#english-version)
   - [1. INTRODUCTION](#1-introduction)
@@ -55,7 +59,6 @@ classoption: "table"
 <br></br>
 
 
-[🇬🇧 English](#english) | [🇪🇸 Español](#español)
 
 <div id="english">
 
