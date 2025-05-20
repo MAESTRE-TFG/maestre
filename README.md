@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="/frontend/static/maestrito/maestrito_jump_transparent.webp" align="center" width="30%">
+    <img src="https://github.com/MAESTRE-TFG/maestre/raw/main/frontend/static/maestrito/maestrito_jump_transparent.webp" alt="Logo Maestre" width="200" />
 </p>
 <p align="center"><h1 align="center">MAESTRE</h1></p>
 <p align="center">
@@ -11,35 +11,71 @@
 	<img src="https://img.shields.io/github/languages/top/MAESTRE-TFG/maestre?style=default&color=0080ff" alt="repo-top-language">
 	<img src="https://img.shields.io/github/languages/count/MAESTRE-TFG/maestre?style=default&color=0080ff" alt="repo-language-count">
 </p>
-<p align="center"><!-- default option, no dependency badges. -->
-</p>
 <p align="center">
-	<!-- default option, no dependency badges. -->
+	<strong> 🤠 ¡GET ACCESS TO OUR APP HERE! 👉 https://maestre.netlify.app/ 😮 </strong>
+	<br>
 </p>
-<br>
-
-##  Table of Contents
-
-- [Table of Contents](#table-of-contents)
-- [Overview](#overview)
-- [Features](#features)
-- [Project Structure](#project-structure)
-	- [Project Index](#project-index)
-- [Local deployment](#local-deployment)
-	- [Prerequisites](#prerequisites)
-	- [Installation](#installation)
-	- [Usage](#usage)
-	- [Testing](#testing)
-- [Project Roadmap](#project-roadmap)
-- [Contributing](#contributing)
-- [License](#license)
-- [Acknowledgments](#acknowledgments)
 
 ---
+
+
+<!-- Language Switch -->
+[🇬🇧 English](#english) | [🇪🇸 Español](#español)</b>
+
+<p align="center">
+	<br>
+	<br>
+	<br>
+	<br>
+</p>
+
+
+---
+
+#  MEET MAESTRE! - ENGLISH VERSION
+
+- [MEET MAESTRE! - ENGLISH VERSION](#meet-maestre---english-version)
+	- [Overview](#overview)
+	- [Features](#features)
+	- [Project Structure](#project-structure)
+		- [Project Index](#project-index)
+	- [Local deployment](#local-deployment)
+		- [Prerequisites](#prerequisites)
+		- [Installation](#installation)
+		- [Usage](#usage)
+		- [Testing](#testing)
+	- [Project Roadmap](#project-roadmap)
+	- [Contributing](#contributing)
+	- [License](#license)
+	- [Acknowledgments](#acknowledgments)
+- [¡CONOCE MAESTRE! - VERSIÓN EN ESPAÑOL](#conoce-maestre---versión-en-español)
+	- [Descripción General](#descripción-general)
+	- [Características](#características)
+	- [Estructura del proyecto](#estructura-del-proyecto)
+		- [Índice del proyecto](#índice-del-proyecto)
+		- [Índice del Proyecto](#índice-del-proyecto-1)
+	- [Despliegue local](#despliegue-local)
+		- [Requisitos previos](#requisitos-previos)
+		- [Instalación](#instalación)
+		- [Uso](#uso)
+		- [Pruebas](#pruebas)
+	- [Hoja de ruta del proyecto](#hoja-de-ruta-del-proyecto)
+	- [Contribuir](#contribuir)
+	- [Licencia](#licencia)
+	- [Agradecimientos](#agradecimientos)
+
+---
+
+
+<div id="english">
+
 
 ##  Overview
 
 *MAESTRE is a cutting-edge web application leveraging artificial intelligence to enhance the workplace experience for secondary and high school teachers. By streamlining administrative tasks and providing data-driven insights, it empowers educators to focus on what matters most—teaching.*
+
+Check out our [USER GUIDE](https://documentation-maestre.netlify.app/) for a more detailed overview of this project!
+
 
 ---
 
@@ -660,6 +696,677 @@ Antonio Macías and Rafael Pulido, the two creators of this project:
 			<sub><b>Analyst Developer, Software Engineer</b></sub>
         </a>
     </td>
+</table>
+
+---
+
+
+
+<div id="español">
+
+
+<em><code>La mejor experiencia laboral para profesores de secundaria y bachillerato impulsada por INTELIGENCIA ARTIFICIAL</code></em>
+
+
+
+---
+
+<p align="center">
+	<br>
+	<br>
+	<br>
+	<br>
+	<img src="https://github.com/MAESTRE-TFG/maestre/raw/main/frontend/static/maestrito/maestrito_jump_transparent.webp" alt="Logo Maestre" width="200" />
+</p>
+<p align="center"><h1 align="center">MAESTRE</h1></p>
+<p align="center">
+	<em><code>La mejor experiencia para profesores de secundaria y bachillerato impulsada por INTELIGENCIA ARTIFICIAL</code></em>
+</p>
+<p align="center">
+	<img src="https://img.shields.io/github/license/MAESTRE-TFG/maestre?style=default&logo=opensourceinitiative&logoColor=white&color=0080ff" alt="licencia">
+	<img src="https://img.shields.io/github/last-commit/MAESTRE-TFG/maestre?style=default&logo=git&logoColor=white&color=0080ff" alt="último-commit">
+	<img src="https://img.shields.io/github/languages/top/MAESTRE-TFG/maestre?style=default&color=0080ff" alt="lenguaje-principal-repo">
+	<img src="https://img.shields.io/github/languages/count/MAESTRE-TFG/maestre?style=default&color=0080ff" alt="conteo-lenguajes-repo">
+</p>
+<p align="center">
+	<strong> 🤠 ¡ACCDE A NUESTRA APP AQUÍ! 👉 https://maestre.netlify.app/ 😮 </strong>
+</p>
+<br>
+
+---
+
+
+
+# ¡CONOCE MAESTRE! - VERSIÓN EN ESPAÑOL
+
+## Descripción General
+
+*MAESTRE es una aplicación web de vanguardia que aprovecha la inteligencia artificial para mejorar la experiencia laboral de los profesores de secundaria y bachillerato. Al agilizar tareas administrativas y proporcionar información basada en datos, permite a los educadores centrarse en lo más importante: la enseñanza.*
+
+Consulta nuestra [GUÍA DE USUARIO](https://documentation-maestre.netlify.app/) para una visión más detallada de este proyecto.
+
+---
+
+## Características
+
+🌐 Herramientas Educativas Impulsadas por IA
+
+- Traducción inteligente de documentos para aulas multilingües
+- Creación y corrección automática de exámenes/pruebas mediante la API de ChatGPT
+- Plantillas personalizables para evaluaciones
+- Programación interactiva de lecciones y actividades
+
+🎨 Interfaz Moderna y Accesible
+
+- Diseño inspirado en el neomorfismo para una experiencia elegante e intuitiva
+- Disposición adaptable y optimizada para web y dispositivos móviles
+- Navegación centrada en el usuario con temas personalizables
+- Diseño accesible para facilitar el uso a todos los educadores
+
+🛠 Rendimiento y Pruebas
+
+- Pruebas unitarias, de integración y de carga exhaustivas
+- Evaluación continua del rendimiento de los modelos de IA
+- Integración fluida con APIs externas de LLM
+
+---
+
+
+##  Estructura del proyecto
+
+```sh
+└── maestre/
+    ├── .github/
+    │   ├── ISSUE_TEMPLATE
+    │   └── PULL_REQUEST_TEMPLATE.md
+    ├── CONTRIBUTING.md
+    ├── LICENSE
+    ├── README.md
+    ├── backend/
+    │   ├── api/
+    │   ├── backend/
+    │   ├── classrooms/
+    │   ├── materials/
+    │   ├── media/
+    │   ├── schools/
+    │   ├── students/
+    │   ├── tags/
+    │   └── users/
+    └── frontend/
+    	├── public/
+    	├── src/
+    	└── static/
+```
+
+
+###  Índice del proyecto
+
+###  Índice del Proyecto
+
+<details open>
+	<summary><b><code>MAESTRE/</code></b></summary>
+	<!-- .github Submodule -->
+	<details>
+		<summary><b>.github</b></summary>
+		<blockquote>
+			<details>
+				<summary><b>ISSUE_TEMPLATE</b></summary>
+				<blockquote>
+					<tr>
+						<td><code>❯ Contiene la(s) plantilla(s) de incidencias utilizadas para reportar errores y solicitar nuevas funcionalidades.</code></td>
+					</tr>
+				</blockquote>
+			</details>
+		</blockquote>
+	</details>
+	<!-- backend Submodule -->
+	<details>
+		<summary><b>backend</b></summary>
+		<blockquote>
+			<table>
+			<tr>
+				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/.coverage'>.coverage</a></b></td>
+				<td><code>❯ Archivo generado que almacena datos de cobertura de código de las pruebas.</code></td>
+			</tr>
+			<tr>
+				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/manage.py'>manage.py</a></b></td>
+				<td><code>❯ Script de gestión de Django para tareas administrativas.</code></td>
+			</tr>
+			<tr>
+				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/requirements.txt'>requirements.txt</a></b></td>
+				<td><code>❯ Lista de dependencias de Python requeridas para el backend.</code></td>
+			</tr>
+			</table>
+			<details>
+				<summary><b>api</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><code>❯ Contiene endpoints de API (probablemente usando Django REST Framework) que exponen servicios del backend.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>backend</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/backend/urls.py'>urls.py</a></b></td>
+						<td><code>❯ Configuración de URL que mapea rutas a vistas para el proyecto Django.</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/backend/wsgi.py'>wsgi.py</a></b></td>
+						<td><code>❯ Punto de entrada WSGI utilizado por servidores de producción para servir la aplicación Django.</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/backend/asgi.py'>asgi.py</a></b></td>
+						<td><code>❯ Punto de entrada ASGI que habilita soporte asíncrono.</code></td>
+					</tr>
+					<tr>
+						<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/backend/backend/settings.py'>settings.py</a></b></td>
+						<td><code>❯ Archivo de configuración de Django que contiene la configuración para base de datos, aplicaciones, middleware, etc.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>classrooms</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><code>❯ Contiene la aplicación/módulo de Django para gestionar datos y vistas relacionadas con las aulas.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>materials</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><code>❯ Módulos relacionados con la gestión de materiales o recursos (por ejemplo, inventario) en la aplicación.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>schools</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><code>❯ Contiene la aplicación/módulo de Django para manejar modelos, vistas y funcionalidades relacionadas con las escuelas.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>students</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><code>❯ Contiene funcionalidad relacionada con la gestión de estudiantes dentro del backend.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>tags</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><code>❯ Contiene funcionalidad relacionada con las etiquetas de materiales.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+			<details>
+				<summary><b>users</b></summary>
+				<blockquote>
+					<table>
+					<tr>
+						<td><code>❯ Contiene la aplicación/módulo de Django que maneja modelos de usuarios, autenticación y vistas relacionadas.</code></td>
+					</tr>
+					</table>
+				</blockquote>
+			</details>
+		</blockquote>
+	</details>
+	<!-- frontend Submodule -->
+	<details>
+		<summary><b>frontend</b></summary>
+		<blockquote>
+			<table>
+			<tr>
+				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/next.config.mjs'>next.config.mjs</a></b></td>
+				<td><code>❯ Archivo de configuración de Next.js (formato módulo ES) para configuraciones personalizadas.</code></td>
+			</tr>
+			<tr>
+				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/components.json'>components.json</a></b></td>
+				<td><code>❯ Configuración JSON que lista o define componentes reutilizables del frontend.</code></td>
+			</tr>
+			<tr>
+				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/postcss.config.mjs'>postcss.config.mjs</a></b></td>
+				<td><code>❯ Archivo de configuración de PostCSS usando sintaxis de módulo ES.</code></td>
+			</tr>
+			<tr>
+				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/eslint.config.mjs'>eslint.config.mjs</a></b></td>
+				<td><code>❯ Archivo de configuración de ESLint (formato módulo ES) para reglas de linting.</code></td>
+			</tr>
+			<tr>
+				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/package.json'>package.json</a></b></td>
+				<td><code>❯ Archivo de manifiesto para el proyecto frontend (dependencias y scripts).</code></td>
+			</tr>
+			<tr>
+				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/jsconfig.json'>jsconfig.json</a></b></td>
+				<td><code>❯ Configuración de JavaScript para IntelliSense del editor y resolución de módulos.</code></td>
+			</tr>
+			<tr>
+				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/tailwind.config.mjs'>tailwind.config.mjs</a></b></td>
+				<td><code>❯ Configuración de Tailwind CSS (versión módulo ES).</code></td>
+			</tr>
+			<tr>
+				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/tailwind.config.js'>tailwind.config.js</a></b></td>
+				<td><code>❯ Configuración de Tailwind CSS (versión CommonJS).</code></td>
+			</tr>
+			<tr>
+				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/package-lock.json'>package-lock.json</a></b></td>
+				<td><code>❯ Archivo de bloqueo de paquetes Npm que garantiza versiones consistentes de dependencias.</code></td>
+			</tr>
+			<tr>
+				<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/next.config.js'>next.config.js</a></b></td>
+				<td><code>❯ Archivo de configuración de Next.js (formato CommonJS) para configuraciones alternativas.</code></td>
+			</tr>
+			</table>
+			<details>
+				<summary><b>src</b></summary>
+				<blockquote>
+					<details>
+						<summary><b>context</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/context/ErrorContext.js'>ErrorContext.js</a></b></td>
+								<td><code>❯ Proporciona un contexto React para gestionar estados de error en toda la aplicación.</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>hooks</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/hooks/use-outside-click.jsx'>use-outside-click.jsx</a></b></td>
+								<td><code>❯ Hook personalizado que detecta clics fuera de un elemento designado.</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>lib</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/lib/utils.js'>utils.js</a></b></td>
+								<td><code>❯ Funciones de utilidad usadas en toda la aplicación frontend.</code></td>
+							</tr>
+							</table>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>components</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/student-create-form.jsx'>student-create-form.jsx</a></b></td>
+								<td><code>❯ Componente de formulario para crear nuevos perfiles de estudiantes.</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/theme-provider.jsx'>theme-provider.jsx</a></b></td>
+								<td><code>❯ Componente que proporciona contexto y configuración de temas.</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/file-upload-demo.jsx'>file-upload-demo.jsx</a></b></td>
+								<td><code>❯ Componente de demostración que muestra la funcionalidad de carga de archivos.</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/card-carrousell.jsx'>card-carrousell.jsx</a></b></td>
+								<td><code>❯ Componente de carrusel para mostrar tarjetas en una vista deslizante.</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/school-create-form.jsx'>school-create-form.jsx</a></b></td>
+								<td><code>❯ Componente de formulario para crear un nuevo perfil de escuela.</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/complete-profile-form.jsx'>complete-profile-form.jsx</a></b></td>
+								<td><code>❯ Componente de formulario para completar detalles del perfil de usuario.</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/signup-form-demo.jsx'>signup-form-demo.jsx</a></b></td>
+								<td><code>❯ Componente de demostración para la funcionalidad de registro de usuarios.</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/classroom-create-form.jsx'>classroom-create-form.jsx</a></b></td>
+								<td><code>❯ Componente de formulario para crear una nueva aula.</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/aurora-background-demo.jsx'>aurora-background-demo.jsx</a></b></td>
+								<td><code>❯ Componente de demostración que muestra un fondo animado de aurora.</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/profile-edit-form.jsx'>profile-edit-form.jsx</a></b></td>
+								<td><code>❯ Componente de formulario para editar información del perfil de usuario.</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/signin-form-demo.jsx'>signin-form-demo.jsx</a></b></td>
+								<td><code>❯ Componente de demostración para la funcionalidad de inicio de sesión de usuarios.</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/sidebar-demo.jsx'>sidebar-demo.jsx</a></b></td>
+								<td><code>❯ Componente de demostración que muestra una interfaz de navegación de barra lateral.</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/classroom-edit-form.jsx'>classroom-edit-form.jsx</a></b></td>
+								<td><code>❯ Componente de formulario para editar detalles del aula.</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/macbook-scroll.jsx'>macbook-scroll.jsx</a></b></td>
+								<td><code>❯ Componente que simula un efecto de desplazamiento de MacBook.</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/theme-switch.jsx'>theme-switch.jsx</a></b></td>
+								<td><code>❯ Componente de alternancia para cambiar entre temas (por ejemplo, modo claro/oscuro).</code></td>
+							</tr>
+							</table>
+							<details>
+								<summary><b>ui</b></summary>
+								<blockquote>
+									<table>
+									<tr>
+										<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/ui/label.jsx'>label.jsx</a></b></td>
+										<td><code>❯ Componente UI para mostrar etiquetas de formulario o texto.</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/ui/modal.js'>modal.js</a></b></td>
+										<td><code>❯ Componente UI para diálogos modales.</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/ui/sidebar.jsx'>sidebar.jsx</a></b></td>
+										<td><code>❯ Componente UI reutilizable de barra lateral.</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/ui/input.jsx'>input.jsx</a></b></td>
+										<td><code>❯ Componente UI de campo de entrada.</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/ui/apple-cards-carousel.jsx'>apple-cards-carousel.jsx</a></b></td>
+										<td><code>❯ Componente de carrusel con un diseño inspirado en Apple.</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/ui/macbook-scroll.jsx'>macbook-scroll.jsx</a></b></td>
+										<td><code>❯ Versión UI alternativa del efecto de desplazamiento de MacBook.</code></td>
+									</tr>
+									<tr>
+										<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/components/ui/file-upload.jsx'>file-upload.jsx</a></b></td>
+										<td><code>❯ Componente UI para manejar cargas de archivos.</code></td>
+									</tr>
+									</table>
+								</blockquote>
+							</details>
+						</blockquote>
+					</details>
+					<details>
+						<summary><b>app</b></summary>
+						<blockquote>
+							<table>
+							<tr>
+								<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/app/layout.js'>layout.js</a></b></td>
+								<td><code>❯ Componente de diseño raíz que define la estructura general de la página.</code></td>
+							</tr>
+							<tr>
+								<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/app/page.js'>page.js</a></b></td>
+								<td><code>❯ Componente principal de la página de inicio de la aplicación.</code></td>
+							</tr>
+							<details>
+								<summary><b>schools</b></summary>
+								<blockquote>
+									<details>
+										<summary><b>new</b></summary>
+										<blockquote>
+											<table>
+											<tr>
+												<td><b><a href='https://github.com/MAESTRE-TFG/maestre.git/blob/master/frontend/src/app/schools/new/page.js'>page.js</a></b></td>
+												<td><code>❯ Componente de página para crear una nueva entrada de escuela.</code></td>
+											</tr>
+											</table>
+										</blockquote>
+									</details>
+								</blockquote>
+							</details>
+						</blockquote>
+					</details>
+				</blockquote>
+			</details>
+		</blockquote>
+	</details>
+</details>
+
+
+
+---
+
+##  Despliegue local
+
+
+###  Requisitos previos
+
+Antes de comenzar con FISIOFIND, asegúrate de que tu entorno de ejecución cumpla con los siguientes requisitos:
+
+- **Lenguaje de programación:** [Python](https://www.python.org/)
+- **Gestor de paquetes:** [Npm](https://www.npmjs.com/), [Pip](https://pypi.org/project/pip/)
+- **Base de datos:** [PostgreSQL](https://www.postgresql.org/)
+- **LLM:** [Ollama](https://ollama.com/) -> [llama3.2-3b](https://ollama.com/library/llama3.2) y [deepseek-r1](https://ollama.com/library/deepseek-r1)
+
+
+###  Instalación
+
+Instala FISIOFIND utilizando uno de los siguientes métodos:
+
+**Construir desde la fuente:**
+
+1. Clona el repositorio FISIOFIND:
+```sh
+❯ git clone https://github.com/MAESTRE-TFG/maestre
+```
+
+2. Navega al directorio del proyecto:
+```sh
+❯ cd maestre
+```
+
+3. Instala las dependencias del proyecto:
+
+**Usando `pip`** &nbsp; [<img align="center" src="https://img.shields.io/badge/Pip-3776AB.svg?style={badge_style}&logo=pypi&logoColor=white" />](https://pypi.org/project/pip/)
+
+Primero, crea y activa un entorno virtual de Python en el directorio backend:
+
+```sh
+❯ cd backend
+❯ python -m venv venv
+❯ source venv/bin/activate
+```
+Luego procedemos a instalar las dependencias:
+
+```sh
+❯ pip install -r requirements.txt
+```
+**Usando `npm`** &nbsp; [<img align="center" src="https://img.shields.io/badge/npm-CB3837.svg?style=flat&logo=npm&logoColor=white" />](https://www.npmjs.com/)
+
+Ahora instalamos las dependencias del framework frontend en el directorio `frontend`:
+
+```sh
+❯ cd ../fronend
+❯ npm install
+```
+
+###  Uso
+
+La primera vez que se despliega el proyecto localmente, necesitamos crear un archivo .env en el directorio `backend` de acuerdo con el archivo `.env.example`.
+
+Para ejecutar el servidor backend, sigue estos pasos en el directorio `backend` **y con el venv activado**:
+
+```sh
+❯ cd .\backend
+❯ python .\manage.py makemigrations
+❯ python .\manage.py migrate
+❯ python .\manage.py runserver
+```
+Adicionalmente, la primera vez que se despliega el proyecto localmente, necesitamos crear un superusuario para acceder al panel de administración:
+
+```sh
+❯ python.\manage.py createsuperuser
+```
+
+Después de que el servidor backend local esté en funcionamiento, podemos ejecutar el servidor frontend **en una nueva ventana de terminal**:
+
+**Usando `npm`** &nbsp; [<img align="center" src="https://img.shields.io/badge/npm-CB3837.svg?style=flat&logo=npm&logoColor=white" />](https://www.npmjs.com/)
+
+```sh
+❯ cd ../../fronted
+❯ npm run dev
+```
+
+###  Pruebas
+Ejecuta el conjunto de pruebas utilizando el siguiente comando:
+
+**Usando `pip`** &nbsp; [<img align="center" src="https://img.shields.io/badge/Pip-3776AB.svg?style={badge_style}&logo=pypi&logoColor=white" />](https://pypi.org/project/pip/)
+
+```sh
+❯ run manage.py test
+```
+
+O elige un módulo específico para probar usando:
+
+```sh
+❯ run manage.py test [módulo]
+```
+
+Para un estudio detallado de cobertura:
+
+```sh
+❯ coverage run manage.py test [módulo]
+❯ coverage report
+❯ coverage html
+```
+
+
+---
+##  Hoja de ruta del proyecto
+
+**Sprint 1**
+- [X] **`Tarea 1.1`**: Gestión de usuarios - registro/inicio de sesión/cierre de sesión/edición
+- [X] **`Tarea 1.2`**: Funcionalidad de aulas
+- [X] **`Tarea 1.3`**: Gestión de estudiantes
+- [X] **`Tarea 1.4`**: Interfaz base - Inicio
+- [X] **`Tarea 1.5`**: Primeras pruebas unitarias
+
+**Sprint 2**
+- [X] **`Tarea 2.1`**: Gestión de materiales (replanificado desde Sprint 1)
+- [X] **`Tarea 2.2`**: **Herramienta de generación de exámenes**
+- [X] **`Tarea 2.3`**: Interfaz estilizada
+- [X] **`Tarea 2.4`**: Conjunto completo de pruebas unitarias (replanificado desde Sprint 1)
+
+**Sprint 3**
+
+- [X] **`Tarea 3.1`**: Gestión de errores (replanificado desde Sprint 2)
+- [X] **`Tarea 3.2`**: Gestión de políticas y términos de usuario
+- [X] **`Tarea 3.3`**: **Herramienta de planificación**
+- [X] **`Tarea 3.4`**: Pruebas y mejoras de la herramienta de generación de exámenes
+
+**Sprint 4**
+
+- [X] **`Tarea 4.1`**: Herramienta de traducción
+- [X] **`Tarea 4.2`**: Herramienta de planificación
+- [X] **`Tarea 4.3`**: Informe final de pruebas
+
+---
+
+##  Contribuir
+
+- **🐛 [Reportar problemas](https://github.com/MAESTRE-TFG/maestre/issues)**: Envía los errores encontrados o registra solicitudes de funciones para el proyecto `maestre.git`.
+
+- **💡 [Enviar solicitudes de extracción](https://github.com/MAESTRE-TFG/maestre/blob/main/CONTRIBUTING.md)**: Revisa las solicitudes de extracción abiertas y envía las tuyas propias.
+
+<details closed>
+<summary>Directrices para contribuir</summary>
+
+
+1. **Haz un fork del repositorio**: Comienza haciendo un fork del repositorio del proyecto a tu cuenta de github.
+
+2. **Clona localmente**: Clona el repositorio bifurcado a tu máquina local usando un cliente git.
+   ```sh
+   git clone https://github.com/MAESTRE-TFG/maestre
+   ```
+
+3. **Crea una nueva rama**: Trabaja siempre en una nueva rama, dándole un nombre descriptivo.
+   ```sh
+   git checkout -b feat/nueva-funcionalidad-x
+   ```
+
+4. **Realiza tus cambios**: Desarrolla y *prueba* tus cambios localmente.
+
+5. **Confirma tus cambios**: Confirma con un mensaje claro que describa tus actualizaciones siguiendo los estándares de *commits convencionales* y tratando de hacerlos lo más *atómicos* posible.
+   ```sh
+   git commit -m 'Feat: Implementada nueva funcionalidad x.'
+   ```
+
+6. **Sube a github**: Sube los cambios a tu repositorio bifurcado.
+   ```sh
+   git push origin feat/nueva-funcionalidad-x
+   ```
+
+7. **Envía una solicitud de extracción**: Crea una PR contra el repositorio original del proyecto apuntando a la rama develop. **Describe claramente los cambios y sus motivaciones utilizando la plantilla proporcionada**.
+
+8. **Revisión**: Una vez que se revise y apruebe tu PR, se fusionará con la rama principal. ¡Felicitaciones por tu contribución!
+</details>
+
+<details closed>
+	<summary>Gráfico de contribuyentes</summary>
+	<br>
+	<p align="left"> <a href="https://github.com/MAESTRE-TFG/maestre/graphs/contributors">
+	<img src="https://contrib.rocks/image?repo=MAESTRE-TFG/maestre"> </a> </p>
+</details>
+
+---
+
+##  Licencia
+
+Este proyecto está protegido bajo la licencia [MIT License](https://choosealicense.com/licenses/mit/). Para más detalles, consulta el archivo [LICENSE](LICENSE).
+
+---
+
+##  Agradecimientos
+
+Antonio Macías y Rafael Pulido, los dos creadores de este proyecto:
+
+<table>
+	<td align="center">
+		<a href="https://github.com/antoniommff">
+			<img src="https://avatars.githubusercontent.com/u/91947070?v=4" width="100px;" alt="Antonio Macías"/>
+			<br />
+					<sub><b>Antonio Macías</b></sub>
+			<sub><b>Director de proyecto, Desarrollador Analista, Ingeniero de Software</b></sub>
+		</a>
+	</td>
+	<td align="center">
+		<a href="https://github.com/rafpulcif">
+			<img src="https://avatars.githubusercontent.com/u/91948036?v=4" width="100px;" alt="Rafael Pulido"/>
+			<br />
+			<sub><b>Rafael Pulido</b></sub>
+			<sub><b>Desarrollador Analista, Ingeniero de Software</b></sub>
+		</a>
+	</td>
 </table>
 
 ---
